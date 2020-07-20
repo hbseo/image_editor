@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
-import Test from './components/Test'
+import Toolbar from './components/js/toolbar';
+import Draw from './components/js/draw';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      test:{name:'Hi'}
+      file : '',
+      previewURL : ''
     }
   }
   render() {
+    let _file, _previewURL = null;
+    if(this.state.file !== '') {
+      _file = this.state.file;
+      _previewURL = this.state.previewURL;
+    }
     return (
       <div className="App">
-        <Test
-          name={this.state.test.name}>
-        </Test>
+        <Toolbar onInputImg = {function(file, URL) {
+          this.setState({
+            file : file,
+            previewURL : URL
+          });
+        }.bind(this)}></Toolbar>
+        <Draw file={_file} previewURL={_previewURL}></Draw>
       </div>
     );
   }
