@@ -10,8 +10,6 @@ class Draw extends Component {
     previewURL = this.props.previewURL;
     let preview = '';
     if(file !== null && file !== undefined) {
-      console.log('hi');
-      console.log(file);
       preview = <img key={i} src={previewURL} alt="img"></img>
     }
     return(
