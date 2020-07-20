@@ -19,12 +19,12 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <Toolbar onInputImg = {function(file, URL) {
+        <Toolbar onInputImg = {(file, URL) => {
           this.setState({
             file : file,
             previewURL : URL
           });
-        }.bind(this)}></Toolbar>
+        }}></Toolbar>
         <Draw file={_file} previewURL={_previewURL}></Draw>
       </div>
     );
