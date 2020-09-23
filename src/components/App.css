@@ -12,3 +12,7 @@ button, a {
   border-radius: .25em;
   margin-right: 5px;
 }
+
+canvas {
+  display: block;
+}

@@ -13,7 +13,7 @@ class App extends Component {
   componentDidMount() {
     this.canvas = new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
-      height: 100,
+      height: 600,
       width: 1000
     });
     this.canvas.backgroundColor = 'grey';
