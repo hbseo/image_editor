@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
+import Login from './Login';
 import './App.css'
 // import * as Filter from './filter';
 
@@ -12,7 +13,7 @@ class App extends Component {
   componentDidMount() {
     this.canvas = new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
-      height: 1000,
+      height: 100,
       width: 1000
     });
     this.canvas.backgroundColor = 'grey';
@@ -49,6 +50,10 @@ class App extends Component {
           {/* <button id='save' onClick={this.saveImage}>Save</button> */}
         </ul>
         <canvas id='canvas'></canvas>
+
+        <hr />
+        <Login/>
+        <hr />
       </div>
     );
   }
