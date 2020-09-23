@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
+import Login from './Login';
 import './App.css'
 
 class App extends Component {
   componentDidMount() {
     const canvas = new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
-      height: 1000,
+      height: 100,
       width: 1000
     });
     canvas.backgroundColor = 'grey';
@@ -32,6 +33,10 @@ class App extends Component {
           <button>Text</button>
         </ul>
         <canvas id='canvas'></canvas>
+
+        <hr />
+        <Login/>
+        <hr />
       </div>
     );
   }
