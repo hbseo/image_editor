@@ -1,4 +1,4 @@
-button {
+button, a {
   display: inline-block;
   padding: .5em .75em;
   color: white;

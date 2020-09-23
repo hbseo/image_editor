@@ -1,20 +1,34 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import './App.css'
+// import * as Filter from './filter';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.canvas = null;
+    this.saveImage = this.saveImage.bind(this);
+  }
   componentDidMount() {
-    const canvas = new fabric.Canvas('canvas', {
+    this.canvas = new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
       height: 1000,
       width: 1000
     });
-    canvas.backgroundColor = 'grey';
+    this.canvas.backgroundColor = 'grey';
     fabric.Image.fromURL('http://fabricjs.com/assets/pug_small.jpg', img => {
       img.set({left:300, top:100});
       img.scaleToWidth(300);
-      canvas.add(img);
-    })
+      this.canvas.add(img);
+    }, {crossOrigin: 'Anonymous'});
+  }
+  saveImage(el) {
+    // let myImg = new Image();
+    // myImg.crossOrigin = 'Anonymous';
+    // myImg.src = this.canvas.toDataURL('image/png');
+    let dataURL = this.canvas.toDataURL('image/jpg');
+    el.href = dataURL;
+    console.log(dataURL);
   }
   render() {
     return(
@@ -30,6 +44,9 @@ class App extends Component {
           <button>Cut</button>
           <button>Filter</button>
           <button>Text</button>
+          <a id='save' onClick={this.saveImage} 
+            download='myImage.jpg' href=''>Save</a>
+          {/* <button id='save' onClick={this.saveImage}>Save</button> */}
         </ul>
         <canvas id='canvas'></canvas>
       </div>
