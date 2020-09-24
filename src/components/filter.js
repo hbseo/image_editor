@@ -9,7 +9,6 @@ class Filter extends Action {
     }
 
     applyFilter = () => {
-      console.log(this)
       let canvas = this.getCanvas();
       let obj = canvas.getActiveObject();
       if(obj) {
