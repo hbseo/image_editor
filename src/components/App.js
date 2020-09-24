@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import './App.css'
 import Rotation from './Rotation';
+import Filter from './Filter';
 // import * as Filter from './filter';
 
 class App extends Component {
@@ -13,14 +14,14 @@ class App extends Component {
     }
     this.canvas = null;
     this.rotation = new Rotation(this);
+    this.filter = new Filter(this);
     this.canvasImage = null;
     this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
 
-    this.getActiveObject = this.getActiveObject.bind(this);
     this.getRotation = this.getRotation.bind(this);
 
     
-    
+    // this.applyFilter = this.applyFilter.bind(this);
   }
 
   getRotation() {
@@ -43,7 +44,7 @@ class App extends Component {
     });
     this.canvasEvent();
 
-    console.log('test');
+    // console.log('test');
 
 
   }
@@ -66,22 +67,15 @@ class App extends Component {
       // 새로운 이미지 추가
       if(this.state.newimg) {
         this.addImage(event.pointer);
-        console.log(event)
+        // console.log(event)
         this.setState({newimg : false})
       }
     });
 
     this.canvas.on('object:rotated', (event) => {
-      console.log('object:rotated', event);
+      // console.log('object:rotated', event);
       this.setState({angle : event.target.angle})
-
     });
-
-    
-
-
-
-
   }
 
   getActiveObject(){
@@ -91,6 +85,24 @@ class App extends Component {
   getCanvas(){
     return this.canvas;
   }
+
+  // applyFilter() {
+  //   let obj = this.canvas.getActiveObject();
+  //   if(obj) {
+  //     if(obj.filters.length === 0) {
+  //       obj.filters.push(new fabric.Image.filters.Grayscale());
+  //       obj.applyFilters();
+  //     }
+  //     else {
+  //       obj.filters.pop();
+  //       obj.applyFilters();
+  //     }
+  //     this.canvas.renderAll();
+  //   }
+  //   else {
+  //     alert('image is not activated');
+  //   }
+  // }
 
   loadImage = (url, pointer) => {
     return new Promise(resolve => {
@@ -178,7 +190,7 @@ class App extends Component {
           <button>Draw Line</button>
           <button>Figure</button>
           <button>Cut</button>
-          <button>Filter</button>
+          <button onClick= {this.filter.applyFilter}>Filter</button>
           <button>Text</button>
           <button onClick = {this.getRotation} > 90 degree rotate</button>
           <button onClick = {this.addNewImage}>add image</button>
