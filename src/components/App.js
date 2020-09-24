@@ -204,8 +204,8 @@ class App extends Component {
 
 
   addNewImage = () => {
+    this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.setState({newimg : true});
-
   }
 
   layerThumb = () => {
@@ -220,6 +220,7 @@ class App extends Component {
 
   onImgUrlChange = (url) => {
     this.testUrl = url;
+    this.setState({newimg : true})
   }
 
 

@@ -67,9 +67,9 @@ class ImageList extends Component {
     showImage = (imagelist) => {
         // console.log('show image', imagelist)
         const listitem = imagelist.map((image) =>
-            <div>
-                <img key= {image.id} src={image.urls.thumb} alt="."  onClick = {this.onClickImg} />
-            </div>
+
+            <img key= {image.id} src={image.urls.thumb} alt="."  onClick = {this.onClickImg} />
+            
             // ursl뒤에 raw, small, regular, full 등의 따라 사이즈 조절
         );
   
@@ -90,7 +90,6 @@ class ImageList extends Component {
 
         return(
             <div>
-                <img src="http://fabricjs.com/assets/pug_small.jpg" alt="" />
                 <button onClick = { () => this.getRandomImage() }>get a random image 10 count</button>
               
                 <form onSubmit={this.handleSubmit}>
