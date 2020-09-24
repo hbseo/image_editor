@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import './App.css'
 import Rotation from './Rotation';
-import Filter from './Filter';
+import Filter from './filter';
+import ImageList from './ImageList';
 // import * as Filter from './filter';
 
 class App extends Component {
@@ -11,6 +12,7 @@ class App extends Component {
     this.state = {
       angle : 0,
       newimg : false,
+      layers : []
     }
     this.canvas = null;
     this.rotation = new Rotation(this);
@@ -44,7 +46,8 @@ class App extends Component {
     });
     this.canvasEvent();
 
-    // console.log('test');
+    this.layerThumb();
+    console.log('test');
 
 
   }
@@ -52,11 +55,13 @@ class App extends Component {
   canvasEvent = () => {
     this.canvas.on('mouse:down', (event) => {
       // console.log('canvas mouse down', event.target);
-      // console.log(this.canvas._activeObject);
+      console.log(this.canvas._activeObject);
     
       // 객체 선택됬을시
       if(event.target){
         if(this.canvas._activeObject._objects) { // 여러개의 객체 선택됬을시
+          // console.log(this.canvas._activeObject._objects)
+
           this.setState({angle : 0})
         }
         else{
@@ -79,7 +84,35 @@ class App extends Component {
   }
 
   getActiveObject(){
+    // console.log("----",this.canvas._activeObject._objects)
+    // if(this.canvas._activeObject._objects){
+    //   // console.log(this.canvas.getActiveObjects())
+    //   // return this.canvas.getActiveObjects();
+    //   const original_point_left = this.canvas._activeObject.left;
+    //   const original_point_top = this.canvas._activeObject.top;
+
+    //   var group = new fabric.Group(this.canvas._activeObject._objects,{
+    //     // originX:'center',
+    //     // originY:'center'
+    //     left : original_point_left,
+    //     top : original_point_top,
+    //     angle : 0
+    //   });
+    //   this.canvas._activeObject.onDeselect();
+    //   // group.onDeselect();
+    //   group.onSelect();
+    //   console.log(group);
+    //   return group;
+    // //   this.canvas._activeObject = alltogetherObj;
+    // //   console.log("adasdf",alltogetherObj);
+
+    // //   return alltogetherObj;
+    // }
+    // else{
+    //   return this.canvas._activeObject;
+    // }
     return this.canvas._activeObject;
+
   }
 
   getCanvas(){
@@ -146,6 +179,8 @@ class App extends Component {
     this.loadImage(this.testUrl, pointer)
     .then((data) => {
       this.canvas.add(data);
+      this.setState({ layers : this.state.layers.concat(data)});
+      // console.log(data.getSvgSrc());
     })
   }
 
@@ -173,6 +208,22 @@ class App extends Component {
 
   }
 
+  layerThumb = () => {
+    var layer_list = null;
+    if(this.canvas){
+      // console.log("------------------", this.canvas._objects);
+      
+      layer_list= this.canvas._objects.map( obj => <li key={obj.cacheKey}><img src={obj.getSvgSrc()} alt="" height="10%" width="10%"/></li>)
+    }
+    return layer_list
+  }
+
+  onImgUrlChange = (url) => {
+    this.testUrl = url;
+  }
+
+
+
 
 
 
@@ -193,7 +244,7 @@ class App extends Component {
           <button onClick= {this.filter.applyFilter}>Filter</button>
           <button>Text</button>
           <button onClick = {this.getRotation} > 90 degree rotate</button>
-          <button onClick = {this.addNewImage}>add image</button>
+          <button onClick = {this.addNewImage}>add image from url</button>
           <button onClick = {this.saveImage}> downlaod </button>
           <input
             type='number'
@@ -209,7 +260,11 @@ class App extends Component {
         <canvas id='canvas'></canvas>
 
         <hr />
+        <ul>
+          {this.layerThumb()}
+        </ul>
         <hr />
+        <ImageList onClick = {this.onImgUrlChange} />
       </div>
     );
   }

@@ -4,7 +4,7 @@ export default class Action {
     constructor(name, App){
         this.app = App;
         this.name = name;
-        console.log(this.name, this.app);
+        // console.log(this.name, this.app);
     }
 
 

@@ -18,6 +18,8 @@ class Rotation extends Action {
 
 
     setAngle(angle){
+      console.log(this)
+
         // const oldAngle = this.getCurrentAngle() % 360;
         // const angleDiff = oldAngle - angle;
         const activeImage = this.getActiveObject();

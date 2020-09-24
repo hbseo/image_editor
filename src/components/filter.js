@@ -1,12 +1,15 @@
 import Action from './Action';
+
 import { fabric } from 'fabric';
 
 class Filter extends Action {
     constructor(App){
       super('Filter', App);
-      console.log(App);
+      // console.log(App,"-asfdjasdhjfjkahslkdf", this);
     }
-    applyFilter() {
+
+    applyFilter = () => {
+      console.log(this)
       let canvas = this.getCanvas();
       let obj = canvas.getActiveObject();
       if(obj) {
@@ -28,3 +31,4 @@ class Filter extends Action {
 }
 
 export default Filter;
+
