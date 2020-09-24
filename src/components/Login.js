@@ -13,12 +13,11 @@ class Login extends React.Component {
       token : '',
       login_fail : true,
       login : false,
-      check_count : 0,
     };
     this.getCheck = this.getCheck.bind(this);
     this.postRegister = this.postRegister.bind(this);
 
-    this.getCheck()
+    // this.getCheck()
     
   }
 
@@ -83,7 +82,6 @@ class Login extends React.Component {
 
 
   getCheck() {
-      this.setState({check_count : this.state.check_count + 1})
       let tk = this.state.token;
       fetch('/api/auth/check', {
         method : 'get',
@@ -94,7 +92,7 @@ class Login extends React.Component {
       .then(res=>res.json())
       .then(data => this.setState({login : data.success, login_fail: !data.success}))
       .catch((error) => {
-        console.log("ff : ", error);
+        console.log("check : ", error);
       });
   }
 
@@ -120,7 +118,6 @@ class Login extends React.Component {
 
 
   render () {
-    const modal = this.state.modal;
     const login_fail = this.state.login_fail;
     let count = this.state.check_count
     let test_style;
