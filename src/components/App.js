@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import './App.css'
 import Rotation from './Rotation';
-import Filter from './filter';
+import Filter from './Filter';
 import ImageList from './ImageList';
+import Delete from './Delete'
 // import * as Filter from './filter';
 
 class App extends Component {
@@ -17,6 +18,7 @@ class App extends Component {
     this.canvas = null;
     this.rotation = new Rotation(this);
     this.filter = new Filter(this);
+    this.delete = new Delete(this);
     this.canvasImage = null;
     this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
 
@@ -81,6 +83,11 @@ class App extends Component {
       // console.log('object:rotated', event);
       this.setState({angle : event.target.angle})
     });
+
+    // 키 입력 이벤트 - 작동안됨
+    this.canvas.on('keydown', (event) => {
+      console.log('fire');
+    }, false);
   }
 
   getActiveObject(){
@@ -119,24 +126,6 @@ class App extends Component {
     return this.canvas;
   }
 
-  // applyFilter() {
-  //   let obj = this.canvas.getActiveObject();
-  //   if(obj) {
-  //     if(obj.filters.length === 0) {
-  //       obj.filters.push(new fabric.Image.filters.Grayscale());
-  //       obj.applyFilters();
-  //     }
-  //     else {
-  //       obj.filters.pop();
-  //       obj.applyFilters();
-  //     }
-  //     this.canvas.renderAll();
-  //   }
-  //   else {
-  //     alert('image is not activated');
-  //   }
-  // }
-
   loadImage = (url, pointer) => {
     return new Promise(resolve => {
       fabric.Image.fromURL(url, img => {
@@ -156,14 +145,10 @@ class App extends Component {
   }
 
   saveImage = (el) => {
-    // let myImg = new Image();
-    // myImg.crossOrigin = 'Anonymous';
-    // myImg.src = this.canvas.toDataURL('image/png');
     this.canvas.backgroundColor = null;
     let dataURL = this.canvas.toDataURL({
       format : 'png'
     });
-    // console.log(dataURL);
     el.href = dataURL;
     var a = document.createElement("a");
     a.href = dataURL;
@@ -237,6 +222,7 @@ class App extends Component {
         <ul>
           <button>Undo</button>
           <button>Redo</button>
+          <button onClick = {this.delete.deleteObj}>Delete</button>
           <button>Rotate</button>
           <button>Flip</button>
           <button>Draw Line</button>
@@ -258,7 +244,7 @@ class App extends Component {
           >
           </input>
         </ul>
-        <canvas id='canvas'></canvas>
+        <canvas id='canvas' tabIndex='0'></canvas>
 
         <hr />
         <ul>
