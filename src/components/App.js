@@ -201,13 +201,11 @@ class App extends Component {
         resolve();
       })
       .then( () => {
-        if(this.getActiveObject()) {
-          this.action['Rotation'].setAngle(this.state.angle);
-        }
-        else{
-          alert('image is not activated')
-        }
+        this.action['Rotation'].setAngle(this.state.angle);
       })
+    }
+    else{
+      alert('image is not activated');
     }
   }
 
