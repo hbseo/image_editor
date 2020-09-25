@@ -240,7 +240,6 @@ class App extends Component {
   filterObject = (event) => {
     var filterOption = event.target.getAttribute('filter');
     var activeObject = this.getActiveObject();
-    console.log(event.target.getAttribute('checked'))
 
     if(activeObject) {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked);
