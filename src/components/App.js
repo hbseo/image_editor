@@ -177,11 +177,25 @@ class App extends Component {
     this._canvas.backgroundColor = 'grey';
   }
 
+  fileChange = (event) => {
+    new Promise((resolve) => {
+      let reader = new FileReader();
+      let file = event.target.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        this.testUrl = event.target.result;
+        resolve();
+      }
+    })
+    .then(() => {
+      this.setState({newimg : true});  
+    })
+  }
+
   addNewImage = () => {
     this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.setState({newimg : true});
   }
-
 
   addImage = (pointer) => {
     this.loadImage(this.testUrl, pointer)
@@ -209,20 +223,6 @@ class App extends Component {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   rotateObject = (event) => {
     var changeAngle = event.target.getAttribute('angle');
     var activeObject = this.getActiveObject();
@@ -235,7 +235,6 @@ class App extends Component {
       alert('image is not activated')
     }
   }
-
 
   filterObject = (event) => {
     var filterOption = event.target.getAttribute('filter');
@@ -252,15 +251,9 @@ class App extends Component {
     
   }
 
-
   deleteObject = (event) => {
     this.action['Delete'].deleteObj();
   }
-
-
-
-
-
 
   layerThumb = () => {
     var layer_list = null;
@@ -275,14 +268,6 @@ class App extends Component {
     this.setState({newimg : true})
   }
 
-
-  
-
-
-
-
-
-  
   render() {
     return(
       <div className='App'>
@@ -317,6 +302,7 @@ class App extends Component {
             onChange = {this.handleAngleChange}
           >
           </input>
+          <input type='file' id='_file' onChange={this.fileChange}></input>
         </ul>
         {/* <FilterMenu onClick= {this.filterObject}/> */}
         <br/>
