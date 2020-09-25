@@ -8,24 +8,28 @@ class Filter extends Action {
       // console.log(App,"-asfdjasdhjfjkahslkdf", this);
     }
 
-    applyFilter = () => {
+    applyFilter = (obj, option, checked) => {
       let canvas = this.getCanvas();
-      let obj = canvas.getActiveObject();
-      if(obj) {
-        if(obj.filters.length === 0) {
-          obj.filters.push(new fabric.Image.filters.Grayscale());
+      switch(option){
+        case 'grey':
+          obj.filters[0] = checked && (new fabric.Image.filters.Grayscale());
+          // obj.filters[0] = checked ? (new fabric.Image.filters.Grayscale()) : null;
           obj.applyFilters();
-        }
-        else {
-          obj.filters.pop();
+          break;
+          
+        case 'vintage':
+          obj.filters[9] = checked && (new fabric.Image.filters.Vintage());
+          // obj.filters[9] = checked ? (new fabric.Image.filters.Vintage()) : null;
           obj.applyFilters();
-        }
-        canvas.renderAll();
+          break;
+  
+        default:
       }
-      else {
-        alert('image is not activated');
-      }
+
+      console.log(obj.filters);
+      canvas.renderAll();
     }
+    
 
 }
 

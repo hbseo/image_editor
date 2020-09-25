@@ -4,127 +4,147 @@ import './App.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
 import ImageList from './ImageList';
-import Delete from './Delete'
-// import * as Filter from './filter';
+import Delete from './Delete';
+import FilterMenu from './FilterMenu';
+
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      angle : 0,
+      angle : 0,   //active object's angle
+      filters : [], //active object's filter
       newimg : false,
       layers : []
     }
-    this.canvas = null;
-    this.rotation = new Rotation(this);
-    this.filter = new Filter(this);
-    this.delete = new Delete(this);
-    this.canvasImage = null;
+
+    this._canvas = null; 
+    this._canvasImage = null;
     this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
+    this.action = {};
 
-    this.getRotation = this.getRotation.bind(this);
 
-    
-    // this.applyFilter = this.applyFilter.bind(this);
+
+    this._createAction();
+
   }
-
-  getRotation() {
-    if(this.getActiveObject()) {
-      this.rotation.setAngle(90);
-    }
-    else{
-      alert('image is not activated')
-    }
-  }
-
-
 
   componentDidMount()  {
-    this.canvas = new fabric.Canvas('canvas', {
+    this._canvas = new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
       height: 600,
       width: 1000,
       backgroundColor : 'grey'
     });
-    this.canvasEvent();
-
+    
+    this._createCanvasEvent();
     this.layerThumb();
-    console.log('test');
-
-
   }
 
-  canvasEvent = () => {
-    this.canvas.on('mouse:down', (event) => {
-      // console.log('canvas mouse down', event.target);
-      console.log(this.canvas._activeObject);
+  // 캔버스 이벤트 설정
+  _createCanvasEvent = () => {
+    this._canvas.on('mouse:down', (event) => {
+      // console.log(this._canvas._activeObject);
     
       // 객체 선택됬을시
       if(event.target){
-        if(this.canvas._activeObject._objects) { // 여러개의 객체 선택됬을시
-          // console.log(this.canvas._activeObject._objects)
-
+        if(this._canvas._activeObject._objects) { // 여러개의 객체 선택됬을시
           this.setState({angle : 0})
         }
         else{
-          this.setState({angle : event.target.angle})
+          this.setState({angle : event.target.angle, filters : event.target.filters})
+          // console.log(event.target.filters)
+
         }
       }
 
       // 새로운 이미지 추가
       if(this.state.newimg) {
         this.addImage(event.pointer);
-        // console.log(event)
         this.setState({newimg : false})
       }
+
+
+      
     });
 
-    this.canvas.on('object:rotated', (event) => {
-      // console.log('object:rotated', event);
+
+    this._canvas.on('object:rotated', (event) => {
       this.setState({angle : event.target.angle})
     });
 
-    // 키 입력 이벤트 - 작동안됨
-    this.canvas.on('keydown', (event) => {
-      console.log('fire');
-    }, false);
+    // 키 입력 이벤트 - mouse:up과 down으로 뭔가를 해보길.
+    this._canvas.on('mouse:up', (event) => {
+      // console.log('fire', event.target);
+    });
+
+    this._canvas.on('mouse:move', (event) => {
+      // console.log(this._canvas.targets);
+    });
+
+
+  }
+
+  /**
+   * create Action List
+   * @private
+   */
+  _createAction = () => {
+    this._register(this.action,  new Rotation(this));
+    this._register(this.action,  new Filter(this));
+    this._register(this.action,  new Delete(this));
+  }
+
+  /**
+   * register Action
+   * @param {Object} map : map 
+   * @param {Object} module : action module
+   * @private
+   */
+  _register = (map, action) => {
+    map[action.getName()] = action;
   }
 
   getActiveObject(){
-    // console.log("----",this.canvas._activeObject._objects)
-    // if(this.canvas._activeObject._objects){
-    //   // console.log(this.canvas.getActiveObjects())
-    //   // return this.canvas.getActiveObjects();
-    //   const original_point_left = this.canvas._activeObject.left;
-    //   const original_point_top = this.canvas._activeObject.top;
+    return this._canvas._activeObject;
 
-    //   var group = new fabric.Group(this.canvas._activeObject._objects,{
+    // console.log("----",this._canvas._activeObject._objects)
+    // if(this._canvas._activeObject._objects){
+    //   // console.log(this._canvas.getActiveObjects())
+    //   // return this._canvas.getActiveObjects();
+    //   const original_point_left = this._canvas._activeObject.left;
+    //   const original_point_top = this._canvas._activeObject.top;
+
+    //   var group = new fabric.Group(this._canvas._activeObject._objects,{
     //     // originX:'center',
     //     // originY:'center'
     //     left : original_point_left,
     //     top : original_point_top,
     //     angle : 0
     //   });
-    //   this.canvas._activeObject.onDeselect();
+    //   this._canvas._activeObject.onDeselect();
     //   // group.onDeselect();
     //   group.onSelect();
     //   console.log(group);
     //   return group;
-    // //   this.canvas._activeObject = alltogetherObj;
+    // //   this._canvas._activeObject = alltogetherObj;
     // //   console.log("adasdf",alltogetherObj);
 
     // //   return alltogetherObj;
     // }
     // else{
-    //   return this.canvas._activeObject;
+    //   return this._canvas._activeObject;
     // }
-    return this.canvas._activeObject;
-
   }
 
+  /**
+   * Get canvas instance
+   * @returns {fabric.Canvas}
+   */
   getCanvas(){
-    return this.canvas;
+    return this._canvas;
   }
+
 
   loadImage = (url, pointer) => {
     return new Promise(resolve => {
@@ -145,8 +165,8 @@ class App extends Component {
   }
 
   saveImage = (el) => {
-    this.canvas.backgroundColor = null;
-    let dataURL = this.canvas.toDataURL({
+    this._canvas.backgroundColor = null;
+    let dataURL = this._canvas.toDataURL({
       format : 'png'
     });
     el.href = dataURL;
@@ -154,16 +174,19 @@ class App extends Component {
     a.href = dataURL;
     a.setAttribute("download", 'image.png');
     a.click();
-    this.canvas.backgroundColor = 'grey';
+    this._canvas.backgroundColor = 'grey';
+  }
 
-    
+  addNewImage = () => {
+    this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
+    this.setState({newimg : true});
   }
 
 
   addImage = (pointer) => {
     this.loadImage(this.testUrl, pointer)
     .then((data) => {
-      this.canvas.add(data);
+      this._canvas.add(data);
       this.setState({ layers : this.state.layers.concat(data)});
       // console.log(data.getSvgSrc());
     })
@@ -179,7 +202,7 @@ class App extends Component {
     })
     .then( () => {
       if(this.getActiveObject()) {
-        this.rotation.setAngle(this.state.angle);
+        this.action['Rotation'].setAngle(this.state.angle);
       }
       else{
         alert('image is not activated')
@@ -188,17 +211,62 @@ class App extends Component {
   }
 
 
-  addNewImage = () => {
-    this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
-    this.setState({newimg : true});
+
+
+
+
+
+
+
+
+
+
+
+
+
+  rotateObject = (event) => {
+    var changeAngle = event.target.getAttribute('angle');
+    var activeObject = this.getActiveObject();
+
+    if(activeObject) {
+      this.setState({angle : (activeObject.angle + Number(changeAngle)) % 360})
+      this.action['Rotation'].setAngle(activeObject.angle + Number(changeAngle));
+    }
+    else{
+      alert('image is not activated')
+    }
   }
+
+
+  filterObject = (event) => {
+    var filterOption = event.target.getAttribute('filter');
+    var activeObject = this.getActiveObject();
+    console.log(event.target.getAttribute('checked'))
+
+    if(activeObject) {
+      this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked);
+    }
+    else{
+      alert('image is not activated');
+      event.target.checked = false;
+    }
+    
+  }
+
+
+  deleteObject = (event) => {
+    this.action['Delete'].deleteObj();
+  }
+
+
+
+
+
 
   layerThumb = () => {
     var layer_list = null;
-    if(this.canvas){
-      // console.log("------------------", this.canvas._objects);
-      
-      layer_list= this.canvas._objects.map( obj => <li key={obj.cacheKey}><img src={obj.getSvgSrc()} alt="" height="10%" width="10%"/></li>)
+    if(this._canvas){
+      layer_list= this._canvas._objects.map( obj => <li key={obj.cacheKey}><img src={obj.getSvgSrc()} alt="" height="10%" width="10%"/></li>)
     }
     return layer_list
   }
@@ -209,6 +277,7 @@ class App extends Component {
   }
 
 
+  
 
 
 
@@ -219,18 +288,24 @@ class App extends Component {
     return(
       <div className='App'>
         <h1>Image Editor</h1>
+
         <ul>
           <button>Undo</button>
           <button>Redo</button>
-          <button onClick = {this.delete.deleteObj}>Delete</button>
+          
           <button>Rotate</button>
           <button>Flip</button>
           <button>Draw Line</button>
           <button>Figure</button>
           <button>Cut</button>
-          <button onClick= {this.filter.applyFilter}>Filter</button>
           <button>Text</button>
-          <button onClick = {this.getRotation} > 90 degree rotate</button>
+          <input type="checkbox" onClick= {this.filterObject} filter="grey"/>Filter grey
+          <input type="checkbox" onClick= {this.filterObject} filter="vintage" />Filter vintage
+          
+          {/* <button onClick= {this.filterObject} filter="grey">Filter grey </button> */}
+          {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
+          <button onClick = {this.deleteObject}>Delete</button>
+          <button onClick = {this.rotateObject} angle="90" > 90 degree rotate</button>
           <button onClick = {this.addNewImage}>add image from url</button>
           <button onClick = {this.saveImage}> downlaod </button>
           <input
@@ -244,6 +319,10 @@ class App extends Component {
           >
           </input>
         </ul>
+        {/* <FilterMenu onClick= {this.filterObject}/> */}
+        <br/>
+
+        <hr/>
         <canvas id='canvas' tabIndex='0'></canvas>
 
         <hr />

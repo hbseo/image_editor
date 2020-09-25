@@ -3,7 +3,7 @@
 export default class Action {
     constructor(name, App){
         this.app = App;
-        this.name = name;
+        this._name = name;
         // console.log(this.name, this.app);
     }
 
@@ -22,6 +22,10 @@ export default class Action {
         return this.app.getCanvas();
     }
 
+
+    getName(){
+        return this._name;
+    }
 
 }
 
