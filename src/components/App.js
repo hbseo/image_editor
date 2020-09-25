@@ -193,21 +193,22 @@ class App extends Component {
   }
 
   handleAngleChange = (event) => {
-    let change_state = {};
-    change_state[event.target.name] = event.target.value;
-
-    new Promise((resolve) => {
-      this.setState(change_state);
-      resolve();
-    })
-    .then( () => {
-      if(this.getActiveObject()) {
-        this.action['Rotation'].setAngle(this.state.angle);
-      }
-      else{
-        alert('image is not activated')
-      }
-    })
+    if(this.getActiveObject()) {
+      let change_state = {};
+      change_state[event.target.name] = event.target.value;
+      new Promise((resolve) => {
+        this.setState(change_state);
+        resolve();
+      })
+      .then( () => {
+        if(this.getActiveObject()) {
+          this.action['Rotation'].setAngle(this.state.angle);
+        }
+        else{
+          alert('image is not activated')
+        }
+      })
+    }
   }
 
 
