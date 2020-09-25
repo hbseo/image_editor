@@ -179,13 +179,9 @@ class App extends Component {
 
   fileChange = (event) => {
     new Promise((resolve) => {
-      let reader = new FileReader();
       let file = event.target.files[0];
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        this.testUrl = event.target.result;
-        resolve();
-      }
+      this.testUrl = URL.createObjectURL(file)
+      resolve();
     })
     .then(() => {
       this.setState({newimg : true});  
@@ -222,6 +218,11 @@ class App extends Component {
       alert('image is not activated');
     }
   }
+
+
+
+
+
 
   rotateObject = (event) => {
     var changeAngle = event.target.getAttribute('angle');
