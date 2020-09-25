@@ -9,9 +9,8 @@ class Filter extends Action {
 
     applyFilter = (obj, option, checked) => {
       let canvas = this.getCanvas();
-      let len = 1;
       if(obj.hasOwnProperty('_objects')) {
-        len = obj._objects.length;
+        let len = obj._objects.length;
         for(let i = 0; i<len; i++) {
           switch(option){
             case 'grey':
