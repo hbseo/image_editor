@@ -242,7 +242,7 @@ class App extends Component {
     var activeObject = this.getActiveObject();
 
     if(activeObject) {
-      this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked);
+      this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
     }
     else{
       alert('image is not activated');
@@ -283,13 +283,11 @@ class App extends Component {
           <button>Figure</button>
           <button>Cut</button>
           <button>Text</button>
-          <input type="checkbox" onClick= {this.filterObject} filter="grey"/>Filter grey
-          <input type="checkbox" onClick= {this.filterObject} filter="vintage" />Filter vintage
           
           {/* <button onClick= {this.filterObject} filter="grey">Filter grey </button> */}
           {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
           <button onClick = {this.deleteObject}>Delete</button>
-          <button onClick = {this.rotateObject} angle="90" > 90 degree rotate</button>
+          <button onClick = {this.rotateObject} angle='90' > 90 degree rotate</button>
           <button onClick = {this.addNewImage}>add image from url</button>
           <button onClick = {this.saveImage}> downlaod </button>
           <input
@@ -303,6 +301,18 @@ class App extends Component {
           >
           </input>
           <input type='file' id='_file' onChange={this.fileChange}></input>
+        </ul>
+        <ul>
+          <input type='checkbox' onClick= {this.filterObject} filter='grey'/>Filter grey
+          <input type='checkbox' onClick= {this.filterObject} filter='invert'/>Filter invert
+          <input type='checkbox' onClick= {this.filterObject} filter='vintage' />Filter vintage
+          <input 
+            type='range' 
+            min='-1'
+            max='1'
+            step='0.01'
+            defaultValue='0'
+            onInput= {this.filterObject} filter='brightness' />Brightness
         </ul>
         {/* <FilterMenu onClick= {this.filterObject}/> */}
         <br/>
