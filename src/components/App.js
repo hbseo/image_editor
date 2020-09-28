@@ -14,6 +14,7 @@ class App extends Component {
     this.state = {
       angle : 0,   //active object's angle
       filters : [], //active object's filter
+      brightness : 0, //active object's brightness
       newimg : false,
       layers : []
     }
@@ -44,15 +45,22 @@ class App extends Component {
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
-      // console.log(this._canvas._activeObject);
+      console.log("mouse active object", this._canvas._activeObject);
     
       // 객체 선택됬을시
       if(event.target){
         if(this._canvas._activeObject._objects) { // 여러개의 객체 선택됬을시
           this.setState({angle : 0})
+          // this.setState({bright : 0})
+
         }
         else{
-          this.setState({angle : event.target.angle, filters : event.target.filters})
+          this.setState({
+            angle : event.target.angle, 
+            filters : event.target.filters,
+            brightness : event.target.filters[5] ?  event.target.filters[5].brightness : 0
+          })
+          
           // console.log(event.target.filters)
 
         }
@@ -219,6 +227,27 @@ class App extends Component {
     }
   }
 
+  handleBrightChange = (event) => {
+    const brightValue = event.target.value
+    var filterOption = event.target.getAttribute('filter');
+    var activeObject = this.getActiveObject();
+    if(this.getActiveObject()) {
+      let change_state = {};
+      change_state[event.target.name] = event.target.value;
+
+      new Promise((resolve) => {
+        this.setState(change_state);
+        resolve();
+      })
+      .then( (brightEvent) => {
+        this.action['Filter'].applyFilter(activeObject, filterOption, true, brightValue)
+      })
+    }
+    else{
+      alert('image is not activated');
+    }
+  }
+
 
 
 
@@ -272,24 +301,38 @@ class App extends Component {
     return(
       <div className='App'>
         <h1>Image Editor</h1>
-
-        <ul>
+        <div>
+          <h5>미구현</h5>
           <button>Undo</button>
           <button>Redo</button>
-          
           <button>Rotate</button>
           <button>Flip</button>
           <button>Draw Line</button>
           <button>Figure</button>
           <button>Cut</button>
           <button>Text</button>
+        </div>
+
+        <div>
+          <h5>개발자 기능</h5>
+          <button onClick = {this.addNewImage}>테스트용 이미지 추가</button>
+          <p>선택 개체 밝기 값{this.state.brightness}</p>
+          <p>선택 개체 각도 값{this.state.angle}</p>
+
+          <hr />
+        </div>
+
+        <ul>
+          
           
           {/* <button onClick= {this.filterObject} filter="grey">Filter grey </button> */}
           {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
-          <button onClick = {this.deleteObject}>Delete</button>
-          <button onClick = {this.rotateObject} angle='90' > 90 degree rotate</button>
-          <button onClick = {this.addNewImage}>add image from url</button>
-          <button onClick = {this.saveImage}> downlaod </button>
+          <button onClick = {this.deleteObject}>선택 개체 삭제</button>
+          <a>|</a>
+          <button onClick = {this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
+          <a>|</a>
+          <button onClick = {this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
+          <a>| 각도설정</a>
           <input
             type='number'
             name='angle'
@@ -300,7 +343,8 @@ class App extends Component {
             onChange = {this.handleAngleChange}
           >
           </input>
-          <input type='file' id='_file' onChange={this.fileChange}></input>
+          <a>| 파일 불러오기</a>
+          <input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>
         </ul>
         <ul>
           <input type='checkbox' onClick= {this.filterObject} filter='grey'/>Filter grey
@@ -310,9 +354,11 @@ class App extends Component {
             type='range' 
             min='-1'
             max='1'
+            name = 'brightness'
             step='0.01'
-            defaultValue='0'
-            onInput= {this.filterObject} filter='brightness' />Brightness
+            value = {this.state.brightness}
+            onChange= {this.handleBrightChange} filter='brightness' />Brightness
+          
         </ul>
         {/* <FilterMenu onClick= {this.filterObject}/> */}
         <br/>

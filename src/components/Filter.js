@@ -38,8 +38,7 @@ class Filter extends Action {
             obj.filters[1] = checked && (new fabric.Image.filters.Invert());
             break;  
           case 'brightness':
-            console.log(value);
-            obj.filters[5] = checked && (new fabric.Image.filters.Brightness({
+            obj.filters[5] = (new fabric.Image.filters.Brightness({
               brightness: value
             }));
             break;  
