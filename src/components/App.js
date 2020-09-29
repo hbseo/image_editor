@@ -5,7 +5,7 @@ import Rotation from './Rotation';
 import Filter from './Filter';
 import ImageList from './ImageList';
 import Delete from './Delete';
-import FilterMenu from './FilterMenu';
+// import FilterMenu from './FilterMenu';
 
 
 class App extends Component {
@@ -45,14 +45,18 @@ class App extends Component {
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
-      console.log("mouse active object", this._canvas._activeObject);
+      // console.log("mouse active object", this._canvas._activeObject);
     
-      // 객체 선택됬을시
+      // 객체 선택됐을시
       if(event.target){
-        if(this._canvas._activeObject._objects) { // 여러개의 객체 선택됬을시
+        if(this._canvas._activeObject._objects) { // 여러개의 객체 선택됐을시
           this.setState({angle : 0})
-          // this.setState({bright : 0})
-
+          // 여러객체가 선택되었을 경우 필터 버튼 막음
+          let list, index;
+          list = document.getElementsByClassName('filter');
+          for(index = 0; index< list.length; index++) {
+            list[index].setAttribute('disabled', true);
+          }
         }
         else{
           this.setState({
@@ -60,9 +64,19 @@ class App extends Component {
             filters : event.target.filters,
             brightness : event.target.filters[5] ?  event.target.filters[5].brightness : 0
           })
-          
-          // console.log(event.target.filters)
-
+          // 하나의 객체가 선택되었을 경우 필터 버튼 뚫어줌
+          let list, index;
+          list = document.getElementsByClassName('filter');
+          for(index = 0; index< list.length; index++) {
+            list[index].removeAttribute('disabled');
+          }
+          // 필터 체크 여부 실시간 변경 ( 미완성 )
+          if(event.target.filters.length !== 0) {
+            console.log(event.target.filters)
+          }
+          else {
+            console.log();
+          }
         }
       }
 
@@ -347,11 +361,13 @@ class App extends Component {
           <input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>
         </ul>
         <ul>
-          <input type='checkbox' onClick= {this.filterObject} filter='grey'/>Filter grey
-          <input type='checkbox' onClick= {this.filterObject} filter='invert'/>Filter invert
-          <input type='checkbox' onClick= {this.filterObject} filter='vintage' />Filter vintage
+          <input type='checkbox' className='filter' id='grey' onClick= {this.filterObject} filter='grey'/>Filter grey
+          <input type='checkbox' className='filter' id='invert' onClick= {this.filterObject} filter='invert'/>Filter invert
+          <input type='checkbox' className='filter' id='vintage' onClick= {this.filterObject} filter='vintage' />Filter vintage
           <input 
-            type='range' 
+            type='range'
+            className='filter'
+            id='brightness'
             min='-1'
             max='1'
             name = 'brightness'
