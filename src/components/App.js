@@ -45,8 +45,6 @@ class App extends Component {
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
-      // console.log("mouse active object", this._canvas._activeObject);
-    
       // 객체 선택됐을시
       if(event.target){
         if(this._canvas._activeObject._objects) { // 여러개의 객체 선택됐을시
@@ -59,23 +57,28 @@ class App extends Component {
           }
         }
         else{
-          this.setState({
-            angle : event.target.angle, 
-            filters : event.target.filters,
-            brightness : event.target.filters[5] ?  event.target.filters[5].brightness : 0
-          })
-          // 하나의 객체가 선택되었을 경우 필터 버튼 뚫어줌
-          let list, index;
-          list = document.getElementsByClassName('filter');
-          for(index = 0; index< list.length; index++) {
-            list[index].removeAttribute('disabled');
-          }
-          // 필터 체크 여부 실시간 변경 ( 미완성 )
-          if(event.target.filters.length !== 0) {
-            console.log(event.target.filters)
+          if(event.target.hasOwnProperty('text')) {
+            console.log('this is text!');
           }
           else {
-            console.log();
+            this.setState({
+              angle : event.target.angle, 
+              filters : event.target.filters,
+              brightness : event.target.filters[5] ?  event.target.filters[5].brightness : 0
+            })
+            // 하나의 객체가 선택되었을 경우 필터 버튼 뚫어줌
+            let list, index;
+            list = document.getElementsByClassName('filter');
+            for(index = 0; index< list.length; index++) {
+              list[index].removeAttribute('disabled');
+            }
+            // 필터 체크 여부 실시간 변경 ( 미완성 )
+            if(event.target.filters.length !== 0) {
+              console.log(event.target.filters)
+            }
+            else {
+              console.log();
+            }
           }
         }
       }
@@ -224,6 +227,11 @@ class App extends Component {
     })
   }
 
+  addText = () => {
+    let text = new fabric.Text('Hello world', {left:100, top:100});
+    this._canvas.add(text);
+  }
+
   handleAngleChange = (event) => {
     if(this.getActiveObject()) {
       let change_state = {};
@@ -343,6 +351,7 @@ class App extends Component {
           {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
           <button onClick = {this.deleteObject}>선택 개체 삭제</button>
           <a>|</a>
+          <button onClick = {this.addText}>텍스트</button>
           <button onClick = {this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
           <a>|</a>
           <button onClick = {this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
