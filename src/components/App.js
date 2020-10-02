@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
+import { ChromePicker } from 'react-color';
 import './App.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
 import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
+import Text from './Text';
+
 // import FilterMenu from './FilterMenu';
 
 
@@ -17,7 +20,8 @@ class App extends Component {
       filters : [], //active object's filter
       brightness : 0, //active object's brightness
       newimg : false,
-      layers : []
+      layers : [],
+      displayColorPicker : false // show color picker true or false
     }
 
     this._canvas = null; 
@@ -120,7 +124,7 @@ class App extends Component {
     this._register(this.action,  new Filter(this));
     this._register(this.action,  new Delete(this));
     this._register(this.action,  new Crop(this));
-
+    this._register(this.action,  new Text(this));
   }
 
   /**
@@ -230,25 +234,6 @@ class App extends Component {
     })
   }
 
-  /* Text
-    backgroundColor : string
-    borderColor : string
-    angle : number
-    cursorColor : string
-    editable : boolean
-    fill : string - 글자색
-    fontFamily : string
-    fontSize : number
-    fontStyle : string (normal, italic ...)
-    fontWeight : number|string ( bold, normal, 400 ...)
-    
-  */
-  addText = () => {
-    let text = new fabric.Textbox('Hello world', {
-      left:100, top:100, fill:'red'});
-    this._canvas.add(text);
-  }
-
   handleAngleChange = (event) => {
     if(this.getActiveObject()) {
       let change_state = {};
@@ -328,10 +313,23 @@ class App extends Component {
     var activeObject = this.getActiveObject();
 
     if(activeObject) {
-      this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
+      this.action['Crop'].cropObj(activeObject, cropOption);
     }
     else{
       alert('image is not activated');
+      event.target.checked = false;
+    }
+  }
+
+  textObject = (event) => {
+    let textOption = event.target.getAttribute('text');
+    let activeObject = this.getActiveObject();
+
+    if(activeObject) {
+      this.action['Text'].textObj(activeObject, textOption, event.target.checked);
+    }
+    else {
+      alert('text is not activated');
       event.target.checked = false;
     }
   }
@@ -349,7 +347,25 @@ class App extends Component {
     this.setState({newimg : true})
   }
 
+  openColorPicker = () => {
+    this.setState({displayColorPicker : !this.state.displayColorPicker});
+  }
+  closeColorPicker = () => {
+    this.setState({displayColorPicker: false});
+  }
+
   render() {
+    const popover = {
+      position: 'absolute',
+      zIndex: '2',
+    }
+    const cover = {
+      position: 'fixed',
+      top: '0px',
+      right: '0px',
+      bottom: '0px',
+      left: '0px',
+    }
     return(
       <div className='App'>
         <h1>Image Editor</h1>
@@ -384,7 +400,7 @@ class App extends Component {
           <button onClick = {this.cropObject} crop="right">선택 개체 오른쪽 반 자르기</button>
           <button onClick = {this.cropObject} crop="left">선택 개체 왼쪽 반 자르기</button>
           <button>|</button>
-          <button onClick = {this.addText}>텍스트</button>
+          <button onClick = {this.action['Text'].addText}>텍스트</button>
           <button onClick = {this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
           <button>|</button>
           <button onClick = {this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
@@ -402,7 +418,9 @@ class App extends Component {
           <button>| 파일 불러오기</button>
           <input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>
         </ul>
+        
         <ul>
+          <h5>필터 기능</h5>
           <input type='checkbox' className='filter' id='grey' onClick= {this.filterObject} filter='grey'/>Filter grey
           <input type='checkbox' className='filter' id='invert' onClick= {this.filterObject} filter='invert'/>Filter invert
           <input type='checkbox' className='filter' id='vintage' onClick= {this.filterObject} filter='vintage' />Filter vintage
@@ -416,8 +434,20 @@ class App extends Component {
             step='0.01'
             value = {this.state.brightness}
             onChange= {this.handleBrightChange} filter='brightness' />Brightness
-          
         </ul>
+
+        <ul>
+          <h5>텍스트 기능</h5>
+          <input type='checkbox' onClick={this.textObject} text='bold'/>bold
+          <input type='checkbox' onClick={this.textObject} text='color'/>color
+          <button onClick={this.openColorPicker}>Pick Color</button>
+          {this.state.displayColorPicker ? <div style={popover}>
+            <div style={cover} onClick={this.closeColorPicker}>
+              <ChromePicker/>
+            </div>
+          </div>:null}
+        </ul>
+
         {/* <FilterMenu onClick= {this.filterObject}/> */}
         <br/>
 
