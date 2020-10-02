@@ -22,9 +22,7 @@ class App extends Component {
 
     this._canvas = null; 
     this._canvasImage = null;
-    // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
-    this.testUrl = 'https://images.unsplash.com/photo-1601388354919-cd320b26f39b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE2NjAxMX0';
-    
+    this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.action = {};
 
 
@@ -36,8 +34,8 @@ class App extends Component {
   componentDidMount()  {
     this._canvas = new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
-      height: 500,
-      width: 500,
+      height: 600,
+      width: 1000,
       backgroundColor : 'grey'
     });
     
@@ -48,7 +46,6 @@ class App extends Component {
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
-      console.log(this._canvas)
       // 객체 선택됐을시
       if(event.target){
         if(this._canvas._activeObject._objects) { // 여러개의 객체 선택됐을시
@@ -220,9 +217,7 @@ class App extends Component {
   }
 
   addNewImage = () => {
-    // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
-    this.testUrl = 'https://images.unsplash.com/photo-1601388354919-cd320b26f39b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE2NjAxMX0';
-
+    this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.setState({newimg : true});
   }
 
@@ -235,8 +230,22 @@ class App extends Component {
     })
   }
 
+  /* Text
+    backgroundColor : string
+    borderColor : string
+    angle : number
+    cursorColor : string
+    editable : boolean
+    fill : string - 글자색
+    fontFamily : string
+    fontSize : number
+    fontStyle : string (normal, italic ...)
+    fontWeight : number|string ( bold, normal, 400 ...)
+    
+  */
   addText = () => {
-    let text = new fabric.Text('Hello world', {left:100, top:100});
+    let text = new fabric.Textbox('Hello world', {
+      left:100, top:100, fill:'red'});
     this._canvas.add(text);
   }
 
@@ -322,8 +331,8 @@ class App extends Component {
       this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
     }
     else{
-      this.action['Crop'].cropObj(null, cropOption);
-      // alert('image is not activated');
+      alert('image is not activated');
+      event.target.checked = false;
     }
   }
 
@@ -338,39 +347,6 @@ class App extends Component {
   onImgUrlChange = (url) => {
     this.testUrl = url;
     this.setState({newimg : true})
-  }
-
-  newCanvas = () => {
-    var url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
-    this._canvas.clear();
-    this._canvas.dispose();
-    
-    new Promise(resolve => {
-      fabric.Image.fromURL(url, img => {
-        img.set({
-
-        });
-        resolve(img);
-      }, {crossOrigin: 'Anonymous'}
-      );
-    })
-    .then((img) => {
-      this._canvas = new fabric.Canvas('canvas', {
-        preserveObjectStacking: true,
-        height: img.height,
-        width: img.width,
-        backgroundImage : img,
-        backgroundColor : 'red'
-      });
-    })
-    .then(() => {
-      this._createCanvasEvent();
-      this.layerThumb();
-    })
-    
-
-    
-
   }
 
   render() {
@@ -392,8 +368,6 @@ class App extends Component {
         <div>
           <h5>개발자 기능</h5>
           <button onClick = {this.addNewImage}>테스트용 이미지 추가</button>
-          <button onClick = {this.newCanvas}>배경이미지 캔버스로 변경</button>
-
           <p>선택 개체 밝기 값{this.state.brightness}</p>
           <p>선택 개체 각도 값{this.state.angle}</p>
 
