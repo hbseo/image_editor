@@ -6,6 +6,8 @@ import Filter from './Filter';
 import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
+import Flip from './Flip';
+
 // import FilterMenu from './FilterMenu';
 
 
@@ -123,6 +125,8 @@ class App extends Component {
     this._register(this.action,  new Filter(this));
     this._register(this.action,  new Delete(this));
     this._register(this.action,  new Crop(this));
+    this._register(this.action,  new Flip(this));
+
 
   }
 
@@ -310,6 +314,19 @@ class App extends Component {
     
   }
 
+  flipObject = (event) => {
+    var activeObject = this.getActiveObject();
+    var option = event.target.getAttribute('flip');
+    if(activeObject) {
+      this.action['Flip'].flip(activeObject, option);
+    }
+    else{
+      this.action['Flip'].flip(null, option);
+
+      // alert('image is not activated');
+    }
+  }
+
   deleteObject = (event) => {
     this.action['Delete'].deleteObj();
   }
@@ -382,7 +399,7 @@ class App extends Component {
           <button>Undo</button>
           <button>Redo</button>
           <button>Rotate</button>
-          <button>Flip</button>
+          
           <button>Draw Line</button>
           <button>Figure</button>
           <button>Cut</button>
@@ -405,6 +422,9 @@ class App extends Component {
           
           {/* <button onClick= {this.filterObject} filter="grey">Filter grey </button> */}
           {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
+          <button onClick = {this.flipObject} flip = "X">Flip x</button>
+          <button onClick = {this.flipObject} flip = "Y">Flip y</button>
+
           <button onClick = {this.deleteObject}>선택 개체 삭제</button>
           <button>|</button>
           <button onClick = {this.cropObject} crop="right">선택 개체 오른쪽 반 자르기</button>
