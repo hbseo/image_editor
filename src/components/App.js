@@ -7,6 +7,7 @@ import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
 import Coloring from './Coloring';
+import Flip from './Flip';
 // import FilterMenu from './FilterMenu';
 
 
@@ -139,6 +140,7 @@ class App extends Component {
         this._register(this.action, new Delete(this));
         this._register(this.action, new Crop(this));
         this._register(this.action, new Coloring(this))
+        this._register(this.action, new Flip(this));
     }
 
     /**
@@ -357,6 +359,19 @@ class App extends Component {
         this.action['Delete'].deleteObj();
     }
 
+    flipObject = (event) => {
+        var activeObject = this.getActiveObject();
+        var option = event.target.getAttribute('flip');
+        if (activeObject) {
+            this.action['Flip'].flip(activeObject, option);
+        }
+        else {
+            this.action['Flip'].flip(null, option);
+
+            // alert('image is not activated');
+        }
+    }
+
     cropObject = (event) => {
         var cropOption = event.target.getAttribute('crop');
         var activeObject = this.getActiveObject();
@@ -417,6 +432,8 @@ class App extends Component {
                     <button>|</button>
                     <button onClick={this.cropObject} crop="right">선택 개체 오른쪽 반 자르기</button>
                     <button onClick={this.cropObject} crop="left">선택 개체 왼쪽 반 자르기</button>
+                    <button onClick={this.flipObject} flip="X">Flip x</button>
+                    <button onClick={this.flipObject} flip="Y">Flip y</button>
                     <button>|</button>
                     <button onClick={this.addText}>텍스트</button>
                     <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
