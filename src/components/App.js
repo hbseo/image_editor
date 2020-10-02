@@ -36,8 +36,8 @@ class App extends Component {
   componentDidMount()  {
     this._canvas = new fabric.Canvas('canvas', {
       preserveObjectStacking: true,
-      height: 600,
-      width: 1000,
+      height: 500,
+      width: 500,
       backgroundColor : 'grey'
     });
     
@@ -322,8 +322,8 @@ class App extends Component {
       this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
     }
     else{
-      alert('image is not activated');
-      event.target.checked = false;
+      this.action['Crop'].cropObj(null, cropOption);
+      // alert('image is not activated');
     }
   }
 
@@ -359,7 +359,8 @@ class App extends Component {
         preserveObjectStacking: true,
         height: img.height,
         width: img.width,
-        backgroundImage : img
+        backgroundImage : img,
+        backgroundColor : 'red'
       });
     })
     .then(() => {

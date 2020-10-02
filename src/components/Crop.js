@@ -25,13 +25,28 @@ class Crop extends Action {
           image.set({
             clipPath : clipPath
           })
-  
-          // canvas.setWidth(1000);
-          // canvas.setHeight(500);
-  
-          console.log(image);
-        } else {
-          
+
+          // console.log(image);
+        } 
+        else {
+          var clipPath = new fabric.Rect({ width: 0, height: 0, top: 0,  left: 0 })
+          image = canvas.backgroundImage;
+          switch(option){
+            case 'right':
+              canvas.setWidth(canvas.width/2);
+              
+              break;
+            case 'left':
+              // clipPath = new fabric.Rect({width: 0 , height: 0, top: 0 ,  left: 0 })
+              canvas.setWidth(canvas.width/2);
+              canvas.backgroundImage.left = -canvas.width/2
+              break;
+            default :
+          }
+          // image.set({
+          //   clipPath : clipPath
+          // })
+          canvas.calcOffset();
         }
         
 
