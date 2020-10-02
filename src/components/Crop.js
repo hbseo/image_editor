@@ -39,7 +39,7 @@ class Crop extends Action {
             case 'left':
               // clipPath = new fabric.Rect({width: 0 , height: 0, top: 0 ,  left: 0 })
               canvas.setWidth(canvas.width/2);
-              canvas.backgroundImage.left = -canvas.width/2
+              if(image){canvas.backgroundImage.left -=canvas.width}
               break;
             default :
           }
