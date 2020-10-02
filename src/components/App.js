@@ -5,6 +5,7 @@ import Rotation from './Rotation';
 import Filter from './Filter';
 import ImageList from './ImageList';
 import Delete from './Delete';
+import Crop from './Crop';
 // import FilterMenu from './FilterMenu';
 
 
@@ -118,6 +119,8 @@ class App extends Component {
     this._register(this.action,  new Rotation(this));
     this._register(this.action,  new Filter(this));
     this._register(this.action,  new Delete(this));
+    this._register(this.action,  new Crop(this));
+
   }
 
   /**
@@ -306,6 +309,19 @@ class App extends Component {
     this.action['Delete'].deleteObj();
   }
 
+  cropObject = (event) => {
+    var cropOption = event.target.getAttribute('crop');
+    var activeObject = this.getActiveObject();
+
+    if(activeObject) {
+      this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
+    }
+    else{
+      alert('image is not activated');
+      event.target.checked = false;
+    }
+  }
+
   layerThumb = () => {
     var layer_list = null;
     if(this._canvas){
@@ -350,12 +366,15 @@ class App extends Component {
           {/* <button onClick= {this.filterObject} filter="grey">Filter grey </button> */}
           {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
           <button onClick = {this.deleteObject}>선택 개체 삭제</button>
-          <a>|</a>
+          <button>|</button>
+          <button onClick = {this.cropObject} crop="right">선택 개체 오른쪽 반 자르기</button>
+          <button onClick = {this.cropObject} crop="left">선택 개체 왼쪽 반 자르기</button>
+          <button>|</button>
           <button onClick = {this.addText}>텍스트</button>
           <button onClick = {this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
-          <a>|</a>
+          <button>|</button>
           <button onClick = {this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
-          <a>| 각도설정</a>
+          <button>| 각도설정</button>
           <input
             type='number'
             name='angle'
@@ -366,7 +385,7 @@ class App extends Component {
             onChange = {this.handleAngleChange}
           >
           </input>
-          <a>| 파일 불러오기</a>
+          <button>| 파일 불러오기</button>
           <input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>
         </ul>
         <ul>
