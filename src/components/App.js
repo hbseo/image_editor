@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
+import { ChromePicker } from 'react-color';
 import './App.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
@@ -8,6 +9,7 @@ import Delete from './Delete';
 import Crop from './Crop';
 import Coloring from './Coloring';
 import Flip from './Flip';
+import Text from './Text';
 // import FilterMenu from './FilterMenu';
 
 
@@ -139,6 +141,7 @@ class App extends Component {
         this._register(this.action, new Filter(this));
         this._register(this.action, new Delete(this));
         this._register(this.action, new Crop(this));
+        this._register(this.action, new Text(this));
         this._register(this.action, new Coloring(this))
         this._register(this.action, new Flip(this));
     }
@@ -381,8 +384,19 @@ class App extends Component {
         }
         else {
           this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
-
         }
+    }
+    textObject = (event) => {
+      let textOption = event.target.getAttribute('text');
+      let activeObject = this.getActiveObject();
+  
+      if(activeObject) {
+        this.action['Text'].textObj(activeObject, textOption, event.target.checked);
+      }
+      else {
+        alert('text is not activated');
+        event.target.checked = false;
+      }
     }
 
     layerThumb = () => {
@@ -426,8 +440,25 @@ class App extends Component {
         this.layerThumb();
       })
     }
+    openColorPicker = () => {
+      this.setState({displayColorPicker : !this.state.displayColorPicker});
+    }
+    closeColorPicker = () => {
+      this.setState({displayColorPicker: false});
+    }
 
     render() {
+      const popover = {
+        position: 'absolute',
+        zIndex: '2',
+      }
+      const cover = {
+        position: 'fixed',
+        top: '0px',
+        right: '0px',
+        bottom: '0px',
+        left: '0px',
+      }
         return (
             <div className='App'>
                 <h1>Image Editor</h1>
@@ -495,6 +526,7 @@ class App extends Component {
                     </div>
                 </ul>
                 <ul>
+                  <h5>필터기능</h5>
                     <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />Filter grey
           <input type='checkbox' className='filter' id='invert' onClick={this.filterObject} filter='invert' />Filter invert
           <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
@@ -509,6 +541,17 @@ class App extends Component {
                         value={this.state.brightness}
                         onChange={this.handleBrightChange} filter='brightness' />Brightness
 
+        </ul>
+        <ul>
+          <h5>텍스트 기능</h5>
+          <input type='checkbox' onClick={this.textObject} text='bold'/>bold
+          <input type='checkbox' onClick={this.textObject} text='color'/>color
+          <button onClick={this.openColorPicker}>Pick Color</button>
+          {this.state.displayColorPicker ? <div style={popover}>
+            <div style={cover} onClick={this.closeColorPicker}>
+              <ChromePicker/>
+            </div>
+          </div>:null}
         </ul>
                 {/* <FilterMenu onClick= {this.filterObject}/> */}
                 <br />
