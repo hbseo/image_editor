@@ -1,7 +1,5 @@
 import Action from './Action';
 
-import { fabric } from 'fabric';
-
 class Coloring extends Action {
     constructor(App) {
         super('Coloring', App);

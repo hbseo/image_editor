@@ -380,8 +380,8 @@ class App extends Component {
             this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
         }
         else {
-            alert('image is not activated');
-            event.target.checked = false;
+          this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
+
         }
     }
 
@@ -396,6 +396,35 @@ class App extends Component {
     onImgUrlChange = (url) => {
         this.testUrl = url;
         this.setState({ newimg: true })
+    }
+
+    newCanvas = () => {
+      var url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
+      this._canvas.clear();
+      this._canvas.dispose();
+  
+      new Promise(resolve => {
+        fabric.Image.fromURL(url, img => {
+          img.set({
+  
+          });
+          resolve(img);
+        }, {crossOrigin: 'Anonymous'}
+        );
+      })
+      .then((img) => {
+        this._canvas = new fabric.Canvas('canvas', {
+          preserveObjectStacking: true,
+          height: img.height,
+          width: img.width,
+          backgroundImage : img,
+          backgroundColor : 'red'
+        });
+      })
+      .then(() => {
+        this._createCanvasEvent();
+        this.layerThumb();
+      })
     }
 
     render() {
@@ -417,6 +446,7 @@ class App extends Component {
                 <div>
                     <h5>개발자 기능</h5>
                     <button onClick={this.addNewImage}>테스트용 이미지 추가</button>
+                    <button onClick = {this.newCanvas}>배경이미지 캔버스로 변경</button>
                     <p>선택 개체 밝기 값{this.state.brightness}</p>
                     <p>선택 개체 각도 값{this.state.angle}</p>
 
