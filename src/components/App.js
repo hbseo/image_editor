@@ -7,9 +7,9 @@ import Filter from './Filter';
 import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
-import Text from './Text';
+import Coloring from './Coloring';
 import Flip from './Flip';
-
+import Text from './Text';
 // import FilterMenu from './FilterMenu';
 
 
@@ -22,7 +22,10 @@ class App extends Component {
       brightness: 0, //active object's brightness
       newimg: false,
       layers: [],
-      displayColorPicker: false // show color picker true or false
+      tri: false,
+      rect: false,
+      circle: false,
+      selected: 'radio-4'
     }
 
     this._canvas = null;
@@ -66,6 +69,9 @@ class App extends Component {
           if (event.target.hasOwnProperty('text')) {
             console.log('this is text!');
           }
+          if (!event.target.hasOwnProperty('img')) {
+            console.log('figure');
+          }
           else {
             this.setState({
               angle: event.target.angle,
@@ -94,8 +100,18 @@ class App extends Component {
         this.addImage(event.pointer);
         this.setState({ newimg: false })
       }
-
-
+      if (this.state.tri) {
+        this.addTriangle(event.pointer);
+        this.setState({ tri: false });
+      }
+      else if (this.state.rect) {
+        this.addRectangle(event.pointer);
+        this.setState({ rect: false });
+      }
+      else if (this.state.circle) {
+        this.addCircle(event.pointer);
+        this.setState({ circle: false });
+      }
 
     });
 
@@ -126,8 +142,8 @@ class App extends Component {
     this._register(this.action, new Delete(this));
     this._register(this.action, new Crop(this));
     this._register(this.action, new Text(this));
+    this._register(this.action, new Coloring(this))
     this._register(this.action, new Flip(this));
-
   }
 
   /**
@@ -237,6 +253,41 @@ class App extends Component {
       })
   }
 
+  addText = () => {
+    let text = new fabric.Text('Hello world', { left: 100, top: 100 });
+    this._canvas.add(text);
+  }
+
+  addTriangle = (pointer) => {
+    let myFigure = new fabric.Triangle({ width: 40, height: 40, left: pointer.x, top: pointer.y, fill: "black" });
+    this._canvas.add(myFigure);
+    this.setState({ tri: true });
+  }
+
+  addRectangle = (pointer) => {
+    let myFigure = new fabric.Rect({ width: 40, height: 40, left: pointer.x, top: pointer.y, fill: "black" });
+    this._canvas.add(myFigure);
+    this.setState({ rect: true });
+  }
+
+  addCircle = (pointer) => {
+    let myFigure = new fabric.Circle({ radius: 20, left: pointer.x, top: pointer.y, fill: "black" });
+    this._canvas.add(myFigure);
+    this.setState({ circle: true });
+  }
+
+  coloringFigure = (event) => {
+    let colorOption = event.target.getAttribute("color");
+    let activeObject = this.getActiveObject();
+    if (activeObject) {
+      this.action['Coloring'].changeColor(activeObject, colorOption, event.target.checked);
+    }
+    else {
+      alert('select figure');
+      event.target.checked = false;
+    }
+  }
+
   handleAngleChange = (event) => {
     if (this.getActiveObject()) {
       let change_state = {};
@@ -307,6 +358,10 @@ class App extends Component {
 
   }
 
+  deleteObject = (event) => {
+    this.action['Delete'].deleteObj();
+  }
+
   flipObject = (event) => {
     var activeObject = this.getActiveObject();
     var option = event.target.getAttribute('flip');
@@ -320,23 +375,17 @@ class App extends Component {
     }
   }
 
-  deleteObject = (event) => {
-    this.action['Delete'].deleteObj();
-  }
-
   cropObject = (event) => {
     var cropOption = event.target.getAttribute('crop');
     var activeObject = this.getActiveObject();
 
     if (activeObject) {
-      this.action['Crop'].cropObj(activeObject, cropOption);
+      this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
     }
     else {
-      alert('image is not activated');
-      event.target.checked = false;
+      this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
     }
   }
-
   textObject = (event) => {
     let textOption = event.target.getAttribute('text');
     let activeObject = this.getActiveObject();
@@ -352,8 +401,8 @@ class App extends Component {
 
   layerThumb = () => {
     var layer_list = null;
-    // if(this._canvas){
-    //   layer_list= this._canvas._objects.map( obj => <li key={obj.cacheKey}><img src={obj.getSvgSrc()} alt="" height="10%" width="10%"/></li>)
+    // if (this._canvas) {
+    //     layer_list = this._canvas._objects.map(obj => <li key={obj.cacheKey}><img src={obj.getSvgSrc()} alt="" height="10%" width="10%" /></li>)
     // }
     return layer_list
   }
@@ -363,6 +412,34 @@ class App extends Component {
     this.setState({ newimg: true })
   }
 
+  newCanvas = () => {
+    var url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
+    this._canvas.clear();
+    this._canvas.dispose();
+
+    new Promise(resolve => {
+      fabric.Image.fromURL(url, img => {
+        img.set({
+
+        });
+        resolve(img);
+      }, { crossOrigin: 'Anonymous' }
+      );
+    })
+      .then((img) => {
+        this._canvas = new fabric.Canvas('canvas', {
+          preserveObjectStacking: true,
+          height: img.height,
+          width: img.width,
+          backgroundImage: img,
+          backgroundColor: 'red'
+        });
+      })
+      .then(() => {
+        this._createCanvasEvent();
+        this.layerThumb();
+      })
+  }
   openColorPicker = () => {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
   }
@@ -390,7 +467,7 @@ class App extends Component {
           <button>Undo</button>
           <button>Redo</button>
           <button>Rotate</button>
-
+          <button>Flip</button>
           <button>Draw Line</button>
           <button>Figure</button>
           <button>Cut</button>
@@ -400,6 +477,7 @@ class App extends Component {
         <div>
           <h5>개발자 기능</h5>
           <button onClick={this.addNewImage}>테스트용 이미지 추가</button>
+          <button onClick={this.newCanvas}>배경이미지 캔버스로 변경</button>
           <p>선택 개체 밝기 값{this.state.brightness}</p>
           <p>선택 개체 각도 값{this.state.angle}</p>
 
@@ -411,15 +489,14 @@ class App extends Component {
 
           {/* <button onClick= {this.filterObject} filter="grey">Filter grey </button> */}
           {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
-          <button onClick={this.flipObject} flip="X">Flip x</button>
-          <button onClick={this.flipObject} flip="Y">Flip y</button>
-
           <button onClick={this.deleteObject}>선택 개체 삭제</button>
           <button>|</button>
           <button onClick={this.cropObject} crop="right">선택 개체 오른쪽 반 자르기</button>
           <button onClick={this.cropObject} crop="left">선택 개체 왼쪽 반 자르기</button>
+          <button onClick={this.flipObject} flip="X">Flip x</button>
+          <button onClick={this.flipObject} flip="Y">Flip y</button>
           <button>|</button>
-          <button onClick={this.action['Text'].addText}>텍스트</button>
+          <button onClick={this.addText}>텍스트</button>
           <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
           <button>|</button>
           <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
@@ -436,10 +513,20 @@ class App extends Component {
           </input>
           <button>| 파일 불러오기</button>
           <input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>
+          <div style={{ border: "solid 1px black" }}>
+            <button onClick={this.addTriangle}>삼</button>
+            <button onClick={this.addRectangle}>직</button>
+            <button onClick={this.addCircle}>원</button>
+            <ul>
+              <input type='radio' id="radio-1" color='red' onClick={this.coloringFigure} checked={this.state.selected === 'radio-1'} onChange={(e) => this.setState({ selected: e.target.value })} />red
+                            <input type='radio' id="radio-2" color='yellow' onClick={this.coloringFigure} checked={this.state.selected === 'radio-2'} onChange={(e) => this.setState({ selected: e.target.value })} />yellow
+                            <input type='radio' id="radio-3" color='green' onClick={this.coloringFigure} checked={this.state.selected === 'radio-3'} onChange={(e) => this.setState({ selected: e.target.value })} />green
+                            <input type='radio' id="radio-4" color='black' onClick={this.coloringFigure} checked={this.state.selected === 'radio-4'} onChange={(e) => this.setState({ selected: e.target.value })} />black
+                        </ul>
+          </div>
         </ul>
-
         <ul>
-          <h5>필터 기능</h5>
+          <h5>필터기능</h5>
           <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />Filter grey
           <input type='checkbox' className='filter' id='invert' onClick={this.filterObject} filter='invert' />Filter invert
           <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
@@ -453,8 +540,8 @@ class App extends Component {
             step='0.01'
             value={this.state.brightness}
             onChange={this.handleBrightChange} filter='brightness' />Brightness
-        </ul>
 
+        </ul>
         <ul>
           <h5>텍스트 기능</h5>
           <input type='checkbox' onClick={this.textObject} text='bold' />bold
@@ -466,7 +553,6 @@ class App extends Component {
             </div>
           </div> : null}
         </ul>
-
         {/* <FilterMenu onClick= {this.filterObject}/> */}
         <br />
 
