@@ -4,50 +4,50 @@ import { fabric } from 'fabric';
 class Text extends Action {
   constructor(App) {
     super('Text', App);
-    this.state = {
-      backgroundcolor: '',
-      bordercolor: '',
-      angle: 0,
-      fill: '',
-      fontfamily: '',
-      fontsize: '',
-      fontstyle: ''
-    }
   }
   addText = () => {
     const canvas = this.getCanvas();
     let text = new fabric.Textbox('Hello world', {
-      left: 100, top: 100
+      left: 100, top: 100, fontSize: 50
     });
-    canvas.add(text);
+    canvas.add(text).setActiveObject(text);
   }
-  textObj = (activeObject, option, checked) => {
+  textObj = (activeObject, option, checked, value) => {
     const canvas = this.getCanvas();
-    const activeObj = this.getActiveObject();
     switch (option) {
       case 'bold':
         if (checked) {
-          activeObj.set({
-            fontWeight: 'bold',
+          activeObject.set({
+            fontWeight: 'bold'
           }).setCoords();
         }
         else {
-          activeObj.set({
-            fontWeight: 'normal',
+          activeObject.set({
+            fontWeight: 'normal'
           }).setCoords();
         }
         break;
       case 'color':
         if (checked) {
-          activeObj.set({
-            fill: 'blue',
+          activeObject.set({
+            fill: 'blue'
           }).setCoords();
         }
         else {
-          activeObj.set({
-            fill: 'black',
+          activeObject.set({
+            fill: 'black'
           }).setCoords();
         }
+        break;
+      case 'fontSize':
+        activeObject.set({
+          fontSize: value
+        }).setCoords();
+        break;
+      case 'fontfamily':
+        activeObject.set({
+          fontFamily: value
+        }).setCoords();
         break;
       default:
     }

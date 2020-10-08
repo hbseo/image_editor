@@ -20,6 +20,7 @@ class App extends Component {
       angle: 0,   //active object's angle
       filters: [], //active object's filter
       brightness: 0, //active object's brightness
+      fontsize: 50, //active object's fontSize
       newimg: false,
       layers: [],
       tri: false,
@@ -66,8 +67,11 @@ class App extends Component {
           }
         }
         else {
+          console.log(event.target);
           if (event.target.hasOwnProperty('text')) {
-            console.log('this is text!');
+            // this.setState({
+            //   fontsize: event.target.fontsize
+            // })
           }
           if (!event.target.hasOwnProperty('img')) {
             console.log('figure');
@@ -253,11 +257,6 @@ class App extends Component {
       })
   }
 
-  addText = () => {
-    let text = new fabric.Text('Hello world', { left: 100, top: 100 });
-    this._canvas.add(text);
-  }
-
   addTriangle = (pointer) => {
     let myFigure = new fabric.Triangle({ width: 40, height: 40, left: pointer.x, top: pointer.y, fill: "black" });
     this._canvas.add(myFigure);
@@ -326,7 +325,20 @@ class App extends Component {
     }
   }
 
-
+  handlefontSizeChange = (event) => {
+    const fontSize = event.target.value;
+    let activeObject = this.getActiveObject();
+    let textOption = event.target.getAttribute('text');
+    if(this.getActiveObject()) {
+      new Promise((resolve) => {
+        this.setState({fontsize: fontSize});
+        resolve();
+      })
+      .then(() => {
+        this.action['Text'].textObj(activeObject, textOption, true, fontSize)
+      })
+    }
+  }
 
 
 
@@ -376,22 +388,16 @@ class App extends Component {
   }
 
   cropObject = (event) => {
-    var cropOption = event.target.getAttribute('crop');
-    var activeObject = this.getActiveObject();
-
-    if (activeObject) {
-      this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
-    }
-    else {
-      this.action['Crop'].cropObj(this.getActiveObject(), cropOption);
-    }
+    let cropOption = event.target.getAttribute('crop');
+    let activeObject = this.getActiveObject();
+    this.action['Crop'].cropObj(activeObject, cropOption);
   }
   textObject = (event) => {
     let textOption = event.target.getAttribute('text');
     let activeObject = this.getActiveObject();
 
     if (activeObject) {
-      this.action['Text'].textObj(activeObject, textOption, event.target.checked);
+      this.action['Text'].textObj(activeObject, textOption, event.target.checked, event.target.value);
     }
     else {
       alert('text is not activated');
@@ -448,17 +454,6 @@ class App extends Component {
   }
 
   render() {
-    const popover = {
-      position: 'absolute',
-      zIndex: '2',
-    }
-    const cover = {
-      position: 'fixed',
-      top: '0px',
-      right: '0px',
-      bottom: '0px',
-      left: '0px',
-    }
     return (
       <div className='App'>
         <h1>Image Editor</h1>
@@ -466,12 +461,12 @@ class App extends Component {
           <h5>미구현</h5>
           <button>Undo</button>
           <button>Redo</button>
-          <button>Rotate</button>
-          <button>Flip</button>
+          {/* <button>Rotate</button>
+          <button>Flip</button> */}
           <button>Draw Line</button>
-          <button>Figure</button>
+          {/* <button>Figure</button> */}
           <button>Cut</button>
-          <button>Text</button>
+          {/* <button>Text</button> */}
         </div>
 
         <div>
@@ -496,7 +491,7 @@ class App extends Component {
           <button onClick={this.flipObject} flip="X">Flip x</button>
           <button onClick={this.flipObject} flip="Y">Flip y</button>
           <button>|</button>
-          <button onClick={this.addText}>텍스트</button>
+          <button onClick={this.action['Text'].addText}>텍스트</button>
           <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
           <button>|</button>
           <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
@@ -540,15 +535,29 @@ class App extends Component {
             step='0.01'
             value={this.state.brightness}
             onChange={this.handleBrightChange} filter='brightness' />Brightness
-
         </ul>
         <ul>
           <h5>텍스트 기능</h5>
           <input type='checkbox' onClick={this.textObject} text='bold' />bold
           <input type='checkbox' onClick={this.textObject} text='color' />color
+          <label htmlFor='fontSize'> 글자 크기: </label>
+          <input 
+            type='number' 
+            onChange={this.handlefontSizeChange} 
+            text='fontSize'
+            name='fontSize'
+            min='1'
+            value={this.state.fontsize} />
+            <label htmlFor='fontfamily'>글꼴: </label>
+            <select name='fontfamily' text='fontfamily' onChange={this.textObject}>
+              <option value='Times New Roman'>Times New Roman</option>
+              <option value='Georgia'>Georgia</option>
+              <option value='serif'>serif</option>
+              <option value='VT323'>VT323</option>
+            </select>
           <button onClick={this.openColorPicker}>Pick Color</button>
-          {this.state.displayColorPicker ? <div style={popover}>
-            <div style={cover} onClick={this.closeColorPicker}>
+          {this.state.displayColorPicker ? <div >
+            <div onClick={this.closeColorPicker}>
               <ChromePicker />
             </div>
           </div> : null}
