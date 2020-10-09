@@ -59,6 +59,19 @@ class App extends Component {
 			el.disabled = true
 		)
 
+		this._createDomEvent();
+    this._createCanvasEvent();
+    this.layerThumb();
+	}
+	
+	_onKeydownEvent = (event) => {
+		const {ctrlKey, keyCode, metaKey} = event;
+			if(keyCode === 8 || keyCode === 46){
+				this.deleteObject();
+			}
+	}
+
+	_createDomEvent = () => {
 		document.addEventListener('mousedown', (event) => {
 			if(event.target.tagName !== 'CANVAS'){
 				this._canvas.defaultCursor = 'default';
@@ -68,9 +81,8 @@ class App extends Component {
 			}
 		})
 
-    this._createCanvasEvent();
-    this.layerThumb();
-  }
+		document.addEventListener('keydown',this._onKeydownEvent)
+	}
 
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
