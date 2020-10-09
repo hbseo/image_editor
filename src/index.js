@@ -7,12 +7,12 @@ import App from './components/App';
 import Error from './components/Error';
 
 ReactDOM.render(
-    <Router>
-        <Switch>
-            <Route exact path="/" component={App} />
+  <Router>
+    <Switch>
+      <Route exact path="/" component={App} />
 
-            <Route component={Error}/>
-        </Switch>
-    </Router>,
-    document.getElementById('root')
+      <Route component={Error} />
+    </Switch>
+  </Router>,
+  document.getElementById('root')
 );
