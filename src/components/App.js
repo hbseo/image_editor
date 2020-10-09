@@ -46,7 +46,10 @@ class App extends Component {
       height: 600,
       width: 1000,
       backgroundColor: 'grey'
-    });
+		});
+		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+			el.disabled = true
+		)
 
     this._createCanvasEvent();
     this.layerThumb();
@@ -55,49 +58,6 @@ class App extends Component {
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
-      // 객체 선택됐을시
-      if (event.target) {
-        if (this._canvas._activeObject._objects) { // 여러개의 객체 선택됐을시
-          this.setState({ angle: 0 })
-          // 여러객체가 선택되었을 경우 필터 버튼 막음
-          let list, index;
-          list = document.getElementsByClassName('filter');
-          for (index = 0; index < list.length; index++) {
-            list[index].setAttribute('disabled', true);
-          }
-        }
-        else {
-          console.log(event.target);
-          if (event.target.hasOwnProperty('text')) {
-            // this.setState({
-            //   fontsize: event.target.fontsize
-            // })
-          }
-          if (!event.target.hasOwnProperty('img')) {
-            console.log('figure');
-          }
-          else {
-            this.setState({
-              angle: event.target.angle,
-              filters: event.target.filters,
-              brightness: event.target.filters[5] ? event.target.filters[5].brightness : 0
-            })
-            // 하나의 객체가 선택되었을 경우 필터 버튼 뚫어줌
-            let list, index;
-            list = document.getElementsByClassName('filter');
-            for (index = 0; index < list.length; index++) {
-              list[index].removeAttribute('disabled');
-            }
-            // 필터 체크 여부 실시간 변경 ( 미완성 )
-            if (event.target.filters.length !== 0) {
-              console.log(event.target.filters)
-            }
-            else {
-              console.log();
-            }
-          }
-        }
-      }
 
       // 새로운 이미지 추가
       if (this.state.newimg) {
@@ -131,10 +91,74 @@ class App extends Component {
 
     this._canvas.on('mouse:move', (event) => {
       // console.log(this._canvas.targets);
-    });
+		});
+		
+		this._canvas.on('selection:created', (event) => {
+			// 객체 선택됐을시
+			let type = this._canvas.getActiveObject().type;
+			let group;
+			console.log(type);
+			switch(type) {
+				case 'image':
+					this._imageSelection();
+					break;
+				case 'activeSelection':
+					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+						el.disabled = true
+					)
+					this.setState({
+						angle: 0
+					});
+					break;
+				
+				default:
+			}
+      
+
+      
+		});
+
+		this._canvas.on('selection:updated', (event) => {
+			let type = this._canvas.getActiveObject().type;
+			switch(type) {
+				case 'image':
+					this._imageSelection();
+					break;
+				case 'activeSelection':
+					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+						el.disabled = true
+					)
+					this.setState({
+						angle: 0
+					});
+					break;
+				default:
+			}
+		});
+
+		this._canvas.on('selection:cleared', (event) => {
+			fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+				el.disabled = true
+			)
+		});
 
 
-  }
+	}
+	
+	_imageSelection = () => {
+		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+			el.disabled = false
+		)
+		let image = this._canvas.getActiveObject();
+		let list = document.getElementsByClassName('filter');
+		for(let i=0; i<list.length; i++){
+			list[i].checked = !!this._canvas.getActiveObject().filters[i];
+		}
+		this.setState({
+			angle: image.angle,
+			brightness: image.filters[5] ? image.filters[5].brightness : 0
+		});
+	}
 
   /**
    * create Action List
@@ -514,17 +538,22 @@ class App extends Component {
             <button onClick={this.addCircle}>원</button>
             <ul>
               <input type='radio' id="radio-1" color='red' onClick={this.coloringFigure} checked={this.state.selected === 'radio-1'} onChange={(e) => this.setState({ selected: e.target.value })} />red
-                            <input type='radio' id="radio-2" color='yellow' onClick={this.coloringFigure} checked={this.state.selected === 'radio-2'} onChange={(e) => this.setState({ selected: e.target.value })} />yellow
-                            <input type='radio' id="radio-3" color='green' onClick={this.coloringFigure} checked={this.state.selected === 'radio-3'} onChange={(e) => this.setState({ selected: e.target.value })} />green
-                            <input type='radio' id="radio-4" color='black' onClick={this.coloringFigure} checked={this.state.selected === 'radio-4'} onChange={(e) => this.setState({ selected: e.target.value })} />black
-                        </ul>
+              <input type='radio' id="radio-2" color='yellow' onClick={this.coloringFigure} checked={this.state.selected === 'radio-2'} onChange={(e) => this.setState({ selected: e.target.value })} />yellow
+              <input type='radio' id="radio-3" color='green' onClick={this.coloringFigure} checked={this.state.selected === 'radio-3'} onChange={(e) => this.setState({ selected: e.target.value })} />green
+              <input type='radio' id="radio-4" color='black' onClick={this.coloringFigure} checked={this.state.selected === 'radio-4'} onChange={(e) => this.setState({ selected: e.target.value })} />black
+            </ul>
           </div>
         </ul>
         <ul>
           <h5>필터기능</h5>
           <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />Filter grey
           <input type='checkbox' className='filter' id='invert' onClick={this.filterObject} filter='invert' />Filter invert
+          <input type='checkbox' className='filter' id='brownie' onClick={this.filterObject} filter='brownie' />Filter brownie
+          <input type='checkbox' className='filter' id='technicolor' onClick={this.filterObject} filter='technicolor' />Filter technicolor
+          <input type='checkbox' className='filter' id='polaroid' onClick={this.filterObject} filter='polaroid' />Filter polaroid
+          <input type='checkbox' className='filter' id='blackwhite' onClick={this.filterObject} filter='blackwhite' />Filter blackwhite
           <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
+          <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
           <input
             type='range'
             className='filter'

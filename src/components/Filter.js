@@ -17,14 +17,29 @@ class Filter extends Action {
         case 'invert':
           obj.filters[1] = checked && (new fabric.Image.filters.Invert());
           break;
-        case 'brightness':
-          obj.filters[5] = (new fabric.Image.filters.Brightness({
-            brightness: value
-          }));
+        case 'brownie':
+          obj.filters[2] = checked && (new fabric.Image.filters.Brownie());
+          break;
+        case 'technicolor':
+          obj.filters[3] = checked && (new fabric.Image.filters.Technicolor());
+          break;
+        case 'polaroid':
+          obj.filters[4] = checked && (new fabric.Image.filters.Polaroid());
+          break;
+        case 'blackwhite':
+          obj.filters[5] = checked && (new fabric.Image.filters.BlackWhite());
           break;
         case 'vintage':
-          obj.filters[9] = checked && (new fabric.Image.filters.Vintage());
+          obj.filters[6] = checked && (new fabric.Image.filters.Vintage());
           break;
+        case 'sepia':
+          obj.filters[7] = checked && (new fabric.Image.filters.Sepia());
+          break;
+        case 'brightness':
+          obj.filters[8] = (new fabric.Image.filters.Brightness({
+            brightness: value
+          }));
+        break;
 
         default:
       }
