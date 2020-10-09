@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { ChromePicker } from 'react-color';
+import { ChromePicker,SketchPicker } from 'react-color';
 import './App.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
@@ -26,7 +26,15 @@ class App extends Component {
       tri: false,
       rect: false,
       circle: false,
-      selected: 'radio-4'
+			selected: 'radio-4',
+			displayColorPicker: false,
+			color: {
+				r: '241',
+				g: '112',
+				b: '19',
+				a: '1',
+			},
+			colorHex : 0,
     }
 
     this._canvas = null;
@@ -406,7 +414,11 @@ class App extends Component {
         this.action['Text'].textObj(activeObject, textOption, true, fontSize)
       })
     }
-  }
+	}
+	
+	handleColorChange = (color) => {
+		this.setState({ color: color.rgb, colorHex : color.hex })
+	}
 
 
 
@@ -525,10 +537,18 @@ class App extends Component {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
   }
   closeColorPicker = () => {
+		console.log('close')
     this.setState({ displayColorPicker: false });
   }
 
   render() {
+		const styles = {
+			color : {
+				// backgroundColor : `rgba(this.state.color.r,this.state.color.g,this.state.color.b,this.state.color.a)`,
+				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
+				// backgroundColor : this.state.colorHex
+			}
+		}
     return (
       <div className='App'>
         <h1>Image Editor</h1>
@@ -552,6 +572,8 @@ class App extends Component {
           <p>선택 개체 각도 값{this.state.angle}</p>
           <h5>텍스트 기능</h5>
 					<p>선택 텍스트 폰트크기{this.state.fontsize}</p>
+					<p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
+					<p>{this.state.colorHex}</p>
 					<hr />
         </div>
 
@@ -636,13 +658,15 @@ class App extends Component {
               <option value='serif'>serif</option>
               <option value='VT323'>VT323</option>
             </select>
-          <button onClick={this.openColorPicker}>Pick Color</button>
-          {this.state.displayColorPicker ? <div >
-            <div onClick={this.closeColorPicker}>
-              <ChromePicker />
-            </div>
-          </div> : null}
         </ul>
+
+				<div>
+        	<button onClick={this.openColorPicker}>df</button>
+        	{ this.state.displayColorPicker ? <div>
+        	  <div onClick={this.closeColorPicker}/>
+        	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
+        	</div> : null }
+      	</div>
         {/* <FilterMenu onClick= {this.filterObject}/> */}
         <br />
 
