@@ -100,7 +100,7 @@ class App extends Component {
 			console.log(type);
 			switch(type) {
 				case 'image':
-					this._imageSelection();
+					this._imageSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection':
 					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
@@ -110,8 +110,10 @@ class App extends Component {
 						angle: 0
 					});
 					break;
-				
 				default:
+					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+						el.disabled = true
+					)
 			}
       
 
@@ -122,7 +124,7 @@ class App extends Component {
 			let type = this._canvas.getActiveObject().type;
 			switch(type) {
 				case 'image':
-					this._imageSelection();
+					this._imageSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection':
 					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
@@ -133,26 +135,35 @@ class App extends Component {
 					});
 					break;
 				default:
+					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+						el.disabled = true
+					)
 			}
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
-			fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-				el.disabled = true
-			)
+			if(!this._canvas.backgroundImage){
+				fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+					el.disabled = true
+				)
+			}
+			else{
+				console.log(this._canvas.backgroundImage);
+				this._imageSelection(this._canvas.backgroundImage);
+			}
 		});
 
 
 	}
 	
-	_imageSelection = () => {
+	_imageSelection = (image) => {
 		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
 			el.disabled = false
 		)
-		let image = this._canvas.getActiveObject();
+		
 		let list = document.getElementsByClassName('filter');
 		for(let i=0; i<list.length; i++){
-			list[i].checked = !!this._canvas.getActiveObject().filters[i];
+			list[i].checked = !!image.filters[i];
 		}
 		this.setState({
 			angle: image.angle,
@@ -388,8 +399,9 @@ class App extends Component {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
     }
     else {
-      alert('image is not activated');
-      event.target.checked = false;
+      this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
+      // alert('image is not activated');
+      // event.target.checked = false;
     }
 
   }
