@@ -42,7 +42,20 @@ class App extends Component {
     this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.action = {};
 
+  componentDidMount() {
+    this._canvas = new fabric.Canvas('canvas', {
+      preserveObjectStacking: true,
+      height: 600,
+      width: 1000,
+      backgroundColor: 'grey'
+    });
+    fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+      el.disabled = true
+    )
 
+    this._createCanvasEvent();
+    this.layerThumb();
+  }
 
     this._createAction();
 
@@ -210,6 +223,12 @@ class App extends Component {
 		})
 	}
 
+    // //   return alltogetherObj;
+    // }
+    // else{
+    //   return this._canvas._activeObject;
+    // }
+  }
 
   /**
    * create Action List
