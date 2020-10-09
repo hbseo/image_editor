@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { ChromePicker,SketchPicker } from 'react-color';
+import { ChromePicker, SketchPicker } from 'react-color';
+import ReactModal from 'react-modal';
 import './App.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
@@ -8,10 +9,9 @@ import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
 import Coloring from './Coloring';
-import ColorButton from './ColorButton'
+import ColorButton from './ColorButton';
 import Flip from './Flip';
 import Text from './Text';
-import ReactModal from 'react-modal';
 // import FilterMenu from './FilterMenu';
 
 
@@ -28,15 +28,16 @@ class App extends Component {
       tri: false,
       rect: false,
       circle: false,
-			selected: 'radio-4',
-			displayColorPicker: false,
-			color: {
-				r: '241',
-				g: '112',
-				b: '19',
-				a: '1',
-			},
-			colorHex : 0,
+      selected: 'radio-4',
+      displayColorPicker: false,
+      color: {
+        r: '241',
+        g: '112',
+        b: '19',
+        a: '1',
+      },
+      colorHex: 0,
+      modal: false,
     }
 
     this._canvas = null;
@@ -44,22 +45,10 @@ class App extends Component {
     this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.action = {};
 
-  componentDidMount() {
-    this._canvas = new fabric.Canvas('canvas', {
-      preserveObjectStacking: true,
-      height: 600,
-      width: 1000,
-      backgroundColor: 'grey'
-    });
-    fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-      el.disabled = true
-    )
 
-    this._createCanvasEvent();
-    this.layerThumb();
-  }
 
     this._createAction();
+
   }
 
   componentDidMount() {
@@ -73,14 +62,14 @@ class App extends Component {
       el.disabled = true
     )
 
-		document.addEventListener('mousedown', (event) => {
-			if(event.target.tagName !== 'CANVAS'){
-				this._canvas.defaultCursor = 'default';
-				this.setState({
-					newimg : false
-				})
-			}
-		})
+    document.addEventListener('mousedown', (event) => {
+      if (event.target.tagName !== 'CANVAS') {
+        this._canvas.defaultCursor = 'default';
+        this.setState({
+          newimg: false
+        })
+      }
+    })
 
     this._createCanvasEvent();
     this.layerThumb();
@@ -92,8 +81,8 @@ class App extends Component {
 
       // 새로운 이미지 추가
       if (this.state.newimg) {
-				this.addImage(event.pointer);
-				this._canvas.defaultCursor = 'default';
+        this.addImage(event.pointer);
+        this._canvas.defaultCursor = 'default';
         this.setState({ newimg: false })
       }
       if (this.state.tri) {
@@ -123,41 +112,17 @@ class App extends Component {
 
     this._canvas.on('mouse:move', (event) => {
       // console.log(this._canvas.targets);
-		});
-		
-		this._canvas.on('selection:created', (event) => {
-			// 객체 선택됐을시
-			let type = this._canvas.getActiveObject().type;
-			switch(type) {
-				case 'image':
-					this._imageSelection(this._canvas.getActiveObject());
-					break;
-				case 'textbox':
-					this._textboxSelection(this._canvas.getActiveObject());
-					break;
-				case 'activeSelection':
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
-					this.setState({
-						angle: 0
-					});
-					break;
-				default:
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
-			}
-      
+    });
 
     this._canvas.on('selection:created', (event) => {
       // 객체 선택됐을시
       let type = this._canvas.getActiveObject().type;
-      let group;
-      console.log(type);
       switch (type) {
         case 'image':
-          this._imageSelection();
+          this._imageSelection(this._canvas.getActiveObject());
+          break;
+        case 'textbox':
+          this._textboxSelection(this._canvas.getActiveObject());
           break;
         case 'activeSelection':
           fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
@@ -167,84 +132,87 @@ class App extends Component {
             angle: 0
           });
           break;
-
-		this._canvas.on('selection:updated', (event) => {
-			let type = this._canvas.getActiveObject().type;
-			switch(type) {
-				case 'image':
-					this._imageSelection(this._canvas.getActiveObject());
-					break;
-				case 'textbox':
-					this._textboxSelection(this._canvas.getActiveObject());
-					break;
-				case 'activeSelection':
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
-					this.setState({
-						angle: 0
-					});
-					break;
-				default:
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
-			}
-		});
-
-		this._canvas.on('selection:cleared', (event) => {
-			if(!this._canvas.backgroundImage){
-				fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-					el.disabled = true
-				)
-			}
-			else{
-				this._imageSelection(this._canvas.backgroundImage);
-			}
-		});
+        default:
+          fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+            el.disabled = true
+          )
+      }
 
 
-	}
 
-	/**
-   * action on selected image
-	 * @param {Object} image : selectedImage or backgroundImage
-   * @private
-   */
-	_imageSelection = (image) => {
-		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-			el.disabled = false
-		)
-		
-		let list = document.getElementsByClassName('filter');
-		for(let i=0; i<list.length; i++){
-			list[i].checked = !!image.filters[i];
-		}
-		this.setState({
-			angle: image.angle,
-			brightness: image.filters[8] ? image.filters[8].brightness : 0
-		});
-	}
+    });
+
+    this._canvas.on('selection:updated', (event) => {
+      let type = this._canvas.getActiveObject().type;
+      switch (type) {
+        case 'image':
+          this._imageSelection(this._canvas.getActiveObject());
+          break;
+        case 'textbox':
+          this._textboxSelection(this._canvas.getActiveObject());
+          break;
+        case 'activeSelection':
+          fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+            el.disabled = true
+          )
+          this.setState({
+            angle: 0
+          });
+          break;
+        default:
+          fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+            el.disabled = true
+          )
+      }
+    });
+
+    this._canvas.on('selection:cleared', (event) => {
+      if (!this._canvas.backgroundImage) {
+        fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+          el.disabled = true
+        )
+      }
+      else {
+        this._imageSelection(this._canvas.backgroundImage);
+      }
+    });
 
 
-	/**
-   * action on textbox
-	 * @param {Object} text : selectedTextbox
-   * @private
-   */
-	_textboxSelection = (text) => {
-		this.setState({
-			fontsize : text.fontSize,
-			angle : text.angle
-		})
-	}
-
-    // //   return alltogetherObj;
-    // }
-    // else{
-    //   return this._canvas._activeObject;
-    // }
   }
+
+  /**
+   * action on selected image
+   * @param {Object} image : selectedImage or backgroundImage
+   * @private
+   */
+  _imageSelection = (image) => {
+    fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+      el.disabled = false
+    )
+
+    let list = document.getElementsByClassName('filter');
+    for (let i = 0; i < list.length; i++) {
+      list[i].checked = !!image.filters[i];
+    }
+    this.setState({
+      angle: image.angle,
+      brightness: image.filters[8] ? image.filters[8].brightness : 0
+    });
+  }
+
+
+  /**
+   * action on textbox
+   * @param {Object} text : selectedTextbox
+   * @private
+   */
+  _textboxSelection = (text) => {
+    this.setState({
+      fontsize: text.fontSize,
+      angle: text.angle
+    })
+  }
+
 
   /**
    * create Action List
@@ -354,15 +322,15 @@ class App extends Component {
   }
 
   addNewImage = () => {
-		this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
-		this._canvas.defaultCursor = 'pointer';
+    this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
+    this._canvas.defaultCursor = 'pointer';
     this.setState({ newimg: true });
   }
 
   addImage = (pointer) => {
     this.loadImage(this.testUrl, pointer)
       .then((data) => {
-				this._canvas.add(data).setActiveObject(data);
+        this._canvas.add(data).setActiveObject(data);
         this.setState({ layers: this.state.layers.concat(data) });
         // console.log(data.getSvgSrc());
       })
@@ -449,11 +417,11 @@ class App extends Component {
           this.action['Text'].textObj(activeObject, textOption, true, fontSize)
         })
     }
-	}
-	
-	handleColorChange = (color) => {
-		this.setState({ color: color.rgb, colorHex : color.hex })
-	}
+  }
+
+  handleColorChange = (color) => {
+    this.setState({ color: color.rgb, colorHex: color.hex })
+  }
 
 
 
@@ -543,10 +511,10 @@ class App extends Component {
       fabric.Image.fromURL(url, img => {
         img.set({
 
-				});
-				img.on('scaling', () => {
+        });
+        img.on('scaling', () => {
 
-				})
+        })
         resolve(img);
       }, { crossOrigin: 'Anonymous' }
       );
@@ -561,10 +529,10 @@ class App extends Component {
         });
       })
       .then(() => {
-				this._createCanvasEvent();
-				fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-					el.disabled = false
-				)
+        this._createCanvasEvent();
+        fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+          el.disabled = false
+        )
         this.layerThumb();
       })
   }
@@ -572,10 +540,9 @@ class App extends Component {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
   }
   closeColorPicker = () => {
-		console.log('close')
+    console.log('close')
     this.setState({ displayColorPicker: false });
   }
-
   handleOpenModal = () => {
     this.setState({
       modal: true
@@ -588,18 +555,14 @@ class App extends Component {
     });
   }
 
-  handleChangeComplete = (color) => {
-    this.setState({ background: color.hex });
-  }
-
   render() {
-		const styles = {
-			color : {
-				// backgroundColor : `rgba(this.state.color.r,this.state.color.g,this.state.color.b,this.state.color.a)`,
-				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
-				// backgroundColor : this.state.colorHex
-			}
-		}
+    const styles = {
+      color: {
+        // backgroundColor : `rgba(this.state.color.r,this.state.color.g,this.state.color.b,this.state.color.a)`,
+        backgroundColor: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`,
+        // backgroundColor : this.state.colorHex
+      }
+    }
     return (
       <div className='App'>
         <h1>Image Editor</h1>
@@ -622,10 +585,10 @@ class App extends Component {
           <p>선택 개체 밝기 값{this.state.brightness}</p>
           <p>선택 개체 각도 값{this.state.angle}</p>
           <h5>텍스트 기능</h5>
-					<p>선택 텍스트 폰트크기{this.state.fontsize}</p>
-					<p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
-					<p>{this.state.colorHex}</p>
-					<hr />
+          <p>선택 텍스트 폰트크기{this.state.fontsize}</p>
+          <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
+          <p>{this.state.colorHex}</p>
+          <hr />
         </div>
 
         <ul>
@@ -712,22 +675,22 @@ class App extends Component {
             name='fontSize'
             min='1'
             value={this.state.fontsize} />
-            <label htmlFor='fontfamily'>글꼴: </label>
-            <select name='fontfamily' text='fontfamily' onChange={this.textObject}>
-              <option value='Times New Roman'>Times New Roman</option>
-              <option value='Georgia'>Georgia</option>
-              <option value='serif'>serif</option>
-              <option value='VT323'>VT323</option>
-            </select>
+          <label htmlFor='fontfamily'>글꼴: </label>
+          <select name='fontfamily' text='fontfamily' onChange={this.textObject}>
+            <option value='Times New Roman'>Times New Roman</option>
+            <option value='Georgia'>Georgia</option>
+            <option value='serif'>serif</option>
+            <option value='VT323'>VT323</option>
+          </select>
         </ul>
 
-				<div>
-        	<button onClick={this.openColorPicker}>df</button>
-        	{ this.state.displayColorPicker ? <div>
-        	  <div onClick={this.closeColorPicker}/>
-        	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
-        	</div> : null }
-      	</div>
+        <div>
+          <button onClick={this.openColorPicker}>df</button>
+          {this.state.displayColorPicker ? <div>
+            <div onClick={this.closeColorPicker} />
+            <SketchPicker color={this.state.color} onChange={this.handleColorChange} />
+          </div> : null}
+        </div>
         {/* <FilterMenu onClick= {this.filterObject}/> */}
         <br />
 
@@ -740,7 +703,7 @@ class App extends Component {
         </ul>
         <hr />
         <ImageList onClick={this.onImgUrlChange} />
-      </div >
+      </div>
     );
   }
 }
