@@ -8,8 +8,10 @@ import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
 import Coloring from './Coloring';
+import ColorButton from './ColorButton'
 import Flip from './Flip';
 import Text from './Text';
+import ReactModal from 'react-modal';
 // import FilterMenu from './FilterMenu';
 
 
@@ -26,18 +28,18 @@ class App extends Component {
       tri: false,
       rect: false,
       circle: false,
-      selected: 'radio-4'
+      selected: 'radio-4',
+      modal: false,
+      background: "#fff"
     }
 
     this._canvas = null;
     this._canvasImage = null;
     this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.action = {};
-
-
-
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
     this._createAction();
-
   }
 
   componentDidMount() {
@@ -46,10 +48,10 @@ class App extends Component {
       height: 600,
       width: 1000,
       backgroundColor: 'grey'
-		});
-		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-			el.disabled = true
-		)
+    });
+    fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+      el.disabled = true
+    )
 
     this._createCanvasEvent();
     this.layerThumb();
@@ -91,74 +93,74 @@ class App extends Component {
 
     this._canvas.on('mouse:move', (event) => {
       // console.log(this._canvas.targets);
-		});
-		
-		this._canvas.on('selection:created', (event) => {
-			// 객체 선택됐을시
-			let type = this._canvas.getActiveObject().type;
-			let group;
-			console.log(type);
-			switch(type) {
-				case 'image':
-					this._imageSelection();
-					break;
-				case 'activeSelection':
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
-					this.setState({
-						angle: 0
-					});
-					break;
-				
-				default:
-			}
-      
+    });
 
-      
-		});
+    this._canvas.on('selection:created', (event) => {
+      // 객체 선택됐을시
+      let type = this._canvas.getActiveObject().type;
+      let group;
+      console.log(type);
+      switch (type) {
+        case 'image':
+          this._imageSelection();
+          break;
+        case 'activeSelection':
+          fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+            el.disabled = true
+          )
+          this.setState({
+            angle: 0
+          });
+          break;
 
-		this._canvas.on('selection:updated', (event) => {
-			let type = this._canvas.getActiveObject().type;
-			switch(type) {
-				case 'image':
-					this._imageSelection();
-					break;
-				case 'activeSelection':
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
-					this.setState({
-						angle: 0
-					});
-					break;
-				default:
-			}
-		});
-
-		this._canvas.on('selection:cleared', (event) => {
-			fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-				el.disabled = true
-			)
-		});
+        default:
+      }
 
 
-	}
-	
-	_imageSelection = () => {
-		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-			el.disabled = false
-		)
-		let image = this._canvas.getActiveObject();
-		let list = document.getElementsByClassName('filter');
-		for(let i=0; i<list.length; i++){
-			list[i].checked = !!this._canvas.getActiveObject().filters[i];
-		}
-		this.setState({
-			angle: image.angle,
-			brightness: image.filters[5] ? image.filters[5].brightness : 0
-		});
-	}
+
+    });
+
+    this._canvas.on('selection:updated', (event) => {
+      let type = this._canvas.getActiveObject().type;
+      switch (type) {
+        case 'image':
+          this._imageSelection();
+          break;
+        case 'activeSelection':
+          fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+            el.disabled = true
+          )
+          this.setState({
+            angle: 0
+          });
+          break;
+        default:
+      }
+    });
+
+    this._canvas.on('selection:cleared', (event) => {
+      fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+        el.disabled = true
+      )
+    });
+
+
+  }
+
+  _imageSelection = () => {
+    fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+      el.disabled = false
+    )
+    let image = this._canvas.getActiveObject();
+    let list = document.getElementsByClassName('filter');
+    for (let i = 0; i < list.length; i++) {
+      list[i].checked = !!this._canvas.getActiveObject().filters[i];
+    }
+    this.setState({
+      angle: image.angle,
+      brightness: image.filters[5] ? image.filters[5].brightness : 0
+    });
+  }
 
   /**
    * create Action List
@@ -353,14 +355,14 @@ class App extends Component {
     const fontSize = event.target.value;
     let activeObject = this.getActiveObject();
     let textOption = event.target.getAttribute('text');
-    if(this.getActiveObject()) {
+    if (this.getActiveObject()) {
       new Promise((resolve) => {
-        this.setState({fontsize: fontSize});
+        this.setState({ fontsize: fontSize });
         resolve();
       })
-      .then(() => {
-        this.action['Text'].textObj(activeObject, textOption, true, fontSize)
-      })
+        .then(() => {
+          this.action['Text'].textObj(activeObject, textOption, true, fontSize)
+        })
     }
   }
 
@@ -477,6 +479,22 @@ class App extends Component {
     this.setState({ displayColorPicker: false });
   }
 
+  handleOpenModal = () => {
+    this.setState({
+      modal: true
+    });
+  }
+
+  handleCloseModal = () => {
+    this.setState({
+      modal: false
+    });
+  }
+
+  handleChangeComplete = (color) => {
+    this.setState({ background: color.hex });
+  }
+
   render() {
     return (
       <div className='App'>
@@ -536,6 +554,16 @@ class App extends Component {
             <button onClick={this.addTriangle}>삼</button>
             <button onClick={this.addRectangle}>직</button>
             <button onClick={this.addCircle}>원</button>
+            <button onClick={this.handleOpenModal}>모달!</button>
+            <ReactModal
+              isOpen={this.state.modal}
+              onRequestClose={this.handleCloseModal}
+              shouldCloseOnOverlayClick={false}
+            >
+              <p>모달!모달!모달!모달!모달!모달!모달!모달!모달!모달!모달!모달!</p>
+              <button onClick={this.handleCloseModal}>Close</button>
+            </ReactModal>
+            <ColorButton />
             <ul>
               <input type='radio' id="radio-1" color='red' onClick={this.coloringFigure} checked={this.state.selected === 'radio-1'} onChange={(e) => this.setState({ selected: e.target.value })} />red
               <input type='radio' id="radio-2" color='yellow' onClick={this.coloringFigure} checked={this.state.selected === 'radio-2'} onChange={(e) => this.setState({ selected: e.target.value })} />yellow
@@ -570,20 +598,20 @@ class App extends Component {
           <input type='checkbox' onClick={this.textObject} text='bold' />bold
           <input type='checkbox' onClick={this.textObject} text='color' />color
           <label htmlFor='fontSize'> 글자 크기: </label>
-          <input 
-            type='number' 
-            onChange={this.handlefontSizeChange} 
+          <input
+            type='number'
+            onChange={this.handlefontSizeChange}
             text='fontSize'
             name='fontSize'
             min='1'
             value={this.state.fontsize} />
-            <label htmlFor='fontfamily'>글꼴: </label>
-            <select name='fontfamily' text='fontfamily' onChange={this.textObject}>
-              <option value='Times New Roman'>Times New Roman</option>
-              <option value='Georgia'>Georgia</option>
-              <option value='serif'>serif</option>
-              <option value='VT323'>VT323</option>
-            </select>
+          <label htmlFor='fontfamily'>글꼴: </label>
+          <select name='fontfamily' text='fontfamily' onChange={this.textObject}>
+            <option value='Times New Roman'>Times New Roman</option>
+            <option value='Georgia'>Georgia</option>
+            <option value='serif'>serif</option>
+            <option value='VT323'>VT323</option>
+          </select>
           <button onClick={this.openColorPicker}>Pick Color</button>
           {this.state.displayColorPicker ? <div >
             <div onClick={this.closeColorPicker}>
@@ -603,7 +631,7 @@ class App extends Component {
         </ul>
         <hr />
         <ImageList onClick={this.onImgUrlChange} />
-      </div>
+      </div >
     );
   }
 }
