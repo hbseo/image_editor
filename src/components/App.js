@@ -8,8 +8,10 @@ import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
 import Coloring from './Coloring';
+import ColorButton from './ColorButton'
 import Flip from './Flip';
 import Text from './Text';
+import ReactModal from 'react-modal';
 // import FilterMenu from './FilterMenu';
 
 
@@ -42,10 +44,22 @@ class App extends Component {
     this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.action = {};
 
+  componentDidMount() {
+    this._canvas = new fabric.Canvas('canvas', {
+      preserveObjectStacking: true,
+      height: 600,
+      width: 1000,
+      backgroundColor: 'grey'
+    });
+    fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+      el.disabled = true
+    )
 
+    this._createCanvasEvent();
+    this.layerThumb();
+  }
 
     this._createAction();
-
   }
 
   componentDidMount() {
@@ -54,10 +68,10 @@ class App extends Component {
       height: 600,
       width: 1000,
       backgroundColor: 'grey'
-		});
-		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-			el.disabled = true
-		)
+    });
+    fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+      el.disabled = true
+    )
 
 		document.addEventListener('mousedown', (event) => {
 			if(event.target.tagName !== 'CANVAS'){
@@ -136,8 +150,23 @@ class App extends Component {
 			}
       
 
-      
-		});
+    this._canvas.on('selection:created', (event) => {
+      // 객체 선택됐을시
+      let type = this._canvas.getActiveObject().type;
+      let group;
+      console.log(type);
+      switch (type) {
+        case 'image':
+          this._imageSelection();
+          break;
+        case 'activeSelection':
+          fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+            el.disabled = true
+          )
+          this.setState({
+            angle: 0
+          });
+          break;
 
 		this._canvas.on('selection:updated', (event) => {
 			let type = this._canvas.getActiveObject().type;
@@ -210,6 +239,12 @@ class App extends Component {
 		})
 	}
 
+    // //   return alltogetherObj;
+    // }
+    // else{
+    //   return this._canvas._activeObject;
+    // }
+  }
 
   /**
    * create Action List
@@ -405,14 +440,14 @@ class App extends Component {
     const fontSize = event.target.value;
     let activeObject = this.getActiveObject();
     let textOption = event.target.getAttribute('text');
-    if(this.getActiveObject()) {
+    if (this.getActiveObject()) {
       new Promise((resolve) => {
-        this.setState({fontsize: fontSize});
+        this.setState({ fontsize: fontSize });
         resolve();
       })
-      .then(() => {
-        this.action['Text'].textObj(activeObject, textOption, true, fontSize)
-      })
+        .then(() => {
+          this.action['Text'].textObj(activeObject, textOption, true, fontSize)
+        })
     }
 	}
 	
@@ -541,6 +576,22 @@ class App extends Component {
     this.setState({ displayColorPicker: false });
   }
 
+  handleOpenModal = () => {
+    this.setState({
+      modal: true
+    });
+  }
+
+  handleCloseModal = () => {
+    this.setState({
+      modal: false
+    });
+  }
+
+  handleChangeComplete = (color) => {
+    this.setState({ background: color.hex });
+  }
+
   render() {
 		const styles = {
 			color : {
@@ -610,6 +661,16 @@ class App extends Component {
             <button onClick={this.addTriangle}>삼</button>
             <button onClick={this.addRectangle}>직</button>
             <button onClick={this.addCircle}>원</button>
+            <button onClick={this.handleOpenModal}>모달!</button>
+            <ReactModal
+              isOpen={this.state.modal}
+              onRequestClose={this.handleCloseModal}
+              shouldCloseOnOverlayClick={false}
+            >
+              <p>모달!모달!모달!모달!모달!모달!모달!모달!모달!모달!모달!모달!</p>
+              <button onClick={this.handleCloseModal}>Close</button>
+            </ReactModal>
+            <ColorButton />
             <ul>
               <input type='radio' id="radio-1" color='red' onClick={this.coloringFigure} checked={this.state.selected === 'radio-1'} onChange={(e) => this.setState({ selected: e.target.value })} />red
               <input type='radio' id="radio-2" color='yellow' onClick={this.coloringFigure} checked={this.state.selected === 'radio-2'} onChange={(e) => this.setState({ selected: e.target.value })} />yellow
@@ -644,9 +705,9 @@ class App extends Component {
           <input type='checkbox' onClick={this.textObject} text='bold' />bold
           <input type='checkbox' onClick={this.textObject} text='color' />color
           <label htmlFor='fontSize'> 글자 크기: </label>
-          <input 
-            type='number' 
-            onChange={this.handlefontSizeChange} 
+          <input
+            type='number'
+            onChange={this.handlefontSizeChange}
             text='fontSize'
             name='fontSize'
             min='1'
@@ -679,7 +740,7 @@ class App extends Component {
         </ul>
         <hr />
         <ImageList onClick={this.onImgUrlChange} />
-      </div>
+      </div >
     );
   }
 }
