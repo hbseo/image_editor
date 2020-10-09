@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { ChromePicker, SketchPicker } from 'react-color';
+import { ChromePicker, SketchPicker, TwitterPicker } from 'react-color';
 import ReactModal from 'react-modal';
 import './App.css'
 import Rotation from './Rotation';
@@ -9,7 +9,6 @@ import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
 import Coloring from './Coloring';
-import ColorButton from './ColorButton';
 import Flip from './Flip';
 import Text from './Text';
 // import FilterMenu from './FilterMenu';
@@ -539,10 +538,12 @@ class App extends Component {
   openColorPicker = () => {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
   }
+
   closeColorPicker = () => {
     console.log('close')
     this.setState({ displayColorPicker: false });
   }
+
   handleOpenModal = () => {
     this.setState({
       modal: true
@@ -633,7 +634,11 @@ class App extends Component {
               <p>모달!모달!모달!모달!모달!모달!모달!모달!모달!모달!모달!모달!</p>
               <button onClick={this.handleCloseModal}>Close</button>
             </ReactModal>
-            <ColorButton />
+            <button onClick={this.openColorPicker}>Pick color</button>
+            {this.state.displayColorPicker ? <div>
+              <div onClick={this.closeColorPicker} />
+              <TwitterPicker color={this.state.color} onChange={this.handleColorChange} />
+            </div> : null}
             <ul>
               <input type='radio' id="radio-1" color='red' onClick={this.coloringFigure} checked={this.state.selected === 'radio-1'} onChange={(e) => this.setState({ selected: e.target.value })} />red
               <input type='radio' id="radio-2" color='yellow' onClick={this.coloringFigure} checked={this.state.selected === 'radio-2'} onChange={(e) => this.setState({ selected: e.target.value })} />yellow
