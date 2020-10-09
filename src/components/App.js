@@ -51,6 +51,15 @@ class App extends Component {
 			el.disabled = true
 		)
 
+		document.addEventListener('mousedown', (event) => {
+			if(event.target.tagName !== 'CANVAS'){
+				this._canvas.defaultCursor = 'default';
+				this.setState({
+					newimg : false
+				})
+			}
+		})
+
     this._createCanvasEvent();
     this.layerThumb();
   }
@@ -61,7 +70,8 @@ class App extends Component {
 
       // 새로운 이미지 추가
       if (this.state.newimg) {
-        this.addImage(event.pointer);
+				this.addImage(event.pointer);
+				this._canvas.defaultCursor = 'default';
         this.setState({ newimg: false })
       }
       if (this.state.tri) {
@@ -152,7 +162,6 @@ class App extends Component {
 				)
 			}
 			else{
-				console.log(this._canvas.backgroundImage);
 				this._imageSelection(this._canvas.backgroundImage);
 			}
 		});
@@ -302,15 +311,15 @@ class App extends Component {
   }
 
   addNewImage = () => {
-    this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
+		this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
+		this._canvas.defaultCursor = 'pointer';
     this.setState({ newimg: true });
   }
 
   addImage = (pointer) => {
     this.loadImage(this.testUrl, pointer)
       .then((data) => {
-				this._canvas.add(data);
-				this._canvas.setActiveObject(data);
+				this._canvas.add(data).setActiveObject(data);
         this.setState({ layers: this.state.layers.concat(data) });
         // console.log(data.getSvgSrc());
       })
@@ -487,7 +496,10 @@ class App extends Component {
       fabric.Image.fromURL(url, img => {
         img.set({
 
-        });
+				});
+				img.on('scaling', () => {
+
+				})
         resolve(img);
       }, { crossOrigin: 'Anonymous' }
       );
