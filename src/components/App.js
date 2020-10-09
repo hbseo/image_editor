@@ -96,11 +96,12 @@ class App extends Component {
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
 			let type = this._canvas.getActiveObject().type;
-			let group;
-			console.log(type);
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
+					break;
+				case 'textbox':
+					this._textboxSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection':
 					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
@@ -125,6 +126,9 @@ class App extends Component {
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
+					break;
+				case 'textbox':
+					this._textboxSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection':
 					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
@@ -155,7 +159,12 @@ class App extends Component {
 
 
 	}
-	
+
+	/**
+   * action on selected image
+	 * @param {Object} image : selectedImage or backgroundImage
+   * @private
+   */
 	_imageSelection = (image) => {
 		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
 			el.disabled = false
@@ -167,9 +176,23 @@ class App extends Component {
 		}
 		this.setState({
 			angle: image.angle,
-			brightness: image.filters[5] ? image.filters[5].brightness : 0
+			brightness: image.filters[8] ? image.filters[8].brightness : 0
 		});
 	}
+
+
+	/**
+   * action on textbox
+	 * @param {Object} text : selectedTextbox
+   * @private
+   */
+	_textboxSelection = (text) => {
+		this.setState({
+			fontsize : text.fontSize,
+			angle : text.angle
+		})
+	}
+
 
   /**
    * create Action List
@@ -286,7 +309,8 @@ class App extends Component {
   addImage = (pointer) => {
     this.loadImage(this.testUrl, pointer)
       .then((data) => {
-        this._canvas.add(data);
+				this._canvas.add(data);
+				this._canvas.setActiveObject(data);
         this.setState({ layers: this.state.layers.concat(data) });
         // console.log(data.getSvgSrc());
       })
@@ -478,7 +502,10 @@ class App extends Component {
         });
       })
       .then(() => {
-        this._createCanvasEvent();
+				this._createCanvasEvent();
+				fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
+					el.disabled = false
+				)
         this.layerThumb();
       })
   }
@@ -511,8 +538,9 @@ class App extends Component {
           <button onClick={this.newCanvas}>배경이미지 캔버스로 변경</button>
           <p>선택 개체 밝기 값{this.state.brightness}</p>
           <p>선택 개체 각도 값{this.state.angle}</p>
-
-          <hr />
+          <h5>텍스트 기능</h5>
+					<p>선택 텍스트 폰트크기{this.state.fontsize}</p>
+					<hr />
         </div>
 
         <ul>
