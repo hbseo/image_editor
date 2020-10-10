@@ -1,16 +1,8 @@
 import Action from './Action';
-import { fabric } from 'fabric';
 
 class Text extends Action {
   constructor(App) {
     super('Text', App);
-  }
-  addText = () => {
-    const canvas = this.getCanvas();
-    let text = new fabric.Textbox('Hello world', {
-      left: 100, top: 100, fontSize: 50
-    });
-    canvas.add(text).setActiveObject(text);
   }
   textObj = (activeObject, option, checked, value) => {
     const canvas = this.getCanvas();
@@ -24,18 +16,6 @@ class Text extends Action {
         else {
           activeObject.set({
             fontWeight: 'normal'
-          }).setCoords();
-        }
-        break;
-      case 'color':
-        if (checked) {
-          activeObject.set({
-            fill: 'blue'
-          }).setCoords();
-        }
-        else {
-          activeObject.set({
-            fill: 'black'
           }).setCoords();
         }
         break;

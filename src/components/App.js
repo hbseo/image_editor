@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { ChromePicker,SketchPicker } from 'react-color';
+import { SketchPicker } from 'react-color';
 import './App.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
@@ -10,6 +10,7 @@ import Crop from './Crop';
 import Coloring from './Coloring';
 import Flip from './Flip';
 import Text from './Text';
+import Fill from './Fill';
 // import FilterMenu from './FilterMenu';
 
 
@@ -55,9 +56,7 @@ class App extends Component {
       width: 1000,
       backgroundColor: 'grey'
 		});
-		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-			el.disabled = true
-		)
+		this.switchTools('filter', 'text', true);
 
 		this._createDomEvent();
     this._createCanvasEvent();
@@ -134,17 +133,13 @@ class App extends Component {
 					this._textboxSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection':
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
+					this.switchTools('filter', 'text', true);
 					this.setState({
 						angle: 0
 					});
 					break;
 				default:
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
+					this.switchTools('filter', 'text', true);
 			}
       
 
@@ -161,27 +156,22 @@ class App extends Component {
 					this._textboxSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection':
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
+					this.switchTools('filter', 'text', true);
 					this.setState({
 						angle: 0
 					});
 					break;
 				default:
-					fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-						el.disabled = true
-					)
+					this.switchTools('filter', 'text', true);
 			}
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
 			if(!this._canvas.backgroundImage){
-				fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-					el.disabled = true
-				)
+        this.switchTools('filter', 'text', true);
 			}
 			else{
+        this.switchTools('text', true);
 				this._imageSelection(this._canvas.backgroundImage);
 			}
 		});
@@ -195,9 +185,7 @@ class App extends Component {
    * @private
    */
 	_imageSelection = (image) => {
-		fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-			el.disabled = false
-		)
+		this.switchTools('filter', false);
 		
 		let list = document.getElementsByClassName('filter');
 		for(let i=0; i<list.length; i++){
@@ -216,11 +204,19 @@ class App extends Component {
    * @private
    */
 	_textboxSelection = (text) => {
+    this.switchTools('text', false);
 		this.setState({
 			fontsize : text.fontSize,
 			angle : text.angle
 		})
-	}
+  }
+  
+  switchTools = (...args) => {
+    for(let i = 0; i< args.length-1; i++) {
+      fabric.util.toArray(document.getElementsByClassName(args[i])).forEach(el => 
+        el.disabled = args[args.length-1]);
+    }
+  }
 
 
   /**
@@ -235,6 +231,7 @@ class App extends Component {
     this._register(this.action, new Text(this));
     this._register(this.action, new Coloring(this))
     this._register(this.action, new Flip(this));
+    this._register(this.action, new Fill(this));
   }
 
   /**
@@ -345,6 +342,13 @@ class App extends Component {
       })
   }
 
+  addText = () => {
+    let text = new fabric.Textbox('Hello world', {
+      left: 100, top: 100, fontSize: 50, lockScalingY: true
+    });
+    this._canvas.add(text).setActiveObject(text);
+  }
+
   addTriangle = (pointer) => {
     let myFigure = new fabric.Triangle({ width: 40, height: 40, left: pointer.x, top: pointer.y, fill: "black" });
     this._canvas.add(myFigure);
@@ -429,7 +433,11 @@ class App extends Component {
 	}
 	
 	handleColorChange = (color) => {
-		this.setState({ color: color.rgb, colorHex : color.hex })
+    const activeObject = this.getActiveObject();
+    if(activeObject) {
+      this.action['Fill'].fill(color.hex);
+    }
+    this.setState({ color: color.rgb, colorHex : color.hex })
 	}
 
 
@@ -601,7 +609,7 @@ class App extends Component {
           <button onClick={this.flipObject} flip="X">Flip x</button>
           <button onClick={this.flipObject} flip="Y">Flip y</button>
           <button>|</button>
-          <button onClick={this.action['Text'].addText}>텍스트</button>
+          <button onClick={this.addText}>텍스트</button>
           <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
           <button>|</button>
           <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
@@ -618,6 +626,13 @@ class App extends Component {
           </input>
           <button>| 파일 불러오기</button>
           <input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>
+          <div>
+        	<button onClick={this.openColorPicker}>color</button>
+        	{ this.state.displayColorPicker ? <div>
+        	  <div onClick={this.closeColorPicker}/>
+        	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
+        	</div> : null }
+      	</div>
           <div style={{ border: "solid 1px black" }}>
             <button onClick={this.addTriangle}>삼</button>
             <button onClick={this.addRectangle}>직</button>
@@ -653,32 +668,24 @@ class App extends Component {
         </ul>
         <ul>
           <h5>텍스트 기능</h5>
-          <input type='checkbox' onClick={this.textObject} text='bold' />bold
-          <input type='checkbox' onClick={this.textObject} text='color' />color
+          <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
           <label htmlFor='fontSize'> 글자 크기: </label>
           <input 
             type='number' 
+            className='text'
             onChange={this.handlefontSizeChange} 
             text='fontSize'
             name='fontSize'
             min='1'
             value={this.state.fontsize} />
             <label htmlFor='fontfamily'>글꼴: </label>
-            <select name='fontfamily' text='fontfamily' onChange={this.textObject}>
+            <select className='text' name='fontfamily' text='fontfamily' onChange={this.textObject}>
               <option value='Times New Roman'>Times New Roman</option>
               <option value='Georgia'>Georgia</option>
               <option value='serif'>serif</option>
               <option value='VT323'>VT323</option>
             </select>
         </ul>
-
-				<div>
-        	<button onClick={this.openColorPicker}>df</button>
-        	{ this.state.displayColorPicker ? <div>
-        	  <div onClick={this.closeColorPicker}/>
-        	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
-        	</div> : null }
-      	</div>
         {/* <FilterMenu onClick= {this.filterObject}/> */}
         <br />
 
