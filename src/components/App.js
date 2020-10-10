@@ -98,16 +98,16 @@ class App extends Component {
           let object = fabric.util.object.clone(this.copiedObjects[i]);
           object.set('top', object.top+5);
           object.set('left', object.left+5);
-          let copiedObject1 = object;
-          this._canvas.add(copiedObject1);
+          this.copiedObjects[i] = object;
+          this._canvas.add(this.copiedObjects[i]);
         }
       }
       else if(this.copiedObject) {
         let object = fabric.util.object.clone(this.copiedObject);
         object.set('top', object.top+5);
         object.set('left', object.left+5);
-        let copiedObject1 = object;
-        this._canvas.add(copiedObject1);
+        this.copiedObject = object;
+        this._canvas.add(this.copiedObject);
       }
       this._canvas.renderAll();
     }
