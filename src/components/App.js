@@ -42,7 +42,9 @@ class App extends Component {
     this._canvasImage = null;
     this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.action = {};
-
+    this.copiedObject = null;
+    // eslint-disable-next-line no-array-constructor
+    this.copiedObjects = new Array();
 
 
     this._createAction();
@@ -64,10 +66,54 @@ class App extends Component {
 	}
 	
 	_onKeydownEvent = (event) => {
-		const {ctrlKey, keyCode, metaKey} = event;
-			if(keyCode === 8 || keyCode === 46){
-				this.deleteObject();
-			}
+    // metakey is a Command key or Windows key
+    const {ctrlKey, keyCode, metaKey} = event;
+    if(keyCode === 8 || keyCode === 46){
+      this.deleteObject();
+    }
+    // ctrl + c
+    if(ctrlKey && keyCode === 67) {
+      console.log('ctrl + c');
+      const activeObject = this.getActiveObject();
+      if(activeObject.type === 'activeSelection') {
+        console.log('test');
+        for(let i in activeObject._objects) {
+          let object = fabric.util.object.clone(activeObject._objects[i]);
+          object.set('top', object.top+5);
+          object.set('left', object.left+5);
+          this.copiedObjects[i] = object;
+        }
+      }
+      else {
+        let object = fabric.util.object.clone(activeObject);
+        object.set('top', object.top+5);
+        object.set('left', object.left+5);
+        this.copiedObject = object;
+        // eslint-disable-next-line no-array-constructor
+        this.copiedObjects = new Array();
+      }
+    }
+    // ctrl + v
+    if(ctrlKey && keyCode === 86) {
+      console.log('ctrl + v')
+      if(this.copiedObjects.length > 0) {
+        for(let i in this.copiedObjects) {
+          let object = fabric.util.object.clone(this.copiedObjects[i]);
+          object.set('top', object.top+5);
+          object.set('left', object.left+5);
+          let copiedObject1 = object;
+          this._canvas.add(copiedObject1);
+        }
+      }
+      else if(this.copiedObject) {
+        let object = fabric.util.object.clone(this.copiedObject);
+        object.set('top', object.top+5);
+        object.set('left', object.left+5);
+        let copiedObject1 = object;
+        this._canvas.add(copiedObject1);
+      }
+      this._canvas.renderAll();
+    }
 	}
 
 	_createDomEvent = () => {
