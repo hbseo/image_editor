@@ -73,10 +73,8 @@ class App extends Component {
     }
     // ctrl + c
     if(ctrlKey && keyCode === 67) {
-      console.log('ctrl + c');
       const activeObject = this.getActiveObject();
       if(activeObject.type === 'activeSelection') {
-        console.log('test');
         for(let i in activeObject._objects) {
           let object = fabric.util.object.clone(activeObject._objects[i]);
           object.set('top', object.top+5);
@@ -95,7 +93,6 @@ class App extends Component {
     }
     // ctrl + v
     if(ctrlKey && keyCode === 86) {
-      console.log('ctrl + v')
       if(this.copiedObjects.length > 0) {
         for(let i in this.copiedObjects) {
           let object = fabric.util.object.clone(this.copiedObjects[i]);
