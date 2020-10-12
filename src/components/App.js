@@ -229,7 +229,7 @@ class App extends Component {
    */
 	_imageSelection = (image) => {
 		this.switchTools('filter', false);
-		
+		this.switchTools('text', true);
 		let list = document.getElementsByClassName('filter');
 		for(let i=0; i<list.length; i++){
 			list[i].checked = !!image.filters[i];
@@ -248,6 +248,7 @@ class App extends Component {
    */
 	_textboxSelection = (text) => {
     this.switchTools('text', false);
+    this.switchTools('filter', true);
 		this.setState({
 			fontsize : text.fontSize,
 			angle : text.angle
