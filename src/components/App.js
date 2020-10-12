@@ -72,7 +72,7 @@ class App extends Component {
       this.deleteObject();
     }
     // ctrl + c
-    if(ctrlKey && keyCode === 67) {
+    if((metaKey || ctrlKey) && keyCode === 67) {
       const activeObject = this.getActiveObject();
       if(activeObject.type === 'activeSelection') {
         for(let i in activeObject._objects) {
@@ -92,7 +92,7 @@ class App extends Component {
       }
     }
     // ctrl + v
-    if(ctrlKey && keyCode === 86) {
+    if((metaKey || ctrlKey) && keyCode === 86) {
       if(this.copiedObjects.length > 0) {
         for(let i in this.copiedObjects) {
           let object = fabric.util.object.clone(this.copiedObjects[i]);
