@@ -600,16 +600,13 @@ class App extends Component {
 
   newCanvas = () => {
     let url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
-    let width = this._canvas.width;
-    let height = this._canvas.height;
     this._canvas.clear();
     this._canvas.dispose();
 
     new Promise(resolve => {
       fabric.Image.fromURL(url, img => {
         img.set({
-          width: width,
-          height: height
+          
 				});
 				img.on('scaling', () => {
 
@@ -621,8 +618,8 @@ class App extends Component {
       .then((img) => {
         this._canvas = new fabric.Canvas('canvas', {
           preserveObjectStacking: true,
-          height: height,
-          width: width,
+          height: img.height,
+          width: img.width,
           backgroundImage: img,
           backgroundColor: 'grey'
         });
