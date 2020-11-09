@@ -598,18 +598,21 @@ class App extends Component {
   }
 
   newCanvas = () => {
-    var url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
+    let url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
+    let width = this._canvas.width;
+    let height = this._canvas.height;
     this._canvas.clear();
     this._canvas.dispose();
 
     new Promise(resolve => {
       fabric.Image.fromURL(url, img => {
         img.set({
-
+          width: width,
+          height: height
 				});
 				img.on('scaling', () => {
 
-				})
+        })
         resolve(img);
       }, { crossOrigin: 'Anonymous' }
       );
@@ -617,8 +620,8 @@ class App extends Component {
       .then((img) => {
         this._canvas = new fabric.Canvas('canvas', {
           preserveObjectStacking: true,
-          height: img.height,
-          width: img.width,
+          height: height,
+          width: width,
           backgroundImage: img,
           backgroundColor: 'white'
         });
@@ -643,7 +646,7 @@ class App extends Component {
     console.log(this._canvas);
   
   }
-
+  
   render() {
 		const styles = {
 			color : {
