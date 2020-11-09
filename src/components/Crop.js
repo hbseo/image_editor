@@ -169,17 +169,18 @@ class Crop extends Action {
       height : this._cropzone.height * this._cropzone.scaleY,
       width : this._cropzone.width * this._cropzone.scaleX
     }
-    let select = new fabric.ActiveSelection(canvas.getObjects(), {
-      canvas: canvas
+    let objects = canvas.getObjects();
+    objects.forEach(element => {
+      console.log(element);
+      element.top = element.top - cropRect.top;
+      element.left = element.left - cropRect.left;
+      element.setCoords();
     });
     if(canvas.backgroundImage) {
       canvas.backgroundImage.top = canvas.backgroundImage.top - cropRect.top;
       canvas.backgroundImage.left = canvas.backgroundImage.left - cropRect.left;
     }
     this.deleteEvent();
-    select.top = select.top - cropRect.top;
-    select.left = select.left - cropRect.left;
-    canvas.add(select);
     canvas.setHeight(cropRect.height);
     canvas.setWidth(cropRect.width);
     canvas.calcOffset();
