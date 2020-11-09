@@ -63,6 +63,7 @@ class Crop extends Action {
 
   cropObj = (activeObject, option) => {
     let canvas = this.getCanvas();
+
     let image = activeObject;
     console.log(image);
     // this._cropzone = image;
@@ -86,15 +87,18 @@ class Crop extends Action {
   cropObjend = (activeObject, cropOption) => {
     let canvas = this.getCanvas();
     let image = activeObject;
+
     let test_canvas = new fabric.Canvas('test', {
       preserveObjectStacking: true,
     });
 
     const filters = image.filters;
+
     image.angle = 0;
     image.filters = [];
     image.applyFilters();
     test_canvas.add(image);
+
     let cropRect = {
       left : this._cropzone.left,
       top : this._cropzone.top,
@@ -169,7 +173,6 @@ class Crop extends Action {
       canvas: canvas
     });
     if(canvas.backgroundImage) {
-      console.log(canvas.backgroundImage);
       canvas.backgroundImage.top = canvas.backgroundImage.top - cropRect.top;
       canvas.backgroundImage.left = canvas.backgroundImage.left - cropRect.left;
     }
@@ -264,7 +267,6 @@ class Crop extends Action {
     const canvas = this.getCanvas();
 
     canvas.off('after:render');
-
 
   }
 

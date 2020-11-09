@@ -59,7 +59,7 @@ class App extends Component {
       preserveObjectStacking: true,
       height: 600,
       width: 1000,
-      backgroundColor: 'grey'
+      backgroundColor: 'white'
 		});
 		this.switchTools('filter', 'text', true);
 
@@ -72,7 +72,7 @@ class App extends Component {
     // metakey is a Command key or Windows key
     const {ctrlKey, keyCode, metaKey} = event;
     if(keyCode === 8 || keyCode === 46){
-      this.deleteObject();
+      // this.deleteObject();
     }
     // ctrl + c
     if((metaKey || ctrlKey) && keyCode === 67) {
@@ -158,6 +158,7 @@ class App extends Component {
           this.cropImg = null;
         }
       }
+
     });
 
 
@@ -696,6 +697,7 @@ class App extends Component {
           <button>|</button>
           <button onClick={this.cropObject} crop="right">자르기 시작</button>
           <button onClick={this.cropEndObject} crop="left">자르기 완료</button>
+
           <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
           <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
           <button onClick={this.flipObject} flip="X">Flip x</button>
