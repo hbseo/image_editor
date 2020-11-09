@@ -153,17 +153,11 @@ class App extends Component {
       }
 
       if(this.cropImg){
-        if(event.target == null){
-          this.action['Crop'].cropObjend(this.cropImg, null);
-          this.cropImg = null;
-        }
-        else if(!(event.target === this.cropImg || event.target.type === "Container")){
+        if(event.target == null || !(event.target === this.cropImg || event.target.type === "Container")){
           this.action['Crop'].cropObjend(this.cropImg, null);
           this.cropImg = null;
         }
       }
-
-
 
     });
 
@@ -562,6 +556,14 @@ class App extends Component {
     }
   }
 
+  cropCanvas = () => {
+    this.action['Crop'].cropCanvas();
+  }
+
+  cropEndCanvas = () => {
+    this.action['Crop'].cropEndCanvas();
+  }
+
   textObject = (event) => {
     let textOption = event.target.getAttribute('text');
     let activeObject = this.getActiveObject();
@@ -692,6 +694,9 @@ class App extends Component {
           <button>|</button>
           <button onClick={this.cropObject} crop="right">자르기 시작</button>
           <button onClick={this.cropEndObject} crop="left">자르기 완료</button>
+
+          <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
+          <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
           <button onClick={this.flipObject} flip="X">Flip x</button>
           <button onClick={this.flipObject} flip="Y">Flip y</button>
           <button>|</button>

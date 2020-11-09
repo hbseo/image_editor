@@ -1,28 +1,18 @@
 import Action from './Action';
 import { fabric } from 'fabric';
+
 class Crop extends Action {
   constructor(App) {
     super('Crop', App);
     this._cropzone = null;
     this._cropImage = null;
-  }
-
-  cropObj = (activeObject, option) => {
-    let canvas = this.getCanvas();
-    var image = activeObject;
-    this._cropzone = image;
-
 
     fabric.Container = fabric.util.createClass(fabric.Rect, {
-
       type: 'Container',
       initialize: function(options) {
-  
-          this.placedColor = 'rgba(211,211,211, 0)';
+          // this.placedColor = 'rgba(211,211,211, 0)';
           this.virtualModeColor = 'rgba(211,211,211, 0)';
-          this.canvas = canvas
           this.setToVirtualMode();
-
           options || (options = { });
           this.callSuper('initialize', options);
           this.set({
@@ -30,10 +20,10 @@ class Crop extends Action {
               'top' : options.top || 0,
               'left':  options.left || 0,
               'height' : options.height || 50,
-              'angle' : options.angle,
-              'fill' : options.fill || this.backgroundColor,
+              'angle' : options.angle || 0,
+              'fill' : options.fill || 'this.backgroundColor',
               'borderColor' : 'black',
-              // 'hasControls' : false
+              'hasControls' : true
           });
           // self = this;
       },
@@ -46,37 +36,37 @@ class Crop extends Action {
           this.backgroundColor = this.virtualModeColor;
       },
   
-      /**
-       * @description set render mode to placement
-       */
-      setToPlacementMode : function(){
-          this.isInVirtualMode = false;
-          this.backgroundColor = this.placedColor;
-      },
+      // /**
+      //  * @description set render mode to placement
+      //  */
+      // setToPlacementMode : function(){
+      //     this.isInVirtualMode = false;
+      //     this.backgroundColor = this.placedColor;
+      // },
   
-      /**
-       * @description toggle virtual mode on and off
-       */
-      toggleVirtualMode : function(){
-  
-          if (this.isInVirtualMode){
-              this.setToPlacementMode();
-          }else{
-              this.setToVirtualMode();
-          }
-          this.set('fill', this.backgroundColor);
-      },
-
-
-  
+      // /**
+      //  * @description toggle virtual mode on and off
+      //  */
+      // toggleVirtualMode: function(){
+      //     if (this.isInVirtualMode){
+      //       this.setToPlacementMode();
+      //     }else{
+      //       this.setToVirtualMode();
+      //     }
+      //     this.set('fill', this.backgroundColor);
+      // },
       _render: function(ctx) {
           this.callSuper('_render', ctx);
       }
     });
+  }
 
+  cropObj = (activeObject, option) => {
+    let canvas = this.getCanvas();
 
+    let image = activeObject;
     this._cropzone = new fabric.Container(
-      {label: 'aasdasd',
+      {label: 'cropObj',
        top: image.top, 
        left: image.left, 
        height: image.height, 
@@ -84,27 +74,24 @@ class Crop extends Action {
        scaleX : image.scaleX,
        scaleY : image.scaleY,
        angle : image.angle,
-       canvas : canvas
     })
     canvas.add(this._cropzone);
     canvas.renderAll();
     this.addEvent();
-
     canvas.setActiveObject(this._cropzone);
-
+    canvas.requestRenderAll();
   }
 
   cropObjend = (activeObject, cropOption) => {
     let canvas = this.getCanvas();
     let image = activeObject;
 
-
     let test_canvas = new fabric.Canvas('test', {
       preserveObjectStacking: true,
     });
 
     const filters = image.filters;
-    
+
     image.angle = 0;
     image.filters = [];
     image.applyFilters();
@@ -118,20 +105,12 @@ class Crop extends Action {
       angle : 0
     }
     canvas.remove(this._cropzone);
-
-    // console.log(cropRect);
     const imageData = {
       imageName: "test",
       url: test_canvas.toDataURL(cropRect)
     };
-
     test_canvas.clear();
     test_canvas.dispose();
-    
-    
-
-    
-
     new Promise(resolve => {
       fabric.Image.fromURL(imageData.url, img => {
         img.set({
@@ -160,15 +139,66 @@ class Crop extends Action {
 
   }
 
-
-  fillOuterBox = () => {
+  cropCanvas = () => {
     let canvas = this.getCanvas();
-    const xy = {
+    this._cropzone = new fabric.Container({
+      label: 'cropCanvas',
+      top: canvas.height/4,
+      left: canvas.width/4,
+      height: canvas.height/2,
+      width: canvas.width/2,
+    });
+    this._cropzone.setControlsVisibility({
+      mtr:false
+    });
+    canvas.add(this._cropzone);
+    this.addEvent();
+    canvas.setActiveObject(this._cropzone);
+    canvas.requestRenderAll();
+  }
+
+  cropEndCanvas = () => {
+    let canvas = this.getCanvas();
+    let activeObject = this.getActiveObject();
+    // let bgImage = null;
+    canvas.remove(activeObject);
+    let cropRect = {
       left : this._cropzone.left,
       top : this._cropzone.top,
       height : this._cropzone.height * this._cropzone.scaleY,
-      width : this._cropzone.width * this._cropzone.scaleX,
+      width : this._cropzone.width * this._cropzone.scaleX
     }
+    let select = new fabric.ActiveSelection(canvas.getObjects(), {
+      canvas: canvas
+    });
+    // if(canvas.backgroundImage) {
+    //   bgImage = canvas.backgroundImage;
+    //   bgImage.top = bgImage.top - cropRect.top;
+    //   bgImage.left = bgImage.left = cropRect.left;
+    // }
+    canvas.clear();
+    canvas.dispose();
+    canvas = new fabric.Canvas('canvas', {
+      preserveObjectStacking: true,
+      backgroundColor: 'grey'
+    })
+    select.top = select.top - cropRect.top;
+    select.left = select.left - cropRect.left;
+    canvas.add(select);
+    canvas.setHeight(cropRect.height);
+    canvas.setWidth(cropRect.width);
+    canvas.calcOffset();
+    canvas.renderAll();
+  }
+
+  fillOuterBox = () => {
+    let canvas = this.getCanvas();
+    // const xy = {
+    //   left : this._cropzone.left,
+    //   top : this._cropzone.top,
+    //   height : this._cropzone.height * this._cropzone.scaleY,
+    //   width : this._cropzone.width * this._cropzone.scaleX,
+    // }
     // console.log(xy)
     if (canvas.getContext) {
       var ctx = canvas.getContext('2d');
@@ -242,7 +272,6 @@ class Crop extends Action {
     const canvas = this.getCanvas();
 
     canvas.off('after:render');
-
 
   }
 
