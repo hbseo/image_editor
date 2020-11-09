@@ -35,14 +35,17 @@ class App extends Component {
 				b: '19',
 				a: '1',
 			},
-			colorHex : 0,
+      colorHex : 0,
     }
 
     this._canvas = null;
     this._canvasImage = null;
-    this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
+    // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
+    this.testUrl = 'https://source.unsplash.com/random/500x400';
     this.action = {};
     this.copiedObject = null;
+    
+    this.cropImg = null;
     // eslint-disable-next-line no-array-constructor
     this.copiedObjects = new Array();
 
@@ -129,7 +132,7 @@ class App extends Component {
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
-
+      
       // 새로운 이미지 추가
       if (this.state.newimg) {
 				this.addImage(event.pointer);
@@ -149,6 +152,12 @@ class App extends Component {
         this.setState({ circle: false });
       }
 
+      if(this.cropImg){
+        if(event.target == null || !(event.target === this.cropImg || event.target.type === "Container")){
+          this.action['Crop'].cropObjend(this.cropImg, null);
+          this.cropImg = null;
+        }
+      }
     });
 
 
@@ -161,9 +170,9 @@ class App extends Component {
       // console.log('fire', event.target);
     });
 
-    this._canvas.on('mouse:move', (event) => {
+    // this._canvas.on('mouse:move', (event) => {
       // console.log(this._canvas.targets);
-		});
+		// });
 		
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
@@ -334,13 +343,13 @@ class App extends Component {
       fabric.Image.fromURL(url, img => {
         img.set({
           angle: 0,
-          originX: "center",
-          originY: "center",
+          // originX: "center",
+          // originY: "center",
           left: pointer.x,
           top: pointer.y
 
         });
-        img.scaleToWidth(300);
+        // img.scaleToWidth(300);
         resolve(img);
       }, { crossOrigin: 'Anonymous' }
       );
@@ -372,7 +381,6 @@ class App extends Component {
   }
 
   addNewImage = () => {
-		this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
 		this._canvas.defaultCursor = 'pointer';
     this.setState({ newimg: true });
   }
@@ -535,8 +543,26 @@ class App extends Component {
   cropObject = (event) => {
     let cropOption = event.target.getAttribute('crop');
     let activeObject = this.getActiveObject();
+    this.cropImg = activeObject;
     this.action['Crop'].cropObj(activeObject, cropOption);
   }
+
+  cropEndObject = (event) => {
+    let cropOption = event.target.getAttribute('crop');
+    if(this.cropImg){
+      this.action['Crop'].cropObjend(this.cropImg, cropOption);
+      this.cropImg = null;
+    }
+  }
+
+  cropCanvas = () => {
+    this.action['Crop'].cropCanvas();
+  }
+
+  cropEndCanvas = () => {
+    this.action['Crop'].cropEndCanvas();
+  }
+
   textObject = (event) => {
     let textOption = event.target.getAttribute('text');
     let activeObject = this.getActiveObject();
@@ -563,6 +589,14 @@ class App extends Component {
     this.setState({ newimg: true })
   }
 
+  objectInfo = () => {
+    if(this.getActiveObject()){
+      let obj = this.getActiveObject();
+      console.log(obj);
+      
+    }
+  }
+
   newCanvas = () => {
     var url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
     this._canvas.clear();
@@ -586,7 +620,7 @@ class App extends Component {
           height: img.height,
           width: img.width,
           backgroundImage: img,
-          backgroundColor: 'red'
+          backgroundColor: 'white'
         });
       })
       .then(() => {
@@ -603,6 +637,11 @@ class App extends Component {
   closeColorPicker = () => {
 		console.log('close')
     this.setState({ displayColorPicker: false });
+  }
+
+  getCanvasInfo = () => {
+    console.log(this._canvas);
+  
   }
 
   render() {
@@ -632,6 +671,10 @@ class App extends Component {
           <h5>개발자 기능</h5>
           <button onClick={this.addNewImage}>테스트용 이미지 추가</button>
           <button onClick={this.newCanvas}>배경이미지 캔버스로 변경</button>
+          <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
+          <button onClick={this.getCanvasInfo}>캔버스정보</button>
+
+
           <p>선택 개체 밝기 값{this.state.brightness}</p>
           <p>선택 개체 각도 값{this.state.angle}</p>
           <h5>텍스트 기능</h5>
@@ -648,8 +691,10 @@ class App extends Component {
           {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
           <button onClick={this.deleteObject}>선택 개체 삭제</button>
           <button>|</button>
-          <button onClick={this.cropObject} crop="right">선택 개체 오른쪽 반 자르기</button>
-          <button onClick={this.cropObject} crop="left">선택 개체 왼쪽 반 자르기</button>
+          <button onClick={this.cropObject} crop="right">자르기 시작</button>
+          <button onClick={this.cropEndObject} crop="left">자르기 완료</button>
+          <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
+          <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
           <button onClick={this.flipObject} flip="X">Flip x</button>
           <button onClick={this.flipObject} flip="Y">Flip y</button>
           <button>|</button>

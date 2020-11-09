@@ -1,5 +1,3 @@
-
-
 export default class Action {
   constructor(name, App) {
     this.app = App;
