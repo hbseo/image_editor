@@ -59,7 +59,7 @@ class App extends Component {
       preserveObjectStacking: true,
       height: 600,
       width: 1000,
-      backgroundColor: 'white'
+      backgroundColor: 'grey'
 		});
 		this.switchTools('filter', 'text', true);
 
@@ -72,7 +72,7 @@ class App extends Component {
     // metakey is a Command key or Windows key
     const {ctrlKey, keyCode, metaKey} = event;
     if(keyCode === 8 || keyCode === 46){
-      // this.deleteObject();
+      this.deleteObject();
     }
     // ctrl + c
     if((metaKey || ctrlKey) && keyCode === 67) {
@@ -624,7 +624,7 @@ class App extends Component {
           height: height,
           width: width,
           backgroundImage: img,
-          backgroundColor: 'white'
+          backgroundColor: 'grey'
         });
       })
       .then(() => {
