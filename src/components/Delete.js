@@ -20,7 +20,10 @@ class Delete extends Action {
             canvas.remove(obj);
           }
         }
-        canvas.remove(obj);
+
+        else {
+          canvas.remove(obj);
+        }
       }
       canvas.renderAll();
     }
