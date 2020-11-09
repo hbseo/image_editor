@@ -65,6 +65,8 @@ class Crop extends Action {
     let canvas = this.getCanvas();
 
     let image = activeObject;
+    console.log(image);
+    // this._cropzone = image;
     this._cropzone = new fabric.Container(
       {label: 'cropObj',
        top: image.top, 
@@ -160,7 +162,6 @@ class Crop extends Action {
   cropEndCanvas = () => {
     let canvas = this.getCanvas();
     let activeObject = this.getActiveObject();
-    // let bgImage = null;
     canvas.remove(activeObject);
     let cropRect = {
       left : this._cropzone.left,
@@ -171,17 +172,11 @@ class Crop extends Action {
     let select = new fabric.ActiveSelection(canvas.getObjects(), {
       canvas: canvas
     });
-    // if(canvas.backgroundImage) {
-    //   bgImage = canvas.backgroundImage;
-    //   bgImage.top = bgImage.top - cropRect.top;
-    //   bgImage.left = bgImage.left = cropRect.left;
-    // }
-    canvas.clear();
-    canvas.dispose();
-    canvas = new fabric.Canvas('canvas', {
-      preserveObjectStacking: true,
-      backgroundColor: 'grey'
-    })
+    if(canvas.backgroundImage) {
+      canvas.backgroundImage.top = canvas.backgroundImage.top - cropRect.top;
+      canvas.backgroundImage.left = canvas.backgroundImage.left - cropRect.left;
+    }
+    this.deleteEvent();
     select.top = select.top - cropRect.top;
     select.left = select.left - cropRect.left;
     canvas.add(select);
