@@ -238,28 +238,28 @@ class App extends Component {
 		});
     
     this._canvas.on('object:added', (event) => {
-      console.log('object:added');
+      // console.log('object:added');
       this.saveState();
     })
     this._canvas.on('object:modified', (event) => {
-      console.log('object:modified');
+      // console.log('object:modified');
       this.saveState();
     })
-    this._canvas.on('object:skewed', (event) => {
-      console.log('object:skewed');
-    })
-    this._canvas.on('object:removed', (event) => {
-      console.log('object:removed');
-    })
-    this._canvas.on('object:skewing', (event) => {
-      console.log('object:skewing');
-    })
-    this._canvas.on('object:scaling', (event) => {
-      console.log('object:scaling');
-    })
-    this._canvas.on('object:scaled', (event) => {
-      console.log('object:scaled');
-    })
+    // this._canvas.on('object:skewed', (event) => {
+    //   console.log('object:skewed');
+    // })
+    // this._canvas.on('object:removed', (event) => {
+    //   console.log('object:removed');
+    // })
+    // this._canvas.on('object:skewing', (event) => {
+    //   console.log('object:skewing');
+    // })
+    // this._canvas.on('object:scaling', (event) => {
+    //   console.log('object:scaling');
+    // })
+    // this._canvas.on('object:scaled', (event) => {
+    //   console.log('object:scaled');
+    // })
   }
 
   saveState = () => {
@@ -269,22 +269,26 @@ class App extends Component {
       }
       this.stateStack.push(this.currentState);
       this.currentState = this._canvas.toDatalessJSON();
-      // this.redoStack.length = 0;
+      this.redoStack.length = 0;
     }
   }
 
   undo = () => {
-    console.log('undo');
-    this.applyState(this.redoStack, this.stateStack.pop());
+    // console.log('undo');
+    if(this.stateStack.length > 0) {
+      this.applyState(this.redoStack, this.stateStack.pop());
+    }
   }
 
   redo = () => {
-    console.log('redo');
-    this.applyState(this.stateStack, this.redoStack.pop());
+    // console.log('redo');
+    if(this.redoStack.length > 0) {
+      this.applyState(this.stateStack, this.redoStack.pop());
+    }
   }
 
   applyState = (stack, newState) => {
-    console.log('applyState');
+    // console.log('applyState');
     stack.push(this.currentState);
     this.currentState = newState;
     this.lock = true;
@@ -576,11 +580,11 @@ class App extends Component {
 
     if (activeObject) {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
+      this.saveState();
     }
     else {
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
-      // alert('image is not activated');
-      // event.target.checked = false;
+      this.saveState();
     }
 
   }
