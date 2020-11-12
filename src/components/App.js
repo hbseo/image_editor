@@ -49,6 +49,12 @@ class App extends Component {
     // eslint-disable-next-line no-array-constructor
     this.copiedObjects = new Array();
 
+    // redo undo
+    this.lock = false;
+    this.currentState = null;
+    this.stateStack = [];
+    this.redoStack = [];
+    this.maxSize = 10;
 
     this._createAction();
 
@@ -60,12 +66,14 @@ class App extends Component {
       height: 600,
       width: 1000,
       backgroundColor: 'grey'
-		});
+    });
 		this.switchTools('filter', 'text', true);
 
 		this._createDomEvent();
     this._createCanvasEvent();
     this.layerThumb();
+
+    this.currentState = this._canvas.toDatalessJSON();
 	}
 	
 	_onKeydownEvent = (event) => {
@@ -228,9 +236,66 @@ class App extends Component {
 				this._imageSelection(this._canvas.backgroundImage);
 			}
 		});
+    
+    this._canvas.on('object:added', (event) => {
+      // console.log('object:added');
+      this.saveState();
+    })
+    this._canvas.on('object:modified', (event) => {
+      // console.log('object:modified');
+      this.saveState();
+    })
+    // this._canvas.on('object:skewed', (event) => {
+    //   console.log('object:skewed');
+    // })
+    // this._canvas.on('object:removed', (event) => {
+    //   console.log('object:removed');
+    // })
+    // this._canvas.on('object:skewing', (event) => {
+    //   console.log('object:skewing');
+    // })
+    // this._canvas.on('object:scaling', (event) => {
+    //   console.log('object:scaling');
+    // })
+    // this._canvas.on('object:scaled', (event) => {
+    //   console.log('object:scaled');
+    // })
+  }
 
+  saveState = () => {
+    if(!this.lock) {
+      if(this.stateStack.length === this.maxSize) {
+        this.stateStack.shift();
+      }
+      this.stateStack.push(this.currentState);
+      this.currentState = this._canvas.toDatalessJSON();
+      this.redoStack.length = 0;
+    }
+  }
 
-	}
+  undo = () => {
+    // console.log('undo');
+    if(this.stateStack.length > 0) {
+      this.applyState(this.redoStack, this.stateStack.pop());
+    }
+  }
+
+  redo = () => {
+    // console.log('redo');
+    if(this.redoStack.length > 0) {
+      this.applyState(this.stateStack, this.redoStack.pop());
+    }
+  }
+
+  applyState = (stack, newState) => {
+    // console.log('applyState');
+    stack.push(this.currentState);
+    this.currentState = newState;
+    this.lock = true;
+    this._canvas.loadFromJSON(this.currentState, () => {
+      this.lock = false;
+    });
+  }
 
 	/**
    * action on selected image
@@ -425,6 +490,7 @@ class App extends Component {
     let activeObject = this.getActiveObject();
     if (activeObject) {
       this.action['Coloring'].changeColor(activeObject, colorOption, event.target.checked);
+      this.saveState();
     }
     else {
       alert('select figure');
@@ -442,6 +508,7 @@ class App extends Component {
       })
         .then(() => {
           this.action['Rotation'].setAngle(this.state.angle);
+          this.saveState();
         })
     }
     else {
@@ -462,7 +529,8 @@ class App extends Component {
         resolve();
       })
         .then((brightEvent) => {
-          this.action['Filter'].applyFilter(activeObject, filterOption, true, brightValue)
+          this.action['Filter'].applyFilter(activeObject, filterOption, true, brightValue);
+          this.saveState();
         })
     }
     else {
@@ -480,7 +548,8 @@ class App extends Component {
         resolve();
       })
       .then(() => {
-        this.action['Text'].textObj(activeObject, textOption, true, fontSize)
+        this.action['Text'].textObj(activeObject, textOption, true, fontSize);
+        this.saveState();
       })
     }
 	}
@@ -489,6 +558,7 @@ class App extends Component {
     const activeObject = this.getActiveObject();
     if(activeObject) {
       this.action['Fill'].fill(color.hex);
+      this.saveState();
     }
     this.setState({ color: color.rgb, colorHex : color.hex })
 	}
@@ -503,6 +573,7 @@ class App extends Component {
     if (activeObject) {
       this.setState({ angle: (activeObject.angle + Number(changeAngle)) % 360 })
       this.action['Rotation'].setAngle(activeObject.angle + Number(changeAngle));
+      this.saveState();
     }
     else {
       alert('image is not activated')
@@ -515,17 +586,18 @@ class App extends Component {
 
     if (activeObject) {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
+      this.saveState();
     }
     else {
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
-      // alert('image is not activated');
-      // event.target.checked = false;
+      this.saveState();
     }
 
   }
 
   deleteObject = (event) => {
     this.action['Delete'].deleteObj();
+    this.saveState();
   }
 
   flipObject = (event) => {
@@ -533,11 +605,11 @@ class App extends Component {
     var option = event.target.getAttribute('flip');
     if (activeObject) {
       this.action['Flip'].flip(activeObject, option);
+      this.saveState();
     }
     else {
       this.action['Flip'].flip(null, option);
-
-      // alert('image is not activated');
+      this.saveState();
     }
   }
 
@@ -546,6 +618,7 @@ class App extends Component {
     let activeObject = this.getActiveObject();
     this.cropImg = activeObject;
     this.action['Crop'].cropObj(activeObject, cropOption);
+    this.saveState();
   }
 
   cropEndObject = (event) => {
@@ -553,15 +626,18 @@ class App extends Component {
     if(this.cropImg){
       this.action['Crop'].cropObjend(this.cropImg, cropOption);
       this.cropImg = null;
+      this.saveState();
     }
   }
 
   cropCanvas = () => {
     this.action['Crop'].cropCanvas();
+    this.saveState();
   }
 
   cropEndCanvas = () => {
     this.action['Crop'].cropEndCanvas();
+    this.saveState();
   }
 
   textObject = (event) => {
@@ -570,6 +646,7 @@ class App extends Component {
 
     if (activeObject) {
       this.action['Text'].textObj(activeObject, textOption, event.target.checked, event.target.value);
+      this.saveState();
     }
     else {
       alert('text is not activated');
@@ -623,6 +700,10 @@ class App extends Component {
           backgroundImage: img,
           backgroundColor: 'grey'
         });
+        this.currentState = this._canvas.toDatalessJSON();
+        this.lock = false;
+        this.stateStack = [];
+        this.redoStack = [];
       })
       .then(() => {
 				this._createCanvasEvent();
@@ -644,6 +725,7 @@ class App extends Component {
     console.log(this._canvas);
   
   }
+
   
   render() {
 		const styles = {
@@ -658,8 +740,8 @@ class App extends Component {
         <h1>Image Editor</h1>
         <div>
           <h5>미구현</h5>
-          <button>Undo</button>
-          <button>Redo</button>
+          <button onClick={this.undo}>Undo</button>
+          <button onClick={this.redo}>Redo</button>
           {/* <button>Rotate</button>
           <button>Flip</button> */}
           <button>Draw Line</button>
