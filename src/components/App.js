@@ -49,6 +49,12 @@ class App extends Component {
     // eslint-disable-next-line no-array-constructor
     this.copiedObjects = new Array();
 
+    // redo undo
+    this.lock = false;
+    this.currentState = null;
+    this.stateStack = [];
+    this.redoStack = [];
+    this.maxSize = 10;
 
     this._createAction();
 
@@ -60,12 +66,14 @@ class App extends Component {
       height: 600,
       width: 1000,
       backgroundColor: 'grey'
-		});
+    });
 		this.switchTools('filter', 'text', true);
 
 		this._createDomEvent();
     this._createCanvasEvent();
     this.layerThumb();
+
+    this.currentState = this._canvas.toDatalessJSON();
 	}
 	
 	_onKeydownEvent = (event) => {
@@ -228,9 +236,62 @@ class App extends Component {
 				this._imageSelection(this._canvas.backgroundImage);
 			}
 		});
+    
+    this._canvas.on('object:added', (event) => {
+      console.log('object:added');
+      this.saveState();
+    })
+    this._canvas.on('object:modified', (event) => {
+      console.log('object:modified');
+      this.saveState();
+    })
+    this._canvas.on('object:skewed', (event) => {
+      console.log('object:skewed');
+    })
+    this._canvas.on('object:removed', (event) => {
+      console.log('object:removed');
+    })
+    this._canvas.on('object:skewing', (event) => {
+      console.log('object:skewing');
+    })
+    this._canvas.on('object:scaling', (event) => {
+      console.log('object:scaling');
+    })
+    this._canvas.on('object:scaled', (event) => {
+      console.log('object:scaled');
+    })
+  }
 
+  saveState = () => {
+    if(!this.lock) {
+      if(this.stateStack.length === this.maxSize) {
+        this.stateStack.shift();
+      }
+      this.stateStack.push(this.currentState);
+      this.currentState = this._canvas.toDatalessJSON();
+      // this.redoStack.length = 0;
+    }
+  }
 
-	}
+  undo = () => {
+    console.log('undo');
+    this.applyState(this.redoStack, this.stateStack.pop());
+  }
+
+  redo = () => {
+    console.log('redo');
+    this.applyState(this.stateStack, this.redoStack.pop());
+  }
+
+  applyState = (stack, newState) => {
+    console.log('applyState');
+    stack.push(this.currentState);
+    this.currentState = newState;
+    this.lock = true;
+    this._canvas.loadFromJSON(this.currentState, () => {
+      this.lock = false;
+    });
+  }
 
 	/**
    * action on selected image
@@ -644,6 +705,7 @@ class App extends Component {
     console.log(this._canvas);
   
   }
+
   
   render() {
 		const styles = {
@@ -658,8 +720,8 @@ class App extends Component {
         <h1>Image Editor</h1>
         <div>
           <h5>미구현</h5>
-          <button>Undo</button>
-          <button>Redo</button>
+          <button onClick={this.undo}>Undo</button>
+          <button onClick={this.redo}>Redo</button>
           {/* <button>Rotate</button>
           <button>Flip</button> */}
           <button>Draw Line</button>
