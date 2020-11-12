@@ -490,6 +490,7 @@ class App extends Component {
     let activeObject = this.getActiveObject();
     if (activeObject) {
       this.action['Coloring'].changeColor(activeObject, colorOption, event.target.checked);
+      this.saveState();
     }
     else {
       alert('select figure');
@@ -507,6 +508,7 @@ class App extends Component {
       })
         .then(() => {
           this.action['Rotation'].setAngle(this.state.angle);
+          this.saveState();
         })
     }
     else {
@@ -527,7 +529,8 @@ class App extends Component {
         resolve();
       })
         .then((brightEvent) => {
-          this.action['Filter'].applyFilter(activeObject, filterOption, true, brightValue)
+          this.action['Filter'].applyFilter(activeObject, filterOption, true, brightValue);
+          this.saveState();
         })
     }
     else {
@@ -545,7 +548,8 @@ class App extends Component {
         resolve();
       })
       .then(() => {
-        this.action['Text'].textObj(activeObject, textOption, true, fontSize)
+        this.action['Text'].textObj(activeObject, textOption, true, fontSize);
+        this.saveState();
       })
     }
 	}
@@ -554,6 +558,7 @@ class App extends Component {
     const activeObject = this.getActiveObject();
     if(activeObject) {
       this.action['Fill'].fill(color.hex);
+      this.saveState();
     }
     this.setState({ color: color.rgb, colorHex : color.hex })
 	}
@@ -568,6 +573,7 @@ class App extends Component {
     if (activeObject) {
       this.setState({ angle: (activeObject.angle + Number(changeAngle)) % 360 })
       this.action['Rotation'].setAngle(activeObject.angle + Number(changeAngle));
+      this.saveState();
     }
     else {
       alert('image is not activated')
@@ -591,6 +597,7 @@ class App extends Component {
 
   deleteObject = (event) => {
     this.action['Delete'].deleteObj();
+    this.saveState();
   }
 
   flipObject = (event) => {
@@ -598,11 +605,11 @@ class App extends Component {
     var option = event.target.getAttribute('flip');
     if (activeObject) {
       this.action['Flip'].flip(activeObject, option);
+      this.saveState();
     }
     else {
       this.action['Flip'].flip(null, option);
-
-      // alert('image is not activated');
+      this.saveState();
     }
   }
 
@@ -611,6 +618,7 @@ class App extends Component {
     let activeObject = this.getActiveObject();
     this.cropImg = activeObject;
     this.action['Crop'].cropObj(activeObject, cropOption);
+    this.saveState();
   }
 
   cropEndObject = (event) => {
@@ -618,15 +626,18 @@ class App extends Component {
     if(this.cropImg){
       this.action['Crop'].cropObjend(this.cropImg, cropOption);
       this.cropImg = null;
+      this.saveState();
     }
   }
 
   cropCanvas = () => {
     this.action['Crop'].cropCanvas();
+    this.saveState();
   }
 
   cropEndCanvas = () => {
     this.action['Crop'].cropEndCanvas();
+    this.saveState();
   }
 
   textObject = (event) => {
@@ -635,6 +646,7 @@ class App extends Component {
 
     if (activeObject) {
       this.action['Text'].textObj(activeObject, textOption, event.target.checked, event.target.value);
+      this.saveState();
     }
     else {
       alert('text is not activated');
@@ -688,6 +700,10 @@ class App extends Component {
           backgroundImage: img,
           backgroundColor: 'grey'
         });
+        this.currentState = this._canvas.toDatalessJSON();
+        this.lock = false;
+        this.stateStack = [];
+        this.redoStack = [];
       })
       .then(() => {
 				this._createCanvasEvent();
