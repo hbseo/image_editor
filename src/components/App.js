@@ -462,7 +462,6 @@ class App extends Component {
     let body = document.body;
     let myFigure;
     this._canvas.defaultCursor = 'pointer';
-    console.log('bug')
 
     let type = event.target.getAttribute('type');
     body.onclick = (event) => {
@@ -584,8 +583,8 @@ class App extends Component {
   }
 
   filterObject = (event) => {
-    var filterOption = event.target.getAttribute('filter');
-    var activeObject = this.getActiveObject();
+    let filterOption = event.target.getAttribute('filter');
+    let activeObject = this.getActiveObject();
 
     if (activeObject) {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
@@ -599,13 +598,24 @@ class App extends Component {
   }
 
   deleteObject = (event) => {
-    this.action['Delete'].deleteObj();
-    this.saveState();
+    switch(this.state.activeObject.type){
+      case 'textbox' : 
+        if(this.getActiveObject().selectable){
+          this.action['Delete'].deleteObj();
+          this.saveState();
+        }
+        break;
+      case 'null' :
+        break;
+      default :
+        this.action['Delete'].deleteObj();
+        this.saveState();
+    }
   }
 
   flipObject = (event) => {
-    var activeObject = this.getActiveObject();
-    var option = event.target.getAttribute('flip');
+    let activeObject = this.getActiveObject();
+    let option = event.target.getAttribute('flip');
     if (activeObject) {
       this.action['Flip'].flip(activeObject, option);
       this.saveState();
