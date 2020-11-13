@@ -3,6 +3,16 @@
   padding: 50px;
 }
 
+#editor {
+  float : left;
+  margin-top : 10%;
+}
+
+#tool {
+  float : right;
+  width : 50%
+}
+
 button, a {
   display: inline-block;
   padding: .5em .75em;
@@ -16,4 +26,16 @@ button, a {
   border-bottom-color: #e2e2e2;
   border-radius: .25em;
   margin-right: 5px;
+}
+
+p {
+  margin : 1px;
+}
+
+hr {
+  margin : 7px;
+}
+
+h5 {
+  margin : 3px;
 }

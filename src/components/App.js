@@ -447,7 +447,7 @@ class App extends Component {
     body.onclick = (event) => {
       if(event.target.tagName === 'CANVAS'){
         let text = new fabric.Textbox('Hello world', {
-          left: event.layerX, top: event.layerY , fontSize: 50, lockScalingY: true
+          left: event.layerX, top: event.layerY , fontSize: this.state.fontsize, lockScalingY: true
         });
         this._canvas.add(text).setActiveObject(text);
       }
@@ -553,6 +553,9 @@ class App extends Component {
         this.action['Text'].textObj(activeObject, textOption, true, fontSize);
         this.saveState();
       })
+    }
+    else{
+      this.setState({fontsize: fontSize});
     }
 	}
 	
@@ -799,56 +802,77 @@ class App extends Component {
   render() {
 		const styles = {
 			color : {
-				// backgroundColor : `rgba(this.state.color.r,this.state.color.g,this.state.color.b,this.state.color.a)`,
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
-				// backgroundColor : this.state.colorHex
 			}
 		}
     return (
       <div className='App'>
-        <h1>Image Editor</h1>
-        <div>
-          <h5>미구현</h5>
-          <button>Draw Line</button>
-          <button onClick={this.undo}>Undo</button>
-          <button onClick={this.redo}>Redo</button>
+        <div id='editor'>
+          <canvas id='canvas' tabIndex='0'></canvas>
         </div>
+        
+        <div id='tool'>
+          <div>
+            <h5>미구현</h5>
+            <button>Draw Line</button>
+          </div>
 
-        <div>
-          <h5>개발자 기능</h5>
-          <button onClick={this.addImage}>테스트용 이미지 추가</button>
-          <button onClick={this.newCanvas}>배경이미지 캔버스로 변경</button>
-          <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
-          <button onClick={this.getCanvasInfo}>캔버스정보</button>
-          <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
-          <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
-          <button onClick={this.convertSvg}>svg로 변환하기</button>
+          <hr />
 
-          <p>현재 객체 타입 = {this.state.activeObject.type}</p>
-          <p>선택 개체 밝기 값 = {this.state.brightness}</p>
-          <p>선택 개체 각도 값 = {this.state.angle}</p>
-        </div>
+          <div>
+            <h5>개발자 기능</h5>
+            <button onClick={this.addImage}>테스트용 이미지 추가</button>
+            <button onClick={this.newCanvas}>배경이미지 캔버스로 변경</button>
+            <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
+            <button onClick={this.getCanvasInfo}>캔버스정보</button>
+            <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
+            <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
+            <button onClick={this.convertSvg}>svg로 변환하기</button>
 
-        <div>
-          <h5>텍스트 기능</h5>
-					<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
-					<p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
-					<p>컬러 헥스 값{this.state.colorHex}</p>
-					<hr />
+            <p>현재 객체 타입 = {this.state.activeObject.type}</p>
+            <p>선택 개체 밝기 값 = {this.state.brightness}</p>
+            <p>선택 개체 각도 값 = {this.state.angle}</p>
+            <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
+				  	<p>컬러 헥스 값{this.state.colorHex}</p>
+          </div>
 
-          <ul>
-          <h5>텍스트 기능</h5>
-          <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
-          <label htmlFor='fontSize'> 글자 크기: </label>
-          <input 
-            type='number' 
-            className='text'
-            onChange={this.handlefontSizeChange} 
-            text='fontSize'
-            name='fontSize'
-            min='1'
-            value={this.state.fontsize} 
-          />
+          <hr />
+
+          <div>
+            <h5>오브젝트 기능</h5>
+            <button onClick={this.sendToBack}>맨 뒤로 보내기</button>
+            <button onClick={this.sendBackwards}>뒤로 보내기</button>
+            <button onClick={this.bringToFront}>맨 앞으로 보내기</button>
+            <button onClick={this.bringForward}>앞으로 보내기</button>
+            <button onClick={this.deleteObject}>선택 개체 삭제</button>
+            <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
+            <input
+              type='number'
+              name='angle'
+              min='-360'
+              max='360'
+              step='1'
+              value={this.state.angle}
+              onChange={this.handleAngleChange}
+            />
+          </div>
+
+          <hr />
+
+          <div>
+            <h5>텍스트 기능</h5>
+            <button onClick={this.addText}>텍스트 추가</button>
+				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
+            <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
+            <label htmlFor='fontSize'> 글자 크기: </label>
+            <input 
+              type='number' 
+              onChange={this.handlefontSizeChange} 
+              text='fontSize'
+              name='fontSize'
+              min='1'
+              value={this.state.fontsize} 
+            />
             <label htmlFor='fontfamily'>글꼴: </label>
             <select className='text' name='fontfamily' text='fontfamily' onChange={this.textObject}>
               <option value='Times New Roman'>Times New Roman</option>
@@ -856,109 +880,91 @@ class App extends Component {
               <option value='serif'>serif</option>
               <option value='VT323'>VT323</option>
             </select>
-          </ul>
+          </div>
+
+          <hr />
+
+          <div>
+            <h5>이미지 기능</h5>
+            <button onClick={this.cropObject} crop="right">자르기 시작</button>
+            <button onClick={this.cropEndObject} crop="left">자르기 완료</button>
+
+            <button onClick={this.flipObject} flip="X">Flip x</button>
+            <button onClick={this.flipObject} flip="Y">Flip y</button>
+
+            <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />Filter grey
+            <input type='checkbox' className='filter' id='invert' onClick={this.filterObject} filter='invert' />Filter invert
+            <input type='checkbox' className='filter' id='brownie' onClick={this.filterObject} filter='brownie' />Filter brownie
+            <input type='checkbox' className='filter' id='technicolor' onClick={this.filterObject} filter='technicolor' />Filter technicolor
+            <input type='checkbox' className='filter' id='polaroid' onClick={this.filterObject} filter='polaroid' />Filter polaroid
+            <input type='checkbox' className='filter' id='blackwhite' onClick={this.filterObject} filter='blackwhite' />Filter blackwhite
+            <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
+            <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
+            <input
+              type='range'
+              className='filter'
+              id='brightness'
+              min='-1'
+              max='1'
+              name='brightness'
+              step='0.01'
+              value={this.state.brightness}
+              onChange={this.handleBrightChange} filter='brightness'
+            />Brightness
+          </div>
+
+          <hr />
+
+          <div>
+            <h5>도형 기능</h5>
+            <div style={{ border: "solid 1px black" }}>
+              <button onClick={this.addShape} type="triangle">삼각형</button>
+              <button onClick={this.addShape} type="rectangle">직사각형</button>
+              <button onClick={this.addShape} type="circle">원</button>
+            </div>
+          </div>
+
+          <hr />
+
+          <div>
+            <h5>캔버스 기능</h5>
+            <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
+            <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
+            <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
+            <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
+            <button onClick={this.undo}>Undo</button>
+            <button onClick={this.redo}>Redo</button>
+          </div>
+
+          <hr />
+
+          <div>
+            <button onClick={this.openColorPicker}>color</button>
+          	{ this.state.displayColorPicker ? <div>
+          	  <div onClick={this.closeColorPicker}/>
+          	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
+          	</div> : null }
+          </div>
+            
+          <div>
+            <h5>아이콘 기능</h5>
+            <button className="fas fa-times" onClick={this.addIcon} type = "cancel"></button>
+            <button className="fas fa-arrow-right" onClick={this.addIcon} type = "icon_arrow_2"></button>
+            <button className="fas fa-angle-right" onClick={this.addIcon} type = "icon_arrow_3"></button>
+            <button className="fas fa-star" onClick={this.addIcon} type = "icon_star"></button>
+            <button className="fas fa-certificate" onClick={this.addIcon} type = "icon_star_2"></button>
+            <button className="fas fa-times" onClick={this.addIcon} type = "icon_polygon"></button>
+            <button className="fas fa-map-marker-alt" onClick={this.addIcon} type = "icon_location"></button>
+            <button className="fas fa-heart" onClick={this.addIcon} type = "icon_heart"></button>
+            <button className="fas fa-comment-alt" onClick={this.addIcon} type = "icon_bubble"></button>
+            <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
+          </div>
+
+          <ImageList onClick={this.onImgUrlChange} />
+
         </div>
 
-        <ul>
-
-
-          {/* <button onClick= {this.filterObject} filter="grey">Filter grey </button> */}
-          {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
-          <button onClick={this.deleteObject}>선택 개체 삭제</button>
-          <button onClick={this.sendToBack}>맨 뒤로 보내기</button>
-          <button onClick={this.sendBackwards}>뒤로 보내기</button>
-          <button onClick={this.bringToFront}>맨 앞으로 보내기</button>
-          <button onClick={this.bringForward}>앞으로 보내기</button>
-
-          
-          <button>|</button>
-          <button onClick={this.cropObject} crop="right">자르기 시작</button>
-          <button onClick={this.cropEndObject} crop="left">자르기 완료</button>
-
-          <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
-          <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
-          <button onClick={this.flipObject} flip="X">Flip x</button>
-          <button onClick={this.flipObject} flip="Y">Flip y</button>
-          <button>|</button>
-          <button onClick={this.addText}>텍스트</button>
-          <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
-          <button>|</button>
-          <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
-          <button>| 각도설정</button>
-          <input
-            type='number'
-            name='angle'
-            min='-360'
-            max='360'
-            step='1'
-            value={this.state.angle}
-            onChange={this.handleAngleChange}
-          >
-          </input>
-          <button>| 파일 불러오기</button>
-          <input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>
-          <div>
-        	<button onClick={this.openColorPicker}>color</button>
-        	{ this.state.displayColorPicker ? <div>
-        	  <div onClick={this.closeColorPicker}/>
-        	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
-        	</div> : null }
-      	</div>
-          
-          <div style={{ border: "solid 1px black" }}>
-            <button onClick={this.addShape} type="triangle">삼각형</button>
-            <button onClick={this.addShape} type="rectangle">직사각형</button>
-            <button onClick={this.addShape} type="circle">원</button>
-          </div>
-        </ul>
-
-        <ul>
-          <h5>아이콘 기능</h5>
-          <button className="fas fa-times" onClick={this.addIcon} type = "cancel"></button>
-          <button className="fas fa-arrow-right" onClick={this.addIcon} type = "icon_arrow_2"></button>
-          <button className="fas fa-angle-right" onClick={this.addIcon} type = "icon_arrow_3"></button>
-          <button className="fas fa-star" onClick={this.addIcon} type = "icon_star"></button>
-          <button className="fas fa-certificate" onClick={this.addIcon} type = "icon_star_2"></button>
-          <button className="fas fa-times" onClick={this.addIcon} type = "icon_polygon"></button>
-          <button className="fas fa-map-marker-alt" onClick={this.addIcon} type = "icon_location"></button>
-          <button className="fas fa-heart" onClick={this.addIcon} type = "icon_heart"></button>
-          <button className="fas fa-comment-alt" onClick={this.addIcon} type = "icon_bubble"></button>
-          <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
-        </ul>
-        <ul>
-          <h5>필터기능</h5>
-          <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />Filter grey
-          <input type='checkbox' className='filter' id='invert' onClick={this.filterObject} filter='invert' />Filter invert
-          <input type='checkbox' className='filter' id='brownie' onClick={this.filterObject} filter='brownie' />Filter brownie
-          <input type='checkbox' className='filter' id='technicolor' onClick={this.filterObject} filter='technicolor' />Filter technicolor
-          <input type='checkbox' className='filter' id='polaroid' onClick={this.filterObject} filter='polaroid' />Filter polaroid
-          <input type='checkbox' className='filter' id='blackwhite' onClick={this.filterObject} filter='blackwhite' />Filter blackwhite
-          <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
-          <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
-          <input
-            type='range'
-            className='filter'
-            id='brightness'
-            min='-1'
-            max='1'
-            name='brightness'
-            step='0.01'
-            value={this.state.brightness}
-            onChange={this.handleBrightChange} filter='brightness'
-          />Brightness
-        </ul>
-
-        <br />
-
         <hr />
-        <canvas id='canvas' tabIndex='0'></canvas>
-
-        <hr />
-        <ul>
-          {this.layerThumb()}
-        </ul>
-        <hr />
-        <ImageList onClick={this.onImgUrlChange} />
       </div>
     );
   }
