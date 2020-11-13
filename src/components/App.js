@@ -28,7 +28,8 @@ class App extends Component {
       rect: false,
       circle: false,
 			selected: 'radio-4',
-			displayColorPicker: false,
+      displayColorPicker: false,
+      activeObject : { type : 'not active'},
 			color: {
 				r: '241',
 				g: '112',
@@ -187,7 +188,8 @@ class App extends Component {
 		
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
-			let type = this._canvas.getActiveObject().type;
+      let type = this._canvas.getActiveObject().type;
+      this.setState({activeObject : this.getActiveObject()});
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
@@ -210,7 +212,8 @@ class App extends Component {
 		});
 
 		this._canvas.on('selection:updated', (event) => {
-			let type = this._canvas.getActiveObject().type;
+      let type = this._canvas.getActiveObject().type;
+      this.setState({activeObject : this.getActiveObject()});
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
@@ -230,6 +233,7 @@ class App extends Component {
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
+      this.setState({activeObject : { type : 'not active'}});
 			if(!this._canvas.backgroundImage){
         this.switchTools('filter', 'text', true);
 			}
@@ -817,6 +821,7 @@ class App extends Component {
           <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
           <button onClick={this.convertSvg}>svg로 변환하기</button>
 
+          <p>현재 객체 {this.state.activeObject.type}</p>
           <p>선택 개체 밝기 값{this.state.brightness}</p>
           <p>선택 개체 각도 값{this.state.angle}</p>
           <h5>텍스트 기능</h5>
