@@ -23,12 +23,14 @@ class App extends Component {
       angle: 0,   //active object's angle
       filters: [], //active object's filter
       brightness: 0, //active object's brightness
+      contrast : 0,
       fontsize: 50, //active object's fontSize
       stroke : 0,
       strokeWidth : 0,
       layers: [],
       displayColorPicker: false,
       activeObject : { type : 'not active'},
+      zoom : 1,
 			color: {
 				r: '255',
 				g: '255',
@@ -45,6 +47,9 @@ class App extends Component {
     this.testUrl = 'https://source.unsplash.com/random/500x400';
     this.action = {};
     this.copiedObject = null;
+
+    this.isDragging = false;
+    this.selection = true;
     
     this.cropImg = null;
     // eslint-disable-next-line no-array-constructor
@@ -101,7 +106,7 @@ class App extends Component {
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
-
+      // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
       if(this.cropImg){
         if(event.target == null || !(event.target === this.cropImg || event.target.type === "Container")){
           this.action['Crop'].cropObjend(this.cropImg, null);
@@ -109,21 +114,51 @@ class App extends Component {
         }
       }
 
+      // let evt = event.e;
+      // if (evt.altKey === true) {
+      //   this.isDragging = true;
+      //   this.selection = false;
+      //   this.lastPosX = evt.clientX;
+      //   this.lastPosY = evt.clientY;
+      // }
+
     });
 
 
-    this._canvas.on('object:rotated', (event) => {
-      this.setState({ angle: event.target.angle })
-    });
 
-    // 키 입력 이벤트 - mouse:up과 down으로 뭔가를 해보길.
+
     this._canvas.on('mouse:up', (event) => {
       // console.log('fire', event.target);
+      // this._canvas.setViewportTransform(this._canvas.viewportTransform);
+      // this.isDragging = false;
+      // this.selection = true;
     });
 
-    // this._canvas.on('mouse:move', (event) => {
+    this._canvas.on('mouse:wheel', (event) => {
+      // var delta = event.e.deltaY; 
+      // var zoom = this._canvas.getZoom (); 
+      // zoom *= 0.999 ** delta; 
+      // if (zoom> 20) zoom = 20 ; 
+      // if (zoom <0.01) zoom = 0.01; 
+      // this._canvas.setZoom (zoom); 
+      // this.setState({zoom : zoom});
+      // event.e.preventDefault (); 
+      // event.e.stopPropagation (); 
+    })
+        
+
+    this._canvas.on('mouse:move', (event) => {
       // console.log(this._canvas.targets);
-		// });
+      // if (this.isDragging) {
+      //   let e = event.e;
+      //   let vpt = this._canvas.viewportTransform;
+      //   vpt[4] += e.clientX - this.lastPosX;
+      //   vpt[5] += e.clientY - this.lastPosY;
+      //   this._canvas.renderAll();
+      //   this.lastPosX = e.clientX;
+      //   this.lastPosY = e.clientY;
+      // }
+		});
 		
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
@@ -198,6 +233,10 @@ class App extends Component {
       // console.log('object:modified');
       this.saveState();
     })
+
+    this._canvas.on('object:rotated', (event) => {
+      this.setState({ angle: event.target.angle })
+    });
     // this._canvas.on('object:skewed', (event) => {
     //   console.log('object:skewed');
     // })
@@ -265,6 +304,7 @@ class App extends Component {
 		this.setState({
 			angle: image.angle,
       brightness: image.filters[8] ? image.filters[8].brightness : 0,
+      contrast : image.filters[10] ? image.filters[10].contrast : 0,
       stroke : image.stroke,
       strokeWidth : image.stroke ? image.strokeWidth : 0,
 		});
@@ -405,7 +445,7 @@ class App extends Component {
       resolve();
     })
       .then(() => {
-        this.setState({ newimg: true });
+        this.addImage();
       })
   }
 
@@ -415,7 +455,8 @@ class App extends Component {
     this._canvas.defaultCursor = 'pointer';
 
     body.onclick = (event) => {
-      const pointer = { x: event.layerX, y : event.layerY  }
+      // const pointer = { x: this.state.absoluteX, y : this.state.absoluteY }
+      const pointer = { x: event.layerX, y : event.layerY  };
       if(event.target.tagName === 'CANVAS'){
         this.loadImage(this.testUrl, pointer)
         .then((data) => {
@@ -522,6 +563,28 @@ class App extends Component {
       })
         .then((brightEvent) => {
           this.action['Filter'].applyFilter(activeObject, filterOption, true, brightValue);
+          this.saveState();
+        })
+    }
+    else {
+      alert('image is not activated');
+    }
+  }
+
+  handleContrastChange = (event) => {
+    const contrastValue = event.target.value
+    var filterOption = event.target.getAttribute('filter');
+    var activeObject = this.getActiveObject();
+    if (this.getActiveObject()) {
+      let change_state = {};
+      change_state[event.target.name] = event.target.value;
+
+      new Promise((resolve) => {
+        this.setState(change_state);
+        resolve();
+      })
+        .then((contrastEvent) => {
+          this.action['Filter'].applyFilter(activeObject, filterOption, true, contrastValue);
           this.saveState();
         })
     }
@@ -843,7 +906,7 @@ class App extends Component {
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
             <button onClick={this.convertSvg}>svg로 변환하기</button>
-
+            <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
             <p>선택 개체 밝기 값 = {this.state.brightness}</p>
             <p>선택 개체 각도 값 = {this.state.angle}</p>
@@ -879,6 +942,10 @@ class App extends Component {
             <button onClick={this.addText}>텍스트 추가</button>
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
+            <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
+            <button type='checkbox' className='text' onClick={this.textObject} text='left-align'>좌측정렬</button>
+            <button type='checkbox' className='text' onClick={this.textObject} text='center-align' >가운데정렬</button>
+            <button type='checkbox' className='text' onClick={this.textObject} text='right-align' >우측정렬</button>
             <label htmlFor='fontSize'> 글자 크기: </label>
             <input 
               type='number' 
@@ -915,6 +982,8 @@ class App extends Component {
             <input type='checkbox' className='filter' id='blackwhite' onClick={this.filterObject} filter='blackwhite' />Filter blackwhite
             <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
             <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
+            <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
+
             <input
               type='range'
               className='filter'
@@ -926,6 +995,18 @@ class App extends Component {
               value={this.state.brightness}
               onChange={this.handleBrightChange} filter='brightness'
             />Brightness
+
+            <input
+              type='range'
+              className='filter'
+              id='contrast'
+              min='-1'
+              max='1'
+              name='contrast'
+              step='0.01'
+              value={this.state.contrast}
+              onChange={this.handleBrightChange} filter='contrast'
+            />Contrast
           </div>
 
           <hr />

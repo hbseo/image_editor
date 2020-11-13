@@ -39,7 +39,16 @@ class Filter extends Action {
           obj.filters[8] = (new fabric.Image.filters.Brightness({
             brightness: value
           }));
-        break;
+          break;
+        case 'kodachrome':
+          obj.filters[9] = checked && (new fabric.Image.filters.Kodachrome());
+          break;
+        case 'contrast':
+          obj.filters[10] = (new fabric.Image.filters.Contrast({
+            contrast: value
+          }));
+          break;
+        
 
         default:
       }
