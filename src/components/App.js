@@ -28,6 +28,7 @@ class App extends Component {
       strokeWidth : 0,
       layers: [],
       displayColorPicker: false,
+      isDrawingMode: false,
       activeObject : { type : 'not active'},
 			color: {
 				r: '255',
@@ -812,8 +813,12 @@ class App extends Component {
     }
   }
 
+  drawing = () => {
+      this._canvas.isDrawingMode = !this._canvas.isDrawingMode;
+      this._canvas.freeDrawingBrush.color = "purple";
+      this._canvas.freeDrawingBrush.width = 10;
+  }
 
-  
   render() {
 		const styles = {
 			color : {
@@ -829,7 +834,7 @@ class App extends Component {
         <div id='tool'>
           <div>
             <h5>미구현</h5>
-            <button>Draw Line</button>
+            <button onClick={this.drawing}>Free Drawing</button>
           </div>
 
           <hr />
