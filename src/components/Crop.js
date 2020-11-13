@@ -65,7 +65,6 @@ class Crop extends Action {
     let canvas = this.getCanvas();
 
     let image = activeObject;
-    console.log(image);
     // this._cropzone = image;
     this._cropzone = new fabric.Container(
       {label: 'cropObj',
@@ -90,23 +89,43 @@ class Crop extends Action {
 
     let test_canvas = new fabric.Canvas('test', {
       preserveObjectStacking: true,
+      height: 600,
+      width: 1000,
     });
 
     const filters = image.filters;
-
-    image.angle = 0;
+    const angle = image.angle;
+    const left = this._cropzone.left;
+    const top = this._cropzone.top;
     image.filters = [];
     image.applyFilters();
-    test_canvas.add(image);
+    
 
+ 
+    let group = new fabric.Group([image, this._cropzone], {
+      angle : -angle,
+    });
+
+    group._restoreObjectsState();
+    test_canvas.add(group.item(0));
+    test_canvas.add(group.item(1));
+  
+    // console.log(test_canvas._objects[1]);
+
+    var a = document.createElement("a");
+    a.href = test_canvas.toDataURL();
+    a.setAttribute("download", 'image.png');
+    a.click();
+
+
+    
     let cropRect = {
-      left : this._cropzone.left,
-      top : this._cropzone.top,
+      left : test_canvas._objects[1].left,
+      top : test_canvas._objects[1].top,
       height : this._cropzone.height * this._cropzone.scaleY,
       width : this._cropzone.width * this._cropzone.scaleX,
-      angle : 0
     }
-    canvas.remove(this._cropzone);
+
     const imageData = {
       imageName: "test",
       url: test_canvas.toDataURL(cropRect)
@@ -116,9 +135,9 @@ class Crop extends Action {
     new Promise(resolve => {
       fabric.Image.fromURL(imageData.url, img => {
         img.set({
-          angle : this._cropzone.angle,
-          left : this._cropzone.left,
-          top : this._cropzone.top,
+          angle : angle,
+          left : left,
+          top : top,
           height : this._cropzone.height* this._cropzone.scaleY,
           width : this._cropzone.width* this._cropzone.scaleX,
           filters : filters,
@@ -133,6 +152,8 @@ class Crop extends Action {
     })
     .then(() => {
       canvas.remove(activeObject);
+      canvas.remove(this._cropzone);
+
       this.deleteEvent();
     })
     .then(() => {
