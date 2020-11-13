@@ -22,18 +22,13 @@ class App extends Component {
       filters: [], //active object's filter
       brightness: 0, //active object's brightness
       fontsize: 50, //active object's fontSize
-      newimg: false,
       layers: [],
-      tri: false,
-      rect: false,
-      circle: false,
-			selected: 'radio-4',
       displayColorPicker: false,
       activeObject : { type : 'not active'},
 			color: {
-				r: '241',
-				g: '112',
-				b: '19',
+				r: '255',
+				g: '255',
+				b: '255',
 				a: '1',
 			},
       colorHex : '#F17013',
@@ -127,41 +122,12 @@ class App extends Component {
 	}
 
 	_createDomEvent = () => {
-		document.addEventListener('mousedown', (event) => {
-			if(event.target.tagName !== 'CANVAS'){
-				this._canvas.defaultCursor = 'default';
-				this.setState({
-					newimg : false
-				})
-			}
-		})
-
 		document.addEventListener('keydown',this._onKeydownEvent)
 	}
 
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
-      
-      // 새로운 이미지 추가
-      if (this.state.newimg) {
-				this.addImage(event.pointer);
-				this._canvas.defaultCursor = 'default';
-        this.setState({ newimg: false })
-      }
-      if (this.state.tri) {
-        this.addTriangle(event.pointer);
-        this.setState({ tri: false });
-      }
-      else if (this.state.rect) {
-        this.addRectangle(event.pointer);
-        this.setState({ rect: false });
-      }
-      else if (this.state.circle) {
-        this.addCircle(event.pointer);
-        this.setState({ circle: false });
-      }
-
 
       if(this.cropImg){
         if(event.target == null || !(event.target === this.cropImg || event.target.type === "Container")){
@@ -197,7 +163,7 @@ class App extends Component {
 				case 'textbox':
 					this._textboxSelection(this._canvas.getActiveObject());
 					break;
-				case 'activeSelection':
+				case 'activeSelection': //group using drag
 					this.switchTools('filter', 'text', true);
 					this.setState({
 						angle: 0
@@ -453,43 +419,73 @@ class App extends Component {
       })
   }
 
-  addNewImage = () => {
-		this._canvas.defaultCursor = 'pointer';
-    this.setState({ newimg: true });
-  }
 
-  addImage = (pointer) => {
-    this.loadImage(this.testUrl, pointer)
-      .then((data) => {
-				this._canvas.add(data).setActiveObject(data);
-        this.setState({ layers: this.state.layers.concat(data) });
-        // console.log(data.getSvgSrc());
-      })
+  addImage = () => {
+    let body = document.body;
+    this._canvas.defaultCursor = 'pointer';
+
+    body.onclick = (event) => {
+      const pointer = { x: event.layerX, y : event.layerY  }
+      if(event.target.tagName === 'CANVAS'){
+        this.loadImage(this.testUrl, pointer)
+        .then((data) => {
+          this._canvas.add(data).setActiveObject(data);
+          // this.setState({ layers: this.state.layers.concat(data) });
+          // console.log(data.getSvgSrc());
+        })
+      }
+      this._canvas.defaultCursor = 'default';
+      body.onclick = null;
+    }
+    
   }
 
   addText = () => {
-    let text = new fabric.Textbox('Hello world', {
-      left: 100, top: 100, fontSize: 50, lockScalingY: true
-    });
-    this._canvas.add(text).setActiveObject(text);
+    let body = document.body;
+    this._canvas.defaultCursor = 'pointer';
+    
+    body.onclick = (event) => {
+      if(event.target.tagName === 'CANVAS'){
+        let text = new fabric.Textbox('Hello world', {
+          left: event.layerX, top: event.layerY , fontSize: 50, lockScalingY: true
+        });
+        this._canvas.add(text).setActiveObject(text);
+      }
+      this._canvas.defaultCursor = 'default';
+      body.onclick = null;
+    }
   }
 
-  addTriangle = (pointer) => {
-    let myFigure = new fabric.Triangle({ width: 40, height: 40, left: pointer.x, top: pointer.y, fill: "black" });
-    this._canvas.add(myFigure);
-    this.setState({ tri: true });
-  }
 
-  addRectangle = (pointer) => {
-    let myFigure = new fabric.Rect({ width: 40, height: 40, left: pointer.x, top: pointer.y, fill: "black" });
-    this._canvas.add(myFigure);
-    this.setState({ rect: true });
-  }
 
-  addCircle = (pointer) => {
-    let myFigure = new fabric.Circle({ radius: 20, left: pointer.x, top: pointer.y, fill: "black" });
-    this._canvas.add(myFigure);
-    this.setState({ circle: true });
+  addShape = (event) => {
+    let body = document.body;
+    let myFigure;
+    this._canvas.defaultCursor = 'pointer';
+    console.log('bug')
+
+    let type = event.target.getAttribute('type');
+    body.onclick = (event) => {
+      if(event.target.tagName === 'CANVAS'){
+        switch(type) {
+          case 'triangle':
+            myFigure = new fabric.Triangle({ width: 40, height: 40, left: event.layerX, top: event.layerY, fill: "black" });
+            this._canvas.add(myFigure);
+            break;
+          case 'rectangle':
+            myFigure = new fabric.Rect({ width: 40, height: 40, left: event.layerX, top: event.layerY, fill: "black" });
+            this._canvas.add(myFigure);
+            break;
+          case 'circle':
+            myFigure = new fabric.Circle({ radius: 20, left: event.layerX, top: event.layerY, fill: "black" });
+            this._canvas.add(myFigure);
+            break;
+          default:
+        }
+      }
+      this._canvas.defaultCursor = 'default';
+      body.onclick = null;
+    }
   }
 
   coloringFigure = (event) => {
@@ -623,7 +619,7 @@ class App extends Component {
   cropObject = (event) => {
     let cropOption = event.target.getAttribute('crop');
     let activeObject = this.getActiveObject();
-    if(activeObject && activeObject.type == 'image'){
+    if(activeObject && activeObject.type === 'image'){
       this.cropImg = activeObject;
       this.action['Crop'].cropObj(activeObject, cropOption);
       this.saveState();
@@ -681,7 +677,7 @@ class App extends Component {
 
   onImgUrlChange = (url) => {
     this.testUrl = url;
-    this.setState({ newimg: true })
+    this.addImage();
   }
 
   objectInfo = () => {
@@ -803,19 +799,14 @@ class App extends Component {
         <h1>Image Editor</h1>
         <div>
           <h5>미구현</h5>
+          <button>Draw Line</button>
           <button onClick={this.undo}>Undo</button>
           <button onClick={this.redo}>Redo</button>
-          {/* <button>Rotate</button>
-          <button>Flip</button> */}
-          <button>Draw Line</button>
-          {/* <button>Figure</button> */}
-          <button>Cut</button>
-          {/* <button>Text</button> */}
         </div>
 
         <div>
           <h5>개발자 기능</h5>
-          <button onClick={this.addNewImage}>테스트용 이미지 추가</button>
+          <button onClick={this.addImage}>테스트용 이미지 추가</button>
           <button onClick={this.newCanvas}>배경이미지 캔버스로 변경</button>
           <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
           <button onClick={this.getCanvasInfo}>캔버스정보</button>
@@ -823,14 +814,39 @@ class App extends Component {
           <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
           <button onClick={this.convertSvg}>svg로 변환하기</button>
 
-          <p>현재 객체 {this.state.activeObject.type}</p>
-          <p>선택 개체 밝기 값{this.state.brightness}</p>
-          <p>선택 개체 각도 값{this.state.angle}</p>
+          <p>현재 객체 타입 = {this.state.activeObject.type}</p>
+          <p>선택 개체 밝기 값 = {this.state.brightness}</p>
+          <p>선택 개체 각도 값 = {this.state.angle}</p>
+        </div>
+
+        <div>
           <h5>텍스트 기능</h5>
-					<p>선택 텍스트 폰트크기{this.state.fontsize}</p>
+					<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
 					<p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
-					<p>{this.state.colorHex}</p>
+					<p>컬러 헥스 값{this.state.colorHex}</p>
 					<hr />
+
+          <ul>
+          <h5>텍스트 기능</h5>
+          <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
+          <label htmlFor='fontSize'> 글자 크기: </label>
+          <input 
+            type='number' 
+            className='text'
+            onChange={this.handlefontSizeChange} 
+            text='fontSize'
+            name='fontSize'
+            min='1'
+            value={this.state.fontsize} 
+          />
+            <label htmlFor='fontfamily'>글꼴: </label>
+            <select className='text' name='fontfamily' text='fontfamily' onChange={this.textObject}>
+              <option value='Times New Roman'>Times New Roman</option>
+              <option value='Georgia'>Georgia</option>
+              <option value='serif'>serif</option>
+              <option value='VT323'>VT323</option>
+            </select>
+          </ul>
         </div>
 
         <ul>
@@ -878,18 +894,14 @@ class App extends Component {
         	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
         	</div> : null }
       	</div>
+          
           <div style={{ border: "solid 1px black" }}>
-            <button onClick={this.addTriangle}>삼각형</button>
-            <button onClick={this.addRectangle}>직사각형</button>
-            <button onClick={this.addCircle}>원</button>
-            <ul>
-              <input type='radio' id="radio-1" color='red' onClick={this.coloringFigure} checked={this.state.selected === 'radio-1'} onChange={(e) => this.setState({ selected: e.target.value })} />red
-              <input type='radio' id="radio-2" color='yellow' onClick={this.coloringFigure} checked={this.state.selected === 'radio-2'} onChange={(e) => this.setState({ selected: e.target.value })} />yellow
-              <input type='radio' id="radio-3" color='green' onClick={this.coloringFigure} checked={this.state.selected === 'radio-3'} onChange={(e) => this.setState({ selected: e.target.value })} />green
-              <input type='radio' id="radio-4" color='black' onClick={this.coloringFigure} checked={this.state.selected === 'radio-4'} onChange={(e) => this.setState({ selected: e.target.value })} />black
-            </ul>
+            <button onClick={this.addShape} type="triangle">삼각형</button>
+            <button onClick={this.addShape} type="rectangle">직사각형</button>
+            <button onClick={this.addShape} type="circle">원</button>
           </div>
         </ul>
+
         <ul>
           <h5>아이콘 기능</h5>
           <button className="fas fa-times" onClick={this.addIcon} type = "cancel"></button>
@@ -922,29 +934,10 @@ class App extends Component {
             name='brightness'
             step='0.01'
             value={this.state.brightness}
-            onChange={this.handleBrightChange} filter='brightness' />Brightness
+            onChange={this.handleBrightChange} filter='brightness'
+          />Brightness
         </ul>
-        <ul>
-          <h5>텍스트 기능</h5>
-          <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
-          <label htmlFor='fontSize'> 글자 크기: </label>
-          <input 
-            type='number' 
-            className='text'
-            onChange={this.handlefontSizeChange} 
-            text='fontSize'
-            name='fontSize'
-            min='1'
-            value={this.state.fontsize} />
-            <label htmlFor='fontfamily'>글꼴: </label>
-            <select className='text' name='fontfamily' text='fontfamily' onChange={this.textObject}>
-              <option value='Times New Roman'>Times New Roman</option>
-              <option value='Georgia'>Georgia</option>
-              <option value='serif'>serif</option>
-              <option value='VT323'>VT323</option>
-            </select>
-        </ul>
-        {/* <FilterMenu onClick= {this.filterObject}/> */}
+
         <br />
 
         <hr />
