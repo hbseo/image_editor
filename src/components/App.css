@@ -10,7 +10,7 @@
 
 #tool {
   float : right;
-  width : 50%
+  width : 30%
 }
 
 button, a {
@@ -26,6 +26,11 @@ button, a {
   border-bottom-color: #e2e2e2;
   border-radius: .25em;
   margin-right: 5px;
+}
+
+button:disabled {
+  color : gray;
+  background-color: gray;
 }
 
 p {
