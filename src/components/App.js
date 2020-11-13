@@ -12,6 +12,8 @@ import Flip from './Flip';
 import Text from './Text';
 import Fill from './Fill';
 import Icon from './Icon';
+import Shape from './Shape';
+
 // import FilterMenu from './FilterMenu';
 
 class App extends Component {
@@ -22,6 +24,8 @@ class App extends Component {
       filters: [], //active object's filter
       brightness: 0, //active object's brightness
       fontsize: 50, //active object's fontSize
+      stroke : 0,
+      strokeWidth : 0,
       layers: [],
       displayColorPicker: false,
       activeObject : { type : 'not active'},
@@ -51,7 +55,7 @@ class App extends Component {
     this.stateStack = [];
     this.redoStack = [];
     this.maxSize = 10;
-    // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+    fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
     this._createAction();
 
@@ -170,7 +174,11 @@ class App extends Component {
 					});
 					break;
 				default:
-					this.switchTools('filter', 'text', true);
+          this.switchTools('filter', 'text', true);
+          this.setState({
+            stroke : this.getActiveObject().stroke,
+						strokeWidth : this.getActiveObject().stroke ? this.getActiveObject().strokeWidth : 0,
+					});
 			}
       
 
@@ -187,14 +195,18 @@ class App extends Component {
 				case 'textbox':
 					this._textboxSelection(this._canvas.getActiveObject());
 					break;
-				case 'activeSelection':
+				case 'activeSelection': //group using drag
 					this.switchTools('filter', 'text', true);
 					this.setState({
-						angle: 0
+            angle: 0
 					});
 					break;
 				default:
-					this.switchTools('filter', 'text', true);
+          this.switchTools('filter', 'text', true);
+          this.setState({
+            stroke : this.getActiveObject().stroke,
+            strokeWidth : this.getActiveObject().stroke ? this.getActiveObject().strokeWidth : 0,
+					});
 			}
 		});
 
@@ -283,7 +295,9 @@ class App extends Component {
 		}
 		this.setState({
 			angle: image.angle,
-			brightness: image.filters[8] ? image.filters[8].brightness : 0
+      brightness: image.filters[8] ? image.filters[8].brightness : 0,
+      stroke : image.stroke,
+      strokeWidth : image.stroke ? image.strokeWidth : 0,
 		});
 	}
 
@@ -298,7 +312,9 @@ class App extends Component {
     this.switchTools('filter', true);
 		this.setState({
 			fontsize : text.fontSize,
-			angle : text.angle
+      angle : text.angle,
+      stroke : text.stroke,
+      strokeWidth : text.stroke ? text.strokeWidth : 0,
 		})
   }
   
@@ -324,6 +340,7 @@ class App extends Component {
     this._register(this.action, new Flip(this));
     this._register(this.action, new Fill(this));
     this._register(this.action, new Icon(this));
+    this._register(this.action, new Shape(this));
   }
 
   /**
@@ -338,34 +355,6 @@ class App extends Component {
 
   getActiveObject() {
     return this._canvas._activeObject;
-
-    // console.log("----",this._canvas._activeObject._objects)
-    // if(this._canvas._activeObject._objects){
-    //   // console.log(this._canvas.getActiveObjects())
-    //   // return this._canvas.getActiveObjects();
-    //   const original_point_left = this._canvas._activeObject.left;
-    //   const original_point_top = this._canvas._activeObject.top;
-
-    //   var group = new fabric.Group(this._canvas._activeObject._objects,{
-    //     // originX:'center',
-    //     // originY:'center'
-    //     left : original_point_left,
-    //     top : original_point_top,
-    //     angle : 0
-    //   });
-    //   this._canvas._activeObject.onDeselect();
-    //   // group.onDeselect();
-    //   group.onSelect();
-    //   console.log(group);
-    //   return group;
-    // //   this._canvas._activeObject = alltogetherObj;
-    // //   console.log("adasdf",alltogetherObj);
-
-    // //   return alltogetherObj;
-    // }
-    // else{
-    //   return this._canvas._activeObject;
-    // }
   }
 
   /**
@@ -566,7 +555,30 @@ class App extends Component {
       this.saveState();
     }
     this.setState({ color: color.rgb, colorHex : color.hex })
-	}
+  }
+  
+  
+  handleStrokeWidthChange = (event) => {
+    this.setState({strokeWidth : event.target.value})
+    console.log(event.target.value);
+    if(this.getActiveObject()){
+      let options = {
+        strokeColor : '#ffffff',
+        strokeWidth : Number(event.target.value)
+      }
+      this.action['Shape'].setStroke(this.getActiveObject(), options);
+    }
+  }
+
+  handleStrokeColorChange = (color) => {
+    // if(this.getActiveObject()){
+    //   let options = {
+    //     strokeColor : color.hex
+    //   }
+    //   this.setState({strokeColor : color.hex})
+    //   this.action['Shape'].setStroke(this.getActiveObject(), options);
+    // }
+  }
 
 
 
@@ -798,6 +810,8 @@ class App extends Component {
       this._canvas.renderAll();
     }
   }
+
+
   
   render() {
 		const styles = {
@@ -921,7 +935,6 @@ class App extends Component {
               <button onClick={this.addShape} type="triangle">삼각형</button>
               <button onClick={this.addShape} type="rectangle">직사각형</button>
               <button onClick={this.addShape} type="circle">원</button>
-            </div>
           </div>
 
           <hr />
@@ -939,11 +952,24 @@ class App extends Component {
           <hr />
 
           <div>
+            <h5>색깔 : FILL 하는 용도</h5>
             <button onClick={this.openColorPicker}>color</button>
           	{ this.state.displayColorPicker ? <div>
           	  <div onClick={this.closeColorPicker}/>
           	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
           	</div> : null }
+
+            <h5>테두리 두깨</h5>
+            <input
+              type='number'
+              name='stroke'
+              min='0'
+              max='100'
+              step='1'
+              value={this.state.strokeWidth}
+              onChange={this.handleStrokeWidthChange}
+            />
+            </div>
           </div>
             
           <div>

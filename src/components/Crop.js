@@ -70,8 +70,8 @@ class Crop extends Action {
       {label: 'cropObj',
        top: image.top, 
        left: image.left, 
-       height: image.height, 
-       width:image.width,
+       height: image.height + image.strokeWidth, 
+       width:image.width + image.strokeWidth,
        scaleX : image.scaleX,
        scaleY : image.scaleY,
        angle : image.angle,
@@ -89,8 +89,6 @@ class Crop extends Action {
 
     let test_canvas = new fabric.Canvas('test', {
       preserveObjectStacking: true,
-      height: 600,
-      width: 1000,
     });
 
     const filters = image.filters;
@@ -120,8 +118,8 @@ class Crop extends Action {
 
     
     let cropRect = {
-      left : test_canvas._objects[1].left,
-      top : test_canvas._objects[1].top,
+      left : test_canvas._objects[1].oCoords.tl.x,
+      top : test_canvas._objects[1].oCoords.tl.y,
       height : this._cropzone.height * this._cropzone.scaleY,
       width : this._cropzone.width * this._cropzone.scaleX,
     }
