@@ -759,6 +759,30 @@ class App extends Component {
     }
   }
 
+  sendBackwards = () => {
+    if(this.getActiveObject()){
+      this._canvas.sendBackwards(this.getActiveObject())
+      this._canvas.renderAll();
+    }
+  }
+  sendToBack = () => {
+    if(this.getActiveObject()){
+      this._canvas.sendToBack(this.getActiveObject())
+      this._canvas.renderAll();
+    }
+  }
+  bringForward = () => {
+    if(this.getActiveObject()){
+      this._canvas.bringForward(this.getActiveObject())
+      this._canvas.renderAll();
+    }
+  }
+  bringToFront = () => {
+    if(this.getActiveObject()){
+      this._canvas.bringToFront(this.getActiveObject())
+      this._canvas.renderAll();
+    }
+  }
   
   render() {
 		const styles = {
@@ -808,6 +832,12 @@ class App extends Component {
           {/* <button onClick= {this.filterObject} filter="grey">Filter grey </button> */}
           {/* <button onClick= {this.filterObject} filter="vintage" >Filter vintage </button>  */}
           <button onClick={this.deleteObject}>선택 개체 삭제</button>
+          <button onClick={this.sendToBack}>맨 뒤로 보내기</button>
+          <button onClick={this.sendBackwards}>뒤로 보내기</button>
+          <button onClick={this.bringToFront}>맨 앞으로 보내기</button>
+          <button onClick={this.bringForward}>앞으로 보내기</button>
+
+          
           <button>|</button>
           <button onClick={this.cropObject} crop="right">자르기 시작</button>
           <button onClick={this.cropEndObject} crop="left">자르기 완료</button>
