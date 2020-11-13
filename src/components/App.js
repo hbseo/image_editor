@@ -745,6 +745,20 @@ class App extends Component {
     }
   }
 
+  convertSvg = () => {
+    let img = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Font_Awesome_5_solid_cloud.svg/512px-Font_Awesome_5_solid_cloud.svg.png";
+    fabric.loadSVGFromURL(img, (objects, options) => {
+      var shape = fabric.util.groupSVGElements(objects, options);
+      console.log(shape.toSVG());
+    })
+  }
+
+  convertObjSvg = () => {
+    if(this.getActiveObject()){
+      console.log(this.getActiveObject().toSVG());
+    }
+  }
+
   
   render() {
 		const styles = {
@@ -776,8 +790,8 @@ class App extends Component {
           <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
           <button onClick={this.getCanvasInfo}>캔버스정보</button>
           <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
-
-
+          <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
+          <button onClick={this.convertSvg}>svg로 변환하기</button>
 
           <p>선택 개체 밝기 값{this.state.brightness}</p>
           <p>선택 개체 각도 값{this.state.angle}</p>
@@ -828,8 +842,8 @@ class App extends Component {
         	</div> : null }
       	</div>
           <div style={{ border: "solid 1px black" }}>
-            <button onClick={this.addTriangle}>삼</button>
-            <button onClick={this.addRectangle}>직</button>
+            <button onClick={this.addTriangle}>삼각형</button>
+            <button onClick={this.addRectangle}>직사각형</button>
             <button onClick={this.addCircle}>원</button>
             <ul>
               <input type='radio' id="radio-1" color='red' onClick={this.coloringFigure} checked={this.state.selected === 'radio-1'} onChange={(e) => this.setState({ selected: e.target.value })} />red
@@ -841,7 +855,16 @@ class App extends Component {
         </ul>
         <ul>
           <h5>아이콘 기능</h5>
-          <button onClick={this.addIcon} type = "arrow" >화살 아이콘</button>
+          <button className="fas fa-times" onClick={this.addIcon} type = "cancel"></button>
+          <button className="fas fa-arrow-right" onClick={this.addIcon} type = "icon_arrow_2"></button>
+          <button className="fas fa-angle-right" onClick={this.addIcon} type = "icon_arrow_3"></button>
+          <button className="fas fa-star" onClick={this.addIcon} type = "icon_star"></button>
+          <button className="fas fa-certificate" onClick={this.addIcon} type = "icon_star_2"></button>
+          <button className="fas fa-times" onClick={this.addIcon} type = "icon_polygon"></button>
+          <button className="fas fa-map-marker-alt" onClick={this.addIcon} type = "icon_location"></button>
+          <button className="fas fa-heart" onClick={this.addIcon} type = "icon_heart"></button>
+          <button className="fas fa-comment-alt" onClick={this.addIcon} type = "icon_bubble"></button>
+          <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
         </ul>
         <ul>
           <h5>필터기능</h5>

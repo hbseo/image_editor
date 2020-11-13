@@ -1,6 +1,5 @@
 import Action from './Action';
 import { fabric } from 'fabric';
-import img from '../man.svg'
 
 //from tui.image.editor
 const iconList = {
@@ -16,8 +15,10 @@ const iconList = {
     icon_polygon: 'M3,31 L19,3 h32 l16,28 l-16,28 H19  z ',
     icon_location: 'M24 62C8 45.503 0 32.837 0 24 0 10.745 10.745 0 24 0s24 10.745 24 24c0 8.837-8 21.503-24 38zm0-28c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10z',
     icon_heart: 'M49.994999,91.349998 l-6.96,-6.333 C18.324001,62.606995 2.01,47.829002 2.01,29.690998 C2.01,14.912998 13.619999,3.299999 28.401001,3.299999 c8.349,0 16.362,5.859 21.594,12 c5.229,-6.141 13.242001,-12 21.591,-12 c14.778,0 26.390999,11.61 26.390999,26.390999 c0,18.138 -16.314001,32.916 -41.025002,55.374001 l-6.96,6.285  z ',
-    icon_bubble: 'M44 48L34 58V48H12C5.373 48 0 42.627 0 36V12C0 5.373 5.373 0 12 0h40c6.627 0 12 5.373 12 12v24c0 6.627-5.373 12-12 12h-8z'
-}
+    icon_bubble: 'M44 48L34 58V48H12C5.373 48 0 42.627 0 36V12C0 5.373 5.373 0 12 0h40c6.627 0 12 5.373 12 12v24c0 6.627-5.373 12-12 12h-8z',
+    icon_cloud : 'M429.382,412.512c45.629,0,82.618-36.99,82.618-82.619c0-39.196-27.305-71.994-63.925-80.468c-0.749-82.934-68.2-149.937-151.311-149.937c-57.06,0-106.735,31.585-132.518,78.221c-7.845-3.395-16.492-5.285-25.583-5.285c-32.75,0-59.779,24.421-63.917,56.042C32.131,236.916,0,274.498,0,319.594c0,51.318,41.601,92.918,92.917,92.918C107.211,412.512,419.589,412.512,429.382,412.512z',
+  
+  }
 class Icon extends Action {
   constructor(App) {
     super('Icon', App);
@@ -25,7 +26,6 @@ class Icon extends Action {
 
   addIcon = (options) => {
     let canvas = this.getCanvas();
-    
     let icon = this._createIcon(iconList[options.type]);
 
 
@@ -42,7 +42,7 @@ class Icon extends Action {
   _addIcon = (canvas, icon, options, event) => {
     icon.set(({
         fill : options.color,
-        type : 'icon',
+        // type : 'icon', // if type is modified, Cannot read property 'fromObject' of undefined
         left : event.pointer.x,
         top : event.pointer.y,
     }))
@@ -54,20 +54,13 @@ class Icon extends Action {
   }
 
 
-  loadIcon = () => {
-      const canvas = this.getCanvas();
-      fabric.loadSVGFromURL(img, (objects, options) => {
-        var shape = fabric.util.groupSVGElements(objects, options);
-        shape.set({
-          left: 165,
-          top: 100,
-        //   width: 295,
-        //   height: 40
-        });
-        canvas.add(shape);
-        canvas.renderAll();
-      })
+  loadSvgIcon = () => {
+    // fabric.loadSVGFromURL(img, (objects, options) => {
+    //   var shape = fabric.util.groupSVGElements(objects, options);
+      
+    // })
   }
+
 
 
   _createIcon = (path) => {
