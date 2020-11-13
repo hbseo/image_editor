@@ -11,8 +11,8 @@ import Coloring from './Coloring';
 import Flip from './Flip';
 import Text from './Text';
 import Fill from './Fill';
+import Icon from './Icon';
 // import FilterMenu from './FilterMenu';
-
 
 class App extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ class App extends Component {
 				b: '19',
 				a: '1',
 			},
-      colorHex : 0,
+      colorHex : '#F17013',
     }
 
     this._canvas = null;
@@ -55,6 +55,7 @@ class App extends Component {
     this.stateStack = [];
     this.redoStack = [];
     this.maxSize = 10;
+    // fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
     this._createAction();
 
@@ -159,6 +160,7 @@ class App extends Component {
         this.addCircle(event.pointer);
         this.setState({ circle: false });
       }
+
 
       if(this.cropImg){
         if(event.target == null || !(event.target === this.cropImg || event.target.type === "Container")){
@@ -351,6 +353,7 @@ class App extends Component {
     this._register(this.action, new Coloring(this))
     this._register(this.action, new Flip(this));
     this._register(this.action, new Fill(this));
+    this._register(this.action, new Icon(this));
   }
 
   /**
@@ -654,6 +657,14 @@ class App extends Component {
     }
   }
 
+  addIcon = (event) => {
+    const options = {
+      type : event.target.getAttribute('type'),
+      color : this.state.colorHex,
+    }
+    this.action['Icon'].addIcon(options);
+  }
+
   layerThumb = () => {
     var layer_list = null;
     // if (this._canvas) {
@@ -723,7 +734,15 @@ class App extends Component {
 
   getCanvasInfo = () => {
     console.log(this._canvas);
-  
+  }
+
+  getCanvasEventInfo = () => {
+    for (const key in this._canvas.__eventListeners){
+      console.log(key);
+      for ( const i of this._canvas.__eventListeners[key]){
+        console.log(i);
+      }
+    }
   }
 
   
@@ -756,6 +775,8 @@ class App extends Component {
           <button onClick={this.newCanvas}>배경이미지 캔버스로 변경</button>
           <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
           <button onClick={this.getCanvasInfo}>캔버스정보</button>
+          <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
+
 
 
           <p>선택 개체 밝기 값{this.state.brightness}</p>
@@ -817,6 +838,10 @@ class App extends Component {
               <input type='radio' id="radio-4" color='black' onClick={this.coloringFigure} checked={this.state.selected === 'radio-4'} onChange={(e) => this.setState({ selected: e.target.value })} />black
             </ul>
           </div>
+        </ul>
+        <ul>
+          <h5>아이콘 기능</h5>
+          <button onClick={this.addIcon} type = "arrow" >화살 아이콘</button>
         </ul>
         <ul>
           <h5>필터기능</h5>
