@@ -28,14 +28,20 @@ class Icon extends Action {
     let canvas = this.getCanvas();
     let icon = this._createIcon(iconList[options.type]);
 
-
-    canvas.on('mouse:down', (event) => { 
+    let canvas_area = document.body;
+    canvas_area.onclick = (event) => {
+      if(event.target.tagName === 'CANVAS'){
         this._addIcon(canvas, icon, options, event);
-        let lastPos = canvas.__eventListeners["mouse:down"].length - 1;
-        canvas.off('mouse:down',canvas.__eventListeners["mouse:down"][lastPos]);
-    });
+      }
+      canvas_area.onclick = null;
+    }
 
+    // canvas.on('mouse:down', (event) => { 
+    //     this._addIcon(canvas, icon, options, event);
 
+    //     let lastPos = canvas.__eventListeners["mouse:down"].length - 1;
+    //     canvas.off('mouse:down',canvas.__eventListeners["mouse:down"][lastPos]);
+    // });
     // this.loadIcon();
   }
 
@@ -43,14 +49,14 @@ class Icon extends Action {
     icon.set(({
         fill : options.color,
         // type : 'icon', // if type is modified, Cannot read property 'fromObject' of undefined
-        left : event.pointer.x,
-        top : event.pointer.y,
+        // left : event.pointer.x, // canvas 이벤트용
+        // top : event.pointer.y, // canvas 이벤트용
+        left : event.layerX,
+        top : event.layerY,
     }))
     canvas.add(icon);
     canvas.setActiveObject(icon);
     canvas.renderAll();
-
-
   }
 
 
