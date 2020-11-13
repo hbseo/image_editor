@@ -112,10 +112,10 @@ class Crop extends Action {
   
     // console.log(test_canvas._objects[1]);
 
-    var a = document.createElement("a");
-    a.href = test_canvas.toDataURL();
-    a.setAttribute("download", 'image.png');
-    a.click();
+    // var a = document.createElement("a");
+    // a.href = test_canvas.toDataURL();
+    // a.setAttribute("download", 'image.png');
+    // a.click();
 
 
     

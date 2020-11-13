@@ -623,9 +623,11 @@ class App extends Component {
   cropObject = (event) => {
     let cropOption = event.target.getAttribute('crop');
     let activeObject = this.getActiveObject();
-    this.cropImg = activeObject;
-    this.action['Crop'].cropObj(activeObject, cropOption);
-    this.saveState();
+    if(activeObject && activeObject.type == 'image'){
+      this.cropImg = activeObject;
+      this.action['Crop'].cropObj(activeObject, cropOption);
+      this.saveState();
+    }
   }
 
   cropEndObject = (event) => {
