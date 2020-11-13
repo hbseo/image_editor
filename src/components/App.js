@@ -40,6 +40,7 @@ class App extends Component {
 
     this._canvas = null;
     this._canvasImage = null;
+    this._clipboard = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.testUrl = 'https://source.unsplash.com/random/500x400';
     this.action = {};
@@ -85,43 +86,11 @@ class App extends Component {
     }
     // ctrl + c
     if((metaKey || ctrlKey) && keyCode === 67) {
-      const activeObject = this.getActiveObject();
-      if(activeObject.type === 'activeSelection') {
-        for(let i in activeObject._objects) {
-          let object = fabric.util.object.clone(activeObject._objects[i]);
-          object.set('top', object.top+5);
-          object.set('left', object.left+5);
-          this.copiedObjects[i] = object;
-        }
-      }
-      else {
-        let object = fabric.util.object.clone(activeObject);
-        object.set('top', object.top+5);
-        object.set('left', object.left+5);
-        this.copiedObject = object;
-        // eslint-disable-next-line no-array-constructor
-        this.copiedObjects = new Array();
-      }
+      this.copyObject();
     }
     // ctrl + v
     if((metaKey || ctrlKey) && keyCode === 86) {
-      if(this.copiedObjects.length > 0) {
-        for(let i in this.copiedObjects) {
-          let object = fabric.util.object.clone(this.copiedObjects[i]);
-          object.set('top', object.top+5);
-          object.set('left', object.left+5);
-          this.copiedObjects[i] = object;
-          this._canvas.add(this.copiedObjects[i]);
-        }
-      }
-      else if(this.copiedObject) {
-        let object = fabric.util.object.clone(this.copiedObject);
-        object.set('top', object.top+5);
-        object.set('left', object.left+5);
-        this.copiedObject = object;
-        this._canvas.add(this.copiedObject);
-      }
-      this._canvas.renderAll();
+      this.pasteObject();
     }
 	}
 
@@ -363,6 +332,38 @@ class App extends Component {
    */
   getCanvas() {
     return this._canvas;
+  }
+
+  copyObject = () => {
+    this.getActiveObject().clone((cloned) => {
+      this._clipboard = cloned;
+    });
+  }
+
+  pasteObject = () => {
+    const canvas = this._canvas;
+    this._clipboard.clone((clonedObj) => {
+      canvas.discardActiveObject();
+      clonedObj.set({
+        left: clonedObj.left + 10,
+        top: clonedObj.top + 10,
+        evented: true,
+      });
+      if (clonedObj.type === 'activeSelection') {
+        clonedObj.canvas = canvas;
+        clonedObj.forEachObject(function(obj) {
+          canvas.add(obj);
+        });
+        // this should solve the unselectability
+        clonedObj.setCoords();
+      } else {
+        canvas.add(clonedObj);
+      }
+      this._clipboard.top += 10;
+      this._clipboard.left += 10;
+      canvas.setActiveObject(clonedObj);
+      canvas.requestRenderAll();
+    });
   }
 
 

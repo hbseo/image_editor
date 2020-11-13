@@ -13,6 +13,7 @@ class Delete extends Action {
         for(let i in obj._objects) {
           canvas.remove(obj._objects[i]);
         }
+        canvas.discardActiveObject();
       }
       else {
         if(obj.type === 'textbox') {
