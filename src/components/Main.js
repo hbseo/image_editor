@@ -1,7 +1,7 @@
 import React, { Component} from 'react';
 import { Link } from 'react-router-dom';
 import ImageList from './ImageList';
-
+import './Main.scss'
 
 class Main extends Component {
   constructor(props) {
@@ -39,15 +39,16 @@ class Main extends Component {
 
 	renderLink = (width, height) => {
 		if(width ===0 || height === 0){
-			return <p>adf</p>
+			return <p>no link</p>
 		}
-		return <Link to ={{
+		return <div><Link to ={{
 			pathname : '/edit',
 			state : {
 				width : width,
 				height : height,
 			}
-		}}>{width}X{height}</Link>
+		}}><i className="far fa-square fa-5x canvas-icon"></i></Link>
+		<p>{width}X{height}</p></div>
 	}
 
 	handleChange = (event) => {
@@ -67,33 +68,78 @@ class Main extends Component {
 		.then( () => {
 			this.handleSubmit();
 		});
+	}
+	
+	fileChange = (event) => {
+    new Promise((resolve) => {
+			let file = event.target.files[0];
+			this.setState({url : URL.createObjectURL(file) });
+      resolve();
+    })
+    .then(() => {
+			this.handleSubmit();
+    })
   }
 
 	
   render() {
     return (
       <div>
-				<div><h2>홈 화면</h2></div>
+				<div id="main-title-div">
+					<h2 id="main-title">MAIN</h2>
+				</div>
 				<hr />
-				<div>
+
+				<div id="canvas-template">
 					<h4>빈 캔버스 시작</h4>
-					<ul>
-						<li>{this.renderLink(800,600)}</li>
-						<li>{this.renderLink(360,360)}</li>
-						<li>{this.renderLink(1280,720)}</li>
-						<li>{this.renderLink(1920,1080)}</li>
-						<li>{this.renderLink(512,512)}</li>
-						<li>{this.renderLink(1080,1080)}</li>
-						<li>{this.renderLink(2048,2048)}</li>
+					<ul className="canvas-list-ul">
+						<li className="canvas-list">
+							<div id="select-canvas-size">
+								{this.renderLink(800,600)}
+							</div>
+						</li>
+						<li className="canvas-list">
+							<div id="select-canvas-size">
+								{this.renderLink(360,360)}
+							</div>
+						</li>
+						<li className="canvas-list">
+							<div id="select-canvas-size">
+								{this.renderLink(1280,720)}
+							</div>
+						</li>
+						<li className="canvas-list">
+							<div id="select-canvas-size">
+								{this.renderLink(1920,1080)}
+							</div>
+						</li>
+						<li className="canvas-list">
+							<div id="select-canvas-size">
+								{this.renderLink(512,512)}
+							</div>
+						</li>
+						<li className="canvas-list">
+							<div id="select-canvas-size">
+								{this.renderLink(1080,1080)}
+							</div>
+						</li>
+						<li className="canvas-list">
+							<div id="select-canvas-size">
+								{this.renderLink(2048,2048)}
+							</div>
+						</li>
+						<li className="canvas-list">
+							<div id="select-canvas-size">
+								{this.renderLink(600,600)}
+							</div>
+						</li>
 					</ul>
 				</div>
-
+				<div>adf</div>
 				<div>
-					
 					<input type="number" name="width" value={this.state.width} onChange={this.handleChange} min = "5" />
 					<input type="number" name="height" value={this.state.height} onChange={this.handleChange} min = "5"/>
 					<span>{this.renderLink(this.state.width,this.state.height)}</span>
-					
 				</div>
 
 				<hr/>
@@ -108,20 +154,26 @@ class Main extends Component {
 
 					{
 						!this.state.submit ? <p>enter the link</p>
-						: <Link to ={{
+						: <div><Link to ={{
 							pathname : '/edit',
 							state : {
 								width : this.state.width,
 								height : this.state.height,
 								url : this.url
 							}
-						}}>{this.state.width}X{this.state.height}</Link>
+						}}><i className="far fa-square fa-5x canvas-icon"></i></Link>
+						<p>{this.state.width}X{this.state.height}</p></div>
 					}
-
-
+					<ImageList onClick={this.onImgUrlChange} />
 				</div>
 
-				<ImageList onClick={this.onImgUrlChange} />
+				<div>
+					<h5>로컬에서 이미지 불러오기</h5>
+
+					<button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
+				</div>
+
+				
       </div>
     )
   }

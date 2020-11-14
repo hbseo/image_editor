@@ -9,7 +9,7 @@ class Filter extends Action {
 
   applyFilter = (obj, option, checked, value) => {
     let canvas = this.getCanvas();
-    if (!obj.hasOwnProperty('_objects')) {
+    if (obj.type === "image") {
       switch (option) {
         case 'grey':
           obj.filters[0] = checked && (new fabric.Image.filters.Grayscale());
@@ -35,20 +35,30 @@ class Filter extends Action {
         case 'sepia':
           obj.filters[7] = checked && (new fabric.Image.filters.Sepia());
           break;
+        case 'kodachrome':
+          obj.filters[8] = checked && (new fabric.Image.filters.Kodachrome());
+          break;
         case 'brightness':
-          obj.filters[8] = (new fabric.Image.filters.Brightness({
+          obj.filters[9] = (new fabric.Image.filters.Brightness({
             brightness: value
           }));
-          break;
-        case 'kodachrome':
-          obj.filters[9] = checked && (new fabric.Image.filters.Kodachrome());
           break;
         case 'contrast':
           obj.filters[10] = (new fabric.Image.filters.Contrast({
             contrast: value
           }));
           break;
-        
+        case 'pixelate':
+          obj.filters[11] = (new fabric.Image.filters.Pixelate({
+            blocksize : value
+          }));
+          break;
+        case 'blur':
+          obj.filters[12] = (new fabric.Image.filters.Blur({
+            blur : value
+          }));
+          break;
+          
 
         default:
       }

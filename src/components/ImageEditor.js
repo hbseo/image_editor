@@ -20,9 +20,7 @@ class ImageEditor extends Component {
     super(props);
     this.state = {
       angle: 0,   //active object's angle
-      filters: [], //active object's filter
-      brightness: 0, //active object's brightness
-      contrast : 0,
+
       fontsize: 50, //active object's fontSize
       stroke : 0,
       strokeWidth : 0,
@@ -38,6 +36,12 @@ class ImageEditor extends Component {
 				a: '1',
 			},
       colorHex : '#FFFFFF',
+      filters : {
+        brightness: 0,
+        contrast : 0,
+        pixelate : 1,
+        blur : 0,
+      }
     }
     
 
@@ -45,6 +49,7 @@ class ImageEditor extends Component {
     this._canvasImageUrl = props.location.state.url;
     this._canvasSize = {width : props.location.state.width, height : props.location.state.height}
     this._clipboard = null;
+    this._backgroundImage = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.testUrl = 'https://source.unsplash.com/random/500x400';
     this.action = {};
@@ -68,21 +73,20 @@ class ImageEditor extends Component {
 
   componentDidMount() {
     console.log(this._canvasImageUrl);
-    let backgroundImage;
     if(this._canvasImageUrl){
       this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top"})
-      .then((img) => backgroundImage = img)
+      .then((img) => this._backgroundImage = img)
       .then(() => {
         this._canvas = new fabric.Canvas('canvas', {
           preserveObjectStacking: true,
           height: this._canvasSize.height,
           width: this._canvasSize.width,
           backgroundColor: '#d8d8d8',
-          backgroundImage : backgroundImage
+          backgroundImage : this._backgroundImage,
         });
       })
       .then(() => {
-        this.switchTools('filter', 'text', true);
+        this.switchTools('text', true);
         this._createDomEvent();
         this._createCanvasEvent();
         this.currentState = this._canvas.toDatalessJSON();
@@ -94,7 +98,7 @@ class ImageEditor extends Component {
         height: this._canvasSize.height,
         width: this._canvasSize.width,
         backgroundColor: '#d8d8d8',
-        backgroundImage : backgroundImage
+        backgroundImage : this._backgroundImage
       });
       this.switchTools('filter', 'text', true);
       this._createDomEvent();
@@ -105,7 +109,14 @@ class ImageEditor extends Component {
   
   componentWillUnmount() {
     this._deleteCanvasEvent();
-    this._deleteDomevent();
+    this._deleteDomevent();  
+    this.lock = false;
+    this.currentState = null;
+    this.stateStack.length = 0;
+    this.redoStack.length = 0;
+    this.cropImg = null;
+    this._clipboard = null;
+    this._backgroundImage = null;
     this._canvas = null;
   }
 	
@@ -348,10 +359,14 @@ class ImageEditor extends Component {
 		}
 		this.setState({
 			angle: image.angle,
-      brightness: image.filters[8] ? image.filters[8].brightness : 0,
-      contrast : image.filters[10] ? image.filters[10].contrast : 0,
       stroke : image.stroke,
       strokeWidth : image.stroke ? image.strokeWidth : 0,
+      filters : {
+        brightness: image.filters[9] ? image.filters[9].brightness : 0,
+        contrast : image.filters[10] ? image.filters[10].contrast : 0,
+        pixelate : image.filters[11] ? image.filters[11].blocksize : 1,
+        blur : image.filters[12] ? image.filters[12].blur : 0
+      }
 		});
 	}
 
@@ -596,48 +611,30 @@ class ImageEditor extends Component {
     }
   }
 
-  handleBrightChange = (event) => {
-    const brightValue = event.target.value
-    var filterOption = event.target.getAttribute('filter');
-    var activeObject = this.getActiveObject();
-    if (this.getActiveObject()) {
-      let change_state = {};
+  handleFilterChange = (event) => {
+    const value = event.target.value
+    let filterOption = event.target.getAttribute('filter');
+    let activeObject = this.getActiveObject();
+    if ( activeObject || this._backgroundImage ) {
+      let change_state = {
+        brightness : this.state.filters.brightness, 
+        contrast : this.state.filters.contrast, 
+        pixelate : this.state.filters.pixelate,
+        blur : this.state.filters.blur,
+      };
       change_state[event.target.name] = event.target.value;
-
       new Promise((resolve) => {
-        this.setState(change_state);
+        this.setState({filters : change_state});
         resolve();
       })
-        .then((brightEvent) => {
-          this.action['Filter'].applyFilter(activeObject, filterOption, true, brightValue);
+        .then(() => {
+          this.action['Filter'].applyFilter(activeObject || this._backgroundImage , filterOption, true, value);
           this.saveState();
         })
     }
     else {
       alert('image is not activated');
-    }
-  }
-
-  handleContrastChange = (event) => {
-    const contrastValue = event.target.value
-    var filterOption = event.target.getAttribute('filter');
-    var activeObject = this.getActiveObject();
-    if (this.getActiveObject()) {
-      let change_state = {};
-      change_state[event.target.name] = event.target.value;
-
-      new Promise((resolve) => {
-        this.setState(change_state);
-        resolve();
-      })
-        .then((contrastEvent) => {
-          this.action['Filter'].applyFilter(activeObject, filterOption, true, contrastValue);
-          this.saveState();
-        })
-    }
-    else {
-      alert('image is not activated');
-    }
+    } 
   }
 
   handlefontSizeChange = (event) => {
@@ -935,24 +932,18 @@ class ImageEditor extends Component {
         
         <div id='tool'>
           <div>
-            <h5>미구현</h5>
-            <button onClick={this.drawing}>Free Drawing</button>
-          </div>
-
-          <hr />
-
-          <div>
             <h5>개발자 기능</h5>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
-            <button onClick={this.newCanvas} disabled>배경이미지 캔버스로 변경</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
-            <button onClick={this.convertSvg}>svg로 변환하기</button>
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
-            <p>선택 개체 밝기 값 = {this.state.brightness}</p>
+            <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
+            <p>선택 개체 대조 값 = {this.state.filters.contrast}</p>
+            <p>선택 개체 픽셀 값 = {this.state.filters.pixelate}</p>
+            <p>선택 개체 블러 값 = {this.state.filters.blur}</p>
             <p>선택 개체 각도 값 = {this.state.angle}</p>
             <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
 				  	<p>컬러 헥스 값{this.state.colorHex}</p>
@@ -1026,7 +1017,7 @@ class ImageEditor extends Component {
             <input type='checkbox' className='filter' id='blackwhite' onClick={this.filterObject} filter='blackwhite' />Filter blackwhite
             <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
             <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
-            <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
+            <input type='checkbox' className='filter' id='kodachrome' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
 
             <input
               type='range'
@@ -1036,8 +1027,8 @@ class ImageEditor extends Component {
               max='1'
               name='brightness'
               step='0.01'
-              value={this.state.brightness}
-              onChange={this.handleBrightChange} filter='brightness'
+              value={this.state.filters.brightness || 0}
+              onChange={this.handleFilterChange} filter='brightness'
             />Brightness
 
             <input
@@ -1048,19 +1039,46 @@ class ImageEditor extends Component {
               max='1'
               name='contrast'
               step='0.01'
-              value={this.state.contrast}
-              onChange={this.handleBrightChange} filter='contrast'
+              value={this.state.filters.contrast || 0}
+              onChange={this.handleFilterChange} filter='contrast'
             />Contrast
+
+            <input
+              type='range'
+              className='filter'
+              id='pixelate'
+              min='1'
+              max='50'
+              name='pixelate'
+              step='1'
+              value={this.state.filters.pixelate || 1}
+              onChange={this.handleFilterChange} filter='pixelate'
+            />pixelate
+
+            <input
+              type='range'
+              className='filter'
+              id='blur'
+              min='0'
+              max='1'
+              name='blur'
+              step='0.01'
+              value={this.state.filters.blur || 0}
+              onChange={this.handleFilterChange} filter='blur'
+            />blur
           </div>
 
           <hr />
 
           <div>
             <h5>도형 기능</h5>
-            <div style={{ border: "solid 1px black" }}>
-              <button onClick={this.addShape} type="triangle">삼각형</button>
-              <button onClick={this.addShape} type="rectangle">직사각형</button>
-              <button onClick={this.addShape} type="circle">원</button>
+            
+            <button onClick={this.addShape} type="triangle">삼각형</button>
+            <button onClick={this.addShape} type="rectangle">직사각형</button>
+            <button onClick={this.addShape} type="circle">원</button>
+
+            <button onClick={this.drawing}>Free Drawing</button>
+
           </div>
 
           <hr />
@@ -1095,7 +1113,6 @@ class ImageEditor extends Component {
               value={this.state.strokeWidth}
               onChange={this.handleStrokeWidthChange}
             />
-            </div>
           </div>
             
           <div>
@@ -1111,7 +1128,15 @@ class ImageEditor extends Component {
             <button className="fas fa-comment-alt" onClick={this.addIcon} type = "icon_bubble"></button>
             <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
           </div>
+
+          <div>
+            <h5>일단은 안 쓰는 기능</h5>
+            <button onClick={this.newCanvas} disabled>배경이미지 캔버스로 변경</button>
+            <button onClick={this.convertSvg}>svg로 변환하기</button>
+          </div>
         </div>
+
+
 
         <hr />
       </div>
