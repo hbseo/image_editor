@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import { SketchPicker } from 'react-color';
-import './App.css'
+import './ImageEditor.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
-import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
 import Coloring from './Coloring';
@@ -16,7 +15,7 @@ import Shape from './Shape';
 
 // import FilterMenu from './FilterMenu';
 
-class App extends Component {
+class ImageEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,23 +37,22 @@ class App extends Component {
 				b: '255',
 				a: '1',
 			},
-      colorHex : '#F17013',
+      colorHex : '#FFFFFF',
     }
+    
 
     this._canvas = null;
-    this._canvasImage = null;
+    this._canvasImageUrl = props.location.state.url;
+    this._canvasSize = {width : props.location.state.width, height : props.location.state.height}
     this._clipboard = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.testUrl = 'https://source.unsplash.com/random/500x400';
     this.action = {};
-    this.copiedObject = null;
 
-    this.isDragging = false;
-    this.selection = true;
+    // this.isDragging = false;
+    // this.selection = true;
     
     this.cropImg = null;
-    // eslint-disable-next-line no-array-constructor
-    this.copiedObjects = new Array();
 
     // redo undo
     this.lock = false;
@@ -69,20 +67,47 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this._canvas = new fabric.Canvas('canvas', {
-      preserveObjectStacking: true,
-      height: 600,
-      width: 1000,
-      backgroundColor: 'grey'
-    });
-		this.switchTools('filter', 'text', true);
-
-		this._createDomEvent();
-    this._createCanvasEvent();
-    this.layerThumb();
-
-    this.currentState = this._canvas.toDatalessJSON();
-	}
+    console.log(this._canvasImageUrl);
+    let backgroundImage;
+    if(this._canvasImageUrl){
+      this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top"})
+      .then((img) => backgroundImage = img)
+      .then(() => {
+        this._canvas = new fabric.Canvas('canvas', {
+          preserveObjectStacking: true,
+          height: this._canvasSize.height,
+          width: this._canvasSize.width,
+          backgroundColor: '#d8d8d8',
+          backgroundImage : backgroundImage
+        });
+      })
+      .then(() => {
+        this.switchTools('filter', 'text', true);
+        this._createDomEvent();
+        this._createCanvasEvent();
+        this.currentState = this._canvas.toDatalessJSON();
+      })
+    }
+    else{
+      this._canvas = new fabric.Canvas('canvas', {
+        preserveObjectStacking: true,
+        height: this._canvasSize.height,
+        width: this._canvasSize.width,
+        backgroundColor: '#d8d8d8',
+        backgroundImage : backgroundImage
+      });
+      this.switchTools('filter', 'text', true);
+      this._createDomEvent();
+      this._createCanvasEvent();
+      this.currentState = this._canvas.toDatalessJSON();
+    }
+  }
+  
+  componentWillUnmount() {
+    this._deleteCanvasEvent();
+    this._deleteDomevent();
+    this._canvas = null;
+  }
 	
 	_onKeydownEvent = (event) => {
     // metakey is a Command key or Windows key
@@ -96,7 +121,9 @@ class App extends Component {
     }
     // ctrl + v
     if((metaKey || ctrlKey) && keyCode === 86) {
-      this.pasteObject();
+      if(this._clipboard){
+        this.pasteObject();
+      }
     }
 	}
 
@@ -255,6 +282,23 @@ class App extends Component {
     // })
   }
 
+  _deleteCanvasEvent = () =>{
+    this._canvas.off('object:added');
+    this._canvas.off('object:modified');
+    this._canvas.off('object:rotated');
+    this._canvas.off('selection:cleared');
+    this._canvas.off('selection:updated');
+    this._canvas.off('selection:created');
+    this._canvas.off('mouse:move');
+    this._canvas.off('mouse:wheel');
+    this._canvas.off('mouse:up');
+    this._canvas.off('mouse:down');
+  }
+
+  _deleteDomevent = () =>{
+    document.removeEventListener('keydown',this._onKeydownEvent)
+  }
+
   saveState = () => {
     if(!this.lock) {
       if(this.stateStack.length === this.maxSize) {
@@ -376,9 +420,11 @@ class App extends Component {
   }
 
   copyObject = () => {
-    this.getActiveObject().clone((cloned) => {
-      this._clipboard = cloned;
-    });
+    if(this.getActiveObject()){
+      this.getActiveObject().clone((cloned) => {
+        this._clipboard = cloned;
+      });
+    }
   }
 
   pasteObject = () => {
@@ -408,13 +454,13 @@ class App extends Component {
   }
 
 
-  loadImage = (url, pointer) => {
+  loadImage = (url, pointer, option) => {
     return new Promise(resolve => {
       fabric.Image.fromURL(url, img => {
         img.set({
           angle: 0,
-          // originX: "center",
-          // originY: "center",
+          originX: option.originX,
+          originY: option.originY,
           left: pointer.x,
           top: pointer.y
 
@@ -436,7 +482,7 @@ class App extends Component {
     a.href = dataURL;
     a.setAttribute("download", 'image.png');
     a.click();
-    this._canvas.backgroundColor = 'grey';
+    this._canvas.backgroundColor = '#d8d8d8';
   }
 
   fileChange = (event) => {
@@ -459,7 +505,7 @@ class App extends Component {
       // const pointer = { x: this.state.absoluteX, y : this.state.absoluteY }
       const pointer = { x: event.layerX, y : event.layerY  };
       if(event.target.tagName === 'CANVAS'){
-        this.loadImage(this.testUrl, pointer)
+        this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center"})
         .then((data) => {
           this._canvas.add(data).setActiveObject(data);
           // this.setState({ layers: this.state.layers.concat(data) });
@@ -778,15 +824,16 @@ class App extends Component {
     }
   }
 
-  newCanvas = () => {
-    let url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
-    this._canvas.clear();
-    this._canvas.dispose();
-
+  newCanvas = (url) => {
+    // let url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
+    // console.log(url);
+    // this._canvas.clear();
+    // this._canvas.dispose();
     new Promise(resolve => {
       fabric.Image.fromURL(url, img => {
         img.set({
-          
+          originX : "left",
+          originY : "top"
 				});
 				img.on('scaling', () => {
 
@@ -796,24 +843,15 @@ class App extends Component {
       );
     })
       .then((img) => {
-        this._canvas = new fabric.Canvas('canvas', {
+        console.log(img);
+        return new fabric.Canvas('canvas', {
           preserveObjectStacking: true,
           height: img.height,
           width: img.width,
           backgroundImage: img,
           backgroundColor: 'grey'
         });
-        this.currentState = this._canvas.toDatalessJSON();
-        this.lock = false;
-        this.stateStack = [];
-        this.redoStack = [];
-      })
-      .then(() => {
-				this._createCanvasEvent();
-				fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-					el.disabled = false
-				)
-        this.layerThumb();
+        
       })
   }
   openColorPicker = () => {
@@ -877,6 +915,7 @@ class App extends Component {
   }
 
   drawing = () => {
+      // this._canvas.freeDrawingCursor = 'default';
       this._canvas.isDrawingMode = !this._canvas.isDrawingMode;
       this._canvas.freeDrawingBrush.color = "purple";
       this._canvas.freeDrawingBrush.width = 10;
@@ -905,7 +944,7 @@ class App extends Component {
           <div>
             <h5>개발자 기능</h5>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
-            <button onClick={this.newCanvas}>배경이미지 캔버스로 변경</button>
+            <button onClick={this.newCanvas} disabled>배경이미지 캔버스로 변경</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
@@ -1072,9 +1111,6 @@ class App extends Component {
             <button className="fas fa-comment-alt" onClick={this.addIcon} type = "icon_bubble"></button>
             <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
           </div>
-
-          <ImageList onClick={this.onImgUrlChange} />
-
         </div>
 
         <hr />
@@ -1083,4 +1119,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default ImageEditor;

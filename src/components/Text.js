@@ -27,7 +27,7 @@ class Text extends Action {
           fontStyle: checked ? 'italic' : 'normal'
         }).setCoords();
         break;
-      case 'legt-align':
+      case 'left-align':
         activeObject.set({
           textAlign: 'left'
         }).setCoords();

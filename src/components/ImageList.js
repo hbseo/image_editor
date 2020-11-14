@@ -60,7 +60,7 @@ class ImageList extends Component {
     // this.setState({ search : event.target.value});
     let change_state = {};
     change_state[event.target.name] = event.target.value;
-    console.log(event.target.name, event.target.value, change_state);
+    // console.log(event.target.name, event.target.value, change_state);
     this.setState(change_state);
   }
 
@@ -80,7 +80,7 @@ class ImageList extends Component {
   }
 
   onClickImg = (event) => {
-    console.log(event.target.src);
+    // console.log(event.target.src);
     this.props.onClick(event.target.src);
   }
 
