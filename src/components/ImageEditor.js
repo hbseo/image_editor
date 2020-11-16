@@ -48,6 +48,7 @@ class ImageEditor extends Component {
         contrast : 0,
         pixelate : 1,
         blur : 0,
+        noise : 0,
       }
     }
     
@@ -369,10 +370,11 @@ class ImageEditor extends Component {
       stroke : image.stroke,
       strokeWidth : image.stroke ? image.strokeWidth : 0,
       filters : {
-        brightness: image.filters[9] ? image.filters[9].brightness : 0,
-        contrast : image.filters[10] ? image.filters[10].contrast : 0,
-        pixelate : image.filters[11] ? image.filters[11].blocksize : 1,
-        blur : image.filters[12] ? image.filters[12].blur : 0
+        brightness: image.filters[15] ? image.filters[15].brightness : 0,
+        contrast : image.filters[16] ? image.filters[16].contrast : 0,
+        pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
+        blur : image.filters[18] ? image.filters[18].blur : 0,
+        noise : image.filters[19] ? image.filters[19].blur : 0
       }
 		});
 	}
@@ -518,53 +520,48 @@ class ImageEditor extends Component {
       })
   }
 
+  addImageEvent = (event) => {
+    const pointer = { x: event.layerX, y : event.layerY  };
+    if(event.target.tagName === 'CANVAS'){
+      this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center"})
+      .then((data) => {
+        this._canvas.add(data).setActiveObject(data);
+        // this.setState({ layers: this.state.layers.concat(data) });
+        // console.log(data.getSvgSrc());
+
+      })
+    }
+    document.removeEventListener('mousedown', this.addImageEvent);
+    this._canvas.defaultCursor = 'default';
+  }
 
   addImage = () => {
-    let body = document.body;
     this._canvas.defaultCursor = 'pointer';
+		document.addEventListener('mousedown',this.addImageEvent);    
+  }
 
-    body.onclick = (event) => {
-      // const pointer = { x: this.state.absoluteX, y : this.state.absoluteY }
-      const pointer = { x: event.layerX, y : event.layerY  };
-      if(event.target.tagName === 'CANVAS'){
-        this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center"})
-        .then((data) => {
-          this._canvas.add(data).setActiveObject(data);
-          // this.setState({ layers: this.state.layers.concat(data) });
-          // console.log(data.getSvgSrc());
-        })
-      }
-      this._canvas.defaultCursor = 'default';
-      body.onclick = null;
+  addTextEvent = (event) => {
+    if(event.target.tagName === 'CANVAS'){
+      let text = new fabric.Textbox('Hello world', {
+        left: event.layerX, top: event.layerY , fontSize: this.state.fontsize, lockScalingY: true
+      });
+      this._canvas.add(text).setActiveObject(text);
     }
-    
+    document.removeEventListener('mousedown', this.addTextEvent);
+    this._canvas.defaultCursor = 'default';
   }
 
   addText = () => {
-    let body = document.body;
     this._canvas.defaultCursor = 'pointer';
-    
-    body.onclick = (event) => {
-      if(event.target.tagName === 'CANVAS'){
-        let text = new fabric.Textbox('Hello world', {
-          left: event.layerX, top: event.layerY , fontSize: this.state.fontsize, lockScalingY: true
-        });
-        this._canvas.add(text).setActiveObject(text);
-      }
-      this._canvas.defaultCursor = 'default';
-      body.onclick = null;
-    }
+		document.addEventListener('mousedown',this.addTextEvent);    
   }
 
-
-
   addShape = (event) => {
-    let body = document.body;
+    // let body = document.body;
     let myFigure;
     this._canvas.defaultCursor = 'pointer';
-
     let type = event.target.getAttribute('type');
-    body.onclick = (event) => {
+    document.onclick = (event) => {
       if(event.target.tagName === 'CANVAS'){
         switch(type) {
           case 'triangle':
@@ -583,7 +580,7 @@ class ImageEditor extends Component {
         }
       }
       this._canvas.defaultCursor = 'default';
-      body.onclick = null;
+      document.onclick = null;
     }
   }
 
@@ -628,6 +625,7 @@ class ImageEditor extends Component {
         contrast : this.state.filters.contrast, 
         pixelate : this.state.filters.pixelate,
         blur : this.state.filters.blur,
+        noise : this.state.filters.noise,
       };
       change_state[event.target.name] = event.target.value;
       new Promise((resolve) => {
@@ -664,15 +662,15 @@ class ImageEditor extends Component {
 	}
 	
 	handleColorChange = (color) => {
-    const activeObject = this.getActiveObject();
-    const body = document.body;
     this.setState({ color: color.rgb, colorHex : color.hex })
-    body.onmouseup = () => {
-      if(activeObject) {
-        this.action['Fill'].fill(color.hex);
-        this.saveState();
-      }
-      body.onmouseup = null;
+  }
+
+  colorChange = (color) => {
+    console.log("mouse up")
+    const activeObject = this.getActiveObject();
+    if(activeObject) {
+      this.action['Fill'].fill(color.hex);
+      this.saveState();
     }
   }
   
@@ -1045,6 +1043,7 @@ class ImageEditor extends Component {
             <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
             <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
             <input type='checkbox' className='filter' id='kodachrome' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
+            <input type='checkbox' className='filter' id='emboss' onClick={this.filterObject} filter='emboss' />Filter emboss
 
             <input
               type='range'
@@ -1093,6 +1092,18 @@ class ImageEditor extends Component {
               value={this.state.filters.blur || 0}
               onChange={this.handleFilterChange} filter='blur'
             />blur
+
+            <input
+              type='range'
+              className='filter'
+              id='noise'
+              min='0'
+              max='100'
+              name='noise'
+              step='1'
+              value={this.state.filters.noise || 0}
+              onChange={this.handleFilterChange} filter='noise'
+            />noise
           </div>
 
           <hr />
@@ -1140,7 +1151,7 @@ class ImageEditor extends Component {
             <button onClick={this.openColorPicker}>color</button>
           	{ this.state.displayColorPicker ? <div>
           	  <div onClick={this.closeColorPicker}/>
-          	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
+          	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.colorChange }/>
           	</div> : null }
 
             <h5>테두리 두깨</h5>
