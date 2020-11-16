@@ -26,7 +26,8 @@ class ImageEditor extends Component {
       strokeWidth : 0,
       layers: [],
       displayColorPicker: false,
-      isDrawingMode: false,
+      drawingMode: false,
+      pen_width: '1',
       activeObject : { type : 'not active'},
       zoom : 1,
 			color: {
@@ -911,11 +912,17 @@ class ImageEditor extends Component {
     }
   }
 
-  drawing = () => {
-      // this._canvas.freeDrawingCursor = 'default';
-      this._canvas.isDrawingMode = !this._canvas.isDrawingMode;
-      this._canvas.freeDrawingBrush.color = "purple";
-      this._canvas.freeDrawingBrush.width = 10;
+  openDrawing = () => {
+    this.setState({ drawingMode: true });
+    this._canvas.isDrawingMode = true;
+    this._canvas.freeDrawingCursor = 'default';
+    this._canvas.freeDrawingBrush.color = "purple";
+    this._canvas.freeDrawingBrush.width = this.state.pen_width;
+  }
+
+  closeDrawing = () => {
+    this.setState({ drawingMode: false });
+    this._canvas.isDrawingMode = false;
   }
 
   render() {
@@ -1076,9 +1083,18 @@ class ImageEditor extends Component {
             <button onClick={this.addShape} type="triangle">삼각형</button>
             <button onClick={this.addShape} type="rectangle">직사각형</button>
             <button onClick={this.addShape} type="circle">원</button>
+          </div>
 
-            <button onClick={this.drawing}>Free Drawing</button>
+          <hr />
 
+          <div>
+              <h5>그리기 기능</h5>
+              {this.state.drawingMode
+                ? <div> 
+                    <button onClick={this.closeDrawing}>Cancel Drawing</button>
+                  </div>
+                : <button onClick={this.openDrawing}>Free Drawing</button>
+                }
           </div>
 
           <hr />
