@@ -27,7 +27,13 @@ class ImageEditor extends Component {
       layers: [],
       displayColorPicker: false,
       drawingMode: false,
-      pen_width: 10,
+      lineWidth: 10,
+      lineColorRgb:{
+          r: '255',
+          g: '255',
+          b: '255',
+          a: '1',
+        },
       activeObject : { type : 'not active'},
       zoom : 1,
 			color: {
@@ -916,7 +922,6 @@ class ImageEditor extends Component {
     this.setState({ drawingMode: true });
     this._canvas.isDrawingMode = true;
     this._canvas.freeDrawingCursor = 'default';
-    this._canvas.freeDrawingBrush.color = "purple";
   }
 
   closeDrawing = () => {
@@ -925,12 +930,17 @@ class ImageEditor extends Component {
     
   }
   
-  handleDrawing = (event) =>{
+  handleDrawingWidth = (event) => {
       const value = event.target.value;
-      this.setState({pen_width: value});
-      this._canvas.freeDrawingBrush.width = this.state.pen_width;
+      this.setState({lineWidth: value});
+      this._canvas.freeDrawingBrush.width = this.state.lineWidth;
   }
 
+  handleDrawingColor = (color) => {
+    this.setState({ lineColorRgb: color.rgb})
+    let rgb = "rgb(" + this.state.lineColorRgb['r'] + ", " + this.state.lineColorRgb['g'] + ", " + this.state.lineColorRgb['b'] + ")"
+    this._canvas.freeDrawingBrush.color = rgb;
+  }
   render() {
 		const styles = {
 			color : {
@@ -1099,7 +1109,9 @@ class ImageEditor extends Component {
                 ? <div> 
                     <button onClick={this.closeDrawing}>Cancel Drawing</button>
                     <br/>
-                    <label>Width</label><input type='range' className='drawing' id='width' min='0' max='150' name='width' step='1' value={this.state.pen_width} onChange={this.handleDrawing.bind(this)}/>
+                    <label>Width</label><input type='range' className='drawing' id='width' min='0' max='150' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth.bind(this)}/>
+                    <br/>
+                    <label>Line Color</label><SketchPicker color={ this.state.lineColorRgb } onChange={ this.handleDrawingColor } />
                   </div>
                 : <button onClick={this.openDrawing}>Free Drawing</button>
                 }
