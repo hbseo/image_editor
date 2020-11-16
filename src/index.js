@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Route, Switch } from 'react-router';
-import App from './components/App';
-
 import Error from './components/Error';
+import Main from './components/Main';
+import ImageEditor from './components/ImageEditor';
+import { Route, Switch } from 'react-router';
+
 
 ReactDOM.render(
   <Router>
     <Switch>
-      <Route exact path="/" component={App} />
-
+      <Route exact path="/" component={Main} />
+			<Route exact path="/edit" component={ImageEditor} />
       <Route component={Error} />
     </Switch>
   </Router>,

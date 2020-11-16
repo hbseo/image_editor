@@ -8,16 +8,9 @@ class Text extends Action {
     const canvas = this.getCanvas();
     switch (option) {
       case 'bold':
-        if (checked) {
-          activeObject.set({
-            fontWeight: 'bold'
-          }).setCoords();
-        }
-        else {
-          activeObject.set({
-            fontWeight: 'normal'
-          }).setCoords();
-        }
+        activeObject.set({
+          fontWeight: checked ? 'bold' : 'normal'
+        }).setCoords();
         break;
       case 'fontSize':
         activeObject.set({
@@ -29,9 +22,39 @@ class Text extends Action {
           fontFamily: value
         }).setCoords();
         break;
+      case 'italic':
+        activeObject.set({
+          fontStyle: checked ? 'italic' : 'normal'
+        }).setCoords();
+        break;
+      case 'left-align':
+        activeObject.set({
+          textAlign: 'left'
+        }).setCoords();
+        break;
+      case 'center-align':
+        activeObject.set({
+          textAlign: 'center'
+        }).setCoords();
+        break;
+      case 'right-align':
+        activeObject.set({
+          textAlign: 'right'
+        }).setCoords();
+        break;
+      case 'background-color':
+        activeObject.set({
+          textBackgroundColor : value
+        }).setCoords();
+        break;
       default:
     }
     canvas.renderAll();
+  }
+
+
+  textAlign = () => {
+
   }
 }
 

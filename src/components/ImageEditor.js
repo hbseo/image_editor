@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import { SketchPicker } from 'react-color';
-import './App.css'
+import './ImageEditor.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
-import ImageList from './ImageList';
 import Delete from './Delete';
 import Crop from './Crop';
 import Coloring from './Coloring';
@@ -16,13 +15,12 @@ import Shape from './Shape';
 
 // import FilterMenu from './FilterMenu';
 
-class App extends Component {
+class ImageEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
       angle: 0,   //active object's angle
-      filters: [], //active object's filter
-      brightness: 0, //active object's brightness
+
       fontsize: 50, //active object's fontSize
       stroke : 0,
       strokeWidth : 0,
@@ -30,26 +28,36 @@ class App extends Component {
       displayColorPicker: false,
       isDrawingMode: false,
       activeObject : { type : 'not active'},
+      zoom : 1,
 			color: {
 				r: '255',
 				g: '255',
 				b: '255',
 				a: '1',
 			},
-      colorHex : '#F17013',
+      colorHex : '#FFFFFF',
+      filters : {
+        brightness: 0,
+        contrast : 0,
+        pixelate : 1,
+        blur : 0,
+      }
     }
+    
 
     this._canvas = null;
-    this._canvasImage = null;
+    this._canvasImageUrl = props.location.state.url;
+    this._canvasSize = {width : props.location.state.width, height : props.location.state.height}
     this._clipboard = null;
+    this._backgroundImage = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.testUrl = 'https://source.unsplash.com/random/500x400';
     this.action = {};
-    this.copiedObject = null;
+
+    // this.isDragging = false;
+    // this.selection = true;
     
     this.cropImg = null;
-    // eslint-disable-next-line no-array-constructor
-    this.copiedObjects = new Array();
 
     // redo undo
     this.lock = false;
@@ -64,20 +72,53 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this._canvas = new fabric.Canvas('canvas', {
-      preserveObjectStacking: true,
-      height: 600,
-      width: 1000,
-      backgroundColor: 'grey'
-    });
-		this.switchTools('filter', 'text', true);
-
-		this._createDomEvent();
-    this._createCanvasEvent();
-    this.layerThumb();
-
-    this.currentState = this._canvas.toDatalessJSON();
-	}
+    console.log(this._canvasImageUrl);
+    if(this._canvasImageUrl){
+      this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top"})
+      .then((img) => this._backgroundImage = img)
+      .then(() => {
+        this._canvas = new fabric.Canvas('canvas', {
+          preserveObjectStacking: true,
+          height: this._canvasSize.height,
+          width: this._canvasSize.width,
+          backgroundColor: '#d8d8d8',
+          backgroundImage : this._backgroundImage,
+        });
+      })
+      .then(() => {
+        this.switchTools('text', true);
+        this._createDomEvent();
+        this._createCanvasEvent();
+        this.currentState = this._canvas.toDatalessJSON();
+      })
+    }
+    else{
+      this._canvas = new fabric.Canvas('canvas', {
+        preserveObjectStacking: true,
+        height: this._canvasSize.height,
+        width: this._canvasSize.width,
+        backgroundColor: '#d8d8d8',
+        backgroundImage : this._backgroundImage
+      });
+      this.switchTools('filter', 'text', true);
+      this._createDomEvent();
+      this._createCanvasEvent();
+      this.currentState = this._canvas.toDatalessJSON();
+    }
+  }
+  
+  componentWillUnmount() {
+    this._deleteCanvasEvent();
+    this._deleteDomevent();  
+    this.lock = false;
+    this.currentState = null;
+    this.stateStack.length = 0;
+    this.redoStack.length = 0;
+    this.cropImg = null;
+    this._clipboard = null;
+    this._backgroundImage = null;
+    this._canvas = null;
+  }
 	
 	_onKeydownEvent = (event) => {
     // metakey is a Command key or Windows key
@@ -91,7 +132,9 @@ class App extends Component {
     }
     // ctrl + v
     if((metaKey || ctrlKey) && keyCode === 86) {
-      this.pasteObject();
+      if(this._clipboard){
+        this.pasteObject();
+      }
     }
 	}
 
@@ -102,7 +145,7 @@ class App extends Component {
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
-
+      // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
       if(this.cropImg){
         if(event.target == null || !(event.target === this.cropImg || event.target.type === "Container")){
           this.action['Crop'].cropObjend(this.cropImg, null);
@@ -110,21 +153,51 @@ class App extends Component {
         }
       }
 
+      // let evt = event.e;
+      // if (evt.altKey === true) {
+      //   this.isDragging = true;
+      //   this.selection = false;
+      //   this.lastPosX = evt.clientX;
+      //   this.lastPosY = evt.clientY;
+      // }
+
     });
 
 
-    this._canvas.on('object:rotated', (event) => {
-      this.setState({ angle: event.target.angle })
-    });
 
-    // 키 입력 이벤트 - mouse:up과 down으로 뭔가를 해보길.
+
     this._canvas.on('mouse:up', (event) => {
       // console.log('fire', event.target);
+      // this._canvas.setViewportTransform(this._canvas.viewportTransform);
+      // this.isDragging = false;
+      // this.selection = true;
     });
 
-    // this._canvas.on('mouse:move', (event) => {
+    this._canvas.on('mouse:wheel', (event) => {
+      // var delta = event.e.deltaY; 
+      // var zoom = this._canvas.getZoom (); 
+      // zoom *= 0.999 ** delta; 
+      // if (zoom> 20) zoom = 20 ; 
+      // if (zoom <0.01) zoom = 0.01; 
+      // this._canvas.setZoom (zoom); 
+      // this.setState({zoom : zoom});
+      // event.e.preventDefault (); 
+      // event.e.stopPropagation (); 
+    })
+        
+
+    this._canvas.on('mouse:move', (event) => {
       // console.log(this._canvas.targets);
-		// });
+      // if (this.isDragging) {
+      //   let e = event.e;
+      //   let vpt = this._canvas.viewportTransform;
+      //   vpt[4] += e.clientX - this.lastPosX;
+      //   vpt[5] += e.clientY - this.lastPosY;
+      //   this._canvas.renderAll();
+      //   this.lastPosX = e.clientX;
+      //   this.lastPosY = e.clientY;
+      // }
+		});
 		
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
@@ -199,6 +272,10 @@ class App extends Component {
       // console.log('object:modified');
       this.saveState();
     })
+
+    this._canvas.on('object:rotated', (event) => {
+      this.setState({ angle: event.target.angle })
+    });
     // this._canvas.on('object:skewed', (event) => {
     //   console.log('object:skewed');
     // })
@@ -214,6 +291,23 @@ class App extends Component {
     // this._canvas.on('object:scaled', (event) => {
     //   console.log('object:scaled');
     // })
+  }
+
+  _deleteCanvasEvent = () =>{
+    this._canvas.off('object:added');
+    this._canvas.off('object:modified');
+    this._canvas.off('object:rotated');
+    this._canvas.off('selection:cleared');
+    this._canvas.off('selection:updated');
+    this._canvas.off('selection:created');
+    this._canvas.off('mouse:move');
+    this._canvas.off('mouse:wheel');
+    this._canvas.off('mouse:up');
+    this._canvas.off('mouse:down');
+  }
+
+  _deleteDomevent = () =>{
+    document.removeEventListener('keydown',this._onKeydownEvent)
   }
 
   saveState = () => {
@@ -265,9 +359,14 @@ class App extends Component {
 		}
 		this.setState({
 			angle: image.angle,
-      brightness: image.filters[8] ? image.filters[8].brightness : 0,
       stroke : image.stroke,
       strokeWidth : image.stroke ? image.strokeWidth : 0,
+      filters : {
+        brightness: image.filters[9] ? image.filters[9].brightness : 0,
+        contrast : image.filters[10] ? image.filters[10].contrast : 0,
+        pixelate : image.filters[11] ? image.filters[11].blocksize : 1,
+        blur : image.filters[12] ? image.filters[12].blur : 0
+      }
 		});
 	}
 
@@ -336,9 +435,11 @@ class App extends Component {
   }
 
   copyObject = () => {
-    this.getActiveObject().clone((cloned) => {
-      this._clipboard = cloned;
-    });
+    if(this.getActiveObject()){
+      this.getActiveObject().clone((cloned) => {
+        this._clipboard = cloned;
+      });
+    }
   }
 
   pasteObject = () => {
@@ -368,13 +469,13 @@ class App extends Component {
   }
 
 
-  loadImage = (url, pointer) => {
+  loadImage = (url, pointer, option) => {
     return new Promise(resolve => {
       fabric.Image.fromURL(url, img => {
         img.set({
           angle: 0,
-          // originX: "center",
-          // originY: "center",
+          originX: option.originX,
+          originY: option.originY,
           left: pointer.x,
           top: pointer.y
 
@@ -396,7 +497,7 @@ class App extends Component {
     a.href = dataURL;
     a.setAttribute("download", 'image.png');
     a.click();
-    this._canvas.backgroundColor = 'grey';
+    this._canvas.backgroundColor = '#d8d8d8';
   }
 
   fileChange = (event) => {
@@ -406,7 +507,7 @@ class App extends Component {
       resolve();
     })
       .then(() => {
-        this.setState({ newimg: true });
+        this.addImage();
       })
   }
 
@@ -416,9 +517,10 @@ class App extends Component {
     this._canvas.defaultCursor = 'pointer';
 
     body.onclick = (event) => {
-      const pointer = { x: event.layerX, y : event.layerY  }
+      // const pointer = { x: this.state.absoluteX, y : this.state.absoluteY }
+      const pointer = { x: event.layerX, y : event.layerY  };
       if(event.target.tagName === 'CANVAS'){
-        this.loadImage(this.testUrl, pointer)
+        this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center"})
         .then((data) => {
           this._canvas.add(data).setActiveObject(data);
           // this.setState({ layers: this.state.layers.concat(data) });
@@ -509,26 +611,30 @@ class App extends Component {
     }
   }
 
-  handleBrightChange = (event) => {
-    const brightValue = event.target.value
-    var filterOption = event.target.getAttribute('filter');
-    var activeObject = this.getActiveObject();
-    if (this.getActiveObject()) {
-      let change_state = {};
+  handleFilterChange = (event) => {
+    const value = event.target.value
+    let filterOption = event.target.getAttribute('filter');
+    let activeObject = this.getActiveObject();
+    if ( activeObject || this._backgroundImage ) {
+      let change_state = {
+        brightness : this.state.filters.brightness, 
+        contrast : this.state.filters.contrast, 
+        pixelate : this.state.filters.pixelate,
+        blur : this.state.filters.blur,
+      };
       change_state[event.target.name] = event.target.value;
-
       new Promise((resolve) => {
-        this.setState(change_state);
+        this.setState({filters : change_state});
         resolve();
       })
-        .then((brightEvent) => {
-          this.action['Filter'].applyFilter(activeObject, filterOption, true, brightValue);
+        .then(() => {
+          this.action['Filter'].applyFilter(activeObject || this._backgroundImage , filterOption, true, value);
           this.saveState();
         })
     }
     else {
       alert('image is not activated');
-    }
+    } 
   }
 
   handlefontSizeChange = (event) => {
@@ -715,15 +821,16 @@ class App extends Component {
     }
   }
 
-  newCanvas = () => {
-    let url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
-    this._canvas.clear();
-    this._canvas.dispose();
-
+  newCanvas = (url) => {
+    // let url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
+    // console.log(url);
+    // this._canvas.clear();
+    // this._canvas.dispose();
     new Promise(resolve => {
       fabric.Image.fromURL(url, img => {
         img.set({
-          
+          originX : "left",
+          originY : "top"
 				});
 				img.on('scaling', () => {
 
@@ -733,24 +840,15 @@ class App extends Component {
       );
     })
       .then((img) => {
-        this._canvas = new fabric.Canvas('canvas', {
+        console.log(img);
+        return new fabric.Canvas('canvas', {
           preserveObjectStacking: true,
           height: img.height,
           width: img.width,
           backgroundImage: img,
           backgroundColor: 'grey'
         });
-        this.currentState = this._canvas.toDatalessJSON();
-        this.lock = false;
-        this.stateStack = [];
-        this.redoStack = [];
-      })
-      .then(() => {
-				this._createCanvasEvent();
-				fabric.util.toArray(document.getElementsByClassName('filter')).forEach(el =>
-					el.disabled = false
-				)
-        this.layerThumb();
+        
       })
   }
   openColorPicker = () => {
@@ -814,6 +912,7 @@ class App extends Component {
   }
 
   drawing = () => {
+      // this._canvas.freeDrawingCursor = 'default';
       this._canvas.isDrawingMode = !this._canvas.isDrawingMode;
       this._canvas.freeDrawingBrush.color = "purple";
       this._canvas.freeDrawingBrush.width = 10;
@@ -833,24 +932,18 @@ class App extends Component {
         
         <div id='tool'>
           <div>
-            <h5>미구현</h5>
-            <button onClick={this.drawing}>Free Drawing</button>
-          </div>
-
-          <hr />
-
-          <div>
             <h5>개발자 기능</h5>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
-            <button onClick={this.newCanvas}>배경이미지 캔버스로 변경</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
-            <button onClick={this.convertSvg}>svg로 변환하기</button>
-
+            <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
-            <p>선택 개체 밝기 값 = {this.state.brightness}</p>
+            <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
+            <p>선택 개체 대조 값 = {this.state.filters.contrast}</p>
+            <p>선택 개체 픽셀 값 = {this.state.filters.pixelate}</p>
+            <p>선택 개체 블러 값 = {this.state.filters.blur}</p>
             <p>선택 개체 각도 값 = {this.state.angle}</p>
             <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
 				  	<p>컬러 헥스 값{this.state.colorHex}</p>
@@ -884,6 +977,10 @@ class App extends Component {
             <button onClick={this.addText}>텍스트 추가</button>
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
+            <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
+            <button type='checkbox' className='text' onClick={this.textObject} text='left-align'>좌측정렬</button>
+            <button type='checkbox' className='text' onClick={this.textObject} text='center-align' >가운데정렬</button>
+            <button type='checkbox' className='text' onClick={this.textObject} text='right-align' >우측정렬</button>
             <label htmlFor='fontSize'> 글자 크기: </label>
             <input 
               type='number' 
@@ -920,6 +1017,8 @@ class App extends Component {
             <input type='checkbox' className='filter' id='blackwhite' onClick={this.filterObject} filter='blackwhite' />Filter blackwhite
             <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
             <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
+            <input type='checkbox' className='filter' id='kodachrome' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
+
             <input
               type='range'
               className='filter'
@@ -928,19 +1027,58 @@ class App extends Component {
               max='1'
               name='brightness'
               step='0.01'
-              value={this.state.brightness}
-              onChange={this.handleBrightChange} filter='brightness'
+              value={this.state.filters.brightness || 0}
+              onChange={this.handleFilterChange} filter='brightness'
             />Brightness
+
+            <input
+              type='range'
+              className='filter'
+              id='contrast'
+              min='-1'
+              max='1'
+              name='contrast'
+              step='0.01'
+              value={this.state.filters.contrast || 0}
+              onChange={this.handleFilterChange} filter='contrast'
+            />Contrast
+
+            <input
+              type='range'
+              className='filter'
+              id='pixelate'
+              min='1'
+              max='50'
+              name='pixelate'
+              step='1'
+              value={this.state.filters.pixelate || 1}
+              onChange={this.handleFilterChange} filter='pixelate'
+            />pixelate
+
+            <input
+              type='range'
+              className='filter'
+              id='blur'
+              min='0'
+              max='1'
+              name='blur'
+              step='0.01'
+              value={this.state.filters.blur || 0}
+              onChange={this.handleFilterChange} filter='blur'
+            />blur
           </div>
 
           <hr />
 
           <div>
             <h5>도형 기능</h5>
-            <div style={{ border: "solid 1px black" }}>
-              <button onClick={this.addShape} type="triangle">삼각형</button>
-              <button onClick={this.addShape} type="rectangle">직사각형</button>
-              <button onClick={this.addShape} type="circle">원</button>
+            
+            <button onClick={this.addShape} type="triangle">삼각형</button>
+            <button onClick={this.addShape} type="rectangle">직사각형</button>
+            <button onClick={this.addShape} type="circle">원</button>
+
+            <button onClick={this.drawing}>Free Drawing</button>
+
           </div>
 
           <hr />
@@ -975,7 +1113,6 @@ class App extends Component {
               value={this.state.strokeWidth}
               onChange={this.handleStrokeWidthChange}
             />
-            </div>
           </div>
             
           <div>
@@ -992,9 +1129,14 @@ class App extends Component {
             <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
           </div>
 
-          <ImageList onClick={this.onImgUrlChange} />
-
+          <div>
+            <h5>일단은 안 쓰는 기능</h5>
+            <button onClick={this.newCanvas} disabled>배경이미지 캔버스로 변경</button>
+            <button onClick={this.convertSvg}>svg로 변환하기</button>
+          </div>
         </div>
+
+
 
         <hr />
       </div>
@@ -1002,4 +1144,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default ImageEditor;

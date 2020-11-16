@@ -10,10 +10,10 @@
 
 #tool {
   float : right;
-  width : 50%
+  width : 40%
 }
 
-button, a {
+button {
   display: inline-block;
   padding: .5em .75em;
   color: white;
@@ -27,6 +27,20 @@ button, a {
   border-radius: .25em;
   margin-right: 5px;
 }
+
+button:disabled {
+  color : rgb(175, 175, 175);
+  background-color: gray;
+  /* border: 1px solid black; */
+}
+
+button:hover:enabled {
+  border: 1px solid rgb(27, 23, 23);
+  color: #ffffff;
+  background-color:rgb(36, 27, 27);
+}
+
+
 
 p {
   margin : 1px;
