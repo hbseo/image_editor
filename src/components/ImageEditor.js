@@ -27,7 +27,7 @@ class ImageEditor extends Component {
       layers: [],
       displayColorPicker: false,
       drawingMode: false,
-      pen_width: '1',
+      pen_width: 10,
       activeObject : { type : 'not active'},
       zoom : 1,
 			color: {
@@ -917,12 +917,18 @@ class ImageEditor extends Component {
     this._canvas.isDrawingMode = true;
     this._canvas.freeDrawingCursor = 'default';
     this._canvas.freeDrawingBrush.color = "purple";
-    this._canvas.freeDrawingBrush.width = this.state.pen_width;
   }
 
   closeDrawing = () => {
     this.setState({ drawingMode: false });
     this._canvas.isDrawingMode = false;
+    
+  }
+  
+  handleDrawing = (event) =>{
+      const value = event.target.value;
+      this.setState({pen_width: value});
+      this._canvas.freeDrawingBrush.width = this.state.pen_width;
   }
 
   render() {
@@ -1092,6 +1098,8 @@ class ImageEditor extends Component {
               {this.state.drawingMode
                 ? <div> 
                     <button onClick={this.closeDrawing}>Cancel Drawing</button>
+                    <br/>
+                    <label>Width</label><input type='range' className='drawing' id='width' min='0' max='150' name='width' step='1' value={this.state.pen_width} onChange={this.handleDrawing.bind(this)}/>
                   </div>
                 : <button onClick={this.openDrawing}>Free Drawing</button>
                 }
