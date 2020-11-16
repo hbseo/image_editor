@@ -28,7 +28,6 @@ class ImageEditor extends Component {
       displayColorPicker: false,
       drawingMode: false,
       lineWidth: 10,
-      lineColorHex: '#000000',
       lineColorRgb:{
           r: '255',
           g: '255',
