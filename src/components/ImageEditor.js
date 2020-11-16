@@ -665,11 +665,15 @@ class ImageEditor extends Component {
 	
 	handleColorChange = (color) => {
     const activeObject = this.getActiveObject();
-    if(activeObject) {
-      this.action['Fill'].fill(color.hex);
-      this.saveState();
-    }
+    const body = document.body;
     this.setState({ color: color.rgb, colorHex : color.hex })
+    body.onmouseup = () => {
+      if(activeObject) {
+        this.action['Fill'].fill(color.hex);
+        this.saveState();
+      }
+      body.onmouseup = null;
+    }
   }
   
   
