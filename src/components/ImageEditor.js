@@ -601,6 +601,14 @@ class ImageEditor extends Component {
     }
   }
 
+  addIcon = (event) => {
+    const options = {
+      type : event.target.getAttribute('type'),
+      color : this.state.colorHex,
+    }
+    this.action['Icon'].addIcon(options);
+  }
+
   coloringFigure = (event) => {
     let colorOption = event.target.getAttribute("color");
     let activeObject = this.getActiveObject();
@@ -682,8 +690,8 @@ class ImageEditor extends Component {
     this.setState({ color: color.rgb, colorHex : color.hex })
   }
 
-  colorChange = (color) => {
-    console.log("mouse up")
+  handleColorChangeComplete = (color) => {
+    // console.log("mouse up")
     const activeObject = this.getActiveObject();
     if(activeObject) {
       this.action['Fill'].fill(color.hex);
@@ -840,14 +848,6 @@ class ImageEditor extends Component {
     }
   }
 
-  addIcon = (event) => {
-    const options = {
-      type : event.target.getAttribute('type'),
-      color : this.state.colorHex,
-    }
-    this.action['Icon'].addIcon(options);
-  }
-
   layerThumb = () => {
     var layer_list = null;
     // if (this._canvas) {
@@ -981,6 +981,11 @@ class ImageEditor extends Component {
     this.setState({ lineColorRgb: color.rgb})
     let rgb = "rgb(" + this.state.lineColorRgb['r'] + ", " + this.state.lineColorRgb['g'] + ", " + this.state.lineColorRgb['b'] + ")"
     this._canvas.freeDrawingBrush.color = rgb;
+  }
+
+  changeBackgroundColor = () => {
+    this._canvas.backgroundColor = this.state.colorHex;
+    this._canvas.renderAll();
   }
   render() {
 		const styles = {
@@ -1175,6 +1180,7 @@ class ImageEditor extends Component {
 
           <div>
             <h5>캔버스 기능</h5>
+            <button onClick={this.changeBackgroundColor}>캔버스 배경색 현재 색깔로 변경</button>
             <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
             <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
             {this.state.displayCropCanvasSize ? 
@@ -1212,7 +1218,7 @@ class ImageEditor extends Component {
             <button onClick={this.openColorPicker}>color</button>
           	{ this.state.displayColorPicker ? <div>
           	  <div onClick={this.closeColorPicker}/>
-          	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.colorChange }/>
+          	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           	</div> : null }
 
             <h5>테두리 두깨</h5>
