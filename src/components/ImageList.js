@@ -8,7 +8,22 @@ class ImageList extends Component {
       images: [],
       search: '',
       image_count: 1,
-      url: ''
+      url: '',
+      image : {
+        full : '',
+        raw : '',
+        regular : '',
+        small : '',
+        thumb : ''
+      },
+      imageSize : {
+        full : { x:0, y:0},
+        raw : { x:0, y:0},
+        regular : { x:0, y:0},
+        small : { x:0, y:0},
+        thumb : { x:0, y:0},
+
+      }
     }
   }
 
@@ -68,7 +83,7 @@ class ImageList extends Component {
     // console.log('show image', imagelist)
     const listitem = imagelist.map((image) =>
 
-      <img key={image.id} src={image.urls.thumb} alt="." onClick={this.onClickImg} />
+      <img key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small}/>
 
       // ursl뒤에 raw, small, regular, full 등의 따라 사이즈 조절
     );
@@ -79,9 +94,95 @@ class ImageList extends Component {
     )
   }
 
+  onClickThumb = (event) => {
+    // console.log(event.target.getAttribute('image'));
+    this.setState({
+      image : {
+        full : event.target.getAttribute('full'),
+        raw : event.target.getAttribute('raw'),
+        regular : event.target.getAttribute('regular'),
+        small : event.target.getAttribute('small'),   
+        thumb : event.target.src     
+    }})
+  }
+
   onClickImg = (event) => {
-    // console.log(event.target.src);
-    this.props.onClick(event.target.src);
+    // console.log(event.target.getAttribute('url'))
+    this.props.onClick(event.target.getAttribute('url'));
+  }
+
+  handleSubmit = (event) => {
+		if(event){ event.preventDefault(); }
+
+		console.log("submit", this.state.url);
+		this.url = this.state.url;
+		this.setState({url : "", submit : false, width:0, height : 0});
+
+
+	}
+
+	imageNotFound = () => {
+
+	}
+	imageFound = (img) => {
+    console.log()
+
+	}
+
+  imageSizeVersion = () => {
+    let image = this.state.image;
+    // console.log("img", image);
+
+    if(!image){
+      return(
+        <div><p>no img</p></div>
+      )
+    }
+    else{
+      let full_img = new Image();
+      full_img.onload = () => {
+        this.setState({
+          imageSize : {
+            full : { x: full_img.width, y: full_img.height},
+            small : { x : 400, y: Math.round(full_img.height * (400 / full_img.width)) },
+            thumb : { x : 200, y: Math.round(full_img.height * (200 / full_img.width)) },
+            regular : { x : 1080, y: Math.round(full_img.height * (1080 / full_img.width)) },
+          }
+        })
+      };
+      full_img.onerror = this.imageNotFound;
+      full_img.src = image.full;
+
+
+
+      return (
+        <div id="image-list-size">
+          <ul>
+            <li>
+              full : {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}
+              <img src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}  />
+            </li>
+            {/* <li>
+              <img src = {image.thumb} url={image.raw} alt="." onClick={this.onClickImg}  />
+            </li> */}
+            <li>
+              regular : {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}
+              <img src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg}  />
+            </li>
+            <li>
+              small : {this.state.imageSize.small.x} X {this.state.imageSize.small.y}
+              <img src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg}  />
+            </li>
+            <li>
+              thumb : {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}
+              <img src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg}  />
+            </li>
+          </ul>
+        </div>
+      )
+    }
+    
+
   }
 
 
@@ -104,6 +205,8 @@ class ImageList extends Component {
         <p>이미지 수 : {this.state.image_count}</p>
 
         {this.showImage(this.state.images)}
+        <p>아래는 선택한 이미지 크기</p>
+        { this.imageSizeVersion() }
       </div>
     )
   }

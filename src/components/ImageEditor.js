@@ -608,12 +608,12 @@ class ImageEditor extends Component {
           let activeObject = this.getActiveObject();
 
 
-          this.adjustOriginToCenter(activeObject);
+          // this.adjustOriginToCenter(activeObject);
           activeObject.set({
             width : Math.abs(activeObject.width),
             height : Math.abs(activeObject.height),
           })
-          
+
           if(activeObject.width === 0 || activeObject.height === 0){
             this._canvas.remove(activeObject);
           }
@@ -640,14 +640,14 @@ class ImageEditor extends Component {
       height : (event.pointer.y - activeObject.top),
     })
 
-    if(activeObject.width < 0 || activeObject. height < 0){
-      activeObject.set({
+    // if(activeObject.width < 0 || activeObject. height < 0){
+      // activeObject.set({
         // flipX : activeObject.width < 0 ? true : false,
         // flipY : activeObject.height < 0 ? true : false,
         // width : Math.abs(activeObject.width),
         // height : Math.abs(activeObject.height),
-      });
-    }
+      // });
+    // }
 
     this._canvas.renderAll();
   }
