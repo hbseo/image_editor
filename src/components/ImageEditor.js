@@ -79,6 +79,9 @@ class ImageEditor extends Component {
     this.redoStack = [];
     this.maxSize = 10;
 
+    //add function
+    this.startPoint = { x : 0, y : 0 };
+
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
     this._createAction();
@@ -545,7 +548,7 @@ class ImageEditor extends Component {
         this._canvas.add(data).setActiveObject(data);
         // this.setState({ layers: this.state.layers.concat(data) });
         // console.log(data.getSvgSrc());
-
+        
       })
     }
     document.removeEventListener('mousedown', this.addImageEvent);
@@ -578,28 +581,95 @@ class ImageEditor extends Component {
     let myFigure;
     this._canvas.defaultCursor = 'pointer';
     let type = event.target.getAttribute('type');
-    document.onclick = () => {
+    document.onmousedown = (event) => {
       if(event.target.tagName === 'CANVAS'){
         switch(type) {
           case 'triangle':
-            myFigure = new fabric.Triangle({ width: 40, height: 40, left: event.layerX, top: event.layerY, fill: "black" });
-            this._canvas.add(myFigure);
+            myFigure = new fabric.Triangle({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black",  originX : "left", originY:"top" });
+            this._canvas.add(myFigure).setActiveObject(myFigure);
             break;
           case 'rectangle':
-            myFigure = new fabric.Rect({ width: 40, height: 40, left: event.layerX, top: event.layerY, fill: "black" });
-            this._canvas.add(myFigure);
+            myFigure = new fabric.Rect({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black", originX : "left", originY:"top" });
+            this._canvas.add(myFigure).setActiveObject(myFigure);
             break;
           case 'circle':
             myFigure = new fabric.Circle({ radius: 20, left: event.layerX, top: event.layerY, fill: "black" });
-            this._canvas.add(myFigure);
+            this._canvas.add(myFigure).setActiveObject(myFigure);
             break;
           default:
         }
+        
+        this.startPoint = {x : event.x , y : event.y};
+        this._canvas.selection = false;
+        this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
+        this._canvas.on('mouse:up', (event) => {
+          this._canvas.off('mouse:move');
+
+          let activeObject = this.getActiveObject();
+
+
+          this.adjustOriginToCenter(activeObject);
+          activeObject.set({
+            width : Math.abs(activeObject.width),
+            height : Math.abs(activeObject.height),
+          })
+          
+          if(activeObject.width === 0 || activeObject.height === 0){
+            this._canvas.remove(activeObject);
+          }
+
+
+          this.startPoint = {x :0, y: 0};
+          this._canvas.selection = true;
+          this._canvas.renderAll();
+          this._canvas.off('mouse:up');
+        });
       }
+
       this._canvas.defaultCursor = 'default';
-      document.onclick = null;
+      document.onmousedown = null;
     }
   }
+
+  shapeCreateResizeEvent = (event) => {
+    let activeObject = this.getActiveObject();
+    
+    
+    activeObject.set({
+      width : (event.pointer.x - activeObject.left),
+      height : (event.pointer.y - activeObject.top),
+    })
+
+    if(activeObject.width < 0 || activeObject. height < 0){
+      activeObject.set({
+        // flipX : activeObject.width < 0 ? true : false,
+        // flipY : activeObject.height < 0 ? true : false,
+        // width : Math.abs(activeObject.width),
+        // height : Math.abs(activeObject.height),
+      });
+    }
+
+    this._canvas.renderAll();
+  }
+
+  // clone from tui.image.editor
+  adjustOriginToCenter = (shape) => {
+    const centerPoint = shape.getPointByOrigin('center', 'center');
+    const {originX, originY} = shape;
+    const origin = shape.getPointByOrigin(originX, originY);
+    const left = shape.left + (centerPoint.x - origin.x);
+    const top = shape.top + (centerPoint.y - origin.y);
+
+    shape.set({
+        hasControls: true,
+        hasBorders: true,
+        originX: 'center',
+        originY: 'center',
+        left,
+        top
+    });
+    shape.setCoords(); // For left, top properties
+}
 
   addIcon = (event) => {
     const options = {
@@ -996,15 +1066,16 @@ class ImageEditor extends Component {
     return (
       <div className='App'>
         <div id='editor'>
-          <canvas id='canvas' tabIndex='0'></canvas>
-        </div>
-        
-        <div id='tool'>
+          <div>
+            <canvas id='canvas' tabIndex='0'></canvas>
+          </div>
+
           <div>
             <h5>개발자 기능</h5>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
+            <br/>
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
             <p>캔버스 확대 값 = {this.state.zoom}</p>
@@ -1019,7 +1090,9 @@ class ImageEditor extends Component {
           </div>
 
           <hr />
-
+        </div>
+        
+        <div id='tool'>
           <div>
             <h5>오브젝트 기능</h5>
             <button onClick={this.sendToBack}>맨 뒤로 보내기</button>
