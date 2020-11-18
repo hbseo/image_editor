@@ -757,6 +757,7 @@ class ImageEditor extends Component {
 	}
 	
 	handleColorChange = (color) => {
+    // console.log((Math.round(color.rgb.a * 255)).toString(16))
     this.setState({ color: color.rgb, colorHex : color.hex })
   }
 
@@ -764,7 +765,8 @@ class ImageEditor extends Component {
     // console.log("mouse up")
     const activeObject = this.getActiveObject();
     if(activeObject) {
-      this.action['Fill'].fill(color.hex);
+      // this.action['Fill'].fill(color.hex);
+      this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
       this.saveState();
     }
   }
