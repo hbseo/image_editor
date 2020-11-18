@@ -26,6 +26,7 @@ class ImageEditor extends Component {
       strokeWidth : 0,
       layers: [],
       displayColorPicker: false,
+      displayCropCanvasSize: false,
       drawingMode: false,
       lineWidth: 10,
       lineColorRgb:{
@@ -49,6 +50,10 @@ class ImageEditor extends Component {
         pixelate : 1,
         blur : 0,
         noise : 0,
+      },
+      cropCanvasSize : {
+        width : 0,
+        height : 0
       }
     }
     
@@ -73,6 +78,7 @@ class ImageEditor extends Component {
     this.stateStack = [];
     this.redoStack = [];
     this.maxSize = 10;
+
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
     this._createAction();
@@ -80,7 +86,6 @@ class ImageEditor extends Component {
   }
 
   componentDidMount() {
-    console.log(this._canvasImageUrl);
     if(this._canvasImageUrl){
       this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top"})
       .then((img) => this._backgroundImage = img)
@@ -155,12 +160,18 @@ class ImageEditor extends Component {
     this._canvas.on('mouse:down', (event) => {
       // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
       if(this.cropImg){
+        console.log(this.cropImg);
         if(event.target == null || !(event.target === this.cropImg || event.target.type === "Container")){
           this.action['Crop'].cropObjend(this.cropImg, null);
           this.cropImg = null;
         }
       }
-
+      if(this.state.displayCropCanvasSize) {
+        if(event.target === null || event.target.type !== 'Container') {
+          this.action['Crop'].removeCropzone();
+          this.setState({displayCropCanvasSize: false});
+        }
+      }
       // let evt = event.e;
       // if (evt.altKey === true) {
       //   this.isDragging = true;
@@ -293,9 +304,14 @@ class ImageEditor extends Component {
     // this._canvas.on('object:skewing', (event) => {
     //   console.log('object:skewing');
     // })
-    // this._canvas.on('object:scaling', (event) => {
-    //   console.log('object:scaling');
-    // })
+    this._canvas.on('object:scaling', (event) => {
+      // console.log('object:scaling');
+      if(this.state.displayCropCanvasSize) {
+        let object = this.getActiveObject();
+        let change_state = {width: object.width*object.scaleX, height: object.height*object.scaleY};
+        this.setState({cropCanvasSize: change_state});
+      }
+    })
     // this._canvas.on('object:scaled', (event) => {
     //   console.log('object:scaled');
     // })
@@ -315,6 +331,7 @@ class ImageEditor extends Component {
   }
 
   _deleteDomevent = () =>{
+    console.log('dddd');
     document.removeEventListener('keydown',this._onKeydownEvent)
   }
 
@@ -561,7 +578,7 @@ class ImageEditor extends Component {
     let myFigure;
     this._canvas.defaultCursor = 'pointer';
     let type = event.target.getAttribute('type');
-    document.onclick = (event) => {
+    document.onclick = () => {
       if(event.target.tagName === 'CANVAS'){
         switch(type) {
           case 'triangle':
@@ -697,7 +714,21 @@ class ImageEditor extends Component {
     // }
   }
 
-
+  handleCropCanvasSizeChange = (event) => {
+    let change_state = {
+      width : this.state.cropCanvasSize.width,
+      height : this.state.cropCanvasSize.height
+    };
+    change_state[event.target.name] = event.target.value;
+    new Promise((resolve) => {
+      this.setState({cropCanvasSize : change_state});
+      console.log(this.state.cropCanvasSize);
+      resolve();
+    })
+    .then(() => {
+      this.action['Crop'].resizeCropzone(this.state.cropCanvasSize);
+    })
+  }
 
 
   rotateObject = (event) => {
@@ -778,11 +809,19 @@ class ImageEditor extends Component {
   }
 
   cropCanvas = () => {
+    this._deleteDomevent();
+    let change_state = {width: this._canvas.width/2, height: this._canvas.height/2};
+    this.setState({
+      displayCropCanvasSize: true,
+      cropCanvasSize: change_state
+    });
     this.action['Crop'].cropCanvas();
     this.saveState();
   }
 
   cropEndCanvas = () => {
+    this._createDomEvent();
+    this.setState({displayCropCanvasSize: false});
     this.action['Crop'].cropEndCanvas();
     this.saveState();
   }
@@ -1138,6 +1177,28 @@ class ImageEditor extends Component {
             <h5>캔버스 기능</h5>
             <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
             <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
+            {this.state.displayCropCanvasSize ? 
+              <div>
+                <label htmlFor='cropCanvasWidth'> x : </label>
+                <input 
+                  type='number' 
+                  onChange={this.handleCropCanvasSizeChange} 
+                  name='width'
+                  min='1'
+                  max={this._canvas.width}
+                  value={this.state.cropCanvasSize.width} 
+                />
+                <label htmlFor='cropCanvasHeight'> y : </label>
+                <input 
+                  type='number' 
+                  onChange={this.handleCropCanvasSizeChange} 
+                  name='height'
+                  min='1'
+                  max={this._canvas.height}
+                  value={this.state.cropCanvasSize.height} 
+                />
+              </div> : null
+            }
             <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
             <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
             <button onClick={this.undo}>Undo</button>

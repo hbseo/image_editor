@@ -160,14 +160,34 @@ class Crop extends Action {
 
   }
 
+  resizeCropzone = (value) => {
+    value.width = parseInt(value.width);
+    value.height = parseInt(value.height);
+    let canvas = this.getCanvas();
+    this._cropzone.width = value.width;
+    this._cropzone.height = value.height;
+    canvas.renderAll();
+  }
+
+  removeCropzone = () => {
+    let canvas = this.getCanvas();
+    canvas.remove(this._cropzone);
+    this.deleteEvent();
+    canvas.renderAll();
+  }
+
   cropCanvas = () => {
     let canvas = this.getCanvas();
     this._cropzone = new fabric.Container({
       label: 'cropCanvas',
-      top: canvas.height/4,
-      left: canvas.width/4,
+      top: canvas.height/2,
+      left: canvas.width/2,
       height: canvas.height/2,
       width: canvas.width/2,
+      borderColor: 'white',
+      cornerColor: 'white',
+      cornerSize: 12,
+      transparentCorners: false
     });
     this._cropzone.setControlsVisibility({
       mtr:false
@@ -183,8 +203,8 @@ class Crop extends Action {
     let activeObject = this.getActiveObject();
     canvas.remove(activeObject);
     let cropRect = {
-      left : this._cropzone.left,
-      top : this._cropzone.top,
+      left : this._cropzone.oCoords.tl.x,
+      top : this._cropzone.oCoords.tl.y,
       height : this._cropzone.height * this._cropzone.scaleY,
       width : this._cropzone.width * this._cropzone.scaleX
     }
