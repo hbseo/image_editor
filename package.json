@@ -24,6 +24,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "react-switch": "^5.0.1",
     "unsplash-js": "^6.3.0"
   },
   "scripts": {

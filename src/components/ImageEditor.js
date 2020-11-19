@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import { SketchPicker, CompactPicker } from 'react-color';
+import Switch from 'react-switch';
 import './ImageEditor.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
@@ -28,6 +29,7 @@ class ImageEditor extends Component {
       displayColorPicker: false,
       displayCropCanvasSize: false,
       displayTextbgColorPicker: false,
+      displayshadow: false,
       drawingMode: false,
       lineWidth: 10,
       lineColorRgb:{
@@ -61,6 +63,12 @@ class ImageEditor extends Component {
       cropCanvasSize : {
         width : 0,
         height : 0
+      },
+      shadow : {
+        blur : 30,
+        offsetY: 10,
+        offsetX : 10,
+        color : '#000000'
       }
     }
     
@@ -851,10 +859,36 @@ class ImageEditor extends Component {
       this.action['Crop'].resizeCropzone(this.state.cropCanvasSize);
     })
   }
-  
+
   handletextBgChange = (event) => {
-    this.setState({textBgColor: event.rgb});
-    this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
+    if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {
+      this.setState({textBgColor: event.rgb});
+      this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
+    }
+  }
+
+  handleShadowChange = (event) => {
+    let object = this.getActiveObject();
+    let change_state = {
+      blur : this.state.shadow.blur,
+      offsetX : this.state.shadow.offsetX,
+      offsetY : this.state.shadow.offsetY,
+      color : this.state.shadow.color
+    }
+    if(event.hex) {
+      change_state['color'] = event.hex;
+    }
+    else {
+      change_state[event.target.name] = event.target.value;
+    }
+    new Promise((resolve) => {
+      this.setState({shadow: change_state});
+      resolve();
+    })
+    .then(() => {
+      object.set('shadow', new fabric.Shadow(this.state.shadow));
+      this._canvas.renderAll();
+    })
   }
 
 
@@ -968,8 +1002,26 @@ class ImageEditor extends Component {
   }
 
   toggletextbg = () => {
-    let toggle = this.state.displayTextbgColorPicker;
-    this.setState({displayTextbgColorPicker: !toggle});
+    this.setState({displayTextbgColorPicker: !this.state.displayTextbgColorPicker});
+  }
+
+  toggleshadow = () => {
+    new Promise((resolve) => {
+      this.setState({displayshadow: !this.state.displayshadow});
+      resolve();
+    })
+    .then(() => {
+      let object = this.getActiveObject();
+      if(object) {
+        if(this.state.displayshadow) {
+          object.set('shadow', new fabric.Shadow({color:'black', blur:30, offsetX:10, offsetY:10, opacity:0}));
+        }
+        else {
+          object.set('shadow', null);
+        }
+        this._canvas.renderAll();
+      }
+    })
   }
 
   layerThumb = () => {
@@ -1186,7 +1238,25 @@ class ImageEditor extends Component {
           <div>
             <h5>텍스트 기능</h5>
             <button onClick={this.addText}>텍스트 추가</button>
-            <button className='text' onClick={this.toggletextbg} text='backgroundColor'>배경색 변경</button>
+            <label htmlFor='material-switch'>
+              <span>배경색</span>
+              <Switch 
+              checked={this.state.displayTextbgColorPicker} 
+              onChange={this.toggletextbg}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={30}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={20}
+              width={48}
+              className="react-switch"
+              id="material-switch"
+              ></Switch>
+            </label>
+            {/* <button className='text' onClick={this.toggletextbg} text='backgroundColor'>배경색 변경</button> */}
             {this.state.displayTextbgColorPicker ? 
             <CompactPicker color={this.state.textBgColor} onChange={this.handletextBgChange}></CompactPicker> : null}
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
@@ -1362,7 +1432,65 @@ class ImageEditor extends Component {
           	  <div onClick={this.closeColorPicker}/>
           	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           	</div> : null }
+            <h5>그림자</h5>
+            <Switch 
+              checked={this.state.displayshadow} 
+              onChange={this.toggleshadow}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={30}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={20}
+              width={48}
+              className="react-switch"
+              id="material-switch"
+              ></Switch>
+              {this.state.displayshadow ?
+                <div>
+                  <br/>
+                  <label htmlFor='shadow'>
+                    <span>블러</span>
+                    <input
+                      type='range'
+                      className='shadow'
+                      id='shadow'
+                      min='1'
+                      max='100'
+                      name='blur'
+                      step='1'
+                      value={this.state.shadow.blur}
+                      onChange={this.handleShadowChange}/>
 
+                    <span>세로 위치</span>
+                    <input
+                      type='range'
+                      className='shadow'
+                      id='shadow'
+                      min='-100'
+                      max='100'
+                      name='offsetY'
+                      step='1'
+                      value={this.state.shadow.scaleY}
+                      onChange={this.handleShadowChange}/>
+
+                    <span>가로 위치</span>
+                    <input
+                      type='range'
+                      className='shadow'
+                      id='shadow'
+                      min='-100'
+                      max='100'
+                      name='offsetX'
+                      step='1'
+                      value={this.state.shadow.scaleX}
+                      onChange={this.handleShadowChange}/>
+                    </label>
+                    <CompactPicker color={this.state.shadow.color} onChange={this.handleShadowChange}></CompactPicker>
+                  </div>
+              :null}
             <h5>테두리 두깨</h5>
             <input
               type='number'
