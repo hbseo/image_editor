@@ -74,10 +74,11 @@ class ImageEditor extends Component {
 
     // redo undo
     this.lock = false;
-    this.currentState = null;
+    this.currentState = { action : 'constructor' };
     this.stateStack = [];
     this.redoStack = [];
     this.maxSize = 10;
+    this.state_id = 1;
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -106,6 +107,8 @@ class ImageEditor extends Component {
         this._createDomEvent();
         this._createCanvasEvent();
         this.currentState = this._canvas.toDatalessJSON();
+        this.currentState.action = "initilize";
+        this.currentState.id = 0;
       })
     }
     else{
@@ -120,7 +123,10 @@ class ImageEditor extends Component {
       this._createDomEvent();
       this._createCanvasEvent();
       this.currentState = this._canvas.toDatalessJSON();
+      this.currentState.action = "initilize";
+      this.currentState.id = 0;
     }
+    this.forceUpdate(); // for showUndo/Redo Stack
   }
   
   componentWillUnmount() {
@@ -164,13 +170,13 @@ class ImageEditor extends Component {
       // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
       if(this.cropImg){
         console.log(this.cropImg);
-        if(event.target == null || !(event.target === this.cropImg || event.target.type === "Container")){
+        if(event.target == null || !(event.target === this.cropImg || event.target.type === "Cropzone")){
           this.action['Crop'].cropObjend(this.cropImg, null);
           this.cropImg = null;
         }
       }
       if(this.state.displayCropCanvasSize) {
-        if(event.target === null || event.target.type !== 'Container') {
+        if(event.target === null || event.target.type !== 'Cropzone') {
           this.action['Crop'].removeCropzone();
           this.setState({displayCropCanvasSize: false});
         }
@@ -293,12 +299,12 @@ class ImageEditor extends Component {
 
       }
       else{
-        this.saveState();
+        this.saveState(event.target.type +' :added event');
       }
     })
     this._canvas.on('object:modified', (event) => {
       // console.log('object:modified');
-      this.saveState();
+      this.saveState(event.target.type + ':modified');
     })
 
     this._canvas.on('object:rotated', (event) => {
@@ -344,14 +350,17 @@ class ImageEditor extends Component {
     document.removeEventListener('keydown',this._onKeydownEvent)
   }
 
-  saveState = () => {
+  saveState = (action) => {
     if(!this.lock) {
       if(this.stateStack.length === this.maxSize) {
         this.stateStack.shift();
       }
       this.stateStack.push(this.currentState);
       this.currentState = this._canvas.toDatalessJSON();
+      this.currentState.action = action;
+      this.currentState.id = this.state_id++;
       this.redoStack.length = 0;
+      this.forceUpdate(); // for showUndo/Redo Stack
     }
   }
 
@@ -370,13 +379,14 @@ class ImageEditor extends Component {
   }
 
   applyState = (stack, newState) => {
-    // console.log('applyState');
+    // console.log(this.currentState);
     stack.push(this.currentState);
     this.currentState = newState;
     this.lock = true;
     this._canvas.loadFromJSON(this.currentState, () => {
       this.lock = false;
     });
+    this.forceUpdate(); // for showUndo/Redo Stack
   }
 
 	/**
@@ -623,7 +633,7 @@ class ImageEditor extends Component {
           this.startPoint = {x :0, y: 0};
           this._canvas.selection = true;
           this._canvas.renderAll();
-          this.saveState();
+          this.saveState('shape add');
           this._canvas.off('mouse:up');
         });
       }
@@ -697,18 +707,18 @@ class ImageEditor extends Component {
     this.action['Icon'].addIcon(options);
   }
 
-  coloringFigure = (event) => {
-    let colorOption = event.target.getAttribute("color");
-    let activeObject = this.getActiveObject();
-    if (activeObject) {
-      this.action['Coloring'].changeColor(activeObject, colorOption, event.target.checked);
-      this.saveState();
-    }
-    else {
-      alert('select figure');
-      event.target.checked = false;
-    }
-  }
+  // coloringFigure = (event) => {
+  //   let colorOption = event.target.getAttribute("color");
+  //   let activeObject = this.getActiveObject();
+  //   if (activeObject) {
+  //     this.action['Coloring'].changeColor(activeObject, colorOption, event.target.checked);
+  //     this.saveState('color change');
+  //   }
+  //   else {
+  //     alert('select figure');
+  //     event.target.checked = false;
+  //   }
+  // }
 
   handleAngleChange = (event) => {
     if (this.getActiveObject()) {
@@ -720,7 +730,7 @@ class ImageEditor extends Component {
       })
         .then(() => {
           this.action['Rotation'].setAngle(this.state.angle);
-          this.saveState();
+          this.saveState('angle change');
         })
     }
     else {
@@ -747,7 +757,7 @@ class ImageEditor extends Component {
       })
         .then(() => {
           this.action['Filter'].applyFilter(activeObject || this._backgroundImage , filterOption, true, value);
-          this.saveState();
+          this.saveState('input filter change : ' + filterOption);
         })
     }
     else {
@@ -766,7 +776,7 @@ class ImageEditor extends Component {
       })
       .then(() => {
         this.action['Text'].textObj(activeObject, textOption, true, fontSize);
-        this.saveState();
+        this.saveState('font size change');
       })
     }
     else{
@@ -785,7 +795,7 @@ class ImageEditor extends Component {
     if(activeObject) {
       // this.action['Fill'].fill(color.hex);
       this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
-      this.saveState();
+      this.saveState('Fill : colorChangeComplete');
     }
   }
   
@@ -836,7 +846,7 @@ class ImageEditor extends Component {
     if (activeObject) {
       this.setState({ angle: (activeObject.angle + Number(changeAngle)) % 360 })
       this.action['Rotation'].setAngle(activeObject.angle + Number(changeAngle));
-      this.saveState();
+      this.saveState('Object is rotated');
     }
     else {
       alert('image is not activated')
@@ -849,11 +859,11 @@ class ImageEditor extends Component {
 
     if (activeObject) {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
-      this.saveState();
+      this.saveState('apply filter objImg');
     }
     else {
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
-      this.saveState();
+      this.saveState('apply filter backgroundImg');
     }
 
   }
@@ -863,14 +873,14 @@ class ImageEditor extends Component {
       case 'textbox' : 
         if(this.getActiveObject().selectable){
           this.action['Delete'].deleteObj();
-          this.saveState();
+          this.saveState('delete Textbox');
         }
         break;
       case 'null' :
         break;
       default :
         this.action['Delete'].deleteObj();
-        this.saveState();
+        this.saveState('delete '+ this.state.activeObject.type);
     }
   }
 
@@ -879,11 +889,11 @@ class ImageEditor extends Component {
     let option = event.target.getAttribute('flip');
     if (activeObject) {
       this.action['Flip'].flip(activeObject, option);
-      this.saveState();
+      this.saveState(activeObject.type + ' flip');
     }
     else {
       this.action['Flip'].flip(null, option);
-      this.saveState();
+      this.saveState('backgroundImg flip');
     }
   }
 
@@ -893,7 +903,7 @@ class ImageEditor extends Component {
     if(activeObject && activeObject.type === 'image'){
       this.cropImg = activeObject;
       this.action['Crop'].cropObj(activeObject, cropOption);
-      this.saveState();
+      // this.saveState();
     }
   }
 
@@ -902,7 +912,7 @@ class ImageEditor extends Component {
     if(this.cropImg){
       this.action['Crop'].cropObjend(this.cropImg, cropOption);
       this.cropImg = null;
-      this.saveState();
+      this.saveState('Crop Obj');
     }
   }
 
@@ -914,14 +924,14 @@ class ImageEditor extends Component {
       cropCanvasSize: change_state
     });
     this.action['Crop'].cropCanvas();
-    this.saveState();
+    // this.saveState('Crop Canvas');
   }
 
   cropEndCanvas = () => {
     this._createDomEvent();
     this.setState({displayCropCanvasSize: false});
     this.action['Crop'].cropEndCanvas();
-    this.saveState();
+    this.saveState('Crop Canvas');
   }
 
   textObject = (event) => {
@@ -930,7 +940,7 @@ class ImageEditor extends Component {
 
     if (activeObject) {
       this.action['Text'].textObj(activeObject, textOption, event.target.checked, event.target.value);
-      this.saveState();
+      this.saveState('Text modified ' + textOption);
     }
     else {
       alert('text is not activated');
@@ -1008,6 +1018,30 @@ class ImageEditor extends Component {
         console.log(i);
       }
     }
+  }
+
+  showUndoStack = () => {
+    // console.log(this.stateStack);
+    const listitem = this.stateStack.map((state) =>
+      <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack">{state.action}</p>
+    );
+    return(
+      <div>
+        {listitem}
+      </div>
+    )
+  }
+
+  showRedoStack = () => {
+    // console.log(this.redoStack);
+    const listitem = this.redoStack.map((state) =>
+      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack">{state.action}</p>
+    );
+    return(
+      <div>
+        {listitem}
+      </div>
+    )
   }
 
   convertSvg = () => {
@@ -1120,6 +1154,15 @@ class ImageEditor extends Component {
             <p>선택 개체 각도 값 = {this.state.angle}</p>
             <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
 				  	<p>컬러 헥스 값{this.state.colorHex}</p>
+            <hr />
+            <p>- Undo Stack </p>
+            {this.showUndoStack()} 
+            <hr />
+            <p>- currentState</p>
+            <p style={{color : '#008000'}}>{this.currentState.action}</p>
+            <hr />
+            <p>- Redo Stack  </p>
+            {this.showRedoStack()}
           </div>
 
           <hr />
