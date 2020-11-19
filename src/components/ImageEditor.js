@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { SketchPicker } from 'react-color';
+import { SketchPicker, CompactPicker } from 'react-color';
 import './ImageEditor.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
@@ -27,6 +27,7 @@ class ImageEditor extends Component {
       layers: [],
       displayColorPicker: false,
       displayCropCanvasSize: false,
+      displayTextbgColorPicker: false,
       drawingMode: false,
       lineWidth: 10,
       lineColorRgb:{
@@ -42,7 +43,13 @@ class ImageEditor extends Component {
 				g: '255',
 				b: '255',
 				a: '1',
-			},
+      },
+      textBgColor: {
+        r: '255',
+        g: '255',
+        b: '255',
+        a: '1'
+      },
       colorHex : '#FFFFFF',
       filters : {
         brightness: 0,
@@ -81,6 +88,12 @@ class ImageEditor extends Component {
 
     //add function
     this.startPoint = { x : 0, y : 0 };
+
+    // font
+    this.fontarray = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
+    'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
+    'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
+    'Copperplate'];
 
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
@@ -569,7 +582,18 @@ class ImageEditor extends Component {
   addTextEvent = (event) => {
     if(event.target.tagName === 'CANVAS'){
       let text = new fabric.Textbox('Hello world', {
-        left: event.layerX, top: event.layerY , fontSize: this.state.fontsize, lockScalingY: true
+        left: event.layerX,
+        top: event.layerY ,
+        fontSize: this.state.fontsize,
+        lockScalingY: true
+      });
+      text.setControlsVisibility({
+        mt: false,
+        mb: false,
+        bl: false,
+        br: false,
+        tl: false,
+        tr: false
       });
       this._canvas.add(text).setActiveObject(text);
     }
@@ -587,7 +611,7 @@ class ImageEditor extends Component {
     let myFigure;
     this._canvas.defaultCursor = 'pointer';
     let type = event.target.getAttribute('type');
-    document.onmousedown = (event) => {
+    document.onmousedown = () => {
       if(event.target.tagName === 'CANVAS'){
         switch(type) {
           case 'triangle':
@@ -608,7 +632,7 @@ class ImageEditor extends Component {
         this.startPoint = {x : event.x , y : event.y};
         this._canvas.selection = false;
         this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
-        this._canvas.on('mouse:up', (event) => {
+        this._canvas.on('mouse:up', () => {
           this._canvas.off('mouse:move');
 
           let activeObject = this.getActiveObject();
@@ -827,6 +851,11 @@ class ImageEditor extends Component {
       this.action['Crop'].resizeCropzone(this.state.cropCanvasSize);
     })
   }
+  
+  handletextBgChange = (event) => {
+    this.setState({textBgColor: event.rgb});
+    this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
+  }
 
 
   rotateObject = (event) => {
@@ -936,6 +965,11 @@ class ImageEditor extends Component {
       alert('text is not activated');
       event.target.checked = false;
     }
+  }
+
+  toggletextbg = () => {
+    let toggle = this.state.displayTextbgColorPicker;
+    this.setState({displayTextbgColorPicker: !toggle});
   }
 
   layerThumb = () => {
@@ -1094,7 +1128,9 @@ class ImageEditor extends Component {
 			color : {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
 			}
-		}
+    }
+    let i = 0;
+    const fontList = this.fontarray.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
         <div id='editor'>
@@ -1150,6 +1186,9 @@ class ImageEditor extends Component {
           <div>
             <h5>텍스트 기능</h5>
             <button onClick={this.addText}>텍스트 추가</button>
+            <button className='text' onClick={this.toggletextbg} text='backgroundColor'>배경색 변경</button>
+            {this.state.displayTextbgColorPicker ? 
+            <CompactPicker color={this.state.textBgColor} onChange={this.handletextBgChange}></CompactPicker> : null}
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
             <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
@@ -1167,10 +1206,7 @@ class ImageEditor extends Component {
             />
             <label htmlFor='fontfamily'>글꼴: </label>
             <select className='text' name='fontfamily' text='fontfamily' onChange={this.textObject}>
-              <option value='Times New Roman'>Times New Roman</option>
-              <option value='Georgia'>Georgia</option>
-              <option value='serif'>serif</option>
-              <option value='VT323'>VT323</option>
+              {fontList}
             </select>
           </div>
 
