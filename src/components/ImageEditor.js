@@ -230,7 +230,7 @@ class ImageEditor extends Component {
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
       let type = this._canvas.getActiveObject().type;
-      this.setState({activeObject : this.getActiveObject()});
+      this.setState({activeObject : this.getActiveObject(), angle : this.getActiveObject().angle});
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
@@ -258,7 +258,7 @@ class ImageEditor extends Component {
 
 		this._canvas.on('selection:updated', (event) => {
       let type = this._canvas.getActiveObject().type;
-      this.setState({activeObject : this.getActiveObject()});
+      this.setState({activeObject : this.getActiveObject(), angle : this.getActiveObject().angle});
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
@@ -282,7 +282,7 @@ class ImageEditor extends Component {
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
-      this.setState({activeObject : { type : 'not active'}});
+      this.setState({activeObject : { type : 'not active'}, angle : 0});
 			if(!this._canvas.backgroundImage){
         this.switchTools('filter', 'text', true);
 			}
@@ -707,6 +707,45 @@ class ImageEditor extends Component {
     this.action['Icon'].addIcon(options);
   }
 
+  addLineResize = (event) => {
+    let line = this.getActiveObject();
+    const pointer = this._canvas.getPointer(event, false);
+    line.set({x2 : pointer.x, y2 : pointer.y});
+    this._canvas.renderAll();
+  }
+
+  addLineEvent = (event) => {
+    if(event.target.tagName === 'CANVAS'){
+      const pointer = this._canvas.getPointer(event, false);
+      let line = new fabric.Line([ pointer.x, pointer.y, pointer.x, pointer.y ], {
+        left : pointer.x,
+        right :pointer.y,
+        strokeWidth : 5,
+        stroke : 'black',
+        fill : 'black'
+      })
+      this._canvas.add(line).setActiveObject(line);
+    }
+    document.removeEventListener('mousedown', this.addLineEvent);
+    this._canvas.defaultCursor = 'default';
+    this._canvas.selection = false;
+    this._canvas.on('mouse:move', this.addLineResize);
+    this._canvas.on('mouse:up', (event) => {
+      this._canvas.off('mouse:move');
+
+      this._canvas.selection = true;
+      this._canvas.renderAll();
+      this.saveState('line add');
+      this._canvas.off('mouse:up');
+    });
+  }
+
+  addLine = () => {
+    this._canvas.defaultCursor = 'pointer';
+		document.addEventListener('mousedown',this.addLineEvent);    
+  }
+
+
   // coloringFigure = (event) => {
   //   let colorOption = event.target.getAttribute("color");
   //   let activeObject = this.getActiveObject();
@@ -869,7 +908,8 @@ class ImageEditor extends Component {
   }
 
   deleteObject = (event) => {
-    switch(this.state.activeObject.type){
+    let obj = this.getActiveObject();
+    switch(obj.type){
       case 'textbox' : 
         if(this.getActiveObject().selectable){
           this.action['Delete'].deleteObj();
@@ -880,7 +920,7 @@ class ImageEditor extends Component {
         break;
       default :
         this.action['Delete'].deleteObj();
-        this.saveState('delete '+ this.state.activeObject.type);
+        this.saveState('delete '+ obj.type);
     }
   }
 
@@ -1307,6 +1347,7 @@ class ImageEditor extends Component {
             <button onClick={this.addShape} type="triangle">삼각형</button>
             <button onClick={this.addShape} type="rectangle">직사각형</button>
             <button onClick={this.addShape} type="circle">원</button>
+            <button onClick={this.addLine} type="line">직선</button>
           </div>
 
           <hr />
