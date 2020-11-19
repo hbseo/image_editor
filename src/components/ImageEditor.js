@@ -287,8 +287,14 @@ class ImageEditor extends Component {
 		});
     
     this._canvas.on('object:added', (event) => {
-      // console.log('object:added');
-      this.saveState();
+      // console.log('object:added', event.target);
+      let type = event.target.type;
+      if( type === 'ellipse' || type ==='rect' || type === 'triangle'){
+
+      }
+      else{
+        this.saveState();
+      }
     })
     this._canvas.on('object:modified', (event) => {
       // console.log('object:modified');
@@ -585,15 +591,15 @@ class ImageEditor extends Component {
       if(event.target.tagName === 'CANVAS'){
         switch(type) {
           case 'triangle':
-            myFigure = new fabric.Triangle({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black",  originX : "left", originY:"top" });
+            myFigure = new fabric.Triangle({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black",  originX : "left", originY:"top", isRegular : false });
             this._canvas.add(myFigure).setActiveObject(myFigure);
             break;
           case 'rectangle':
-            myFigure = new fabric.Rect({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black", originX : "left", originY:"top" });
+            myFigure = new fabric.Rect({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black", originX : "left", originY:"top", isRegular : false});
             this._canvas.add(myFigure).setActiveObject(myFigure);
             break;
           case 'circle':
-            myFigure = new fabric.Circle({ radius: 20, left: event.layerX, top: event.layerY, fill: "black" });
+            myFigure = new fabric.Ellipse({ rx:0, ry:0, left: event.layerX, top: event.layerY, fill: "black", isRegular : false });
             this._canvas.add(myFigure).setActiveObject(myFigure);
             break;
           default:
@@ -607,12 +613,7 @@ class ImageEditor extends Component {
 
           let activeObject = this.getActiveObject();
 
-
-          // this.adjustOriginToCenter(activeObject);
-          activeObject.set({
-            width : Math.abs(activeObject.width),
-            height : Math.abs(activeObject.height),
-          })
+          this.adjustOriginToCenter(activeObject);
 
           if(activeObject.width === 0 || activeObject.height === 0){
             this._canvas.remove(activeObject);
@@ -622,6 +623,7 @@ class ImageEditor extends Component {
           this.startPoint = {x :0, y: 0};
           this._canvas.selection = true;
           this._canvas.renderAll();
+          this.saveState();
           this._canvas.off('mouse:up');
         });
       }
@@ -634,20 +636,36 @@ class ImageEditor extends Component {
   shapeCreateResizeEvent = (event) => {
     let activeObject = this.getActiveObject();
     
-    
-    activeObject.set({
-      width : (event.pointer.x - activeObject.left),
-      height : (event.pointer.y - activeObject.top),
-    })
+    let width = Math.abs(event.pointer.x - activeObject.left);
+    let height = Math.abs(event.pointer.y - activeObject.top);
 
-    // if(activeObject.width < 0 || activeObject. height < 0){
-      // activeObject.set({
-        // flipX : activeObject.width < 0 ? true : false,
-        // flipY : activeObject.height < 0 ? true : false,
-        // width : Math.abs(activeObject.width),
-        // height : Math.abs(activeObject.height),
-      // });
-    // }
+    
+    if (activeObject.isRegular) {
+      width = height =  Math.max(width, height);
+
+      if (activeObject.type === 'triangle') {
+          height = Math.sqrt(3) / 2 * width;
+      }
+    }
+
+    if(activeObject.type === 'ellipse'){
+      activeObject.set({
+        rx : width /2 ,
+        ry : height / 2,
+        originX : event.pointer.x - activeObject.left < 0 ? 'right' : 'left',
+        originY : event.pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
+      })
+    }
+    else{
+      activeObject.set({
+        width : width,
+        height :height,
+        originX : event.pointer.x - activeObject.left < 0 ? 'right' : 'left',
+        originY : event.pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
+      })
+    }
+
+
 
     this._canvas.renderAll();
   }
@@ -669,7 +687,7 @@ class ImageEditor extends Component {
         top
     });
     shape.setCoords(); // For left, top properties
-}
+  }
 
   addIcon = (event) => {
     const options = {
@@ -1006,6 +1024,18 @@ class ImageEditor extends Component {
     }
   }
 
+  convertObjScale = () => {
+    if(this.getActiveObject()){
+      let obj = this.getActiveObject();
+      obj.set({
+        width : obj.width * obj.scaleX,
+        height : obj.height * obj.scaleY,
+        scaleY : 1,
+        scaleX : 1,
+      })
+    }
+  }
+
   sendBackwards = () => {
     if(this.getActiveObject()){
       this._canvas.sendBackwards(this.getActiveObject())
@@ -1080,6 +1110,7 @@ class ImageEditor extends Component {
             <br/>
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
+            <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
             <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
@@ -1289,7 +1320,7 @@ class ImageEditor extends Component {
           <hr />
 
           <div>
-            <h5>색깔 : FILL 하는 용도</h5>
+            <h5>색깔 : 기본 색</h5>
             <button onClick={this.openColorPicker}>color</button>
           	{ this.state.displayColorPicker ? <div>
           	  <div onClick={this.closeColorPicker}/>

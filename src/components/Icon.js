@@ -27,13 +27,15 @@ class Icon extends Action {
   addIcon = (options) => {
     let canvas = this.getCanvas();
     let icon = this._createIcon(iconList[options.type]);
+    let canvas_area = document;
+    canvas.defaultCursor = 'pointer';
 
-    let canvas_area = document.body;
-    canvas_area.onclick = (event) => {
+    canvas_area.onmousedown = (event) => {
       if(event.target.tagName === 'CANVAS'){
         this._addIcon(canvas, icon, options, event);
       }
-      canvas_area.onclick = null;
+      canvas.defaultCursor = 'default';
+      canvas_area.onmousedown = null;
     }
 
     // canvas.on('mouse:down', (event) => { 
