@@ -92,7 +92,7 @@ class ImageEditor extends Component {
     this.currentState = { action : 'constructor' };
     this.stateStack = [];
     this.redoStack = [];
-    this.maxSize = 10;
+    this.maxSize = 100;
     this.state_id = 1;
 
     //add function
@@ -316,7 +316,7 @@ class ImageEditor extends Component {
     this._canvas.on('object:added', (event) => {
       // console.log('object:added', event.target);
       let type = event.target.type;
-      if( type === 'ellipse' || type ==='rect' || type === 'triangle'){
+      if( type === 'ellipse' || type ==='rect' || type === 'triangle' || type === 'Cropzone'){
 
       }
       else{
@@ -325,7 +325,10 @@ class ImageEditor extends Component {
     })
     this._canvas.on('object:modified', (event) => {
       // console.log('object:modified');
-      this.saveState(event.target.type + ':modified');
+      let type = event.target.type;
+      if(type !== 'Cropzone') {
+        this.saveState(event.target.type + ':modified');
+      }
     })
 
     this._canvas.on('object:rotated', (event) => {
@@ -367,7 +370,6 @@ class ImageEditor extends Component {
   }
 
   _deleteDomevent = () =>{
-    console.log('dddd');
     document.removeEventListener('keydown',this._onKeydownEvent)
   }
 
@@ -404,6 +406,7 @@ class ImageEditor extends Component {
     stack.push(this.currentState);
     this.currentState = newState;
     this.lock = true;
+    console.log(this.currentState);
     this._canvas.loadFromJSON(this.currentState, () => {
       this.lock = false;
     });
@@ -762,7 +765,7 @@ class ImageEditor extends Component {
     this._canvas.defaultCursor = 'default';
     this._canvas.selection = false;
     this._canvas.on('mouse:move', this.addLineResize);
-    this._canvas.on('mouse:up', (event) => {
+    this._canvas.on('mouse:up', () => {
       this._canvas.off('mouse:move');
 
       this._canvas.selection = true;
@@ -901,7 +904,6 @@ class ImageEditor extends Component {
     change_state[event.target.name] = event.target.value;
     new Promise((resolve) => {
       this.setState({cropCanvasSize : change_state});
-      console.log(this.state.cropCanvasSize);
       resolve();
     })
     .then(() => {
@@ -913,6 +915,7 @@ class ImageEditor extends Component {
     if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {
       this.setState({textBgColor: event.rgb});
       this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
+      this.saveState('text bg change');
     }
   }
 
@@ -1015,7 +1018,7 @@ class ImageEditor extends Component {
     if(this.cropImg){
       this.action['Crop'].cropObjend(this.cropImg, cropOption);
       this.cropImg = null;
-      this.saveState('Crop Obj');
+      // this.saveState('Crop Obj');
     }
   }
 
@@ -1249,6 +1252,12 @@ class ImageEditor extends Component {
     this._canvas.backgroundColor = this.state.colorHex;
     this._canvas.renderAll();
   }
+  UndoStack = () => {
+    console.log(this.stateStack);
+  }
+  RedoStack = () => {
+    console.log(this.redoStack);
+  }
   render() {
 		const styles = {
 			color : {
@@ -1273,6 +1282,8 @@ class ImageEditor extends Component {
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
             <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
+            <button onClick={this.UndoStack}>UndoStack</button>
+            <button onClick={this.RedoStack}>RedoStack</button>
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
             <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
