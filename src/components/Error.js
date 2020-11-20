@@ -4,8 +4,11 @@ import './Error.css'
 class Error extends React.Component {
   render() {
     return (
-      <div id="main">
-        <h1 id="msg">404 Not FOUND</h1>
+      <div id="main">      
+        <p id="msg">
+          <i class="fas fa-sad-tear"></i>
+          404 Not FOUND
+        </p>
       </div>
     )
   }

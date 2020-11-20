@@ -16,15 +16,7 @@ class Delete extends Action {
         canvas.discardActiveObject();
       }
       else {
-        if(obj.type === 'textbox') {
-          if(!obj.__lastIsEditing) {
-            canvas.remove(obj);
-          }
-        }
-
-        else {
-          canvas.remove(obj);
-        }
+        canvas.remove(obj);
       }
       canvas.renderAll();
     }

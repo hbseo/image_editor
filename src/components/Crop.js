@@ -225,11 +225,11 @@ class Crop extends Action {
       // ctx.closePath();
 
       //inner
-      ctx.moveTo(this._cropzone.aCoords.tl.x , this._cropzone.aCoords.tl.y);
-      ctx.lineTo(this._cropzone.aCoords.bl.x , this._cropzone.aCoords.bl.y);
-      ctx.lineTo(this._cropzone.aCoords.br.x , this._cropzone.aCoords.br.y);
-      ctx.lineTo(this._cropzone.aCoords.tr.x , this._cropzone.aCoords.tr.y);
-      ctx.moveTo(this._cropzone.aCoords.tl.x , this._cropzone.aCoords.tl.y);
+      ctx.moveTo(this._cropzone.oCoords.tl.x , this._cropzone.oCoords.tl.y);
+      ctx.lineTo(this._cropzone.oCoords.bl.x , this._cropzone.oCoords.bl.y);
+      ctx.lineTo(this._cropzone.oCoords.br.x , this._cropzone.oCoords.br.y);
+      ctx.lineTo(this._cropzone.oCoords.tr.x , this._cropzone.oCoords.tr.y);
+      ctx.moveTo(this._cropzone.oCoords.tl.x , this._cropzone.oCoords.tl.y);
       ctx.closePath();
 
 

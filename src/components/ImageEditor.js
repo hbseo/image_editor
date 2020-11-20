@@ -616,7 +616,7 @@ class ImageEditor extends Component {
   }
 
   addImageEvent = (event) => {
-    const pointer = { x: event.layerX, y : event.layerY  };
+    const pointer = this._canvas.getPointer(event, false)
     if(event.target.tagName === 'CANVAS'){
       this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center", scaleX : 1, scaleY : 1})
       .then((data) => {
@@ -636,10 +636,11 @@ class ImageEditor extends Component {
   }
 
   addTextEvent = (event) => {
+    const pointer = this._canvas.getPointer(event, false)
     if(event.target.tagName === 'CANVAS'){
       let text = new fabric.Textbox('Hello world', {
-        left: event.layerX,
-        top: event.layerY ,
+        left: pointer.x,
+        top: pointer.y,
         fontSize: this.state.fontsize,
         lockScalingY: true
       });
@@ -671,22 +672,22 @@ class ImageEditor extends Component {
         disableObj.lockMovementY = true;
         disableObj.lockMovementX = true;
       }
+      const pointer = this._canvas.getPointer(event, false)
       switch(this.shapeType) {
         case 'triangle':
-          myFigure = new fabric.Triangle({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black",  originX : "left", originY:"top", isRegular : false });
+          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : false });
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'rectangle':
-          myFigure = new fabric.Rect({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black", originX : "left", originY:"top", isRegular : false});
+          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : false});
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'circle':
-          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: event.layerX, top: event.layerY, fill: "black", isRegular : false });
+          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : false });
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         default:
       }
-      this.startPoint = {x : event.x , y : event.y};
       this._canvas.selection = false;
       this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
       this._canvas.on('mouse:up', (event) => {
@@ -700,8 +701,6 @@ class ImageEditor extends Component {
           this._canvas.remove(activeObject);
         }
 
-
-        this.startPoint = {x :0, y: 0};
         this._canvas.selection = true;
         this._canvas.renderAll();
         this.saveState('shape add');
@@ -728,9 +727,9 @@ class ImageEditor extends Component {
 
   shapeCreateResizeEvent = (event) => {
     let activeObject = this.getActiveObject();
-    
-    let width = Math.abs(event.pointer.x - activeObject.left);
-    let height = Math.abs(event.pointer.y - activeObject.top);
+    const pointer = this._canvas.getPointer(event, false)
+    let width = Math.abs(pointer.x - activeObject.left);
+    let height = Math.abs(pointer.y - activeObject.top);
 
     
     if (activeObject.isRegular) {
@@ -745,16 +744,16 @@ class ImageEditor extends Component {
       activeObject.set({
         rx : width /2 ,
         ry : height / 2,
-        originX : event.pointer.x - activeObject.left < 0 ? 'right' : 'left',
-        originY : event.pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
+        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
+        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
       })
     }
     else{
       activeObject.set({
         width : width,
         height :height,
-        originX : event.pointer.x - activeObject.left < 0 ? 'right' : 'left',
-        originY : event.pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
+        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
+        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
       })
     }
 
@@ -1026,7 +1025,7 @@ class ImageEditor extends Component {
     if(obj){
       switch(obj.type){
         case 'textbox' : 
-          if(this.getActiveObject().selectable){
+          if(!this.getActiveObject().isEditing){
             this.action['Delete'].deleteObj();
             this.saveState('delete Textbox');
           }
