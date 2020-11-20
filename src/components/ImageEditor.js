@@ -597,7 +597,7 @@ class ImageEditor extends Component {
         });
         // img.scaleToWidth(300);
         resolve(img);
-      }, { crossOrigin: 'Anonymous' }
+      }, { crossOrigin: 'anonymous' }
       );
     });
   }
@@ -810,6 +810,12 @@ class ImageEditor extends Component {
 
   addLineEvent = (event) => {
     if(event.target.tagName === 'CANVAS'){
+      const disableObj = this.getActiveObject();
+      if(disableObj){
+        // disableObj.evented = false;
+        disableObj.lockMovementY = true;
+        disableObj.lockMovementX = true;
+      }
       const pointer = this._canvas.getPointer(event, false);
       let line = new fabric.Line([ pointer.x, pointer.y, pointer.x, pointer.y ], {
         left : pointer.x,
@@ -819,23 +825,29 @@ class ImageEditor extends Component {
         fill : 'black'
       })
       this._canvas.add(line).setActiveObject(line);
-    }
-    document.removeEventListener('mousedown', this.addLineEvent);
-    this._canvas.defaultCursor = 'default';
-    this._canvas.selection = false;
-    this._canvas.on('mouse:move', this.addLineResize);
-    this._canvas.on('mouse:up', () => {
-      this._canvas.off('mouse:move', this.addLineResize);
 
-      this._canvas.selection = true;
-      this._canvas.renderAll();
-      this.saveState('line add');
-      this._canvas.off('mouse:up');
-    });
+      this._canvas.selection = false;
+      this._canvas.on('mouse:move', this.addLineResize);
+      this._canvas.on('mouse:up', () => {
+        this._canvas.off('mouse:move', this.addLineResize);
+        console.log('off')
+        this._canvas.selection = true;
+        this._canvas.renderAll();
+        this.saveState('line add');
+        if(disableObj){
+          disableObj.lockMovementY = false;
+          disableObj.lockMovementX = false;
+        }
+        this._canvas.off('mouse:up');
+      });
+    }
+    this._canvas.defaultCursor = 'default';
+    document.removeEventListener('mousedown', this.addLineEvent);
   }
 
   addLine = () => {
     this._canvas.defaultCursor = 'pointer';
+    this._canvas.discardActiveObject();
 		document.addEventListener('mousedown',this.addLineEvent);    
   }
 
