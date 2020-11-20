@@ -7,7 +7,6 @@ import Rotation from './Rotation';
 import Filter from './Filter';
 import Delete from './Delete';
 import Crop from './Crop';
-import Coloring from './Coloring';
 import Flip from './Flip';
 import Text from './Text';
 import Fill from './Fill';
@@ -521,7 +520,6 @@ class ImageEditor extends Component {
     this._register(this.action, new Delete(this));
     this._register(this.action, new Crop(this));
     this._register(this.action, new Text(this));
-    this._register(this.action, new Coloring(this))
     this._register(this.action, new Flip(this));
     this._register(this.action, new Fill(this));
     this._register(this.action, new Icon(this));
@@ -734,6 +732,7 @@ class ImageEditor extends Component {
   addShape = (event) => {
     // let body = document.body;
     this._canvas.defaultCursor = 'pointer';
+    this._canvas.discardActiveObject();
     this.shapeType = event.target.getAttribute('type');
     document.addEventListener('mousedown',this.addShapeEvent);    
   }
@@ -840,20 +839,6 @@ class ImageEditor extends Component {
 		document.addEventListener('mousedown',this.addLineEvent);    
   }
 
-
-  // coloringFigure = (event) => {
-  //   let colorOption = event.target.getAttribute("color");
-  //   let activeObject = this.getActiveObject();
-  //   if (activeObject) {
-  //     this.action['Coloring'].changeColor(activeObject, colorOption, event.target.checked);
-  //     this.saveState('color change');
-  //   }
-  //   else {
-  //     alert('select figure');
-  //     event.target.checked = false;
-  //   }
-  // }
-
   lockScaleRatio = (event) => {
     if(this.getActiveObject()){
       let obj = this.getActiveObject();
@@ -880,7 +865,10 @@ class ImageEditor extends Component {
         })
     }
     else {
-      alert('image is not activated');
+      if(this._backgroundImage){
+        this._canvas.backgroundImage.angle = event.target.value;
+        this._canvas.renderAll();
+      }
     }
   }
 
