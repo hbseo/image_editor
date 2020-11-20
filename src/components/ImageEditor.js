@@ -94,6 +94,9 @@ class ImageEditor extends Component {
     this.redoStack = [];
     this.maxSize = 100;
     this.state_id = 1;
+    this.undoCanvasSize = [];
+    this.redoCanvasSize = [];
+    this.currentCanvasSize = {width: null, height: null};
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -130,6 +133,7 @@ class ImageEditor extends Component {
         this.currentState = this._canvas.toDatalessJSON();
         this.currentState.action = "initilize";
         this.currentState.id = 0;
+        this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
       })
     }
     else{
@@ -146,6 +150,7 @@ class ImageEditor extends Component {
       this.currentState = this._canvas.toDatalessJSON();
       this.currentState.action = "initilize";
       this.currentState.id = 0;
+      this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
     }
     this.forceUpdate(); // for showUndo/Redo Stack
   }
@@ -155,9 +160,13 @@ class ImageEditor extends Component {
     this._deleteDomevent();  
     this.lock = false;
     this.currentState = null;
+    this.currentCanvasSize = null;
     this.stateStack.length = 0;
     this.redoStack.length = 0;
+    this.redoCanvasSize.length = 0;
+    this.undoCanvasSize.length = 0;
     this.cropImg = null;
+    this.fontarray.length = 0;
     this._clipboard = null;
     this._backgroundImage = null;
     this._canvas = null;
@@ -377,11 +386,14 @@ class ImageEditor extends Component {
     if(!this.lock) {
       if(this.stateStack.length === this.maxSize) {
         this.stateStack.shift();
+        this.undoCanvasSize.shift();
       }
       this.stateStack.push(this.currentState);
+      this.undoCanvasSize.push(this.currentCanvasSize);
       this.currentState = this._canvas.toDatalessJSON();
       this.currentState.action = action;
       this.currentState.id = this.state_id++;
+      this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
     }
@@ -390,24 +402,26 @@ class ImageEditor extends Component {
   undo = () => {
     // console.log('undo');
     if(this.stateStack.length > 0) {
-      this.applyState(this.redoStack, this.stateStack.pop());
+      this.applyState(this.redoStack, this.redoCanvasSize, this.stateStack.pop(), this.undoCanvasSize.pop());
     }
   }
 
   redo = () => {
     // console.log('redo');
     if(this.redoStack.length > 0) {
-      this.applyState(this.stateStack, this.redoStack.pop());
+      this.applyState(this.stateStack, this.undoCanvasSize,  this.redoStack.pop(), this.redoCanvasSize.pop());
     }
   }
 
-  applyState = (stack, newState) => {
-    // console.log(this.currentState);
+  applyState = (stack, sizeStack, newState, canvasSize) => {
     stack.push(this.currentState);
+    sizeStack.push(this.currentCanvasSize);
     this.currentState = newState;
+    this.currentCanvasSize = canvasSize;
     this.lock = true;
-    console.log(this.currentState);
     this._canvas.loadFromJSON(this.currentState, () => {
+      this._canvas.setWidth(canvasSize.width);
+      this._canvas.setHeight(canvasSize.height);
       this.lock = false;
     });
     this.forceUpdate(); // for showUndo/Redo Stack
@@ -632,7 +646,7 @@ class ImageEditor extends Component {
     let myFigure;
     this._canvas.defaultCursor = 'pointer';
     let type = event.target.getAttribute('type');
-    document.onmousedown = () => {
+    document.onmousedown = (event) => {
       if(event.target.tagName === 'CANVAS'){
         switch(type) {
           case 'triangle':
@@ -653,7 +667,7 @@ class ImageEditor extends Component {
         this.startPoint = {x : event.x , y : event.y};
         this._canvas.selection = false;
         this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
-        this._canvas.on('mouse:up', () => {
+        this._canvas.on('mouse:up', (event) => {
           this._canvas.off('mouse:move');
 
           let activeObject = this.getActiveObject();
@@ -1035,9 +1049,11 @@ class ImageEditor extends Component {
 
   cropEndCanvas = () => {
     this._createDomEvent();
+    if(this.state.displayCropCanvasSize) {
+      this.action['Crop'].cropEndCanvas();
+      this.saveState('Crop Canvas');
+    }
     this.setState({displayCropCanvasSize: false});
-    this.action['Crop'].cropEndCanvas();
-    this.saveState('Crop Canvas');
   }
 
   textObject = (event) => {
@@ -1252,12 +1268,6 @@ class ImageEditor extends Component {
     this._canvas.backgroundColor = this.state.colorHex;
     this._canvas.renderAll();
   }
-  UndoStack = () => {
-    console.log(this.stateStack);
-  }
-  RedoStack = () => {
-    console.log(this.redoStack);
-  }
   render() {
 		const styles = {
 			color : {
@@ -1282,8 +1292,6 @@ class ImageEditor extends Component {
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
             <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
-            <button onClick={this.UndoStack}>UndoStack</button>
-            <button onClick={this.RedoStack}>RedoStack</button>
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
             <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
