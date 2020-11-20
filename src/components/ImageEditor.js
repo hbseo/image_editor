@@ -1309,6 +1309,7 @@ class ImageEditor extends Component {
                 ? <button onClick={this.disablePipette}>Disable Pipette</button>
                 : <button onClick={this.enablePipette}>Enable Pipette</button>
             }
+            <p>{this.state.pipetteRGB.r}|{this.state.pipetteRGB.g}|{this.state.pipetteRGB.b}</p>
             <br/>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
