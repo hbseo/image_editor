@@ -293,7 +293,13 @@ class ImageEditor extends Component {
 					this.setState({
 						angle: 0
 					});
-					break;
+          break;
+        case 'group': //group using drag
+				  this.switchTools('filter', 'text', true);
+				  this.setState({
+				  	angle: 0
+				  });
+				  break;
 				default:
           this.switchTools('filter', 'text', true);
           this.setState({
@@ -321,7 +327,13 @@ class ImageEditor extends Component {
 					this.setState({
             angle: 0
 					});
-					break;
+          break;
+        case 'group': //group using drag
+				  this.switchTools('filter', 'text', true);
+				  this.setState({
+				  	angle: 0
+				  });
+				  break;
 				default:
           this.switchTools('filter', 'text', true);
           this.setState({
@@ -1254,6 +1266,24 @@ class ImageEditor extends Component {
     }
   }
 
+  makeGroup = () => {
+    if(this.getActiveObject().type === 'activeSelection'){
+      this._canvas.getActiveObject().toGroup();
+      this.setState({ activeObject : this._canvas.getActiveObject()});
+      this._canvas.renderAll();
+      this.saveState('makeGroup')
+    }
+  }
+
+  unGroup = () => {
+    if(this.getActiveObject().type === 'group'){
+      this._canvas.getActiveObject().toActiveSelection();
+      this.setState({ activeObject : this._canvas.getActiveObject()});
+      this._canvas.renderAll();
+      this.saveState('unGroup')
+    }
+  }
+
   sendBackwards = () => {
     if(this.getActiveObject()){
       this._canvas.sendBackwards(this.getActiveObject())
@@ -1377,6 +1407,8 @@ class ImageEditor extends Component {
             <button onClick={this.bringToFront}>맨 앞으로 보내기</button>
             <button onClick={this.bringForward}>앞으로 보내기</button>
             <button onClick={this.deleteObject}>선택 개체 삭제</button>
+            <button onClick={this.makeGroup}>그룹화</button>
+            <button onClick={this.unGroup}>그룹해제</button>
             <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
             <input
               type='number'
