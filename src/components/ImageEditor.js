@@ -81,8 +81,9 @@ class ImageEditor extends Component {
     
 
     this._canvas = null;
-    this._canvasImageUrl = props.location.state.url;
-    this._canvasSize = {width : props.location.state.width, height : props.location.state.height}
+    if(!props.location.state) { props.history.push('/'); }
+    this._canvasImageUrl = props.location.state ? props.location.state.url : '';
+    this._canvasSize = {width : props.location.state? props.location.state.width : 500, height : props.location.state? props.location.state.height : 500}
     this._clipboard = null;
     this._backgroundImage = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
@@ -107,6 +108,7 @@ class ImageEditor extends Component {
 
     //add function
     this.startPoint = { x : 0, y : 0 };
+    this.shapeType = '';
 
     // font
     this.fontarray = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
@@ -195,10 +197,20 @@ class ImageEditor extends Component {
         this.pasteObject();
       }
     }
-	}
+  }
+  
+  _onMousdDownEvent = (event) => {
+    if(event.target.tagName === 'CANVAS'){
+      document.addEventListener('keydown',this._onKeydownEvent)
+    }
+    else{
+      document.removeEventListener('keydown',this._onKeydownEvent)
+    }
+  }
 
 	_createDomEvent = () => {
-		document.addEventListener('keydown',this._onKeydownEvent)
+    // document.getElementById('canvas').addEventListener('keydown',this._onKeydownEvent)
+    document.addEventListener('mousedown',this._onMousdDownEvent)
 	}
 
   // 캔버스 이벤트 설정
@@ -648,66 +660,68 @@ class ImageEditor extends Component {
 		document.addEventListener('mousedown',this.addTextEvent);    
   }
 
+  addShapeEvent = (event) => {
+    let myFigure;
+    if(event.target.tagName === 'CANVAS'){
+      const disableObj = this.getActiveObject();
+      if(disableObj){
+        // disableObj.evented = false;
+        disableObj.lockMovementY = true;
+        disableObj.lockMovementX = true;
+      }
+      switch(this.shapeType) {
+        case 'triangle':
+          myFigure = new fabric.Triangle({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black",  originX : "left", originY:"top", isRegular : false });
+          this._canvas.add(myFigure).setActiveObject(myFigure);
+          break;
+        case 'rectangle':
+          myFigure = new fabric.Rect({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black", originX : "left", originY:"top", isRegular : false});
+          this._canvas.add(myFigure).setActiveObject(myFigure);
+          break;
+        case 'circle':
+          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: event.layerX, top: event.layerY, fill: "black", isRegular : false });
+          this._canvas.add(myFigure).setActiveObject(myFigure);
+          break;
+        default:
+      }
+      this.startPoint = {x : event.x , y : event.y};
+      this._canvas.selection = false;
+      this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
+      this._canvas.on('mouse:up', (event) => {
+        this._canvas.off('mouse:move');
+
+        let activeObject = this.getActiveObject();
+
+        this.adjustOriginToCenter(activeObject);
+
+        if(activeObject.width === 0 || activeObject.height === 0){
+          this._canvas.remove(activeObject);
+        }
+
+
+        this.startPoint = {x :0, y: 0};
+        this._canvas.selection = true;
+        this._canvas.renderAll();
+        this.saveState('shape add');
+        if(disableObj){
+          disableObj.lockMovementY = false;
+          disableObj.lockMovementX = false;
+        }
+
+        this._canvas.off('mouse:up');
+        // this._canvas.on('mouse:up', (event) => { console.log("fire", event)});
+      });
+    }
+
+    this._canvas.defaultCursor = 'default';
+    document.removeEventListener('mousedown',this.addShapeEvent);    
+  }
+
   addShape = (event) => {
     // let body = document.body;
-    let myFigure;
     this._canvas.defaultCursor = 'pointer';
-    let type = event.target.getAttribute('type');
-    document.onmousedown = (event) => {
-      if(event.target.tagName === 'CANVAS'){
-        const disableObj = this.getActiveObject();
-        if(disableObj){
-          // disableObj.evented = false;
-          disableObj.lockMovementY = true;
-          disableObj.lockMovementX = true;
-        }
-        switch(type) {
-          case 'triangle':
-            myFigure = new fabric.Triangle({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black",  originX : "left", originY:"top", isRegular : false });
-            this._canvas.add(myFigure).setActiveObject(myFigure);
-            break;
-          case 'rectangle':
-            myFigure = new fabric.Rect({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black", originX : "left", originY:"top", isRegular : false});
-            this._canvas.add(myFigure).setActiveObject(myFigure);
-            break;
-          case 'circle':
-            myFigure = new fabric.Ellipse({ rx:0, ry:0, left: event.layerX, top: event.layerY, fill: "black", isRegular : false });
-            this._canvas.add(myFigure).setActiveObject(myFigure);
-            break;
-          default:
-        }
-        this.startPoint = {x : event.x , y : event.y};
-        this._canvas.selection = false;
-        this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
-        this._canvas.on('mouse:up', (event) => {
-          this._canvas.off('mouse:move');
-
-          let activeObject = this.getActiveObject();
-
-          this.adjustOriginToCenter(activeObject);
-
-          if(activeObject.width === 0 || activeObject.height === 0){
-            this._canvas.remove(activeObject);
-          }
-
-
-          this.startPoint = {x :0, y: 0};
-          this._canvas.selection = true;
-          this._canvas.renderAll();
-          this.saveState('shape add');
-          if(disableObj){
-            disableObj.lockMovementY = false;
-            disableObj.lockMovementX = false;
-          }
-
-          this._canvas.off('mouse:up');
-          // this._canvas.on('mouse:up', (event) => { console.log("fire", event)});
-        });
-      }
-
-      this._canvas.defaultCursor = 'default';
-      document.onmousedown = null;
-    }
+    this.shapeType = event.target.getAttribute('type');
+    document.addEventListener('mousedown',this.addShapeEvent);    
   }
 
   shapeCreateResizeEvent = (event) => {
@@ -1007,18 +1021,20 @@ class ImageEditor extends Component {
 
   deleteObject = (event) => {
     let obj = this.getActiveObject();
-    switch(obj.type){
-      case 'textbox' : 
-        if(this.getActiveObject().selectable){
+    if(obj){
+      switch(obj.type){
+        case 'textbox' : 
+          if(this.getActiveObject().selectable){
+            this.action['Delete'].deleteObj();
+            this.saveState('delete Textbox');
+          }
+          break;
+        case 'null' :
+          break;
+        default :
           this.action['Delete'].deleteObj();
-          this.saveState('delete Textbox');
-        }
-        break;
-      case 'null' :
-        break;
-      default :
-        this.action['Delete'].deleteObj();
-        this.saveState('delete '+ obj.type);
+          this.saveState('delete '+ obj.type);
+      }
     }
   }
 
