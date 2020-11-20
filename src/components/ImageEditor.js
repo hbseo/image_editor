@@ -655,6 +655,12 @@ class ImageEditor extends Component {
     let type = event.target.getAttribute('type');
     document.onmousedown = (event) => {
       if(event.target.tagName === 'CANVAS'){
+        const disableObj = this.getActiveObject();
+        if(disableObj){
+          // disableObj.evented = false;
+          disableObj.lockMovementY = true;
+          disableObj.lockMovementX = true;
+        }
         switch(type) {
           case 'triangle':
             myFigure = new fabric.Triangle({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black",  originX : "left", originY:"top", isRegular : false });
@@ -670,7 +676,6 @@ class ImageEditor extends Component {
             break;
           default:
         }
-        
         this.startPoint = {x : event.x , y : event.y};
         this._canvas.selection = false;
         this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
@@ -690,7 +695,13 @@ class ImageEditor extends Component {
           this._canvas.selection = true;
           this._canvas.renderAll();
           this.saveState('shape add');
+          if(disableObj){
+            disableObj.lockMovementY = false;
+            disableObj.lockMovementX = false;
+          }
+
           this._canvas.off('mouse:up');
+          // this._canvas.on('mouse:up', (event) => { console.log("fire", event)});
         });
       }
 
