@@ -1,6 +1,5 @@
-<br />
 <p align="center">
-  <h2 align="center">🎨 Image Editor</h2>
+  <h1 align="center">🎨 Image Editor</h1>
   <p align="center">
     HYU-ERICA capstone project
   </p>
