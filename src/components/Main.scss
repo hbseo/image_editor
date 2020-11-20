@@ -25,6 +25,10 @@
 // 	box-sizing: border-box;
 // 	z-index: -1;
 // }
+
+#root {
+	height: 100%;
+}
 #main-title-div{
 	display: block;
 }
@@ -69,6 +73,10 @@
 #canvas-template {
 	border : 1px solid black;
 	height: 300px;
+}
+
+#preview {
+	width : 500px;
 }
 .canvas-list-ul{
 	list-style: none;

@@ -38,27 +38,38 @@ class Filter extends Action {
         case 'kodachrome':
           obj.filters[8] = checked && (new fabric.Image.filters.Kodachrome());
           break;
+        case 'emboss':
+          obj.filters[9] = checked && (new fabric.Image.filters.Convolute({
+            matrix :  [ 1,   1,  1,
+                        1, 0.7, -1,
+                       -1,  -1, -1 ]
+          }));
+          break;
         case 'brightness':
-          obj.filters[9] = (new fabric.Image.filters.Brightness({
+          obj.filters[15] = (new fabric.Image.filters.Brightness({
             brightness: value
           }));
           break;
         case 'contrast':
-          obj.filters[10] = (new fabric.Image.filters.Contrast({
+          obj.filters[16] = (new fabric.Image.filters.Contrast({
             contrast: value
           }));
           break;
         case 'pixelate':
-          obj.filters[11] = (new fabric.Image.filters.Pixelate({
+          obj.filters[17] = (new fabric.Image.filters.Pixelate({
             blocksize : value
           }));
           break;
         case 'blur':
-          obj.filters[12] = (new fabric.Image.filters.Blur({
+          obj.filters[18] = (new fabric.Image.filters.Blur({
             blur : value
           }));
           break;
-          
+        case 'noise':
+          obj.filters[19] = (new fabric.Image.filters.Noise({
+            noise : value
+          }));
+          break;          
 
         default:
       }

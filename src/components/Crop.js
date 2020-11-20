@@ -7,8 +7,8 @@ class Crop extends Action {
     this._cropzone = null;
     this._cropImage = null;
 
-    fabric.Container = fabric.util.createClass(fabric.Rect, {
-      type: 'Container',
+    fabric.Cropzone = fabric.util.createClass(fabric.Rect, {
+      type: 'Cropzone',
       initialize: function(options) {
           // this.placedColor = 'rgba(211,211,211, 0)';
           this.virtualModeColor = 'rgba(211,211,211, 0)';
@@ -25,7 +25,6 @@ class Crop extends Action {
               'borderColor' : 'black',
               'hasControls' : true
           });
-          // self = this;
       },
   
       /**
@@ -36,25 +35,6 @@ class Crop extends Action {
           this.backgroundColor = this.virtualModeColor;
       },
   
-      // /**
-      //  * @description set render mode to placement
-      //  */
-      // setToPlacementMode : function(){
-      //     this.isInVirtualMode = false;
-      //     this.backgroundColor = this.placedColor;
-      // },
-  
-      // /**
-      //  * @description toggle virtual mode on and off
-      //  */
-      // toggleVirtualMode: function(){
-      //     if (this.isInVirtualMode){
-      //       this.setToPlacementMode();
-      //     }else{
-      //       this.setToVirtualMode();
-      //     }
-      //     this.set('fill', this.backgroundColor);
-      // },
       _render: function(ctx) {
           this.callSuper('_render', ctx);
       }
@@ -66,7 +46,7 @@ class Crop extends Action {
 
     let image = activeObject;
     // this._cropzone = image;
-    this._cropzone = new fabric.Container(
+    this._cropzone = new fabric.Cropzone(
       {label: 'cropObj',
        top: image.top, 
        left: image.left, 
@@ -160,14 +140,34 @@ class Crop extends Action {
 
   }
 
+  resizeCropzone = (value) => {
+    value.width = parseInt(value.width);
+    value.height = parseInt(value.height);
+    let canvas = this.getCanvas();
+    this._cropzone.width = value.width;
+    this._cropzone.height = value.height;
+    canvas.renderAll();
+  }
+
+  removeCropzone = () => {
+    let canvas = this.getCanvas();
+    canvas.remove(this._cropzone);
+    this.deleteEvent();
+    canvas.renderAll();
+  }
+
   cropCanvas = () => {
     let canvas = this.getCanvas();
-    this._cropzone = new fabric.Container({
+    this._cropzone = new fabric.Cropzone({
       label: 'cropCanvas',
-      top: canvas.height/4,
-      left: canvas.width/4,
+      top: canvas.height/2,
+      left: canvas.width/2,
       height: canvas.height/2,
       width: canvas.width/2,
+      borderColor: 'white',
+      cornerColor: 'white',
+      cornerSize: 12,
+      transparentCorners: false
     });
     this._cropzone.setControlsVisibility({
       mtr:false
@@ -183,8 +183,8 @@ class Crop extends Action {
     let activeObject = this.getActiveObject();
     canvas.remove(activeObject);
     let cropRect = {
-      left : this._cropzone.left,
-      top : this._cropzone.top,
+      left : this._cropzone.oCoords.tl.x,
+      top : this._cropzone.oCoords.tl.y,
       height : this._cropzone.height * this._cropzone.scaleY,
       width : this._cropzone.width * this._cropzone.scaleX
     }

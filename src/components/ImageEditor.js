@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { SketchPicker } from 'react-color';
+import { SketchPicker, CompactPicker } from 'react-color';
+import Switch from 'react-switch';
 import './ImageEditor.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
@@ -26,6 +27,9 @@ class ImageEditor extends Component {
       strokeWidth : 0,
       layers: [],
       displayColorPicker: false,
+      displayCropCanvasSize: false,
+      displayTextbgColorPicker: false,
+      displayshadow: false,
       drawingMode: false,
       lineWidth: 10,
       lineColorRgb:{
@@ -41,13 +45,30 @@ class ImageEditor extends Component {
 				g: '255',
 				b: '255',
 				a: '1',
-			},
+      },
+      textBgColor: {
+        r: '255',
+        g: '255',
+        b: '255',
+        a: '1'
+      },
       colorHex : '#FFFFFF',
       filters : {
         brightness: 0,
         contrast : 0,
         pixelate : 1,
         blur : 0,
+        noise : 0,
+      },
+      cropCanvasSize : {
+        width : 0,
+        height : 0
+      },
+      shadow : {
+        blur : 30,
+        offsetY: 10,
+        offsetX : 10,
+        color : '#000000'
       }
     }
     
@@ -68,10 +89,21 @@ class ImageEditor extends Component {
 
     // redo undo
     this.lock = false;
-    this.currentState = null;
+    this.currentState = { action : 'constructor' };
     this.stateStack = [];
     this.redoStack = [];
     this.maxSize = 10;
+    this.state_id = 1;
+
+    //add function
+    this.startPoint = { x : 0, y : 0 };
+
+    // font
+    this.fontarray = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
+    'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
+    'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
+    'Copperplate'];
+
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
     this._createAction();
@@ -79,7 +111,6 @@ class ImageEditor extends Component {
   }
 
   componentDidMount() {
-    console.log(this._canvasImageUrl);
     if(this._canvasImageUrl){
       this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top"})
       .then((img) => this._backgroundImage = img)
@@ -97,6 +128,8 @@ class ImageEditor extends Component {
         this._createDomEvent();
         this._createCanvasEvent();
         this.currentState = this._canvas.toDatalessJSON();
+        this.currentState.action = "initilize";
+        this.currentState.id = 0;
       })
     }
     else{
@@ -111,7 +144,10 @@ class ImageEditor extends Component {
       this._createDomEvent();
       this._createCanvasEvent();
       this.currentState = this._canvas.toDatalessJSON();
+      this.currentState.action = "initilize";
+      this.currentState.id = 0;
     }
+    this.forceUpdate(); // for showUndo/Redo Stack
   }
   
   componentWillUnmount() {
@@ -154,12 +190,18 @@ class ImageEditor extends Component {
     this._canvas.on('mouse:down', (event) => {
       // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
       if(this.cropImg){
-        if(event.target == null || !(event.target === this.cropImg || event.target.type === "Container")){
+        console.log(this.cropImg);
+        if(event.target == null || !(event.target === this.cropImg || event.target.type === "Cropzone")){
           this.action['Crop'].cropObjend(this.cropImg, null);
           this.cropImg = null;
         }
       }
-
+      if(this.state.displayCropCanvasSize) {
+        if(event.target === null || event.target.type !== 'Cropzone') {
+          this.action['Crop'].removeCropzone();
+          this.setState({displayCropCanvasSize: false});
+        }
+      }
       // let evt = event.e;
       // if (evt.altKey === true) {
       //   this.isDragging = true;
@@ -209,7 +251,7 @@ class ImageEditor extends Component {
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
       let type = this._canvas.getActiveObject().type;
-      this.setState({activeObject : this.getActiveObject()});
+      this.setState({activeObject : this.getActiveObject(), angle : this.getActiveObject().angle});
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
@@ -237,7 +279,7 @@ class ImageEditor extends Component {
 
 		this._canvas.on('selection:updated', (event) => {
       let type = this._canvas.getActiveObject().type;
-      this.setState({activeObject : this.getActiveObject()});
+      this.setState({activeObject : this.getActiveObject(), angle : this.getActiveObject().angle});
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
@@ -261,7 +303,7 @@ class ImageEditor extends Component {
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
-      this.setState({activeObject : { type : 'not active'}});
+      this.setState({activeObject : { type : 'not active'}, angle : 0});
 			if(!this._canvas.backgroundImage){
         this.switchTools('filter', 'text', true);
 			}
@@ -272,12 +314,18 @@ class ImageEditor extends Component {
 		});
     
     this._canvas.on('object:added', (event) => {
-      // console.log('object:added');
-      this.saveState();
+      // console.log('object:added', event.target);
+      let type = event.target.type;
+      if( type === 'ellipse' || type ==='rect' || type === 'triangle'){
+
+      }
+      else{
+        this.saveState(event.target.type +' :added event');
+      }
     })
     this._canvas.on('object:modified', (event) => {
       // console.log('object:modified');
-      this.saveState();
+      this.saveState(event.target.type + ':modified');
     })
 
     this._canvas.on('object:rotated', (event) => {
@@ -292,9 +340,14 @@ class ImageEditor extends Component {
     // this._canvas.on('object:skewing', (event) => {
     //   console.log('object:skewing');
     // })
-    // this._canvas.on('object:scaling', (event) => {
-    //   console.log('object:scaling');
-    // })
+    this._canvas.on('object:scaling', (event) => {
+      // console.log('object:scaling');
+      if(this.state.displayCropCanvasSize) {
+        let object = this.getActiveObject();
+        let change_state = {width: object.width*object.scaleX, height: object.height*object.scaleY};
+        this.setState({cropCanvasSize: change_state});
+      }
+    })
     // this._canvas.on('object:scaled', (event) => {
     //   console.log('object:scaled');
     // })
@@ -314,17 +367,21 @@ class ImageEditor extends Component {
   }
 
   _deleteDomevent = () =>{
+    console.log('dddd');
     document.removeEventListener('keydown',this._onKeydownEvent)
   }
 
-  saveState = () => {
+  saveState = (action) => {
     if(!this.lock) {
       if(this.stateStack.length === this.maxSize) {
         this.stateStack.shift();
       }
       this.stateStack.push(this.currentState);
       this.currentState = this._canvas.toDatalessJSON();
+      this.currentState.action = action;
+      this.currentState.id = this.state_id++;
       this.redoStack.length = 0;
+      this.forceUpdate(); // for showUndo/Redo Stack
     }
   }
 
@@ -343,13 +400,14 @@ class ImageEditor extends Component {
   }
 
   applyState = (stack, newState) => {
-    // console.log('applyState');
+    // console.log(this.currentState);
     stack.push(this.currentState);
     this.currentState = newState;
     this.lock = true;
     this._canvas.loadFromJSON(this.currentState, () => {
       this.lock = false;
     });
+    this.forceUpdate(); // for showUndo/Redo Stack
   }
 
 	/**
@@ -369,10 +427,11 @@ class ImageEditor extends Component {
       stroke : image.stroke,
       strokeWidth : image.stroke ? image.strokeWidth : 0,
       filters : {
-        brightness: image.filters[9] ? image.filters[9].brightness : 0,
-        contrast : image.filters[10] ? image.filters[10].contrast : 0,
-        pixelate : image.filters[11] ? image.filters[11].blocksize : 1,
-        blur : image.filters[12] ? image.filters[12].blur : 0
+        brightness: image.filters[15] ? image.filters[15].brightness : 0,
+        contrast : image.filters[16] ? image.filters[16].contrast : 0,
+        pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
+        blur : image.filters[18] ? image.filters[18].blur : 0,
+        noise : image.filters[19] ? image.filters[19].blur : 0
       }
 		});
 	}
@@ -518,87 +577,219 @@ class ImageEditor extends Component {
       })
   }
 
+  addImageEvent = (event) => {
+    const pointer = { x: event.layerX, y : event.layerY  };
+    if(event.target.tagName === 'CANVAS'){
+      this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center"})
+      .then((data) => {
+        this._canvas.add(data).setActiveObject(data);
+        // this.setState({ layers: this.state.layers.concat(data) });
+        // console.log(data.getSvgSrc());
+        
+      })
+    }
+    document.removeEventListener('mousedown', this.addImageEvent);
+    this._canvas.defaultCursor = 'default';
+  }
 
   addImage = () => {
-    let body = document.body;
     this._canvas.defaultCursor = 'pointer';
+		document.addEventListener('mousedown',this.addImageEvent);    
+  }
 
-    body.onclick = (event) => {
-      // const pointer = { x: this.state.absoluteX, y : this.state.absoluteY }
-      const pointer = { x: event.layerX, y : event.layerY  };
-      if(event.target.tagName === 'CANVAS'){
-        this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center"})
-        .then((data) => {
-          this._canvas.add(data).setActiveObject(data);
-          // this.setState({ layers: this.state.layers.concat(data) });
-          // console.log(data.getSvgSrc());
-        })
-      }
-      this._canvas.defaultCursor = 'default';
-      body.onclick = null;
+  addTextEvent = (event) => {
+    if(event.target.tagName === 'CANVAS'){
+      let text = new fabric.Textbox('Hello world', {
+        left: event.layerX,
+        top: event.layerY ,
+        fontSize: this.state.fontsize,
+        lockScalingY: true
+      });
+      text.setControlsVisibility({
+        mt: false,
+        mb: false,
+        bl: false,
+        br: false,
+        tl: false,
+        tr: false
+      });
+      this._canvas.add(text).setActiveObject(text);
     }
-    
+    document.removeEventListener('mousedown', this.addTextEvent);
+    this._canvas.defaultCursor = 'default';
   }
 
   addText = () => {
-    let body = document.body;
     this._canvas.defaultCursor = 'pointer';
-    
-    body.onclick = (event) => {
-      if(event.target.tagName === 'CANVAS'){
-        let text = new fabric.Textbox('Hello world', {
-          left: event.layerX, top: event.layerY , fontSize: this.state.fontsize, lockScalingY: true
-        });
-        this._canvas.add(text).setActiveObject(text);
-      }
-      this._canvas.defaultCursor = 'default';
-      body.onclick = null;
-    }
+		document.addEventListener('mousedown',this.addTextEvent);    
   }
 
-
-
   addShape = (event) => {
-    let body = document.body;
+    // let body = document.body;
     let myFigure;
     this._canvas.defaultCursor = 'pointer';
-
     let type = event.target.getAttribute('type');
-    body.onclick = (event) => {
+    document.onmousedown = () => {
       if(event.target.tagName === 'CANVAS'){
         switch(type) {
           case 'triangle':
-            myFigure = new fabric.Triangle({ width: 40, height: 40, left: event.layerX, top: event.layerY, fill: "black" });
-            this._canvas.add(myFigure);
+            myFigure = new fabric.Triangle({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black",  originX : "left", originY:"top", isRegular : false });
+            this._canvas.add(myFigure).setActiveObject(myFigure);
             break;
           case 'rectangle':
-            myFigure = new fabric.Rect({ width: 40, height: 40, left: event.layerX, top: event.layerY, fill: "black" });
-            this._canvas.add(myFigure);
+            myFigure = new fabric.Rect({ width: 0, height: 0, left: event.layerX, top: event.layerY, fill: "black", originX : "left", originY:"top", isRegular : false});
+            this._canvas.add(myFigure).setActiveObject(myFigure);
             break;
           case 'circle':
-            myFigure = new fabric.Circle({ radius: 20, left: event.layerX, top: event.layerY, fill: "black" });
-            this._canvas.add(myFigure);
+            myFigure = new fabric.Ellipse({ rx:0, ry:0, left: event.layerX, top: event.layerY, fill: "black", isRegular : false });
+            this._canvas.add(myFigure).setActiveObject(myFigure);
             break;
           default:
         }
+        
+        this.startPoint = {x : event.x , y : event.y};
+        this._canvas.selection = false;
+        this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
+        this._canvas.on('mouse:up', () => {
+          this._canvas.off('mouse:move');
+
+          let activeObject = this.getActiveObject();
+
+          this.adjustOriginToCenter(activeObject);
+
+          if(activeObject.width === 0 || activeObject.height === 0){
+            this._canvas.remove(activeObject);
+          }
+
+
+          this.startPoint = {x :0, y: 0};
+          this._canvas.selection = true;
+          this._canvas.renderAll();
+          this.saveState('shape add');
+          this._canvas.off('mouse:up');
+        });
       }
+
       this._canvas.defaultCursor = 'default';
-      body.onclick = null;
+      document.onmousedown = null;
     }
   }
 
-  coloringFigure = (event) => {
-    let colorOption = event.target.getAttribute("color");
+  shapeCreateResizeEvent = (event) => {
     let activeObject = this.getActiveObject();
-    if (activeObject) {
-      this.action['Coloring'].changeColor(activeObject, colorOption, event.target.checked);
-      this.saveState();
+    
+    let width = Math.abs(event.pointer.x - activeObject.left);
+    let height = Math.abs(event.pointer.y - activeObject.top);
+
+    
+    if (activeObject.isRegular) {
+      width = height =  Math.max(width, height);
+
+      if (activeObject.type === 'triangle') {
+          height = Math.sqrt(3) / 2 * width;
+      }
     }
-    else {
-      alert('select figure');
-      event.target.checked = false;
+
+    if(activeObject.type === 'ellipse'){
+      activeObject.set({
+        rx : width /2 ,
+        ry : height / 2,
+        originX : event.pointer.x - activeObject.left < 0 ? 'right' : 'left',
+        originY : event.pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
+      })
     }
+    else{
+      activeObject.set({
+        width : width,
+        height :height,
+        originX : event.pointer.x - activeObject.left < 0 ? 'right' : 'left',
+        originY : event.pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
+      })
+    }
+
+
+
+    this._canvas.renderAll();
   }
+
+  // clone from tui.image.editor
+  adjustOriginToCenter = (shape) => {
+    const centerPoint = shape.getPointByOrigin('center', 'center');
+    const {originX, originY} = shape;
+    const origin = shape.getPointByOrigin(originX, originY);
+    const left = shape.left + (centerPoint.x - origin.x);
+    const top = shape.top + (centerPoint.y - origin.y);
+
+    shape.set({
+        hasControls: true,
+        hasBorders: true,
+        originX: 'center',
+        originY: 'center',
+        left,
+        top
+    });
+    shape.setCoords(); // For left, top properties
+  }
+
+  addIcon = (event) => {
+    const options = {
+      type : event.target.getAttribute('type'),
+      color : this.state.colorHex,
+    }
+    this.action['Icon'].addIcon(options);
+  }
+
+  addLineResize = (event) => {
+    let line = this.getActiveObject();
+    const pointer = this._canvas.getPointer(event, false);
+    line.set({x2 : pointer.x, y2 : pointer.y});
+    this._canvas.renderAll();
+  }
+
+  addLineEvent = (event) => {
+    if(event.target.tagName === 'CANVAS'){
+      const pointer = this._canvas.getPointer(event, false);
+      let line = new fabric.Line([ pointer.x, pointer.y, pointer.x, pointer.y ], {
+        left : pointer.x,
+        right :pointer.y,
+        strokeWidth : 5,
+        stroke : 'black',
+        fill : 'black'
+      })
+      this._canvas.add(line).setActiveObject(line);
+    }
+    document.removeEventListener('mousedown', this.addLineEvent);
+    this._canvas.defaultCursor = 'default';
+    this._canvas.selection = false;
+    this._canvas.on('mouse:move', this.addLineResize);
+    this._canvas.on('mouse:up', (event) => {
+      this._canvas.off('mouse:move');
+
+      this._canvas.selection = true;
+      this._canvas.renderAll();
+      this.saveState('line add');
+      this._canvas.off('mouse:up');
+    });
+  }
+
+  addLine = () => {
+    this._canvas.defaultCursor = 'pointer';
+		document.addEventListener('mousedown',this.addLineEvent);    
+  }
+
+
+  // coloringFigure = (event) => {
+  //   let colorOption = event.target.getAttribute("color");
+  //   let activeObject = this.getActiveObject();
+  //   if (activeObject) {
+  //     this.action['Coloring'].changeColor(activeObject, colorOption, event.target.checked);
+  //     this.saveState('color change');
+  //   }
+  //   else {
+  //     alert('select figure');
+  //     event.target.checked = false;
+  //   }
+  // }
 
   handleAngleChange = (event) => {
     if (this.getActiveObject()) {
@@ -610,7 +801,7 @@ class ImageEditor extends Component {
       })
         .then(() => {
           this.action['Rotation'].setAngle(this.state.angle);
-          this.saveState();
+          this.saveState('angle change');
         })
     }
     else {
@@ -628,6 +819,7 @@ class ImageEditor extends Component {
         contrast : this.state.filters.contrast, 
         pixelate : this.state.filters.pixelate,
         blur : this.state.filters.blur,
+        noise : this.state.filters.noise,
       };
       change_state[event.target.name] = event.target.value;
       new Promise((resolve) => {
@@ -636,7 +828,7 @@ class ImageEditor extends Component {
       })
         .then(() => {
           this.action['Filter'].applyFilter(activeObject || this._backgroundImage , filterOption, true, value);
-          this.saveState();
+          this.saveState('input filter change : ' + filterOption);
         })
     }
     else {
@@ -655,7 +847,7 @@ class ImageEditor extends Component {
       })
       .then(() => {
         this.action['Text'].textObj(activeObject, textOption, true, fontSize);
-        this.saveState();
+        this.saveState('font size change');
       })
     }
     else{
@@ -664,12 +856,18 @@ class ImageEditor extends Component {
 	}
 	
 	handleColorChange = (color) => {
+    // console.log((Math.round(color.rgb.a * 255)).toString(16))
+    this.setState({ color: color.rgb, colorHex : color.hex })
+  }
+
+  handleColorChangeComplete = (color) => {
+    // console.log("mouse up")
     const activeObject = this.getActiveObject();
     if(activeObject) {
-      this.action['Fill'].fill(color.hex);
-      this.saveState();
+      // this.action['Fill'].fill(color.hex);
+      this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
+      this.saveState('Fill : colorChangeComplete');
     }
-    this.setState({ color: color.rgb, colorHex : color.hex })
   }
   
   
@@ -695,7 +893,52 @@ class ImageEditor extends Component {
     // }
   }
 
+  handleCropCanvasSizeChange = (event) => {
+    let change_state = {
+      width : this.state.cropCanvasSize.width,
+      height : this.state.cropCanvasSize.height
+    };
+    change_state[event.target.name] = event.target.value;
+    new Promise((resolve) => {
+      this.setState({cropCanvasSize : change_state});
+      console.log(this.state.cropCanvasSize);
+      resolve();
+    })
+    .then(() => {
+      this.action['Crop'].resizeCropzone(this.state.cropCanvasSize);
+    })
+  }
 
+  handletextBgChange = (event) => {
+    if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {
+      this.setState({textBgColor: event.rgb});
+      this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
+    }
+  }
+
+  handleShadowChange = (event) => {
+    let object = this.getActiveObject();
+    let change_state = {
+      blur : this.state.shadow.blur,
+      offsetX : this.state.shadow.offsetX,
+      offsetY : this.state.shadow.offsetY,
+      color : this.state.shadow.color
+    }
+    if(event.hex) {
+      change_state['color'] = event.hex;
+    }
+    else {
+      change_state[event.target.name] = event.target.value;
+    }
+    new Promise((resolve) => {
+      this.setState({shadow: change_state});
+      resolve();
+    })
+    .then(() => {
+      object.set('shadow', new fabric.Shadow(this.state.shadow));
+      this._canvas.renderAll();
+    })
+  }
 
 
   rotateObject = (event) => {
@@ -705,7 +948,7 @@ class ImageEditor extends Component {
     if (activeObject) {
       this.setState({ angle: (activeObject.angle + Number(changeAngle)) % 360 })
       this.action['Rotation'].setAngle(activeObject.angle + Number(changeAngle));
-      this.saveState();
+      this.saveState('Object is rotated');
     }
     else {
       alert('image is not activated')
@@ -718,28 +961,29 @@ class ImageEditor extends Component {
 
     if (activeObject) {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
-      this.saveState();
+      this.saveState('apply filter objImg');
     }
     else {
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
-      this.saveState();
+      this.saveState('apply filter backgroundImg');
     }
 
   }
 
   deleteObject = (event) => {
-    switch(this.state.activeObject.type){
+    let obj = this.getActiveObject();
+    switch(obj.type){
       case 'textbox' : 
         if(this.getActiveObject().selectable){
           this.action['Delete'].deleteObj();
-          this.saveState();
+          this.saveState('delete Textbox');
         }
         break;
       case 'null' :
         break;
       default :
         this.action['Delete'].deleteObj();
-        this.saveState();
+        this.saveState('delete '+ obj.type);
     }
   }
 
@@ -748,11 +992,11 @@ class ImageEditor extends Component {
     let option = event.target.getAttribute('flip');
     if (activeObject) {
       this.action['Flip'].flip(activeObject, option);
-      this.saveState();
+      this.saveState(activeObject.type + ' flip');
     }
     else {
       this.action['Flip'].flip(null, option);
-      this.saveState();
+      this.saveState('backgroundImg flip');
     }
   }
 
@@ -762,7 +1006,7 @@ class ImageEditor extends Component {
     if(activeObject && activeObject.type === 'image'){
       this.cropImg = activeObject;
       this.action['Crop'].cropObj(activeObject, cropOption);
-      this.saveState();
+      // this.saveState();
     }
   }
 
@@ -771,18 +1015,26 @@ class ImageEditor extends Component {
     if(this.cropImg){
       this.action['Crop'].cropObjend(this.cropImg, cropOption);
       this.cropImg = null;
-      this.saveState();
+      this.saveState('Crop Obj');
     }
   }
 
   cropCanvas = () => {
+    this._deleteDomevent();
+    let change_state = {width: this._canvas.width/2, height: this._canvas.height/2};
+    this.setState({
+      displayCropCanvasSize: true,
+      cropCanvasSize: change_state
+    });
     this.action['Crop'].cropCanvas();
-    this.saveState();
+    // this.saveState('Crop Canvas');
   }
 
   cropEndCanvas = () => {
+    this._createDomEvent();
+    this.setState({displayCropCanvasSize: false});
     this.action['Crop'].cropEndCanvas();
-    this.saveState();
+    this.saveState('Crop Canvas');
   }
 
   textObject = (event) => {
@@ -791,7 +1043,7 @@ class ImageEditor extends Component {
 
     if (activeObject) {
       this.action['Text'].textObj(activeObject, textOption, event.target.checked, event.target.value);
-      this.saveState();
+      this.saveState('Text modified ' + textOption);
     }
     else {
       alert('text is not activated');
@@ -799,12 +1051,27 @@ class ImageEditor extends Component {
     }
   }
 
-  addIcon = (event) => {
-    const options = {
-      type : event.target.getAttribute('type'),
-      color : this.state.colorHex,
-    }
-    this.action['Icon'].addIcon(options);
+  toggletextbg = () => {
+    this.setState({displayTextbgColorPicker: !this.state.displayTextbgColorPicker});
+  }
+
+  toggleshadow = () => {
+    new Promise((resolve) => {
+      this.setState({displayshadow: !this.state.displayshadow});
+      resolve();
+    })
+    .then(() => {
+      let object = this.getActiveObject();
+      if(object) {
+        if(this.state.displayshadow) {
+          object.set('shadow', new fabric.Shadow({color:'black', blur:30, offsetX:10, offsetY:10, opacity:0}));
+        }
+        else {
+          object.set('shadow', null);
+        }
+        this._canvas.renderAll();
+      }
+    })
   }
 
   layerThumb = () => {
@@ -879,6 +1146,30 @@ class ImageEditor extends Component {
     }
   }
 
+  showUndoStack = () => {
+    // console.log(this.stateStack);
+    const listitem = this.stateStack.map((state) =>
+      <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack">{state.action}</p>
+    );
+    return(
+      <div>
+        {listitem}
+      </div>
+    )
+  }
+
+  showRedoStack = () => {
+    // console.log(this.redoStack);
+    const listitem = this.redoStack.map((state) =>
+      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack">{state.action}</p>
+    );
+    return(
+      <div>
+        {listitem}
+      </div>
+    )
+  }
+
   convertSvg = () => {
     let img = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Font_Awesome_5_solid_cloud.svg/512px-Font_Awesome_5_solid_cloud.svg.png";
     fabric.loadSVGFromURL(img, (objects, options) => {
@@ -890,6 +1181,18 @@ class ImageEditor extends Component {
   convertObjSvg = () => {
     if(this.getActiveObject()){
       console.log(this.getActiveObject().toSVG());
+    }
+  }
+
+  convertObjScale = () => {
+    if(this.getActiveObject()){
+      let obj = this.getActiveObject();
+      obj.set({
+        width : obj.width * obj.scaleX,
+        height : obj.height * obj.scaleY,
+        scaleY : 1,
+        scaleX : 1,
+      })
     }
   }
 
@@ -941,26 +1244,35 @@ class ImageEditor extends Component {
     let rgb = "rgb(" + this.state.lineColorRgb['r'] + ", " + this.state.lineColorRgb['g'] + ", " + this.state.lineColorRgb['b'] + ")"
     this._canvas.freeDrawingBrush.color = rgb;
   }
+
+  changeBackgroundColor = () => {
+    this._canvas.backgroundColor = this.state.colorHex;
+    this._canvas.renderAll();
+  }
   render() {
 		const styles = {
 			color : {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
 			}
-		}
+    }
+    let i = 0;
+    const fontList = this.fontarray.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
         <div id='editor'>
-          <canvas id='canvas' tabIndex='0'></canvas>
-        </div>
-        
-        <div id='tool'>
+          <div>
+            <canvas id='canvas' tabIndex='0'></canvas>
+          </div>
+
           <div>
             <h5>개발자 기능</h5>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
+            <br/>
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
+            <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
             <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
@@ -970,10 +1282,21 @@ class ImageEditor extends Component {
             <p>선택 개체 각도 값 = {this.state.angle}</p>
             <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
 				  	<p>컬러 헥스 값{this.state.colorHex}</p>
+            <hr />
+            <p>- Undo Stack </p>
+            {this.showUndoStack()} 
+            <hr />
+            <p>- currentState</p>
+            <p style={{color : '#008000'}}>{this.currentState.action}</p>
+            <hr />
+            <p>- Redo Stack  </p>
+            {this.showRedoStack()}
           </div>
 
           <hr />
-
+        </div>
+        
+        <div id='tool'>
           <div>
             <h5>오브젝트 기능</h5>
             <button onClick={this.sendToBack}>맨 뒤로 보내기</button>
@@ -998,6 +1321,27 @@ class ImageEditor extends Component {
           <div>
             <h5>텍스트 기능</h5>
             <button onClick={this.addText}>텍스트 추가</button>
+            <label htmlFor='material-switch'>
+              <span>배경색</span>
+              <Switch 
+              checked={this.state.displayTextbgColorPicker} 
+              onChange={this.toggletextbg}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={30}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={20}
+              width={48}
+              className="react-switch"
+              id="material-switch"
+              ></Switch>
+            </label>
+            {/* <button className='text' onClick={this.toggletextbg} text='backgroundColor'>배경색 변경</button> */}
+            {this.state.displayTextbgColorPicker ? 
+            <CompactPicker color={this.state.textBgColor} onChange={this.handletextBgChange}></CompactPicker> : null}
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
             <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
@@ -1015,10 +1359,7 @@ class ImageEditor extends Component {
             />
             <label htmlFor='fontfamily'>글꼴: </label>
             <select className='text' name='fontfamily' text='fontfamily' onChange={this.textObject}>
-              <option value='Times New Roman'>Times New Roman</option>
-              <option value='Georgia'>Georgia</option>
-              <option value='serif'>serif</option>
-              <option value='VT323'>VT323</option>
+              {fontList}
             </select>
           </div>
 
@@ -1041,6 +1382,7 @@ class ImageEditor extends Component {
             <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
             <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
             <input type='checkbox' className='filter' id='kodachrome' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
+            <input type='checkbox' className='filter' id='emboss' onClick={this.filterObject} filter='emboss' />Filter emboss
 
             <input
               type='range'
@@ -1089,6 +1431,18 @@ class ImageEditor extends Component {
               value={this.state.filters.blur || 0}
               onChange={this.handleFilterChange} filter='blur'
             />blur
+
+            <input
+              type='range'
+              className='filter'
+              id='noise'
+              min='0'
+              max='100'
+              name='noise'
+              step='1'
+              value={this.state.filters.noise || 0}
+              onChange={this.handleFilterChange} filter='noise'
+            />noise
           </div>
 
           <hr />
@@ -1099,6 +1453,7 @@ class ImageEditor extends Component {
             <button onClick={this.addShape} type="triangle">삼각형</button>
             <button onClick={this.addShape} type="rectangle">직사각형</button>
             <button onClick={this.addShape} type="circle">원</button>
+            <button onClick={this.addLine} type="line">직선</button>
           </div>
 
           <hr />
@@ -1121,8 +1476,31 @@ class ImageEditor extends Component {
 
           <div>
             <h5>캔버스 기능</h5>
+            <button onClick={this.changeBackgroundColor}>캔버스 배경색 현재 색깔로 변경</button>
             <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
             <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
+            {this.state.displayCropCanvasSize ? 
+              <div>
+                <label htmlFor='cropCanvasWidth'> x : </label>
+                <input 
+                  type='number' 
+                  onChange={this.handleCropCanvasSizeChange} 
+                  name='width'
+                  min='1'
+                  max={this._canvas.width}
+                  value={this.state.cropCanvasSize.width} 
+                />
+                <label htmlFor='cropCanvasHeight'> y : </label>
+                <input 
+                  type='number' 
+                  onChange={this.handleCropCanvasSizeChange} 
+                  name='height'
+                  min='1'
+                  max={this._canvas.height}
+                  value={this.state.cropCanvasSize.height} 
+                />
+              </div> : null
+            }
             <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
             <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
             <button onClick={this.undo}>Undo</button>
@@ -1132,13 +1510,71 @@ class ImageEditor extends Component {
           <hr />
 
           <div>
-            <h5>색깔 : FILL 하는 용도</h5>
+            <h5>색깔 : 기본 색</h5>
             <button onClick={this.openColorPicker}>color</button>
           	{ this.state.displayColorPicker ? <div>
           	  <div onClick={this.closeColorPicker}/>
-          	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } />
+          	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           	</div> : null }
+            <h5>그림자</h5>
+            <Switch 
+              checked={this.state.displayshadow} 
+              onChange={this.toggleshadow}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={30}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={20}
+              width={48}
+              className="react-switch"
+              id="material-switch"
+              ></Switch>
+              {this.state.displayshadow ?
+                <div>
+                  <br/>
+                  <label htmlFor='shadow'>
+                    <span>블러</span>
+                    <input
+                      type='range'
+                      className='shadow'
+                      id='shadow'
+                      min='1'
+                      max='100'
+                      name='blur'
+                      step='1'
+                      value={this.state.shadow.blur}
+                      onChange={this.handleShadowChange}/>
 
+                    <span>세로 위치</span>
+                    <input
+                      type='range'
+                      className='shadow'
+                      id='shadow'
+                      min='-100'
+                      max='100'
+                      name='offsetY'
+                      step='1'
+                      value={this.state.shadow.scaleY}
+                      onChange={this.handleShadowChange}/>
+
+                    <span>가로 위치</span>
+                    <input
+                      type='range'
+                      className='shadow'
+                      id='shadow'
+                      min='-100'
+                      max='100'
+                      name='offsetX'
+                      step='1'
+                      value={this.state.shadow.scaleX}
+                      onChange={this.handleShadowChange}/>
+                    </label>
+                    <CompactPicker color={this.state.shadow.color} onChange={this.handleShadowChange}></CompactPicker>
+                  </div>
+              :null}
             <h5>테두리 두깨</h5>
             <input
               type='number'
