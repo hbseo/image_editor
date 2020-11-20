@@ -51,7 +51,7 @@ class Icon extends Action {
   _addIcon = (canvas, icon, options, event) => {
     const pointer = canvas.getPointer(event, false);
     icon.set(({
-        fill : options.color,
+        fill : `rgba(${ options.color.r }, ${ options.color.g }, ${ options.color.b }, ${ options.color.a })`,
         // type : 'icon', // if type is modified, Cannot read property 'fromObject' of undefined
         // left : event.pointer.x, // canvas 이벤트용
         // top : event.pointer.y, // canvas 이벤트용

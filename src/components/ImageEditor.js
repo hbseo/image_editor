@@ -797,7 +797,7 @@ class ImageEditor extends Component {
   addIcon = (event) => {
     const options = {
       type : event.target.getAttribute('type'),
-      color : this.state.colorHex,
+      color : this.state.color,
     }
     this.action['Icon'].addIcon(options);
   }
@@ -855,7 +855,15 @@ class ImageEditor extends Component {
   // }
 
   lockScaleRatio = (event) => {
-    this.setState({lockScale : event.target.checked})
+    if(this.getActiveObject()){
+      let obj = this.getActiveObject();
+      obj.set({
+        scaleY : Math.max(obj.scaleX, obj.scaleY),
+        scaleX : Math.max(obj.scaleX, obj.scaleY)
+      })
+    }
+    this.setState({lockScale : event.target.checked, activeObject : this.getActiveObject()})
+    this._canvas.renderAll();
   }
 
   handleAngleChange = (event) => {
@@ -1363,7 +1371,7 @@ class ImageEditor extends Component {
   }
 
   changeBackgroundColor = () => {
-    this._canvas.backgroundColor = this.state.colorHex;
+    this._canvas.backgroundColor = `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`;
     this._canvas.renderAll();
   }
 
@@ -1412,6 +1420,8 @@ class ImageEditor extends Component {
             <p>선택 개체 픽셀 값 = {this.state.filters.pixelate}</p>
             <p>선택 개체 블러 값 = {this.state.filters.blur}</p>
             <p>선택 개체 각도 값 = {this.state.angle}</p>
+            <p>선택 개체 가로 크기 = {this.state.activeObject.scaleX * this.state.activeObject.width}</p>
+            <p>선택 개체 세로 크기 = {this.state.activeObject.scaleY * this.state.activeObject.height}</p>
             <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
 				  	<p>컬러 헥스 값{this.state.colorHex}</p>
             <hr />
