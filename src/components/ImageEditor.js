@@ -84,6 +84,7 @@ class ImageEditor extends Component {
     if(!props.location.state) { props.history.push('/'); }
     this._canvasImageUrl = props.location.state ? props.location.state.url : '';
     this._canvasSize = {width : props.location.state? props.location.state.width : 500, height : props.location.state? props.location.state.height : 500}
+    this._backgroundImageRatio = props.location.state ? props.location.state.ratio/100 : 1;
     this._clipboard = null;
     this._backgroundImage = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
@@ -124,7 +125,7 @@ class ImageEditor extends Component {
 
   componentDidMount() {
     if(this._canvasImageUrl){
-      this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top"})
+      this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio})
       .then((img) => this._backgroundImage = img)
       .then(() => {
         this._canvas = new fabric.Canvas('canvas', {
@@ -579,8 +580,9 @@ class ImageEditor extends Component {
           originX: option.originX,
           originY: option.originY,
           left: pointer.x,
-          top: pointer.y
-
+          top: pointer.y,
+          scaleX : option.scaleX,
+          scaleY : option.scaleY,
         });
         // img.scaleToWidth(300);
         resolve(img);
@@ -616,7 +618,7 @@ class ImageEditor extends Component {
   addImageEvent = (event) => {
     const pointer = { x: event.layerX, y : event.layerY  };
     if(event.target.tagName === 'CANVAS'){
-      this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center"})
+      this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center", scaleX : 1, scaleY : 1})
       .then((data) => {
         this._canvas.add(data).setActiveObject(data);
         // this.setState({ layers: this.state.layers.concat(data) });
