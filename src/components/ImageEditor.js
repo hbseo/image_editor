@@ -38,7 +38,7 @@ class ImageEditor extends Component {
           b: '255',
           a: '1',
         },
-      activeObject : { type : 'not active'},
+      activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
       zoom : 1,
 			color: {
 				r: '255',
@@ -77,6 +77,7 @@ class ImageEditor extends Component {
           b: '255',
           a: '1',
       },
+      lockScale : false,
     }
     
 
@@ -344,7 +345,7 @@ class ImageEditor extends Component {
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
-      this.setState({activeObject : { type : 'not active'}, angle : 0});
+      this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0}, angle : 0});
 			if(!this._canvas.backgroundImage){
         this.switchTools('filter', 'text', true);
 			}
@@ -703,7 +704,7 @@ class ImageEditor extends Component {
       this._canvas.selection = false;
       this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
       this._canvas.on('mouse:up', (event) => {
-        this._canvas.off('mouse:move');
+        this._canvas.off('mouse:move', this.shapeCreateResizeEvent);
 
         let activeObject = this.getActiveObject();
 
@@ -825,7 +826,7 @@ class ImageEditor extends Component {
     this._canvas.selection = false;
     this._canvas.on('mouse:move', this.addLineResize);
     this._canvas.on('mouse:up', () => {
-      this._canvas.off('mouse:move');
+      this._canvas.off('mouse:move', this.addLineResize);
 
       this._canvas.selection = true;
       this._canvas.renderAll();
@@ -853,6 +854,10 @@ class ImageEditor extends Component {
   //   }
   // }
 
+  lockScaleRatio = (event) => {
+    this.setState({lockScale : event.target.checked})
+  }
+
   handleAngleChange = (event) => {
     if (this.getActiveObject()) {
       let change_state = {};
@@ -870,6 +875,30 @@ class ImageEditor extends Component {
       alert('image is not activated');
     }
   }
+
+  handleScaleXChange = (event) => {
+    if(this.getActiveObject()){
+      this.getActiveObject().scaleX = event.target.value / 100 ;
+      if(this.state.lockScale){
+        this.getActiveObject().scaleY = event.target.value / 100 ;
+      }
+      this.setState({activeObject : this.getActiveObject()});
+      this._canvas.renderAll();
+    }
+  }
+
+  handleScaleYChange = (event) => {
+    if(this.getActiveObject()){
+      this.getActiveObject().scaleY = event.target.value / 100;
+      if(this.state.lockScale){
+        this.getActiveObject().scaleX = event.target.value / 100 ;
+      }
+      this.setState({activeObject : this.getActiveObject()});
+      this._canvas.renderAll();
+    }
+  }
+
+  handle
 
   handleFilterChange = (event) => {
     const value = event.target.value
@@ -1410,6 +1439,7 @@ class ImageEditor extends Component {
             <button onClick={this.makeGroup}>그룹화</button>
             <button onClick={this.unGroup}>그룹해제</button>
             <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
+            <p>회전</p>
             <input
               type='number'
               name='angle'
@@ -1419,6 +1449,26 @@ class ImageEditor extends Component {
               value={this.state.angle}
               onChange={this.handleAngleChange}
             />
+            <p>확대 및 축소</p>
+            <input
+              type='number'
+              name='scaleX'
+              min='1'
+              max='200'
+              step='1'
+              value={this.state.activeObject.scaleX * 100}
+              onChange={this.handleScaleXChange}
+            />%
+            <input
+              type='number'
+              name='scaleY'
+              min='1'
+              max='200'
+              step='1'
+              value={this.state.activeObject.scaleY * 100}
+              onChange={this.handleScaleYChange}
+            />%
+            <input type='checkbox' onClick={this.lockScaleRatio} /> 비율 고정
           </div>
 
           <hr />
