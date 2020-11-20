@@ -69,7 +69,14 @@ class ImageEditor extends Component {
         offsetY: 10,
         offsetX : 10,
         color : '#000000'
-      }
+      },
+      pipette: false,
+      pipetteRGB:{
+          r: '255',
+          g: '255',
+          b: '255',
+          a: '1',
+      },
     }
     
 
@@ -245,17 +252,21 @@ class ImageEditor extends Component {
         
 
     this._canvas.on('mouse:move', (event) => {
-      // console.log(this._canvas.targets);
-      // if (this.isDragging) {
-      //   let e = event.e;
-      //   let vpt = this._canvas.viewportTransform;
-      //   vpt[4] += e.clientX - this.lastPosX;
-      //   vpt[5] += e.clientY - this.lastPosY;
-      //   this._canvas.renderAll();
-      //   this.lastPosX = e.clientX;
-      //   this.lastPosY = e.clientY;
-      // }
-		});
+        const pointer = this._canvas.getPointer(event, false);
+        if(this.state.pipette){
+            let context = document.getElementById('canvas').getContext('2d');
+            let data = context.getImageData(pointer.x, pointer.y, 1, 1).data; 
+            console.log(data);
+            let rgb = "rgb(" + data[0].toString() + ", " + data[1].toString() + ", " + data[2].toString() + ")";
+            console.log(rgb);
+            // this.setState({pipetteRGB: rgb});
+            // console.log(rgb);
+            this.state.pipetteRGB.r = data[0].toString();
+            this.state.pipetteRGB.g = data[1].toString();
+            this.state.pipetteRGB.b = data[2].toString();
+            this.state.pipetteRGB.a = data[3].toString();
+        }
+    });
 		
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
@@ -1268,12 +1279,26 @@ class ImageEditor extends Component {
     this._canvas.backgroundColor = this.state.colorHex;
     this._canvas.renderAll();
   }
+
+  enablePipette = () => {
+      this.setState({ pipette: true });
+  }
+
+  disablePipette = () => {
+    this.setState({ pipette: false });
+  }
+
   render() {
 		const styles = {
 			color : {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
-			}
-    }
+            }
+        };
+        const pipetteColor = {
+			color : {
+                backgroundColor : `rgba(${ this.state.pipetteRGB.r }, ${ this.state.pipetteRGB.g }, ${ this.state.pipetteRGB.b }, ${ this.state.pipetteRGB.a })` ,
+            }
+        };
     let i = 0;
     const fontList = this.fontarray.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
@@ -1285,6 +1310,12 @@ class ImageEditor extends Component {
 
           <div>
             <h5>개발자 기능</h5>
+            {this.state.pipette
+                ? <button onClick={this.disablePipette}>Disable Pipette</button>
+                : <button onClick={this.enablePipette}>Enable Pipette</button>
+            }
+            <p style={pipetteColor.color}>{this.state.pipetteRGB.r}|{this.state.pipetteRGB.g}|{this.state.pipetteRGB.b}</p>
+            <br/>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
