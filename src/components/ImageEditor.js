@@ -1071,6 +1071,10 @@ class ImageEditor extends Component {
   }
 
   toggletextbg = () => {
+    if(this.state.displayTextbgColorPicker) {
+      this.getActiveObject().set({textBackgroundColor: null});
+      this._canvas.renderAll();
+    }
     this.setState({displayTextbgColorPicker: !this.state.displayTextbgColorPicker});
   }
 
