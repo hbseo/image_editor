@@ -96,14 +96,22 @@ class ImageList extends Component {
 
   onClickThumb = (event) => {
     // console.log(event.target.getAttribute('image'));
-    this.setState({
-      image : {
-        full : event.target.getAttribute('full'),
-        raw : event.target.getAttribute('raw'),
-        regular : event.target.getAttribute('regular'),
-        small : event.target.getAttribute('small'),   
-        thumb : event.target.src     
-    }})
+
+    new Promise((resolve) => {
+      this.setState({
+        image : {
+          full : event.target.getAttribute('full'),
+          raw : event.target.getAttribute('raw'),
+          regular : event.target.getAttribute('regular'),
+          small : event.target.getAttribute('small'),   
+          thumb : event.target.src     
+      }})
+      resolve();
+    })
+    .then(() => {
+      this.getImageSize();
+    })
+
   }
 
   onClickImg = (event) => {
@@ -113,12 +121,7 @@ class ImageList extends Component {
 
   handleSubmit = (event) => {
 		if(event){ event.preventDefault(); }
-
-		console.log("submit", this.state.url);
-		this.url = this.state.url;
-		this.setState({url : "", submit : false, width:0, height : 0});
-
-
+    this.getImage();
 	}
 
 	imageNotFound = () => {
@@ -127,7 +130,24 @@ class ImageList extends Component {
 	imageFound = (img) => {
     console.log()
 
-	}
+  }
+  
+  getImageSize = () => {
+    let full_img = new Image();
+    full_img.onload = () => {
+      // console.log('onload')
+      this.setState({
+        imageSize : {
+          full : { x: full_img.width, y: full_img.height},
+          small : { x : 400, y: Math.round(full_img.height * (400 / full_img.width)) },
+          thumb : { x : 200, y: Math.round(full_img.height * (200 / full_img.width)) },
+          regular : { x : 1080, y: Math.round(full_img.height * (1080 / full_img.width)) },
+        }
+      })
+    };
+    full_img.onerror = this.imageNotFound;
+    full_img.src = this.state.image.full;
+  }
 
   imageSizeVersion = () => {
     let image = this.state.image;
@@ -139,22 +159,6 @@ class ImageList extends Component {
       )
     }
     else{
-      let full_img = new Image();
-      full_img.onload = () => {
-        this.setState({
-          imageSize : {
-            full : { x: full_img.width, y: full_img.height},
-            small : { x : 400, y: Math.round(full_img.height * (400 / full_img.width)) },
-            thumb : { x : 200, y: Math.round(full_img.height * (200 / full_img.width)) },
-            regular : { x : 1080, y: Math.round(full_img.height * (1080 / full_img.width)) },
-          }
-        })
-      };
-      full_img.onerror = this.imageNotFound;
-      full_img.src = image.full;
-
-
-
       return (
         <div id="image-list-size">
           <ul>
