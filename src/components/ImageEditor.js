@@ -69,7 +69,14 @@ class ImageEditor extends Component {
         offsetY: 10,
         offsetX : 10,
         color : '#000000'
-      }
+      },
+      pipette: false,
+      pipetteRGB:{
+          r: '255',
+          g: '255',
+          b: '255',
+          a: '1',
+      },
     }
     
 
@@ -211,6 +218,10 @@ class ImageEditor extends Component {
           this.setState({displayCropCanvasSize: false});
         }
       }
+
+      if(this.state.pipette){
+          this.setState({ pipette: false});
+      }
       // let evt = event.e;
       // if (evt.altKey === true) {
       //   this.isDragging = true;
@@ -245,17 +256,13 @@ class ImageEditor extends Component {
         
 
     this._canvas.on('mouse:move', (event) => {
-      // console.log(this._canvas.targets);
-      // if (this.isDragging) {
-      //   let e = event.e;
-      //   let vpt = this._canvas.viewportTransform;
-      //   vpt[4] += e.clientX - this.lastPosX;
-      //   vpt[5] += e.clientY - this.lastPosY;
-      //   this._canvas.renderAll();
-      //   this.lastPosX = e.clientX;
-      //   this.lastPosY = e.clientY;
-      // }
-		});
+        const pointer = this._canvas.getPointer(event, false);
+        if(this.state.pipette){
+            let context = document.getElementById('canvas').getContext('2d');
+            let data = context.getImageData(pointer.x, pointer.y, 1, 1).data; 
+            this.setState({...this.state.pipette, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}});
+        }
+    });
 		
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
@@ -1272,12 +1279,21 @@ class ImageEditor extends Component {
     this._canvas.backgroundColor = this.state.colorHex;
     this._canvas.renderAll();
   }
+
+  enablePipette = () => {
+      this.setState({ pipette: true });
+  }
+
+  disablePipette = () => {
+    this.setState({ pipette: false });
+  }
+
   render() {
 		const styles = {
 			color : {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
-			}
-    }
+            }
+        };
     let i = 0;
     const fontList = this.fontarray.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
@@ -1289,6 +1305,11 @@ class ImageEditor extends Component {
 
           <div>
             <h5>개발자 기능</h5>
+            {this.state.pipette
+                ? <button onClick={this.disablePipette}>Disable Pipette</button>
+                : <button onClick={this.enablePipette}>Enable Pipette</button>
+            }
+            <br/>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
