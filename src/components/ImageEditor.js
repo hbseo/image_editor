@@ -218,6 +218,10 @@ class ImageEditor extends Component {
           this.setState({displayCropCanvasSize: false});
         }
       }
+
+      if(this.state.pipette){
+          this.setState({ pipette: false});
+      }
       // let evt = event.e;
       // if (evt.altKey === true) {
       //   this.isDragging = true;
@@ -256,10 +260,12 @@ class ImageEditor extends Component {
         if(this.state.pipette){
             let context = document.getElementById('canvas').getContext('2d');
             let data = context.getImageData(pointer.x, pointer.y, 1, 1).data; 
-            this.state.pipetteRGB.r = data[0].toString();
-            this.state.pipetteRGB.g = data[1].toString();
-            this.state.pipetteRGB.b = data[2].toString();
-            this.state.pipetteRGB.a = data[3].toString();
+            let rgb = "{" + data[0] + ", " + data[1] + ", " + data[2] + ")";
+            // this.state.pipetteRGB.r = data[0];
+            // this.state.pipetteRGB.g = data[1].toString();
+            // this.state.pipetteRGB.b = data[2].toString();
+            this.setState({...this.state.pipette, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}});
+            console.log(this.state.pipetteRGB);
         }
     });
 		
@@ -1293,11 +1299,6 @@ class ImageEditor extends Component {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
             }
         };
-        const pipetteColor = {
-			color : {
-                backgroundColor : `rgba(${ this.state.pipetteRGB.r }, ${ this.state.pipetteRGB.g }, ${ this.state.pipetteRGB.b }, ${ this.state.pipetteRGB.a })` ,
-            }
-        };
     let i = 0;
     const fontList = this.fontarray.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
@@ -1313,7 +1314,6 @@ class ImageEditor extends Component {
                 ? <button onClick={this.disablePipette}>Disable Pipette</button>
                 : <button onClick={this.enablePipette}>Enable Pipette</button>
             }
-            <p style={pipetteColor.color}>{this.state.pipetteRGB.r}|{this.state.pipetteRGB.g}|{this.state.pipetteRGB.b}</p>
             <br/>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
