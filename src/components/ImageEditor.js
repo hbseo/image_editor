@@ -260,12 +260,7 @@ class ImageEditor extends Component {
         if(this.state.pipette){
             let context = document.getElementById('canvas').getContext('2d');
             let data = context.getImageData(pointer.x, pointer.y, 1, 1).data; 
-            let rgb = "{" + data[0] + ", " + data[1] + ", " + data[2] + ")";
-            // this.state.pipetteRGB.r = data[0];
-            // this.state.pipetteRGB.g = data[1].toString();
-            // this.state.pipetteRGB.b = data[2].toString();
             this.setState({...this.state.pipette, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}});
-            console.log(this.state.pipetteRGB);
         }
     });
 		
