@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { SketchPicker } from 'react-color';
+import { SketchPicker, CompactPicker } from 'react-color';
+import Switch from 'react-switch';
 import './ImageEditor.css'
 import Rotation from './Rotation';
 import Filter from './Filter';
@@ -27,6 +28,8 @@ class ImageEditor extends Component {
       layers: [],
       displayColorPicker: false,
       displayCropCanvasSize: false,
+      displayTextbgColorPicker: false,
+      displayshadow: false,
       drawingMode: false,
       lineWidth: 10,
       lineColorRgb:{
@@ -42,7 +45,13 @@ class ImageEditor extends Component {
 				g: '255',
 				b: '255',
 				a: '1',
-			},
+      },
+      textBgColor: {
+        r: '255',
+        g: '255',
+        b: '255',
+        a: '1'
+      },
       colorHex : '#FFFFFF',
       filters : {
         brightness: 0,
@@ -54,6 +63,12 @@ class ImageEditor extends Component {
       cropCanvasSize : {
         width : 0,
         height : 0
+      },
+      shadow : {
+        blur : 30,
+        offsetY: 10,
+        offsetX : 10,
+        color : '#000000'
       }
     }
     
@@ -82,6 +97,12 @@ class ImageEditor extends Component {
 
     //add function
     this.startPoint = { x : 0, y : 0 };
+
+    // font
+    this.fontarray = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
+    'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
+    'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
+    'Copperplate'];
 
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
 
@@ -579,7 +600,18 @@ class ImageEditor extends Component {
   addTextEvent = (event) => {
     if(event.target.tagName === 'CANVAS'){
       let text = new fabric.Textbox('Hello world', {
-        left: event.layerX, top: event.layerY , fontSize: this.state.fontsize, lockScalingY: true
+        left: event.layerX,
+        top: event.layerY ,
+        fontSize: this.state.fontsize,
+        lockScalingY: true
+      });
+      text.setControlsVisibility({
+        mt: false,
+        mb: false,
+        bl: false,
+        br: false,
+        tl: false,
+        tr: false
       });
       this._canvas.add(text).setActiveObject(text);
     }
@@ -597,7 +629,7 @@ class ImageEditor extends Component {
     let myFigure;
     this._canvas.defaultCursor = 'pointer';
     let type = event.target.getAttribute('type');
-    document.onmousedown = (event) => {
+    document.onmousedown = () => {
       if(event.target.tagName === 'CANVAS'){
         switch(type) {
           case 'triangle':
@@ -618,7 +650,7 @@ class ImageEditor extends Component {
         this.startPoint = {x : event.x , y : event.y};
         this._canvas.selection = false;
         this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
-        this._canvas.on('mouse:up', (event) => {
+        this._canvas.on('mouse:up', () => {
           this._canvas.off('mouse:move');
 
           let activeObject = this.getActiveObject();
@@ -877,6 +909,37 @@ class ImageEditor extends Component {
     })
   }
 
+  handletextBgChange = (event) => {
+    if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {
+      this.setState({textBgColor: event.rgb});
+      this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
+    }
+  }
+
+  handleShadowChange = (event) => {
+    let object = this.getActiveObject();
+    let change_state = {
+      blur : this.state.shadow.blur,
+      offsetX : this.state.shadow.offsetX,
+      offsetY : this.state.shadow.offsetY,
+      color : this.state.shadow.color
+    }
+    if(event.hex) {
+      change_state['color'] = event.hex;
+    }
+    else {
+      change_state[event.target.name] = event.target.value;
+    }
+    new Promise((resolve) => {
+      this.setState({shadow: change_state});
+      resolve();
+    })
+    .then(() => {
+      object.set('shadow', new fabric.Shadow(this.state.shadow));
+      this._canvas.renderAll();
+    })
+  }
+
 
   rotateObject = (event) => {
     var changeAngle = event.target.getAttribute('angle');
@@ -986,6 +1049,29 @@ class ImageEditor extends Component {
       alert('text is not activated');
       event.target.checked = false;
     }
+  }
+
+  toggletextbg = () => {
+    this.setState({displayTextbgColorPicker: !this.state.displayTextbgColorPicker});
+  }
+
+  toggleshadow = () => {
+    new Promise((resolve) => {
+      this.setState({displayshadow: !this.state.displayshadow});
+      resolve();
+    })
+    .then(() => {
+      let object = this.getActiveObject();
+      if(object) {
+        if(this.state.displayshadow) {
+          object.set('shadow', new fabric.Shadow({color:'black', blur:30, offsetX:10, offsetY:10, opacity:0}));
+        }
+        else {
+          object.set('shadow', null);
+        }
+        this._canvas.renderAll();
+      }
+    })
   }
 
   layerThumb = () => {
@@ -1168,7 +1254,9 @@ class ImageEditor extends Component {
 			color : {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
 			}
-		}
+    }
+    let i = 0;
+    const fontList = this.fontarray.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
         <div id='editor'>
@@ -1233,6 +1321,27 @@ class ImageEditor extends Component {
           <div>
             <h5>텍스트 기능</h5>
             <button onClick={this.addText}>텍스트 추가</button>
+            <label htmlFor='material-switch'>
+              <span>배경색</span>
+              <Switch 
+              checked={this.state.displayTextbgColorPicker} 
+              onChange={this.toggletextbg}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={30}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={20}
+              width={48}
+              className="react-switch"
+              id="material-switch"
+              ></Switch>
+            </label>
+            {/* <button className='text' onClick={this.toggletextbg} text='backgroundColor'>배경색 변경</button> */}
+            {this.state.displayTextbgColorPicker ? 
+            <CompactPicker color={this.state.textBgColor} onChange={this.handletextBgChange}></CompactPicker> : null}
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
             <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
@@ -1250,10 +1359,7 @@ class ImageEditor extends Component {
             />
             <label htmlFor='fontfamily'>글꼴: </label>
             <select className='text' name='fontfamily' text='fontfamily' onChange={this.textObject}>
-              <option value='Times New Roman'>Times New Roman</option>
-              <option value='Georgia'>Georgia</option>
-              <option value='serif'>serif</option>
-              <option value='VT323'>VT323</option>
+              {fontList}
             </select>
           </div>
 
@@ -1410,7 +1516,65 @@ class ImageEditor extends Component {
           	  <div onClick={this.closeColorPicker}/>
           	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           	</div> : null }
+            <h5>그림자</h5>
+            <Switch 
+              checked={this.state.displayshadow} 
+              onChange={this.toggleshadow}
+              onColor="#86d3ff"
+              onHandleColor="#2693e6"
+              handleDiameter={30}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+              height={20}
+              width={48}
+              className="react-switch"
+              id="material-switch"
+              ></Switch>
+              {this.state.displayshadow ?
+                <div>
+                  <br/>
+                  <label htmlFor='shadow'>
+                    <span>블러</span>
+                    <input
+                      type='range'
+                      className='shadow'
+                      id='shadow'
+                      min='1'
+                      max='100'
+                      name='blur'
+                      step='1'
+                      value={this.state.shadow.blur}
+                      onChange={this.handleShadowChange}/>
 
+                    <span>세로 위치</span>
+                    <input
+                      type='range'
+                      className='shadow'
+                      id='shadow'
+                      min='-100'
+                      max='100'
+                      name='offsetY'
+                      step='1'
+                      value={this.state.shadow.scaleY}
+                      onChange={this.handleShadowChange}/>
+
+                    <span>가로 위치</span>
+                    <input
+                      type='range'
+                      className='shadow'
+                      id='shadow'
+                      min='-100'
+                      max='100'
+                      name='offsetX'
+                      step='1'
+                      value={this.state.shadow.scaleX}
+                      onChange={this.handleShadowChange}/>
+                    </label>
+                    <CompactPicker color={this.state.shadow.color} onChange={this.handleShadowChange}></CompactPicker>
+                  </div>
+              :null}
             <h5>테두리 두깨</h5>
             <input
               type='number'
