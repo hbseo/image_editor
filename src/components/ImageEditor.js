@@ -92,8 +92,11 @@ class ImageEditor extends Component {
     this.currentState = { action : 'constructor' };
     this.stateStack = [];
     this.redoStack = [];
-    this.maxSize = 10;
+    this.maxSize = 100;
     this.state_id = 1;
+    this.undoCanvasSize = [];
+    this.redoCanvasSize = [];
+    this.currentCanvasSize = {width: null, height: null};
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -130,6 +133,7 @@ class ImageEditor extends Component {
         this.currentState = this._canvas.toDatalessJSON();
         this.currentState.action = "initilize";
         this.currentState.id = 0;
+        this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
       })
     }
     else{
@@ -146,6 +150,7 @@ class ImageEditor extends Component {
       this.currentState = this._canvas.toDatalessJSON();
       this.currentState.action = "initilize";
       this.currentState.id = 0;
+      this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
     }
     this.forceUpdate(); // for showUndo/Redo Stack
   }
@@ -155,9 +160,13 @@ class ImageEditor extends Component {
     this._deleteDomevent();  
     this.lock = false;
     this.currentState = null;
+    this.currentCanvasSize = null;
     this.stateStack.length = 0;
     this.redoStack.length = 0;
+    this.redoCanvasSize.length = 0;
+    this.undoCanvasSize.length = 0;
     this.cropImg = null;
+    this.fontarray.length = 0;
     this._clipboard = null;
     this._backgroundImage = null;
     this._canvas = null;
@@ -316,7 +325,7 @@ class ImageEditor extends Component {
     this._canvas.on('object:added', (event) => {
       // console.log('object:added', event.target);
       let type = event.target.type;
-      if( type === 'ellipse' || type ==='rect' || type === 'triangle'){
+      if( type === 'ellipse' || type ==='rect' || type === 'triangle' || type === 'Cropzone'){
 
       }
       else{
@@ -325,7 +334,10 @@ class ImageEditor extends Component {
     })
     this._canvas.on('object:modified', (event) => {
       // console.log('object:modified');
-      this.saveState(event.target.type + ':modified');
+      let type = event.target.type;
+      if(type !== 'Cropzone') {
+        this.saveState(event.target.type + ':modified');
+      }
     })
 
     this._canvas.on('object:rotated', (event) => {
@@ -367,7 +379,6 @@ class ImageEditor extends Component {
   }
 
   _deleteDomevent = () =>{
-    console.log('dddd');
     document.removeEventListener('keydown',this._onKeydownEvent)
   }
 
@@ -375,11 +386,14 @@ class ImageEditor extends Component {
     if(!this.lock) {
       if(this.stateStack.length === this.maxSize) {
         this.stateStack.shift();
+        this.undoCanvasSize.shift();
       }
       this.stateStack.push(this.currentState);
+      this.undoCanvasSize.push(this.currentCanvasSize);
       this.currentState = this._canvas.toDatalessJSON();
       this.currentState.action = action;
       this.currentState.id = this.state_id++;
+      this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
     }
@@ -388,23 +402,26 @@ class ImageEditor extends Component {
   undo = () => {
     // console.log('undo');
     if(this.stateStack.length > 0) {
-      this.applyState(this.redoStack, this.stateStack.pop());
+      this.applyState(this.redoStack, this.redoCanvasSize, this.stateStack.pop(), this.undoCanvasSize.pop());
     }
   }
 
   redo = () => {
     // console.log('redo');
     if(this.redoStack.length > 0) {
-      this.applyState(this.stateStack, this.redoStack.pop());
+      this.applyState(this.stateStack, this.undoCanvasSize,  this.redoStack.pop(), this.redoCanvasSize.pop());
     }
   }
 
-  applyState = (stack, newState) => {
-    // console.log(this.currentState);
+  applyState = (stack, sizeStack, newState, canvasSize) => {
     stack.push(this.currentState);
+    sizeStack.push(this.currentCanvasSize);
     this.currentState = newState;
+    this.currentCanvasSize = canvasSize;
     this.lock = true;
     this._canvas.loadFromJSON(this.currentState, () => {
+      this._canvas.setWidth(canvasSize.width);
+      this._canvas.setHeight(canvasSize.height);
       this.lock = false;
     });
     this.forceUpdate(); // for showUndo/Redo Stack
@@ -629,7 +646,7 @@ class ImageEditor extends Component {
     let myFigure;
     this._canvas.defaultCursor = 'pointer';
     let type = event.target.getAttribute('type');
-    document.onmousedown = () => {
+    document.onmousedown = (event) => {
       if(event.target.tagName === 'CANVAS'){
         switch(type) {
           case 'triangle':
@@ -650,7 +667,7 @@ class ImageEditor extends Component {
         this.startPoint = {x : event.x , y : event.y};
         this._canvas.selection = false;
         this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
-        this._canvas.on('mouse:up', () => {
+        this._canvas.on('mouse:up', (event) => {
           this._canvas.off('mouse:move');
 
           let activeObject = this.getActiveObject();
@@ -762,7 +779,7 @@ class ImageEditor extends Component {
     this._canvas.defaultCursor = 'default';
     this._canvas.selection = false;
     this._canvas.on('mouse:move', this.addLineResize);
-    this._canvas.on('mouse:up', (event) => {
+    this._canvas.on('mouse:up', () => {
       this._canvas.off('mouse:move');
 
       this._canvas.selection = true;
@@ -901,7 +918,6 @@ class ImageEditor extends Component {
     change_state[event.target.name] = event.target.value;
     new Promise((resolve) => {
       this.setState({cropCanvasSize : change_state});
-      console.log(this.state.cropCanvasSize);
       resolve();
     })
     .then(() => {
@@ -913,6 +929,7 @@ class ImageEditor extends Component {
     if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {
       this.setState({textBgColor: event.rgb});
       this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
+      this.saveState('text bg change');
     }
   }
 
@@ -1015,7 +1032,7 @@ class ImageEditor extends Component {
     if(this.cropImg){
       this.action['Crop'].cropObjend(this.cropImg, cropOption);
       this.cropImg = null;
-      this.saveState('Crop Obj');
+      // this.saveState('Crop Obj');
     }
   }
 
@@ -1032,9 +1049,11 @@ class ImageEditor extends Component {
 
   cropEndCanvas = () => {
     this._createDomEvent();
+    if(this.state.displayCropCanvasSize) {
+      this.action['Crop'].cropEndCanvas();
+      this.saveState('Crop Canvas');
+    }
     this.setState({displayCropCanvasSize: false});
-    this.action['Crop'].cropEndCanvas();
-    this.saveState('Crop Canvas');
   }
 
   textObject = (event) => {

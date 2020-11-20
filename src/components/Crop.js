@@ -66,44 +66,32 @@ class Crop extends Action {
   cropObjend = (activeObject, cropOption) => {
     let canvas = this.getCanvas();
     let image = activeObject;
-
     let test_canvas = new fabric.Canvas('test', {
       preserveObjectStacking: true,
     });
-
     const filters = image.filters;
     const angle = image.angle;
     const left = this._cropzone.left;
     const top = this._cropzone.top;
     image.filters = [];
     image.applyFilters();
-    
-
- 
     let group = new fabric.Group([image, this._cropzone], {
       angle : -angle,
     });
-
     group._restoreObjectsState();
     test_canvas.add(group.item(0));
     test_canvas.add(group.item(1));
-  
     // console.log(test_canvas._objects[1]);
-
     // var a = document.createElement("a");
     // a.href = test_canvas.toDataURL();
     // a.setAttribute("download", 'image.png');
     // a.click();
-
-
-    
     let cropRect = {
       left : test_canvas._objects[1].oCoords.tl.x,
       top : test_canvas._objects[1].oCoords.tl.y,
       height : this._cropzone.height * this._cropzone.scaleY,
       width : this._cropzone.width * this._cropzone.scaleX,
     }
-
     const imageData = {
       imageName: "test",
       url: test_canvas.toDataURL(cropRect)
@@ -125,14 +113,11 @@ class Crop extends Action {
       );
     })
     .then((data) => {
-      data.applyFilters();
-      canvas.add(data);
-    })
-    .then(() => {
       canvas.remove(activeObject);
       canvas.remove(this._cropzone);
-
       this.deleteEvent();
+      data.applyFilters();
+      canvas.add(data);
     })
     .then(() => {
       canvas.renderAll();
@@ -180,8 +165,7 @@ class Crop extends Action {
 
   cropEndCanvas = () => {
     let canvas = this.getCanvas();
-    let activeObject = this.getActiveObject();
-    canvas.remove(activeObject);
+    canvas.remove(this._cropzone);
     let cropRect = {
       left : this._cropzone.oCoords.tl.x,
       top : this._cropzone.oCoords.tl.y,
@@ -190,7 +174,6 @@ class Crop extends Action {
     }
     let objects = canvas.getObjects();
     objects.forEach(element => {
-      console.log(element);
       element.top = element.top - cropRect.top;
       element.left = element.left - cropRect.left;
       element.setCoords();
