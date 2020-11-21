@@ -375,9 +375,6 @@ class ImageEditor extends Component {
     this._canvas.on('object:rotated', (event) => {
       this.setState({ angle: event.target.angle })
     });
-    // this._canvas.on('object:skewed', (event) => {
-    //   console.log('object:skewed');
-    // })
     // this._canvas.on('object:removed', (event) => {
     //   console.log('object:removed');
     // })
@@ -546,6 +543,35 @@ class ImageEditor extends Component {
    */
   getCanvas() {
     return this._canvas;
+  }
+
+  snapMovingEvent = (event) => {
+    // console.log(Math.round(event.target.left / 10) * 10)
+    // console.log(event.target.width * event.target.scaleX / 2, event.target.left);
+    // console.log(Math.round(event.target.left / 10) * 10, "-", Number((event.target.aCoords.bl.x % 1) .toFixed(10)), "=");
+    // let remainder = false;
+    // console.log("From", event.target.left ,event.target.aCoords.bl.x)
+    // if( event.target.left % 10 != 0) { remainder = true; }
+    event.target.set({
+      // left : Math.round(event.target.left / 10) * 10 - ( Number((event.target.aCoords.bl.x % 1) .toFixed(10)) ),
+      // left : Math.round(event.target.left / 10) * 10 - ( remainder ),
+
+      left : Math.round(event.target.left / 1) * 10,
+      // left : Math.round((event.target.oCoords.ml.x + (event.target.width * event.target.scaleX / 2)) / 10) * 10,
+      top : Math.round(event.target.top / 1) * 10,
+    })
+    // if(remainder && event.target.aCoords.bl.x % 10 )
+    // console.log("to", event.target.left, event.target.aCoords.bl.x);
+    
+  }
+
+  onClickSnap = (event) => {
+    if(event.target.checked){
+      this._canvas.on("object:moving", this.snapMovingEvent);
+    }
+    else{
+      this._canvas.off("object:moving", this.snapMovingEvent);
+    }
   }
 
   copyObject = () => {
@@ -738,7 +764,11 @@ class ImageEditor extends Component {
   }
 
   shapeCreateResizeEvent = (event) => {
+    // console.log(event.target)
+    // let activeObject = event.target
     let activeObject = this.getActiveObject();
+    // console.log(activeObject, event.target)
+
     const pointer = this._canvas.getPointer(event, false)
     let width = Math.abs(pointer.x - activeObject.left);
     let height = Math.abs(pointer.y - activeObject.top);
@@ -1670,6 +1700,7 @@ class ImageEditor extends Component {
             <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
             <button onClick={this.undo}>Undo</button>
             <button onClick={this.redo}>Redo</button>
+            <input type="checkbox" onClick={this.onClickSnap}/>스냅 옵션
           </div>
 
           <hr />
