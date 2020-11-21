@@ -112,6 +112,7 @@ class ImageEditor extends Component {
     this.shapeType = '';
 
     this.grid = null;
+    this.gridOn = false;
     // font
     this.fontarray = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
     'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
@@ -443,12 +444,14 @@ class ImageEditor extends Component {
 
   onClickGrid = (event) => {
     if(event.target.checked){
-      console.log(this.grid);
+      // console.log(this.grid);
+      this.gridOn = true;
       this._canvas.add(this.grid);
       this._canvas.sendToBack(this.grid);
       this._canvas.renderAll();
     }
     else{
+      this.gridOn = false;
       this._canvas.remove(this.grid);
       this._canvas.renderAll();
     }
@@ -1391,12 +1394,14 @@ class ImageEditor extends Component {
   sendBackwards = () => {
     if(this.getActiveObject()){
       this._canvas.sendBackwards(this.getActiveObject())
+      if(this.gridOn){ this._canvas.sendToBack(this.grid) }
       this._canvas.renderAll();
     }
   }
   sendToBack = () => {
     if(this.getActiveObject()){
       this._canvas.sendToBack(this.getActiveObject())
+      if(this.gridOn){ this._canvas.sendToBack(this.grid) }
       this._canvas.renderAll();
     }
   }
