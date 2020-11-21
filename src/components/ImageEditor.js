@@ -111,6 +111,7 @@ class ImageEditor extends Component {
     this.startPoint = { x : 0, y : 0 };
     this.shapeType = '';
 
+    this.grid = null;
     // font
     this.fontarray = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
     'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
@@ -144,6 +145,7 @@ class ImageEditor extends Component {
         this.currentState.action = "initilize";
         this.currentState.id = 0;
         this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
+        this._makeGrid();
       })
     }
     else{
@@ -161,6 +163,7 @@ class ImageEditor extends Component {
       this.currentState.action = "initilize";
       this.currentState.id = 0;
       this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
+      this._makeGrid();
     }
     this.forceUpdate(); // for showUndo/Redo Stack
   }
@@ -180,6 +183,7 @@ class ImageEditor extends Component {
     this._clipboard = null;
     this._backgroundImage = null;
     this._canvas = null;
+    this.grid = null;
   }
 	
 	_onKeydownEvent = (event) => {
@@ -411,6 +415,45 @@ class ImageEditor extends Component {
     document.removeEventListener('keydown',this._onKeydownEvent)
   }
 
+  _makeGrid = () => {
+    if(this.grid) { return; }
+
+    let grids = [];
+    let gridoption = {
+      stroke: "#000000",
+      strokeWidth: 1,
+      // strokeDashArray: [5, 5]
+    };
+    for (let x = 0; x < (this._canvas.width); x += 10) {
+      grids.push(new fabric.Line([x, 0, x, this._canvas.height], gridoption)); // vertical
+    }
+    for (let y = 0; y < (this._canvas.height); y += 10) {
+      grids.push(new fabric.Line([0, y, this._canvas.width, y], gridoption)); // horizon
+    }
+    this.grid = new fabric.Group(grids, {
+      selectable : false,
+      evented : false
+    })
+    this.grid.addWithUpdate();
+    // for (var i = 0; i < (1000 / 10); i++) {
+    //   this._canvas.add(new fabric.Line([ i * 10, 0, i * 10, 1000], { stroke: '#000000', selectable: false, evented: false })); // vertical
+    //   this._canvas.add(new fabric.Line([ 0, i * 10, 1000, i * 10], { stroke: '#000000', selectable: false, evented: false })); // horizon
+    // }
+  }
+
+  onClickGrid = (event) => {
+    if(event.target.checked){
+      console.log(this.grid);
+      this._canvas.add(this.grid);
+      this._canvas.sendToBack(this.grid);
+      this._canvas.renderAll();
+    }
+    else{
+      this._canvas.remove(this.grid);
+      this._canvas.renderAll();
+    }
+  }
+
   saveState = (action) => {
     if(!this.lock) {
       if(this.stateStack.length === this.maxSize) {
@@ -546,23 +589,17 @@ class ImageEditor extends Component {
   }
 
   snapMovingEvent = (event) => {
-    // console.log(Math.round(event.target.left / 10) * 10)
-    // console.log(event.target.width * event.target.scaleX / 2, event.target.left);
-    // console.log(Math.round(event.target.left / 10) * 10, "-", Number((event.target.aCoords.bl.x % 1) .toFixed(10)), "=");
-    // let remainder = false;
-    // console.log("From", event.target.left ,event.target.aCoords.bl.x)
-    // if( event.target.left % 10 != 0) { remainder = true; }
+    let left = Math.round(event.target.left / 10) * 10;
+    let top =  Math.round(event.target.top / 10) * 10;
     event.target.set({
-      // left : Math.round(event.target.left / 10) * 10 - ( Number((event.target.aCoords.bl.x % 1) .toFixed(10)) ),
-      // left : Math.round(event.target.left / 10) * 10 - ( remainder ),
-
-      left : Math.round(event.target.left / 1) * 10,
-      // left : Math.round((event.target.oCoords.ml.x + (event.target.width * event.target.scaleX / 2)) / 10) * 10,
-      top : Math.round(event.target.top / 1) * 10,
+      left : left,
+      top : top,
     })
-    // if(remainder && event.target.aCoords.bl.x % 10 )
-    // console.log("to", event.target.left, event.target.aCoords.bl.x);
-    
+    const pointer = event.target.getPointByOrigin('left', 'top');
+    event.target.set({
+      left : left - pointer.x%10,
+      top : top - pointer.y%10
+    })
   }
 
   onClickSnap = (event) => {
@@ -1701,6 +1738,7 @@ class ImageEditor extends Component {
             <button onClick={this.undo}>Undo</button>
             <button onClick={this.redo}>Redo</button>
             <input type="checkbox" onClick={this.onClickSnap}/>스냅 옵션
+            <input type="checkbox" onClick={this.onClickGrid}/>그리드 옵션
           </div>
 
           <hr />
