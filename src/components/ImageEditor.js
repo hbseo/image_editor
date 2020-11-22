@@ -681,6 +681,55 @@ class ImageEditor extends Component {
     this._canvas.backgroundColor = '#d8d8d8';
   }
 
+  exportCanvas = () => {
+    let data = JSON.stringify(this._canvas.toJSON());
+    let file = new Blob([data], {type : 'octet/stream'});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(file);
+    a.setAttribute("download", 'canvas.json');
+    a.click();
+  }
+
+  importCanvas = (event) => {
+    let file = event.target.files[0];
+    let json;
+    var reader = new FileReader();
+    reader.onload = (event) => {
+      json = JSON.parse(event.target.result);
+      console.log(json);
+
+      this._canvas.loadFromJSON(json, () => {
+        this.cropImg = null;
+  
+        // redo undo
+        this.lock = false;
+        this.currentState = { action : 'constructor' };
+        this.stateStack = [];
+        this.redoStack = [];
+        this.maxSize = 100;
+        this.state_id = 1;
+        this.undoCanvasSize = [];
+        this.redoCanvasSize = [];
+        this.currentCanvasSize = {width: null, height: null};
+  
+        //add function
+        this.shapeType = '';
+    
+        this.grid = null;
+        this.gridOn = false;
+
+        this.currentState = this._canvas.toDatalessJSON();
+        this.currentState.action = "initilize";
+        this.currentState.id = 0;
+        this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
+  
+        this._canvas.renderAll()
+        this.forceUpdate(); // for undo/redo stack
+      })
+    }
+    reader.readAsText(file);
+  }
+
   fileChange = (event) => {
     new Promise((resolve) => {
       let file = event.target.files[0];
@@ -1791,6 +1840,8 @@ class ImageEditor extends Component {
               </div> : null
             }
             <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
+            <button onClick={this.exportCanvas}> 캔버스 export </button>
+            <button><input type='file' id='_file' onChange={this.importCanvas} accept="json"></input>캔버스 import</button>
             <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
             <button onClick={this.undo}>Undo</button>
             <button onClick={this.redo}>Redo</button>
