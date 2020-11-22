@@ -592,17 +592,23 @@ class ImageEditor extends Component {
   }
 
   snapMovingEvent = (event) => {
+    let direction = {
+      x : event.e.movementX <= 0 ? 'left' : 'right',
+      y : event.e.movementY <= 0 ? 'top' : 'bottom',
+    }
     let left = Math.round(event.target.left / 10) * 10;
     let top =  Math.round(event.target.top / 10) * 10;
     event.target.set({
       left : left,
       top : top,
     })
-    const pointer = event.target.getPointByOrigin('left', 'top');
+    const pointer = event.target.getPointByOrigin(direction.x, direction.y);
+    // const pointer = event.target.getPointByOrigin('left', 'top');
     event.target.set({
       left : left - pointer.x%10,
       top : top - pointer.y%10
     })
+    this.setState({activeObject : this.getActiveObject()})
   }
 
   onClickSnap = (event) => {
@@ -1552,12 +1558,15 @@ class ImageEditor extends Component {
 
           <div>
             <h5>개발자 기능</h5>
-            {this.state.pipette
-                ? <button onClick={this.disablePipette}>Disable Pipette</button>
-                : <button onClick={this.enablePipette}>Enable Pipette</button>
-            }
-            <p>{this.state.pipetteRGB.r}|{this.state.pipetteRGB.g}|{this.state.pipetteRGB.b}</p>
-            <br/>
+
+            {this.state.activeObject.type !== 'not active' ?
+            <div>
+              <p> left : {this.state.activeObject.aCoords.tl.x} </p>
+              <p> right : {this.state.activeObject.aCoords.br.x} </p>
+              <p> top : {this.state.activeObject.aCoords.tl.y} </p>
+              <p> bottom : {this.state.activeObject.aCoords.br.y} </p>
+            </div> : <div></div> }
+
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
@@ -1858,6 +1867,22 @@ class ImageEditor extends Component {
           	  <div onClick={this.closeColorPicker}/>
           	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           	</div> : null }
+          </div>
+
+          <hr/>
+
+          <div>
+            <h5>스포이드</h5>
+            {this.state.pipette
+                ? <button onClick={this.disablePipette}>Disable Pipette</button>
+                : <button onClick={this.enablePipette}>Enable Pipette</button>
+            }
+            <p>{this.state.pipetteRGB.r}|{this.state.pipetteRGB.g}|{this.state.pipetteRGB.b}</p>
+          </div>
+
+          <hr />
+
+          <div>
             <h5>그림자</h5>
             <Switch 
               checked={this.state.displayshadow} 
