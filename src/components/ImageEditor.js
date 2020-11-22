@@ -98,14 +98,11 @@ class ImageEditor extends Component {
 
     // redo undo
     this.lock = false;
-    this.currentState = { action : 'constructor' };
+    this.currentState = { width: null, height: null, action : 'constructor' };
     this.stateStack = [];
     this.redoStack = [];
     this.maxSize = 100;
     this.state_id = 1;
-    this.undoCanvasSize = [];
-    this.redoCanvasSize = [];
-    this.currentCanvasSize = {width: null, height: null};
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -143,9 +140,10 @@ class ImageEditor extends Component {
         this._createDomEvent();
         this._createCanvasEvent();
         this.currentState = this._canvas.toDatalessJSON();
+        this.currentState.width = this._canvas.width;
+        this.currentState.height = this._canvas.height;
         this.currentState.action = "initilize";
         this.currentState.id = 0;
-        this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
         this._makeGrid();
       })
     }
@@ -161,9 +159,10 @@ class ImageEditor extends Component {
       this._createDomEvent();
       this._createCanvasEvent();
       this.currentState = this._canvas.toDatalessJSON();
+      this.currentState.width = this._canvas.width;
+        this.currentState.height = this._canvas.height;
       this.currentState.action = "initilize";
       this.currentState.id = 0;
-      this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
       this._makeGrid();
     }
     this.forceUpdate(); // for showUndo/Redo Stack
@@ -174,11 +173,8 @@ class ImageEditor extends Component {
     this._deleteDomevent();  
     this.lock = false;
     this.currentState = null;
-    this.currentCanvasSize = null;
     this.stateStack.length = 0;
     this.redoStack.length = 0;
-    this.redoCanvasSize.length = 0;
-    this.undoCanvasSize.length = 0;
     this.cropImg = null;
     this.fontarray.length = 0;
     this._clipboard = null;
@@ -461,42 +457,37 @@ class ImageEditor extends Component {
     if(!this.lock) {
       if(this.stateStack.length === this.maxSize) {
         this.stateStack.shift();
-        this.undoCanvasSize.shift();
       }
       this.stateStack.push(this.currentState);
-      this.undoCanvasSize.push(this.currentCanvasSize);
       this.currentState = this._canvas.toDatalessJSON();
+      this.currentState.width = this._canvas.width;
+      this.currentState.height = this._canvas.height;
       this.currentState.action = action;
       this.currentState.id = this.state_id++;
-      this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
     }
   }
 
   undo = () => {
-    // console.log('undo');
     if(this.stateStack.length > 0) {
-      this.applyState(this.redoStack, this.redoCanvasSize, this.stateStack.pop(), this.undoCanvasSize.pop());
+      this.applyState(this.redoStack, this.stateStack.pop());
     }
   }
 
   redo = () => {
-    // console.log('redo');
     if(this.redoStack.length > 0) {
-      this.applyState(this.stateStack, this.undoCanvasSize,  this.redoStack.pop(), this.redoCanvasSize.pop());
+      this.applyState(this.stateStack, this.redoStack.pop());
     }
   }
 
-  applyState = (stack, sizeStack, newState, canvasSize) => {
+  applyState = (stack, newState) => {
     stack.push(this.currentState);
-    sizeStack.push(this.currentCanvasSize);
     this.currentState = newState;
-    this.currentCanvasSize = canvasSize;
     this.lock = true;
     this._canvas.loadFromJSON(this.currentState, () => {
-      this._canvas.setWidth(canvasSize.width);
-      this._canvas.setHeight(canvasSize.height);
+      this._canvas.setWidth(newState.width);
+      this._canvas.setHeight(newState.height);
       this.lock = false;
     });
     this.forceUpdate(); // for showUndo/Redo Stack
