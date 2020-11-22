@@ -759,10 +759,14 @@ class ImageEditor extends Component {
           myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : false});
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
-        case 'circle':
+        case 'ellipse':
           myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : false });
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
+        case 'circle':
+          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : false});
+          this._canvas.add(myFigure).setActiveObject(myFigure);
+          break;        
         default:
       }
       this._canvas.selection = false;
@@ -826,6 +830,13 @@ class ImageEditor extends Component {
       activeObject.set({
         rx : width /2 ,
         ry : height / 2,
+        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
+        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
+      })
+    }
+    else if(activeObject.type === 'circle'){
+      activeObject.set({
+        radius : Math.max(width, height) / 2,
         originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
         originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
       })
@@ -976,7 +987,16 @@ class ImageEditor extends Component {
     }
   }
 
-  handle
+  handleEndAngleChange = (event) => {
+    if(this.getActiveObject()){
+      let shape = this.getActiveObject();
+      shape.set({
+        endAngle : event.target.value * Math.PI / 180,
+      })
+      this.setState({activeObject : this.getActiveObject()});
+      this._canvas.renderAll();
+    }
+  }
 
   handleFilterChange = (event) => {
     const value = event.target.value
@@ -1689,8 +1709,16 @@ class ImageEditor extends Component {
             
             <button onClick={this.addShape} type="triangle">삼각형</button>
             <button onClick={this.addShape} type="rectangle">직사각형</button>
+            <button onClick={this.addShape} type="ellipse">타원</button>
             <button onClick={this.addShape} type="circle">원</button>
             <button onClick={this.addLine} type="line">직선</button>
+
+            { this.state.activeObject.type === "circle" ? 
+            <div>
+              {/* <input type="number" name="startAngle"  value = {this.state.activeObject.startAngle} /> */}
+              <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.state.activeObject.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
+            </div> : <div></div>
+            }
           </div>
 
           <hr />
