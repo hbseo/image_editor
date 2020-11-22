@@ -70,6 +70,9 @@ class Filter extends Action {
             noise : value
           }));
           break;          
+        case 'opacity':
+          obj.opacity = value;
+          break;
 
         default:
       }

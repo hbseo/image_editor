@@ -523,7 +523,7 @@ class ImageEditor extends Component {
         contrast : image.filters[16] ? image.filters[16].contrast : 0,
         pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
         blur : image.filters[18] ? image.filters[18].blur : 0,
-        noise : image.filters[19] ? image.filters[19].blur : 0
+        noise : image.filters[19] ? image.filters[19].blur : 0,
       }
 		});
 	}
@@ -1023,6 +1023,17 @@ class ImageEditor extends Component {
     else {
       alert('image is not activated');
     } 
+  }
+
+  handleOpacityChange = (event) => {
+    let activeObject = this.getActiveObject();
+    if(activeObject || this._backgroundImage){
+      this.action['Filter'].applyFilter(activeObject || this._backgroundImage , 'opacity', true, event.target.value);
+      if(activeObject){
+        this.setState({ activeObject : activeObject})
+      }
+      this._canvas.renderAll();
+    }
   }
 
   handlefontSizeChange = (event) => {
@@ -1640,7 +1651,7 @@ class ImageEditor extends Component {
             <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
             <input type='checkbox' className='filter' id='kodachrome' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
             <input type='checkbox' className='filter' id='emboss' onClick={this.filterObject} filter='emboss' />Filter emboss
-
+            
             <input
               type='range'
               className='filter'
@@ -1700,6 +1711,19 @@ class ImageEditor extends Component {
               value={this.state.filters.noise || 0}
               onChange={this.handleFilterChange} filter='noise'
             />noise
+
+            
+            <input
+              type='range'
+              id='opacity'
+              min='0'
+              max='1'
+              name='opacity'
+              step='0.01'
+              value={this.state.activeObject.type === 'image' ? this.state.activeObject.opacity : 1}
+              onChange={this.handleFilterChange} filter='opacity'
+              disabled = {this.state.activeObject.type === 'image' ? false : true}
+            />opacity
           </div>
 
           <hr />
