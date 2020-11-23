@@ -111,8 +111,13 @@ class ImageEditor extends Component {
     this.startPoint = { x : 0, y : 0 };
     this.shapeType = '';
 
+    //grid
     this.grid = null;
     this.gridOn = false;
+
+    //keyEvent
+    this.shift = false;
+
     // font
     this.fontarray = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
     'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
@@ -204,6 +209,16 @@ class ImageEditor extends Component {
       }
     }
   }
+
+  _onShiftKeydownEvent = (event) => {
+    const {keyCode} = event;
+    if(keyCode === 16){ this.shift = true; }
+  }
+
+  _onShiftKeyUpEvent = (event) => {
+    const {keyCode} = event;
+    if(keyCode === 16) { this.shift = false;}
+  }
   
   _onMousdDownEvent = (event) => {
     if(event.target.tagName === 'CANVAS'){
@@ -217,6 +232,7 @@ class ImageEditor extends Component {
 	_createDomEvent = () => {
     // document.getElementById('canvas').addEventListener('keydown',this._onKeydownEvent)
     document.addEventListener('mousedown',this._onMousdDownEvent)
+    document.addEventListener('keyup',this._onShiftKeyUpEvent)
 	}
 
   // 캔버스 이벤트 설정
@@ -798,6 +814,8 @@ class ImageEditor extends Component {
   addShapeEvent = (event) => {
     let myFigure;
     if(event.target.tagName === 'CANVAS'){
+      document.removeEventListener('keydown',this._onKeydownEvent);
+
       const disableObj = this.getActiveObject();
       if(disableObj){
         // disableObj.evented = false;
@@ -807,19 +825,19 @@ class ImageEditor extends Component {
       const pointer = this._canvas.getPointer(event, false)
       switch(this.shapeType) {
         case 'triangle':
-          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : false });
+          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : this.shift });
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'rectangle':
-          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : false});
+          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift});
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'ellipse':
-          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : false });
+          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : this.shift });
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'circle':
-          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : false});
+          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift});
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;        
         default:
@@ -844,13 +862,15 @@ class ImageEditor extends Component {
           disableObj.lockMovementY = false;
           disableObj.lockMovementX = false;
         }
-
+        document.addEventListener('keydown',this._onKeydownEvent);
+        this.shift = false;
         this._canvas.off('mouse:up');
         // this._canvas.on('mouse:up', (event) => { console.log("fire", event)});
       });
     }
 
     this._canvas.defaultCursor = 'default';
+    document.removeEventListener('keydown',this._onShiftKeydownEvent);
     document.removeEventListener('mousedown',this.addShapeEvent);    
   }
 
@@ -860,10 +880,11 @@ class ImageEditor extends Component {
     this._canvas.discardActiveObject();
     this.shapeType = event.target.getAttribute('type');
     document.addEventListener('mousedown',this.addShapeEvent);    
+    document.addEventListener('keydown',this._onShiftKeydownEvent);
   }
 
   shapeCreateResizeEvent = (event) => {
-    // console.log(event.target)
+    // console.log(keyCode)
     // let activeObject = event.target
     let activeObject = this.getActiveObject();
     // console.log(activeObject, event.target)
