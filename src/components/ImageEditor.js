@@ -396,6 +396,47 @@ class ImageEditor extends Component {
     this._canvas.on('object:rotated', (event) => {
       this.setState({ angle: event.target.angle })
     });
+    this._canvas.on("object:moving", (event) => {
+      event.target.setCoords();
+      this._canvas.forEachObject((obj) => {
+        if(obj === event.target) {return;}
+
+        //right
+        // console.log(obj.aCoords.tr.x - event.target.aCoords.tl.x)
+        if(Math.abs(obj.aCoords.tr.x - event.target.aCoords.tl.x) < 10){
+          event.target.set({
+            // left : obj.getPointByOrigin('right', 'bottom').x + (event.target.scaleX * event.target.width / 2)
+            left : obj.aCoords.tr.x + (event.target.scaleX * event.target.width / 2),
+          })
+          event.target.setCoords();
+        }
+        //left
+        // console.log(obj.aCoords.tl.x - event.target.aCoords.tr.x);
+        if(Math.abs(obj.aCoords.tl.x - event.target.aCoords.tr.x) < 10){
+          event.target.set({
+            // left : event.target.left - obj.left + 1,
+            left : obj.getPointByOrigin('left', 'bottom').x - (event.target.scaleX * event.target.width / 2)
+          })
+          event.target.setCoords();
+        }
+        // top
+        // console.log(obj.aCoords.tr.x - event.target.aCoords.tl.x)
+        if(Math.abs(obj.aCoords.tl.y - event.target.aCoords.bl.y) < 10){
+          event.target.set({
+            top : obj.getPointByOrigin('right', 'top').y - (event.target.scaleY * event.target.height / 2)
+          })
+          event.target.setCoords();
+        }
+        //bottom
+        // console.log(obj.aCoords.tl.x - event.target.aCoords.tr.x);
+        if(Math.abs(obj.aCoords.bl.y - event.target.aCoords.tl.y) < 10){
+          event.target.set({
+            top : obj.getPointByOrigin('right', 'bottom').y + (event.target.scaleY * event.target.height / 2)
+          })
+          event.target.setCoords();
+        }
+      })
+    });
     // this._canvas.on('object:removed', (event) => {
     //   console.log('object:removed');
     // })
