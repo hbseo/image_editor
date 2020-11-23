@@ -104,6 +104,8 @@ class ImageEditor extends Component {
     this.maxSize = 100;
     this.state_id = 1;
     this.dotoggle = true;
+
+    // filterList (len = 20)
     this.filterList = ['Grey', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'Blackwhite', 'Vintage', 'Sepia', 'Kodachrome',
     'Emboss', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise'];
 
@@ -511,20 +513,29 @@ class ImageEditor extends Component {
 	_imageSelection = (image) => {
 		this.switchTools('filter', false);
 		this.switchTools('text', true);
-		let list = document.getElementsByClassName('filter');
+    let list = document.getElementsByClassName('filter');
+    let index = Array.from({length: this.filterList.length}, () => false);
+    image.filters.forEach(filter => {
+      if(this.filterList.indexOf(filter.type) >= 15) {
+        index[this.filterList.indexOf(filter.type)] = filter;
+      }
+      else {
+        index[this.filterList.indexOf(filter.type)] = true;
+      }
+    });
 		for(let i=0; i<list.length; i++){
-			list[i].checked = !!image.filters[i];
-		}
+			list[i].checked = index[i];
+    }
 		this.setState({
 			angle: image.angle,
       stroke : image.stroke,
       strokeWidth : image.stroke ? image.strokeWidth : 0,
       filters : {
-        brightness: image.filters[15] ? image.filters[15].brightness : 0,
-        contrast : image.filters[16] ? image.filters[16].contrast : 0,
-        pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
-        blur : image.filters[18] ? image.filters[18].blur : 0,
-        noise : image.filters[19] ? image.filters[19].blur : 0
+        brightness: index[15] ? index[15].brightness : 0,
+        contrast : index[16] ? index[16].contrast : 0,
+        pixelate : index[17] ? index[17].blocksize : 1,
+        blur : index[18] ? index[18].blur : 0,
+        noise : index[19] ? index[19].noise : 0
       }
 		});
 	}
