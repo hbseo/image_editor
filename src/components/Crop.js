@@ -68,6 +68,7 @@ class Crop extends Action {
     let image = activeObject;
     let test_canvas = new fabric.Canvas('test', {
       preserveObjectStacking: true,
+      imageSmoothingEnabled : false,
     });
     const filters = image.filters;
     const angle = image.angle;
