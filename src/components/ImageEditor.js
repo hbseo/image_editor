@@ -221,7 +221,7 @@ class ImageEditor extends Component {
     if(keyCode === 16) { this.shift = false;}
   }
   
-  _onMousdDownEvent = (event) => {
+  _onMouseDownEvent = (event) => {
     if(event.target.tagName === 'CANVAS'){
       document.addEventListener('keydown',this._onKeydownEvent)
     }
@@ -232,7 +232,7 @@ class ImageEditor extends Component {
 
 	_createDomEvent = () => {
     // document.getElementById('canvas').addEventListener('keydown',this._onKeydownEvent)
-    document.addEventListener('mousedown',this._onMousdDownEvent)
+    document.addEventListener('mousedown',this._onMouseDownEvent)
     document.addEventListener('keyup',this._onShiftKeyUpEvent)
 	}
 
@@ -432,6 +432,8 @@ class ImageEditor extends Component {
 
   _deleteDomevent = () =>{
     document.removeEventListener('keydown',this._onKeydownEvent)
+    document.removeEventListener('mousedown',this._onMouseDownEvent)
+    document.removeEventListener('keyup',this._onShiftKeyUpEvent)
   }
 
   _makeGrid = () => {
@@ -597,7 +599,8 @@ class ImageEditor extends Component {
     map[action.getName()] = action;
   }
 
-  getActiveObject() {
+  getActiveObject = () => {
+    console.log(this._canvas, this._canvas.getActiveObject()) // for finding a bug
     return this._canvas._activeObject;
   }
 
@@ -605,7 +608,7 @@ class ImageEditor extends Component {
    * Get canvas instance
    * @returns {fabric.Canvas}
    */
-  getCanvas() {
+  getCanvas = () => {
     return this._canvas;
   }
 
