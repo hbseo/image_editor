@@ -160,7 +160,8 @@ class ImageEditor extends Component {
         height: this._canvasSize.height,
         width: this._canvasSize.width,
         backgroundColor: '#d8d8d8',
-        backgroundImage : this._backgroundImage
+        backgroundImage : this._backgroundImage,
+        imageSmoothingEnabled : false,
       });
       this.switchTools('filter', 'text', true);
       this._createDomEvent();
@@ -372,7 +373,7 @@ class ImageEditor extends Component {
 			else{
         this.switchTools('text', true);
 				this._imageSelection(this._canvas.backgroundImage);
-			}
+      };
 		});
     
     this._canvas.on('object:added', (event) => {
@@ -396,47 +397,7 @@ class ImageEditor extends Component {
     this._canvas.on('object:rotated', (event) => {
       this.setState({ angle: event.target.angle })
     });
-    this._canvas.on("object:moving", (event) => {
-      event.target.setCoords();
-      this._canvas.forEachObject((obj) => {
-        if(obj === event.target) {return;}
-
-        //right
-        // console.log(obj.aCoords.tr.x - event.target.aCoords.tl.x)
-        if(Math.abs(obj.aCoords.tr.x - event.target.aCoords.tl.x) < 10){
-          event.target.set({
-            // left : obj.getPointByOrigin('right', 'bottom').x + (event.target.scaleX * event.target.width / 2)
-            left : obj.aCoords.tr.x + (event.target.scaleX * event.target.width / 2),
-          })
-          event.target.setCoords();
-        }
-        //left
-        // console.log(obj.aCoords.tl.x - event.target.aCoords.tr.x);
-        if(Math.abs(obj.aCoords.tl.x - event.target.aCoords.tr.x) < 10){
-          event.target.set({
-            // left : event.target.left - obj.left + 1,
-            left : obj.getPointByOrigin('left', 'bottom').x - (event.target.scaleX * event.target.width / 2)
-          })
-          event.target.setCoords();
-        }
-        // top
-        // console.log(obj.aCoords.tr.x - event.target.aCoords.tl.x)
-        if(Math.abs(obj.aCoords.tl.y - event.target.aCoords.bl.y) < 10){
-          event.target.set({
-            top : obj.getPointByOrigin('right', 'top').y - (event.target.scaleY * event.target.height / 2)
-          })
-          event.target.setCoords();
-        }
-        //bottom
-        // console.log(obj.aCoords.tl.x - event.target.aCoords.tr.x);
-        if(Math.abs(obj.aCoords.bl.y - event.target.aCoords.tl.y) < 10){
-          event.target.set({
-            top : obj.getPointByOrigin('right', 'bottom').y + (event.target.scaleY * event.target.height / 2)
-          })
-          event.target.setCoords();
-        }
-      })
-    });
+    this._canvas.on("object:moving", this.snapObjectMovingEvent);
     // this._canvas.on('object:removed', (event) => {
     //   console.log('object:removed');
     // })
@@ -677,6 +638,56 @@ class ImageEditor extends Component {
     }
   }
 
+  snapObjectMovingEvent = (event) => {
+    event.target.setCoords();
+    this._canvas.forEachObject((obj) => {
+      if(obj === event.target) {return;}
+
+      //right
+      // console.log(obj.aCoords.tr.x - event.target.aCoords.tl.x)
+      // console.log(
+      //   obj.getPointByOrigin('left', 'bottom').x + (obj.width * obj.scaleX) + (event.target.scaleX * event.target.width / 2),
+      //   obj.getPointByOrigin('right', 'bottom').x + (event.target.scaleX * event.target.width / 2),
+      //   obj.aCoords.tr.x + (event.target.scaleX * event.target.width / 2),
+      //   obj.aCoords.tl.x + (obj.width * obj.scaleX) +  (event.target.scaleX * event.target.width / 2)
+      // )
+      if(Math.abs(obj.aCoords.tr.x - event.target.aCoords.tl.x) < 10){
+        event.target.set({
+          left : obj.getPointByOrigin('right', 'bottom').x + (event.target.scaleX * event.target.width / 2) + (event.target.strokeWidth/2)
+          // left : obj.aCoords.tr.x + (event.target.scaleX * event.target.width / 2),
+          // left : obj.getPointByOrigin('left', 'bottom').x + (obj.width * obj.scaleX) + (event.target.scaleX * event.target.width / 2)
+        })
+        // obj.setCoords();
+        event.target.setCoords();
+      }
+      //left
+      // console.log(obj.aCoords.tl.x - event.target.aCoords.tr.x);
+      if(Math.abs(obj.aCoords.tl.x - event.target.aCoords.tr.x) < 10){
+        event.target.set({
+          // left : event.target.left - obj.left + 1,
+          left : obj.getPointByOrigin('left', 'bottom').x - (event.target.scaleX * event.target.width / 2) - (event.target.strokeWidth/2)
+        })
+        event.target.setCoords();
+      }
+      // top
+      // console.log(obj.aCoords.tr.x - event.target.aCoords.tl.x)
+      if(Math.abs(obj.aCoords.tl.y - event.target.aCoords.bl.y) < 10){
+        event.target.set({
+          top : obj.getPointByOrigin('right', 'top').y - (event.target.scaleY * event.target.height / 2) - (event.target.strokeWidth/2)
+        })
+        event.target.setCoords();
+      }
+      //bottom
+      // console.log(obj.aCoords.tl.x - event.target.aCoords.tr.x);
+      if(Math.abs(obj.aCoords.bl.y - event.target.aCoords.tl.y) < 10){
+        event.target.set({
+          top : obj.getPointByOrigin('left', 'bottom').y + (event.target.scaleY * event.target.height / 2) + (event.target.strokeWidth/2)
+        })
+        event.target.setCoords();
+      }
+    })
+  }
+
   copyObject = () => {
     if(this.getActiveObject()){
       this.getActiveObject().clone((cloned) => {
@@ -723,6 +734,7 @@ class ImageEditor extends Component {
           top: pointer.y,
           scaleX : option.scaleX,
           scaleY : option.scaleY,
+          strokeWidth : 0
         });
         // img.scaleToWidth(300);
         resolve(img);
@@ -831,7 +843,8 @@ class ImageEditor extends Component {
         left: pointer.x,
         top: pointer.y,
         fontSize: this.state.fontsize,
-        lockScalingY: true
+        lockScalingY: true,
+        strokeWidth : 0
       });
       text.setControlsVisibility({
         mt: false,
@@ -866,19 +879,19 @@ class ImageEditor extends Component {
       const pointer = this._canvas.getPointer(event, false)
       switch(this.shapeType) {
         case 'triangle':
-          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : this.shift });
+          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0 });
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'rectangle':
-          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift});
+          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0});
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'ellipse':
-          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : this.shift });
+          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : this.shift, strokeWidth : 0 });
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'circle':
-          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift});
+          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0});
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;        
         default:
