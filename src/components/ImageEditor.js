@@ -45,11 +45,8 @@ class ImageEditor extends Component {
 				b: '255',
 				a: '1',
       },
-      textBgColor: {
-        r: '255',
-        g: '255',
-        b: '255',
-        a: '1'
+      text : {
+        color : '#FFFFFF'
       },
       colorHex : '#FFFFFF',
       filters : {
@@ -65,8 +62,8 @@ class ImageEditor extends Component {
       },
       shadow : {
         blur : 30,
-        offsetY: 10,
         offsetX : 10,
+        offsetY: 10,
         color : '#000000'
       },
       pipette: false,
@@ -208,13 +205,13 @@ class ImageEditor extends Component {
   
   _onMousdDownEvent = (event) => {
     if(event.target.tagName === 'CANVAS'){
-      document.addEventListener('keydown',this._onKeydownEvent)
+      document.addEventListener('keydown',this._onKeydownEvent);
     }
     else{
       if(event.target.type === 'range') {
         this.dotoggle = false;
       }
-      document.removeEventListener('keydown',this._onKeydownEvent)
+      document.removeEventListener('keydown',this._onKeydownEvent);
     }
   }
 
@@ -549,12 +546,33 @@ class ImageEditor extends Component {
 	_textboxSelection = (text) => {
     this.switchTools('text', false);
     this.switchTools('filter', true);
+    // toggle shadow, backgroundColor
+    let toggle = [false, false];
+    let shadow = null;
+    let textBgColor = null;
+    if(text.shadow) {
+      toggle[0] = true;
+    }
+    if(text.textBackgroundColor) {
+      toggle[1] = true;
+    }
+    shadow = {
+      blur : toggle[0] ? text.shadow.blur : 30,
+      offsetX : toggle[0] ? text.shadow.offsetX : 10,
+      offsetY : toggle[0] ? text.shadow.offsetY : 10,
+      color : toggle[0] ? text.shadow.color : '#000000'
+    };
+    textBgColor = { color : toggle[1] ? text.textBackgroundColor : '#FFFFFF'};
 		this.setState({
 			fontsize : text.fontSize,
       angle : text.angle,
       stroke : text.stroke,
       strokeWidth : text.stroke ? text.strokeWidth : 0,
-		})
+      displayshadow : toggle[0],
+      displayTextbgColorPicker : toggle[1],
+      shadow : shadow,
+      text : textBgColor
+		});
   }
   
   switchTools = (...args) => {
@@ -1088,7 +1106,8 @@ class ImageEditor extends Component {
 
   handletextBgChange = (event) => {
     if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {
-      this.setState({textBgColor: event.rgb});
+      let change_state = {color : event.hex};
+      this.setState({text : change_state});
       this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
       this.saveState('text bg change');
     }
@@ -1230,12 +1249,21 @@ class ImageEditor extends Component {
   }
 
   toggletextbg = () => {
-    if(this.state.displayTextbgColorPicker) {
-      this.getActiveObject().set({textBackgroundColor: null});
+    new Promise((resolve) => {
+      this.setState({displayTextbgColorPicker: !this.state.displayTextbgColorPicker});
+      resolve();
+    })
+    .then(() => {
+      let object = this.getActiveObject();
+      if(this.state.displayTextbgColorPicker) {
+        object.set({textBackgroundColor: '#FFFFFF'});
+      }
+      else {
+        object.set({textBackgroundColor: null});
+      }
       this.saveState('textbox backgroundColor');
       this._canvas.renderAll();
-    }
-    this.setState({displayTextbgColorPicker: !this.state.displayTextbgColorPicker});
+    })
   }
 
   toggleshadow = () => {
@@ -1598,9 +1626,8 @@ class ImageEditor extends Component {
               id="material-switch"
               ></Switch>
             </label>
-            {/* <button className='text' onClick={this.toggletextbg} text='backgroundColor'>배경색 변경</button> */}
             {this.state.displayTextbgColorPicker ? 
-            <CompactPicker color={this.state.textBgColor} onChange={this.handletextBgChange}></CompactPicker> : null}
+            <CompactPicker color={this.state.text.color} onChange={this.handletextBgChange}></CompactPicker> : null}
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
             <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
@@ -1818,7 +1845,7 @@ class ImageEditor extends Component {
                       max='100'
                       name='offsetY'
                       step='1'
-                      value={this.state.shadow.scaleY}
+                      value={this.state.shadow.offsetY}
                       onChange={this.handleShadowChange}/>
 
                     <span>가로 위치</span>
@@ -1830,7 +1857,7 @@ class ImageEditor extends Component {
                       max='100'
                       name='offsetX'
                       step='1'
-                      value={this.state.shadow.scaleX}
+                      value={this.state.shadow.offsetX}
                       onChange={this.handleShadowChange}/>
                     </label>
                     <CompactPicker color={this.state.shadow.color} onChange={this.handleShadowChange}></CompactPicker>
