@@ -1,50 +1,100 @@
+
 function shapeScalingResizeEvent(canvas, pointer, obj){
-  // let width = obj.scaleX * obj.width
-  // let height = obj.scaleY * obj.height
-  // const startPoint = obj.aCoords.tl;
-  // obj.set({
-  //   width : width,
-  //   height : height,
-  //   scaleX : 1,
-  //   scaleY : 1,
-  //   left : startPoint + width / 2,
-  //   top : startPoint + height / 2,
-  // })
-  // console.log(obj.scaleY, obj.scaleY, pointer);
-  
-  // console.log(obj.scaleX, obj.scaleY);
-  // if(activeObject.type === 'ellipse'){
-  //   activeObject.set({
-  //       rx : width /2 ,
-  //       ry : height / 2,
-  //       scaleX : 1,
-  //       scaleY : 1,
-  //   })
-  // }
-  // else if(activeObject.type === 'circle'){
-  //   activeObject.set({
-  //     radius : Math.max(width, height) / 2,
-  //     scaleX : 1,
-  //     scaleY : 1,
-  //   })
-  // }
-  // else{
-  //   activeObject.set({
-  //     width : width,
-  //     height :height,
-  //     scaleX : 1,
-  //     scaleY : 1,
-  //   })
-  // }
+
+  let width = Math.abs(obj.left - pointer.x);
+  let height = Math.abs(obj.top - pointer.y);
+
+  obj.set({
+    width : width,
+    height : height,
+    scaleX : 1,
+    scaleY : 1,
+  })
+  obj.setCoords();
   canvas.renderAll();
   
 }
 
-module.exports = {
+/**
+ * @author NHN Ent. FE Development Team <dl_javascript@nhn.com>
+ */
 
-  
+/**
+ * Get the positions of ratated origin by the pointer value
+ * @param {{x: number, y: number}} origin - Origin value
+ * @param {{x: number, y: number}} pointer - Pointer value
+ * @param {number} angle - Rotating angle
+ * @returns {Object} Postions of origin
+ * @ignore
+ */
+function getPositionsOfRotatedOrigin(origin, pointer, angle) {
+  const sx = origin.x;
+  const sy = origin.y;
+  const px = pointer.x;
+  const py = pointer.y;
+  const r = angle * Math.PI / 180;
+  const rx = ((px - sx) * Math.cos(r)) - ((py - sy) * Math.sin(r)) + sx;
+  const ry = ((px - sx) * Math.sin(r)) + ((py - sy) * Math.cos(r)) + sy;
+
+  return {
+      originX: (sx > rx) ? 'right' : 'left',
+      originY: (sy > ry) ? 'bottom' : 'top'
+  };
+}
+
+/**
+ * Adjust the origin of shape by the start point
+ * @param {{x: number, y: number}} pointer - Pointer value
+ * @param {fabric.Object} shape - Shape object
+ * @ignore
+ */
+function adjustOriginByStartPoint(pointer, shape) {
+  const centerPoint = shape.getPointByOrigin('center', 'center');
+  const angle = -shape.angle;
+  const originPositions = getPositionsOfRotatedOrigin(centerPoint, pointer, angle);
+  const {originX, originY} = originPositions;
+  const origin = shape.getPointByOrigin(originX, originY);
+  const left = shape.left - (centerPoint.x - origin.x);
+  const top = shape.top - (centerPoint.y - origin.y);
+
+  shape.set({
+      originX,
+      originY,
+      left,
+      top
+  });
+
+  shape.setCoords();
+}
+
+/**
+ * Adjust the origin position of shape to center
+ * @param {fabric.Object} shape - Shape object
+ */
+function adjustOriginToCenter  (shape) {
+  const centerPoint = shape.getPointByOrigin('center', 'center');
+  const {originX, originY} = shape;
+  const origin = shape.getPointByOrigin(originX, originY);
+  const left = shape.left + (centerPoint.x - origin.x);
+  const top = shape.top + (centerPoint.y - origin.y);
+
+  shape.set({
+      hasControls: true,
+      hasBorders: true,
+      originX: 'center',
+      originY: 'center',
+      left,
+      top,
+  });
+  shape.setCoords(); // For left, top properties
+}
+
+
+module.exports = {
   resize(canvas, event, obj){
     const pointer = canvas.getPointer(event, false);
+    adjustOriginByStartPoint(pointer, obj)
     shapeScalingResizeEvent(canvas, pointer, obj);
+    adjustOriginToCenter(obj)
   }
 }

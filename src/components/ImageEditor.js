@@ -899,24 +899,26 @@ class ImageEditor extends Component {
       const pointer = this._canvas.getPointer(event, false)
       switch(this.shapeType) {
         case 'triangle':
-          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0 });
+          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false, });
           this._canvas.add(myFigure).setActiveObject(myFigure);
+          this._bindShapeEvent(myFigure);
           break;
         case 'rectangle':
-          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0});
+          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false,});
           this._canvas.add(myFigure).setActiveObject(myFigure);
+          this._bindShapeEvent(myFigure);
           break;
         case 'ellipse':
           myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : this.shift, strokeWidth : 0 });
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'circle':
-          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0});
+          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false,});
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;        
         default:
       }
-      this._bindShapeEvent(myFigure);
+      
       this._canvas.selection = false;
       this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
       this._canvas.on('mouse:up', (event) => {
