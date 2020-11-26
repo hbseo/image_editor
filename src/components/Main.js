@@ -6,13 +6,13 @@ import './Main.scss'
 class Main extends Component {
   constructor(props) {
 		super(props);
-		this.state = {width : 5, height : 5, url :  "", submit : false};
+		this.state = {width : 5, height : 5, url :  "", submit : false, imgRatio : 100, imgWidth : 0, imgHeight : 0};
 		this.url= "";
 		this.image = null;
   }
     
   componentDidMount() {
-
+		
 	}  
 
   handleSubmit = (event) => {
@@ -20,7 +20,8 @@ class Main extends Component {
 
 		console.log("submit", this.state.url);
 		this.url = this.state.url;
-		this.setState({url : "", submit : false, width:0, height : 0});
+		this.setState({url : "", submit : false, width:0, height : 0, imgRatio : 100});
+		
 
 		this.image = new Image();
 		this.image.onload = this.imageFound;
@@ -33,7 +34,8 @@ class Main extends Component {
 		alert("not valid url");
 	}
 	imageFound = () => {
-		this.setState({submit : true, width:this.image.width, height : this.image.height})
+		document.getElementById("imgRatio").disabled = false;
+		this.setState({submit : true, width:this.image.width, height : this.image.height, imgRatio : 100, imgWidth : this.image.width, imgHeight : this.image.height})
 	}
 	
 
@@ -53,11 +55,25 @@ class Main extends Component {
 
 	handleChange = (event) => {
 		// console.log(event.target.value);
+		document.getElementById("imgRatio").disabled = true;
     let change_state = {};
 		change_state[event.target.name] = event.target.value;
 		this.url = ""
-		this.setState({ submit : false })
+		this.setState({ submit : false, imgRatio : 100 })
     this.setState(change_state);
+	}
+
+	handleImageSizeChange = (event) => {
+		new Promise((resolve) => {
+			let ratio = event.target.value;
+			let width = Math.round(this.state.imgWidth * (event.target.value / 100));
+			let height = Math.round(this.state.imgHeight * (event.target.value / 100));
+			// console.log((event.target.value / 100), width, height);
+			resolve({ratio, width, height})
+		})
+		.then((data) => {
+			this.setState({imgRatio : data.ratio, width : data.width, height : data.height});
+		})
 	}
 
 	onImgUrlChange = (url) => {
@@ -159,11 +175,15 @@ class Main extends Component {
 							state : {
 								width : this.state.width,
 								height : this.state.height,
-								url : this.url
+								url : this.url,
+								ratio : this.state.imgRatio,
 							}
 						}}><i className="far fa-square fa-5x canvas-icon"></i></Link>
 						<p>{this.state.width}X{this.state.height}</p></div>
 					}
+					<input disabled type="range" name="imgRatio" id="imgRatio" value={this.state.imgRatio} onChange={this.handleImageSizeChange} min = "5" max = "200" step="1" />
+					<p>{this.state.imgRatio}</p>
+					<hr/>
 					<ImageList onClick={this.onImgUrlChange} />
 				</div>
 
