@@ -43,11 +43,8 @@ class ImageEditor extends Component {
 				b: '255',
 				a: '1',
       },
-      textBgColor: {
-        r: '255',
-        g: '255',
-        b: '255',
-        a: '1'
+      text : {
+        color : '#FFFFFF'
       },
       colorHex : '#000000',
       filters : {
@@ -63,8 +60,8 @@ class ImageEditor extends Component {
       },
       shadow : {
         blur : 30,
-        offsetY: 10,
         offsetX : 10,
+        offsetY: 10,
         color : '#000000'
       },
       pipette: false,
@@ -93,17 +90,27 @@ class ImageEditor extends Component {
     // this.selection = true;
     
     this.cropImg = null;
+    this.cropCanvasState = {
+      left : 0,
+      top : 0,
+      scaleX : 0,
+      scaleY : 0,
+      width : 0,
+      height : 0
+    };
 
     // redo undo
     this.lock = false;
-    this.currentState = { action : 'constructor' };
+    this.currentState = { width: null, height: null, action : 'constructor' };
     this.stateStack = [];
     this.redoStack = [];
     this.maxSize = 100;
     this.state_id = 1;
-    this.undoCanvasSize = [];
-    this.redoCanvasSize = [];
-    this.currentCanvasSize = {width: null, height: null};
+    this.dotoggle = true;
+
+    // filterList (len = 20)
+    this.filterList = ['Grey', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'Blackwhite', 'Vintage', 'Sepia', 'Kodachrome',
+    'Emboss', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise'];
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -121,7 +128,7 @@ class ImageEditor extends Component {
     this.lastPosY = 0;
 
     // font
-    this.fontarray = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
+    this.fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
     'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
     'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
     'Copperplate'];
@@ -143,6 +150,7 @@ class ImageEditor extends Component {
           width: this._canvasSize.width,
           backgroundColor: '#d8d8d8',
           backgroundImage : this._backgroundImage,
+          uniformScaling: false, // When true, objects can be transformed by one side
           imageSmoothingEnabled : false,
           fireRightClick: true,
         });
@@ -152,9 +160,10 @@ class ImageEditor extends Component {
         this._createDomEvent();
         this._createCanvasEvent();
         this.currentState = this._canvas.toDatalessJSON();
+        this.currentState.width = this._canvas.width;
+        this.currentState.height = this._canvas.height;
         this.currentState.action = "initilize";
         this.currentState.id = 0;
-        this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
         this._makeGrid();
       })
     }
@@ -165,6 +174,7 @@ class ImageEditor extends Component {
         width: this._canvasSize.width,
         backgroundColor: '#d8d8d8',
         backgroundImage : this._backgroundImage,
+        uniformScaling: false,
         imageSmoothingEnabled : false,
         fireRightClick: true,
       });
@@ -172,9 +182,10 @@ class ImageEditor extends Component {
       this._createDomEvent();
       this._createCanvasEvent();
       this.currentState = this._canvas.toDatalessJSON();
+      this.currentState.width = this._canvas.width;
+        this.currentState.height = this._canvas.height;
       this.currentState.action = "initilize";
       this.currentState.id = 0;
-      this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
       this._makeGrid();
     }
     this.forceUpdate(); // for showUndo/Redo Stack
@@ -185,13 +196,10 @@ class ImageEditor extends Component {
     this._deleteDomevent();  
     this.lock = false;
     this.currentState = null;
-    this.currentCanvasSize = null;
     this.stateStack.length = 0;
     this.redoStack.length = 0;
-    this.redoCanvasSize.length = 0;
-    this.undoCanvasSize.length = 0;
     this.cropImg = null;
-    this.fontarray.length = 0;
+    this.fontList.length = 0;
     this._clipboard = null;
     this._backgroundImage = null;
     this._canvas = null;
@@ -228,15 +236,26 @@ class ImageEditor extends Component {
   
   _onMouseDownEvent = (event) => {
     if(event.target.tagName === 'CANVAS'){
-      document.addEventListener('keydown',this._onKeydownEvent)
+      document.addEventListener('keydown',this._onKeydownEvent);
     }
     else{
-      document.removeEventListener('keydown',this._onKeydownEvent)
+      if(event.target.type === 'range') {
+        this.dotoggle = false;
+      }
+      document.removeEventListener('keydown',this._onKeydownEvent);
+    }
+  }
+
+  _onMouseUpEvent = (event) => {
+    if(event.target.type === 'range') {
+      this.dotoggle = true;
+      this.saveState(event.target.name + 'change');
     }
   }
 
 	_createDomEvent = () => {
     // document.getElementById('canvas').addEventListener('keydown',this._onKeydownEvent)
+    document.addEventListener('mouseup',this._onMouseUpEvent);
     document.addEventListener('mousedown',this._onMouseDownEvent)
     document.addEventListener('keyup',this._onShiftKeyUpEvent)
 	}
@@ -246,7 +265,6 @@ class ImageEditor extends Component {
     this._canvas.on('mouse:down', (event) => {
       // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
       if(this.cropImg){
-        // console.log(this.cropImg);
         if(event.target == null || !(event.target === this.cropImg || event.target.type === "Cropzone")){
           this.action['Crop'].cropObjend(this.cropImg, null);
           this.cropImg = null;
@@ -396,10 +414,7 @@ class ImageEditor extends Component {
     this._canvas.on('object:added', (event) => {
       // console.log('object:added', event.target);
       let type = event.target.type;
-      if( type === 'ellipse' || type ==='rect' || type === 'triangle' || type === 'Cropzone'){
-
-      }
-      else{
+      if(type !== 'Cropzone'){
         this.saveState(event.target.type +' :added event');
       }
     })
@@ -423,20 +438,41 @@ class ImageEditor extends Component {
     this._canvas.on('object:scaling', (event) => {
       // console.log('object:scaling');
       if(this.state.displayCropCanvasSize) {
-        let object = this.getActiveObject();
-        let change_state = {width: object.width*object.scaleX, height: object.height*object.scaleY};
+        console.log(event);
+        let obj = event.target;
+        obj.setCoords();
+        if(event.pointer.y < 0) {
+          console.log('dd');
+        }
+        
+        let change_state = {width: obj.width*obj.scaleX, height: obj.height*obj.scaleY};
         this.setState({cropCanvasSize: change_state});
       }
     })
-    // this._canvas.on('object:scaled', (event) => {
-    //   console.log('object:scaled');
-    // })
+    this._canvas.on('object:moving', (event) => {
+      // prevents going out of the canvas while cutting the canvas
+      if(this.state.displayCropCanvasSize) {
+        let obj = event.target;
+        obj.setCoords();
+        if(obj.getBoundingRect().top < 0 || obj.getBoundingRect().left < 0) {
+          obj.top = Math.max(obj.top, obj.top - obj.getBoundingRect().top);
+          obj.left = Math.max(obj.left, obj.left - obj.getBoundingRect().left);
+        }
+        if(obj.getBoundingRect().top + obj.getBoundingRect().height > obj.canvas.height ||
+        obj.getBoundingRect().left + obj.getBoundingRect().width > obj.canvas.width) {
+          obj.top = Math.min(obj.top, obj.canvas.height - obj.getBoundingRect().height + obj.top - obj.getBoundingRect().top);
+          obj.left = Math.min(obj.left, obj.canvas.width - obj.getBoundingRect().width + obj.left - obj.getBoundingRect().left)
+        }
+      }
+    })
   }
 
   _deleteCanvasEvent = () =>{
     this._canvas.off('object:added');
     this._canvas.off('object:modified');
     this._canvas.off('object:rotated');
+    this._canvas.off('object:scaling');
+    this._canvas.off('object:moving');
     this._canvas.off('selection:cleared');
     this._canvas.off('selection:updated');
     this._canvas.off('selection:created');
@@ -505,45 +541,40 @@ class ImageEditor extends Component {
   }
 
   saveState = (action) => {
-    if(!this.lock) {
+    if(this.dotoggle && !this.lock) {
       if(this.stateStack.length === this.maxSize) {
         this.stateStack.shift();
-        this.undoCanvasSize.shift();
       }
       this.stateStack.push(this.currentState);
-      this.undoCanvasSize.push(this.currentCanvasSize);
       this.currentState = this._canvas.toDatalessJSON();
+      this.currentState.width = this._canvas.width;
+      this.currentState.height = this._canvas.height;
       this.currentState.action = action;
       this.currentState.id = this.state_id++;
-      this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
     }
   }
 
   undo = () => {
-    // console.log('undo');
     if(this.stateStack.length > 0) {
-      this.applyState(this.redoStack, this.redoCanvasSize, this.stateStack.pop(), this.undoCanvasSize.pop());
+      this.applyState(this.redoStack, this.stateStack.pop());
     }
   }
 
   redo = () => {
-    // console.log('redo');
     if(this.redoStack.length > 0) {
-      this.applyState(this.stateStack, this.undoCanvasSize,  this.redoStack.pop(), this.redoCanvasSize.pop());
+      this.applyState(this.stateStack, this.redoStack.pop());
     }
   }
 
-  applyState = (stack, sizeStack, newState, canvasSize) => {
+  applyState = (stack, newState) => {
     stack.push(this.currentState);
-    sizeStack.push(this.currentCanvasSize);
     this.currentState = newState;
-    this.currentCanvasSize = canvasSize;
     this.lock = true;
     this._canvas.loadFromJSON(this.currentState, () => {
-      this._canvas.setWidth(canvasSize.width);
-      this._canvas.setHeight(canvasSize.height);
+      this._canvas.setWidth(newState.width);
+      this._canvas.setHeight(newState.height);
       this.lock = false;
     });
     this.forceUpdate(); // for showUndo/Redo Stack
@@ -557,18 +588,27 @@ class ImageEditor extends Component {
 	_imageSelection = (image) => {
 		this.switchTools('filter', false);
 		this.switchTools('text', true);
-		let list = document.getElementsByClassName('filter');
+    let list = document.getElementsByClassName('filter');
+    let index = Array.from({length: this.filterList.length}, () => false);
+    image.filters.forEach(filter => {
+      if(this.filterList.indexOf(filter.type) >= 15) {
+        index[this.filterList.indexOf(filter.type)] = filter;
+      }
+      else {
+        index[this.filterList.indexOf(filter.type)] = true;
+      }
+    });
 		for(let i=0; i<list.length; i++){
-			list[i].checked = !!image.filters[i];
-		}
+			list[i].checked = index[i];
+    }
 		this.setState({
 			activeObject : this.getActiveObject(),
       filters : {
-        brightness: image.filters[15] ? image.filters[15].brightness : 0,
-        contrast : image.filters[16] ? image.filters[16].contrast : 0,
-        pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
-        blur : image.filters[18] ? image.filters[18].blur : 0,
-        noise : image.filters[19] ? image.filters[19].blur : 0,
+        brightness: index[15] ? index[15].brightness : 0,
+        contrast : index[16] ? index[16].contrast : 0,
+        pixelate : index[17] ? index[17].blocksize : 1,
+        blur : index[18] ? index[18].blur : 0,
+        noise : index[19] ? index[19].noise : 0
       }
 		});
 	}
@@ -582,6 +622,23 @@ class ImageEditor extends Component {
 	_textboxSelection = (text) => {
     this.switchTools('text', false);
     this.switchTools('filter', true);
+    // toggle shadow, backgroundColor
+    let toggle = [false, false];
+    let shadow = null;
+    let textBgColor = null;
+    if(text.shadow) {
+      toggle[0] = true;
+    }
+    if(text.textBackgroundColor) {
+      toggle[1] = true;
+    }
+    shadow = {
+      blur : toggle[0] ? text.shadow.blur : 30,
+      offsetX : toggle[0] ? text.shadow.offsetX : 10,
+      offsetY : toggle[0] ? text.shadow.offsetY : 10,
+      color : toggle[0] ? text.shadow.color : '#000000'
+    };
+    textBgColor = { color : toggle[1] ? text.textBackgroundColor : '#FFFFFF'};
 		this.setState({
       activeObject : this.getActiveObject(),
 		})
@@ -867,7 +924,6 @@ class ImageEditor extends Component {
         this._canvas.add(data).setActiveObject(data);
         // this.setState({ layers: this.state.layers.concat(data) });
         // console.log(data.getSvgSrc());
-        
       })
     }
     document.removeEventListener('mousedown', this.addImageEvent);
@@ -876,7 +932,7 @@ class ImageEditor extends Component {
 
   addImage = () => {
     this._canvas.defaultCursor = 'pointer';
-		document.addEventListener('mousedown',this.addImageEvent);    
+    document.addEventListener('mousedown',this.addImageEvent);
   }
 
   addTextEvent = (event) => {
@@ -1271,6 +1327,7 @@ class ImageEditor extends Component {
         strokeWidth : Number(event.target.value)
       }
       this.action['Shape'].setStroke(this.getActiveObject(), options);
+      this.saveState('stroke change');
     }
     this.setState({ activeObject : this.getActiveObject() })
   }
@@ -1302,7 +1359,8 @@ class ImageEditor extends Component {
 
   handletextBgChange = (event) => {
     if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {
-      this.setState({textBgColor: event.rgb});
+      let change_state = {color : event.hex};
+      this.setState({text : change_state});
       this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
       this.saveState('text bg change');
     }
@@ -1328,6 +1386,7 @@ class ImageEditor extends Component {
     })
     .then(() => {
       object.set('shadow', new fabric.Shadow(this.state.shadow));
+      this.saveState('shadow changed');
       this._canvas.renderAll();
     })
   }
@@ -1400,7 +1459,6 @@ class ImageEditor extends Component {
     if(activeObject && activeObject.type === 'image'){
       this.cropImg = activeObject;
       this.action['Crop'].cropObj(activeObject, cropOption);
-      // this.saveState();
     }
   }
 
@@ -1409,23 +1467,19 @@ class ImageEditor extends Component {
     if(this.cropImg){
       this.action['Crop'].cropObjend(this.cropImg, cropOption);
       this.cropImg = null;
-      // this.saveState('Crop Obj');
     }
   }
 
   cropCanvas = () => {
-    this._deleteDomevent();
     let change_state = {width: this._canvas.width/2, height: this._canvas.height/2};
     this.setState({
       displayCropCanvasSize: true,
       cropCanvasSize: change_state
     });
     this.action['Crop'].cropCanvas();
-    // this.saveState('Crop Canvas');
   }
 
   cropEndCanvas = () => {
-    this._createDomEvent();
     if(this.state.displayCropCanvasSize) {
       this.action['Crop'].cropEndCanvas();
       this.saveState('Crop Canvas');
@@ -1450,11 +1504,21 @@ class ImageEditor extends Component {
   }
 
   toggletextbg = () => {
-    if(this.state.displayTextbgColorPicker) {
-      this.getActiveObject().set({textBackgroundColor: null});
+    new Promise((resolve) => {
+      this.setState({displayTextbgColorPicker: !this.state.displayTextbgColorPicker});
+      resolve();
+    })
+    .then(() => {
+      let object = this.getActiveObject();
+      if(this.state.displayTextbgColorPicker) {
+        object.set({textBackgroundColor: '#FFFFFF'});
+      }
+      else {
+        object.set({textBackgroundColor: null});
+      }
+      this.saveState('textbox backgroundColor');
       this._canvas.renderAll();
-    }
-    this.setState({displayTextbgColorPicker: !this.state.displayTextbgColorPicker});
+    })
   }
 
   toggleshadow = () => {
@@ -1471,6 +1535,7 @@ class ImageEditor extends Component {
         else {
           object.set('shadow', null);
         }
+        this.saveState('shadow');
         this._canvas.renderAll();
       }
     })
@@ -1634,6 +1699,7 @@ class ImageEditor extends Component {
       this._canvas.sendBackwards(this.getActiveObject())
       if(this.gridOn){ this._canvas.sendToBack(this.grid) }
       this._canvas.renderAll();
+      this.saveState('sendBackwards');
     }
   }
   sendToBack = () => {
@@ -1641,18 +1707,21 @@ class ImageEditor extends Component {
       this._canvas.sendToBack(this.getActiveObject())
       if(this.gridOn){ this._canvas.sendToBack(this.grid) }
       this._canvas.renderAll();
+      this.saveState('sendToBack');
     }
   }
   bringForward = () => {
     if(this.getActiveObject()){
       this._canvas.bringForward(this.getActiveObject())
       this._canvas.renderAll();
+      this.saveState('bringForward');
     }
   }
   bringToFront = () => {
     if(this.getActiveObject()){
       this._canvas.bringToFront(this.getActiveObject())
       this._canvas.renderAll();
+      this.saveState('bringToFront');
     }
   }
 
@@ -1682,6 +1751,7 @@ class ImageEditor extends Component {
 
   changeBackgroundColor = () => {
     this._canvas.backgroundColor = `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`;
+    this.saveState('change backgroundColor');
     this._canvas.renderAll();
   }
 
@@ -1693,6 +1763,14 @@ class ImageEditor extends Component {
     this.setState({ pipette: false });
   }
 
+  getStateStack = () => {
+    console.log(this.stateStack);
+  }
+
+  getCurrentStack = () => {
+    console.log(this.currentState);
+  }
+
   render() {
 		const styles = {
 			color : {
@@ -1700,7 +1778,7 @@ class ImageEditor extends Component {
             }
         };
     let i = 0;
-    const fontList = this.fontarray.map(font => (<option key={i++} value={font}>{font}</option>));
+    const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
         <div id='editor'>
@@ -1722,6 +1800,8 @@ class ImageEditor extends Component {
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
+            <button onClick={this.getCurrentStack}>currentStack 콘솔 출력</button>
+            <button onClick={this.getStateStack}>stateStack 콘솔 출력</button>
             <button onClick={this.resetCanvas}>캔버스 줌 및 위치 리셋</button>
             <br/>
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
@@ -1821,9 +1901,8 @@ class ImageEditor extends Component {
               id="material-switch"
               ></Switch>
             </label>
-            {/* <button className='text' onClick={this.toggletextbg} text='backgroundColor'>배경색 변경</button> */}
             {this.state.displayTextbgColorPicker ? 
-            <CompactPicker color={this.state.textBgColor} onChange={this.handletextBgChange}></CompactPicker> : null}
+            <CompactPicker color={this.state.text.color} onChange={this.handletextBgChange}></CompactPicker> : null}
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
             <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
@@ -2084,7 +2163,7 @@ class ImageEditor extends Component {
                       max='100'
                       name='offsetY'
                       step='1'
-                      value={this.state.shadow.scaleY}
+                      value={this.state.shadow.offsetY}
                       onChange={this.handleShadowChange}/>
 
                     <span>가로 위치</span>
@@ -2096,7 +2175,7 @@ class ImageEditor extends Component {
                       max='100'
                       name='offsetX'
                       step='1'
-                      value={this.state.shadow.scaleX}
+                      value={this.state.shadow.offsetX}
                       onChange={this.handleShadowChange}/>
                     </label>
                     <CompactPicker color={this.state.shadow.color} onChange={this.handleShadowChange}></CompactPicker>
