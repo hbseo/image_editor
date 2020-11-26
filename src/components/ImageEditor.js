@@ -92,6 +92,14 @@ class ImageEditor extends Component {
     // this.selection = true;
     
     this.cropImg = null;
+    this.cropCanvasState = {
+      left : 0,
+      top : 0,
+      scaleX : 0,
+      scaleY : 0,
+      width : 0,
+      height : 0
+    };
 
     // redo undo
     this.lock = false;
@@ -113,7 +121,7 @@ class ImageEditor extends Component {
     this.grid = null;
     this.gridOn = false;
     // font
-    this.fontarray = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
+    this.fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
     'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
     'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
     'Copperplate'];
@@ -135,6 +143,7 @@ class ImageEditor extends Component {
           width: this._canvasSize.width,
           backgroundColor: '#d8d8d8',
           backgroundImage : this._backgroundImage,
+          uniformScaling: false // When true, objects can be transformed by one side
         });
       })
       .then(() => {
@@ -155,7 +164,8 @@ class ImageEditor extends Component {
         height: this._canvasSize.height,
         width: this._canvasSize.width,
         backgroundColor: '#d8d8d8',
-        backgroundImage : this._backgroundImage
+        backgroundImage : this._backgroundImage,
+        uniformScaling: false
       });
       this.switchTools('filter', 'text', true);
       this._createDomEvent();
@@ -178,7 +188,7 @@ class ImageEditor extends Component {
     this.stateStack.length = 0;
     this.redoStack.length = 0;
     this.cropImg = null;
-    this.fontarray.length = 0;
+    this.fontList.length = 0;
     this._clipboard = null;
     this._backgroundImage = null;
     this._canvas = null;
@@ -394,20 +404,41 @@ class ImageEditor extends Component {
     this._canvas.on('object:scaling', (event) => {
       // console.log('object:scaling');
       if(this.state.displayCropCanvasSize) {
-        let object = this.getActiveObject();
-        let change_state = {width: object.width*object.scaleX, height: object.height*object.scaleY};
+        console.log(event);
+        let obj = event.target;
+        obj.setCoords();
+        if(event.pointer.y < 0) {
+          console.log('dd');
+        }
+        
+        let change_state = {width: obj.width*obj.scaleX, height: obj.height*obj.scaleY};
         this.setState({cropCanvasSize: change_state});
       }
     })
-    // this._canvas.on('object:scaled', (event) => {
-    //   console.log('object:scaled');
-    // })
+    this._canvas.on('object:moving', (event) => {
+      // prevents going out of the canvas while cutting the canvas
+      if(this.state.displayCropCanvasSize) {
+        let obj = event.target;
+        obj.setCoords();
+        if(obj.getBoundingRect().top < 0 || obj.getBoundingRect().left < 0) {
+          obj.top = Math.max(obj.top, obj.top - obj.getBoundingRect().top);
+          obj.left = Math.max(obj.left, obj.left - obj.getBoundingRect().left);
+        }
+        if(obj.getBoundingRect().top + obj.getBoundingRect().height > obj.canvas.height ||
+        obj.getBoundingRect().left + obj.getBoundingRect().width > obj.canvas.width) {
+          obj.top = Math.min(obj.top, obj.canvas.height - obj.getBoundingRect().height + obj.top - obj.getBoundingRect().top);
+          obj.left = Math.min(obj.left, obj.canvas.width - obj.getBoundingRect().width + obj.left - obj.getBoundingRect().left)
+        }
+      }
+    })
   }
 
   _deleteCanvasEvent = () =>{
     this._canvas.off('object:added');
     this._canvas.off('object:modified');
     this._canvas.off('object:rotated');
+    this._canvas.off('object:scaling');
+    this._canvas.off('object:moving');
     this._canvas.off('selection:cleared');
     this._canvas.off('selection:updated');
     this._canvas.off('selection:created');
@@ -1510,7 +1541,7 @@ class ImageEditor extends Component {
             }
         };
     let i = 0;
-    const fontList = this.fontarray.map(font => (<option key={i++} value={font}>{font}</option>));
+    const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
         <div id='editor'>
