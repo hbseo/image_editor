@@ -107,8 +107,8 @@ class ImageEditor extends Component {
     this.dotoggle = true;
 
     // filterList (len = 20)
-    this.filterList = ['Grey', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'Blackwhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Emboss', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise'];
+    this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise'];
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -258,76 +258,90 @@ class ImageEditor extends Component {
     document.addEventListener('mouseup',this._onMouseUpEvent);
     document.addEventListener('mousedown',this._onMouseDownEvent)
     document.addEventListener('keyup',this._onShiftKeyUpEvent)
-	}
+  }
+
+
+  /**
+  * 'canvasMoveStartEvent' event handler
+  * @onMousedown
+  * @private
+  */
+  _canvasMoveStartEvent = (event) => {
+    if (event.e.altKey === true) {
+      this.isDragging = true;
+      this.selection = false;
+      this.lastPosX = event.e.clientX;
+      this.lastPosY = event.e.clientY;
+      this._canvas.selection = false;
+    }
+  }
+
+  /**
+  * 'canvasMovingEvent' event handler
+  * @onMousemove
+  * @private
+  */
+  _canvasMovingEvent = (event) => {
+    if (this.isDragging) {
+      let e = event.e;
+      let vpt = this._canvas.viewportTransform;
+      vpt[4] += e.clientX - this.lastPosX;
+      vpt[5] += e.clientY - this.lastPosY;
+      this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
+      this._canvas.renderAll();
+      this.lastPosX = e.clientX;
+      this.lastPosY = e.clientY;
+    }
+  } 
+
+  /**
+  * 'canvasMovieEndEvent' event handler
+  * @onMouseup
+  * @private
+  */
+  _canvasMoveEndEvent = (event) => {
+    this._canvas.setViewportTransform(this._canvas.viewportTransform);
+    this.isDragging = false;
+    this.selection = true;
+    this._canvas.selection = true;
+  }
+
+  /**
+  * 'canvasZoomEvent' event handler
+  * @onMousewheel
+  * @private
+  */
+  _canvasZoomEvent = (event) => {
+    if(event.e.altKey){
+      var delta = event.e.deltaY; 
+      var zoom = this._canvas.getZoom (); 
+      zoom *= 0.999 ** delta; 
+      if (zoom> 20) zoom = 20 ; 
+      if (zoom <0.01) zoom = 0.01; 
+      this._canvas.setZoom (zoom); 
+      this.setState({zoom : zoom});
+      event.e.preventDefault (); 
+      event.e.stopPropagation (); 
+    }
+  }
 
   // 캔버스 이벤트 설정
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
       // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
-      if(this.cropImg){
-        if(event.target == null || !(event.target === this.cropImg || event.target.type === "Cropzone")){
-          this.action['Crop'].cropObjend(this.cropImg, null);
-          this.cropImg = null;
-        }
-      }
       if(this.state.displayCropCanvasSize) {
         if(event.target === null || event.target.type !== 'Cropzone') {
           this.action['Crop'].removeCropzone();
           this.setState({displayCropCanvasSize: false});
         }
       }
-      //zoom
-      if (event.e.altKey === true) {
-        this.isDragging = true;
-        this.selection = false;
-        this.lastPosX = event.e.clientX;
-        this.lastPosY = event.e.clientY;
-        this._canvas.selection = false;
-      }
     });
 
+    this._canvas.on('mouse:down', this._canvasMoveStartEvent);
+    this._canvas.on('mouse:move', this._canvasMovingEvent);
+    this._canvas.on('mouse:up', this._canvasMoveEndEvent);
+    this._canvas.on('mouse:wheel', this._canvasZoomEvent);    
 
-
-
-    this._canvas.on('mouse:up', (event) => {
-      // console.log('fire', event.target);
-      //zoom
-      this._canvas.setViewportTransform(this._canvas.viewportTransform);
-      this.isDragging = false;
-      this.selection = true;
-      this._canvas.selection = true;
-    });
-
-    this._canvas.on('mouse:wheel', (event) => {
-      //zoom
-      if(event.e.altKey){
-        var delta = event.e.deltaY; 
-        var zoom = this._canvas.getZoom (); 
-        zoom *= 0.999 ** delta; 
-        if (zoom> 20) zoom = 20 ; 
-        if (zoom <0.01) zoom = 0.01; 
-        this._canvas.setZoom (zoom); 
-        this.setState({zoom : zoom});
-        event.e.preventDefault (); 
-        event.e.stopPropagation (); 
-      }
-    })
-        
-
-    this._canvas.on('mouse:move', (event) => {
-
-      //move
-      if (this.isDragging) {
-        let e = event.e;
-        let vpt = this._canvas.viewportTransform;
-        vpt[4] += e.clientX - this.lastPosX;
-        vpt[5] += e.clientY - this.lastPosY;
-        this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
-        this._canvas.renderAll();
-        this.lastPosX = e.clientX;
-        this.lastPosY = e.clientY;
-      }
-    });
 		
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
@@ -349,9 +363,6 @@ class ImageEditor extends Component {
 				default:
           this.switchTools('filter', 'text', true);
 			}
-      
-
-      
 		});
 
 		this._canvas.on('selection:updated', (event) => {
@@ -562,6 +573,7 @@ class ImageEditor extends Component {
     this._canvas.loadFromJSON(this.currentState, () => {
       this._canvas.setWidth(newState.width);
       this._canvas.setHeight(newState.height);
+      this._canvas.calcOffset();
       this.lock = false;
     });
     this.forceUpdate(); // for showUndo/Redo Stack
@@ -578,6 +590,7 @@ class ImageEditor extends Component {
     let list = document.getElementsByClassName('filter');
     let index = Array.from({length: this.filterList.length}, () => false);
     image.filters.forEach(filter => {
+      console.log(filter);
       if(this.filterList.indexOf(filter.type) >= 15) {
         index[this.filterList.indexOf(filter.type)] = filter;
       }
@@ -849,7 +862,10 @@ class ImageEditor extends Component {
   }
 
   exportCanvas = () => {
-    let data = JSON.stringify(this._canvas.toJSON());
+    let c = this._canvas.toJSON();
+    c.width = this._canvas.width;
+    c.height = this._canvas.height;
+    let data = JSON.stringify(c);
     let file = new Blob([data], {type : 'octet/stream'});
     var a = document.createElement("a");
     a.href = URL.createObjectURL(file);
@@ -889,9 +905,15 @@ class ImageEditor extends Component {
 
         this.currentState = this._canvas.toDatalessJSON();
         this.currentState.action = "initilize";
+        this.currentState.width = json.width ? json.width : 800;
+        this.currentState.height = json.height ? json.height : 600;
         this.currentState.id = 0;
         this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
-  
+
+        this._canvas.setWidth( json.width ? json.width : 800 );
+        this._canvas.setHeight( json.height ? json.height : 600 );
+        this._canvas.calcOffset();
+
         this._canvas.renderAll()
         this.forceUpdate(); // for undo/redo stack
       })
@@ -1470,18 +1492,28 @@ class ImageEditor extends Component {
     }
   }
 
+  cropObjMouseDown = (event) => {
+    if(event.target == null || !(event.target === this.cropImg || event.target.type === "Cropzone")){
+      this._canvas.off('mouse:down', this.cropObjMouseDown);
+      this.action['Crop'].cropObjend(this.cropImg, null);
+      this.cropImg = null;
+    }
+  }
+
   cropObject = (event) => {
     let cropOption = event.target.getAttribute('crop');
     let activeObject = this.getActiveObject();
     if(activeObject && activeObject.type === 'image'){
       this.cropImg = activeObject;
       this.action['Crop'].cropObj(activeObject, cropOption);
+      this._canvas.on('mouse:down', this.cropObjMouseDown);
     }
   }
 
   cropEndObject = (event) => {
     let cropOption = event.target.getAttribute('crop');
     if(this.cropImg){
+      this._canvas.off('mouse:down', this.cropObjMouseDown);
       this.action['Crop'].cropObjend(this.cropImg, cropOption);
       this.cropImg = null;
     }
