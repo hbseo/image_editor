@@ -447,13 +447,24 @@ class ImageEditor extends Component {
     this._canvas.on('object:scaling', (event) => {
       // console.log('object:scaling');
       if(this.state.displayCropCanvasSize) {
-        console.log(event);
         let obj = event.target;
         obj.setCoords();
-        if(event.pointer.y < 0) {
-          console.log('dd');
+        if(event.pointer.y < 0 || event.pointer.x < 0 ||
+           event.pointer.y > event.target.canvas.height ||
+           event.pointer.x > event.target.canvas.width) {
+          obj.top = this.cropCanvasState.top;
+          obj.left = this.cropCanvasState.left;
+          obj.scaleX = this.cropCanvasState.scaleX;
+          obj.scaleY = this.cropCanvasState.scaleY;
         }
-        
+        else {
+          this.cropCanvasState = {
+            top: obj.top,
+            left: obj.left,
+            scaleX: obj.scaleX,
+            scaleY: obj.scaleY,
+          }
+        }
         let change_state = {width: obj.width*obj.scaleX, height: obj.height*obj.scaleY};
         this.setState({cropCanvasSize: change_state});
       }
@@ -1359,10 +1370,33 @@ class ImageEditor extends Component {
   }
 
   handleCropCanvasSizeChange = (event) => {
+    let obj = this.getActiveObject();
     let change_state = {
       width : this.state.cropCanvasSize.width,
       height : this.state.cropCanvasSize.height
     };
+    if(event.target.name === 'width') {
+      if(obj.left - event.target.value/2 < 0 || obj.left + event.target.value/2 > this._canvas.width) {
+        if(obj.left < this._canvas.width - obj.left) {
+          obj.left = event.target.value/2;
+        }
+        else {
+          obj.left = this._canvas.width - event.target.value/2;
+        }
+        change_state.width = Math.min(obj.left*2, (this._canvas.width-obj.left)*2);
+      }
+    }
+    else {
+      if(obj.top - event.target.value/2 < 0 || obj.top + event.target.value/2 > this._canvas.height) {
+        if(obj.top < this._canvas.height - obj.top) {
+          obj.top = event.target.value/2;
+        }
+        else {
+          obj.top = this._canvas.height - event.target.value/2;
+        }
+        change_state.height = Math.min(obj.top*2, (this._canvas.height-obj.top)*2);
+      }
+    }
     change_state[event.target.name] = event.target.value;
     new Promise((resolve) => {
       this.setState({cropCanvasSize : change_state});
