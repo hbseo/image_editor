@@ -118,9 +118,8 @@ class Draw extends Action {
       evented : false,
     })
     this.circle_group.push(cir);
-    console.log('cir');
     canvas.add(cir);    
-  },100);
+  }, 70);
 
 
   dragPolygonEnd = () => {
