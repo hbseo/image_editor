@@ -20,11 +20,8 @@ class ImageEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      angle: 0,   //active object's angle
-
       fontsize: 50, //active object's fontSize
-      stroke : 0,
-      strokeWidth : 0,
+      canvasView : { x: 0, y: 0},
       layers: [],
       displayColorPicker: false,
       displayCropCanvasSize: false,
@@ -330,9 +327,12 @@ class ImageEditor extends Component {
         let vpt = this._canvas.viewportTransform;
         vpt[4] += e.clientX - this.lastPosX;
         vpt[5] += e.clientY - this.lastPosY;
+        this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
         this._canvas.renderAll();
         this.lastPosX = e.clientX;
         this.lastPosY = e.clientY;
+
+        
       }
 
       if(this.state.pipette){
@@ -345,7 +345,7 @@ class ImageEditor extends Component {
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
       let type = this._canvas.getActiveObject().type;
-      this.setState({activeObject : this.getActiveObject(), angle : this.getActiveObject().angle});
+      this.setState({activeObject : this.getActiveObject() });
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
@@ -356,21 +356,17 @@ class ImageEditor extends Component {
 				case 'activeSelection': //group using drag
 					this.switchTools('filter', 'text', true);
 					this.setState({
-						angle: 0
+            activeObject : this.getActiveObject()
 					});
           break;
         case 'group': //group using drag
 				  this.switchTools('filter', 'text', true);
 				  this.setState({
-				  	angle: 0
+            activeObject : this.getActiveObject()
 				  });
 				  break;
 				default:
           this.switchTools('filter', 'text', true);
-          this.setState({
-            stroke : this.getActiveObject().stroke,
-						strokeWidth : this.getActiveObject().stroke ? this.getActiveObject().strokeWidth : 0,
-					});
 			}
       
 
@@ -379,7 +375,7 @@ class ImageEditor extends Component {
 
 		this._canvas.on('selection:updated', (event) => {
       let type = this._canvas.getActiveObject().type;
-      this.setState({activeObject : this.getActiveObject(), angle : this.getActiveObject().angle});
+      this.setState({ activeObject : this.getActiveObject() });
 			switch(type) {
 				case 'image':
 					this._imageSelection(this._canvas.getActiveObject());
@@ -390,26 +386,22 @@ class ImageEditor extends Component {
 				case 'activeSelection': //group using drag
 					this.switchTools('filter', 'text', true);
 					this.setState({
-            angle: 0
+            activeObject : this.getActiveObject()
 					});
           break;
         case 'group': //group using drag
 				  this.switchTools('filter', 'text', true);
 				  this.setState({
-				  	angle: 0
+				  	activeObject : this.getActiveObject()
 				  });
 				  break;
 				default:
           this.switchTools('filter', 'text', true);
-          this.setState({
-            stroke : this.getActiveObject().stroke,
-            strokeWidth : this.getActiveObject().stroke ? this.getActiveObject().strokeWidth : 0,
-					});
 			}
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
-      this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0}, angle : 0});
+      this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0} });
 			if(!this._canvas.backgroundImage){
         this.switchTools('filter', 'text', true);
 			}
@@ -435,9 +427,8 @@ class ImageEditor extends Component {
     })
 
     this._canvas.on('object:rotated', (event) => {
-      this.setState({ angle: event.target.angle })
+      this.setState({ activeObject : this.getActiveObject() })
     });
-    this._canvas.on("object:moving", this.snapObjectMovingEvent);
     // this._canvas.on('object:removed', (event) => {
     //   console.log('object:removed');
     // })
@@ -622,9 +613,7 @@ class ImageEditor extends Component {
 			list[i].checked = index[i];
     }
 		this.setState({
-			angle: image.angle,
-      stroke : image.stroke,
-      strokeWidth : image.stroke ? image.strokeWidth : 0,
+			activeObject : this.getActiveObject(),
       filters : {
         brightness: index[15] ? index[15].brightness : 0,
         contrast : index[16] ? index[16].contrast : 0,
@@ -747,6 +736,15 @@ class ImageEditor extends Component {
     }
     else{
       this._canvas.off("object:moving", this.snapMovingEvent);
+    }
+  }
+
+  onClickObjectSnap = (event) => {
+    if(event.target.checked){
+      this._canvas.on("object:moving", this.snapObjectMovingEvent);
+    }
+    else{
+      this._canvas.off("object:moving", this.snapObjectMovingEvent);
     }
   }
 
@@ -1221,23 +1219,17 @@ class ImageEditor extends Component {
 
   handleAngleChange = (event) => {
     if (this.getActiveObject()) {
-      let change_state = {};
-      change_state[event.target.name] = event.target.value;
-      new Promise((resolve) => {
-        this.setState(change_state);
-        resolve();
-      })
-        .then(() => {
-          this.action['Rotation'].setAngle(this.state.angle);
-          this.saveState('angle change');
-        })
+      this.action['Rotation'].setAngle(event.target.value);
+      this.setState({ activeObject : this.getActiveObject() });
+      this.saveState('angle change');
+      this._canvas.renderAll();
     }
-    else {
-      if(this._backgroundImage){
-        this._canvas.backgroundImage.angle = event.target.value;
-        this._canvas.renderAll();
-      }
-    }
+    // else {
+    //   if(this._backgroundImage){
+    //     this._canvas.backgroundImage.angle = event.target.value;
+    //     this._canvas.renderAll();
+    //   }
+    // }
   }
 
   handleScaleXChange = (event) => {
@@ -1347,8 +1339,6 @@ class ImageEditor extends Component {
   
   
   handleStrokeWidthChange = (event) => {
-    this.setState({strokeWidth : event.target.value})
-    console.log(event.target.value);
     if(this.getActiveObject()){
       let options = {
         strokeColor : '#ffffff',
@@ -1357,6 +1347,7 @@ class ImageEditor extends Component {
       this.action['Shape'].setStroke(this.getActiveObject(), options);
       this.saveState('stroke change');
     }
+    this.setState({ activeObject : this.getActiveObject() })
   }
 
   handleStrokeColorChange = (color) => {
@@ -1447,8 +1438,8 @@ class ImageEditor extends Component {
     var activeObject = this.getActiveObject();
 
     if (activeObject) {
-      this.setState({ angle: (activeObject.angle + Number(changeAngle)) % 360 })
       this.action['Rotation'].setAngle(activeObject.angle + Number(changeAngle));
+      this.setState({ activeObject : activeObject })
       this.saveState('Object is rotated');
     }
     else {
@@ -1654,6 +1645,19 @@ class ImageEditor extends Component {
     console.log(this._canvas);
   }
 
+  getMousePointInfo = (event) => {
+    if(event.target.checked){
+      this._canvas.on('mouse:down', this.showPointer);
+    }
+    else{
+      this._canvas.off('mouse:down', this.showPointer);
+    }
+  }
+
+  showPointer = (event) => {
+    console.log(this._canvas.getPointer(event, false));
+  }
+
   getCanvasEventInfo = () => {
     for (const key in this._canvas.__eventListeners){
       console.log(key);
@@ -1844,13 +1848,16 @@ class ImageEditor extends Component {
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
             <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
+            <input type="checkbox" onClick = {this.getMousePointInfo} /> 캔버스 좌표 보기
             <p>캔버스 확대 값 = {this.state.zoom}</p>
+            <p>캔버스 크기  {this._canvas? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</p>
+            <p> 좌측 상단 좌표 = x : {-this.state.canvasView.x}  y : {-this.state.canvasView.y}</p>
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
             <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
             <p>선택 개체 대조 값 = {this.state.filters.contrast}</p>
             <p>선택 개체 픽셀 값 = {this.state.filters.pixelate}</p>
             <p>선택 개체 블러 값 = {this.state.filters.blur}</p>
-            <p>선택 개체 각도 값 = {this.state.angle}</p>
+            <p>선택 개체 각도 값 = { this.state.activeObject.type !== 'not active' ? this.state.activeObject.angle : 'none'}</p>
             <p>선택 개체 가로 크기 = {this.state.activeObject.scaleX * this.state.activeObject.width}</p>
             <p>선택 개체 세로 크기 = {this.state.activeObject.scaleY * this.state.activeObject.height}</p>
             <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
@@ -1887,7 +1894,7 @@ class ImageEditor extends Component {
               min='-360'
               max='360'
               step='1'
-              value={this.state.angle}
+              value={this.state.activeObject.type !== 'not active' ? this.state.activeObject.angle : 0}
               onChange={this.handleAngleChange}
             />
             <p>확대 및 축소</p>
@@ -2083,7 +2090,7 @@ class ImageEditor extends Component {
                 ? <div> 
                     <button onClick={this.closeDrawing}>Cancel Drawing</button>
                     <br/>
-                    <label>Width</label><input type='range' className='drawing' id='width' min='0' max='150' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth.bind(this)}/>
+                    <label>Width</label><input type='range' className='drawing' id='width' min='0' max='30' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth.bind(this)}/>
                     <br/>
                     <label>Line Color</label><SketchPicker color={ this.state.lineColorRgb } onChange={ this.handleDrawingColor } />
                   </div>
@@ -2126,8 +2133,9 @@ class ImageEditor extends Component {
             <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
             <button onClick={this.undo}>Undo</button>
             <button onClick={this.redo}>Redo</button>
-            <input type="checkbox" onClick={this.onClickSnap}/>스냅 옵션
-            <input type="checkbox" onClick={this.onClickGrid}/>그리드 옵션
+            <input type="checkbox" onClick={this.onClickSnap}/>그리드 스냅 옵션
+            <input type="checkbox" onClick={this.onClickGrid}/>그리드 on/off
+            <input type="checkbox" onClick={this.onClickObjectSnap}/> 오브젝트 스냅 옵션
           </div>
 
           <hr />
@@ -2221,7 +2229,8 @@ class ImageEditor extends Component {
               min='0'
               max='100'
               step='1'
-              value={this.state.strokeWidth}
+              value={ this.state.activeObject.strokeWidth ? this.state.activeObject.strokeWidth : 0}
+              disabled = { (this.state.activeObject.type === 'group' || this.state.activeObject.type === 'activeSelection' || this.state.activeObject.type === 'not active') ? true : false }
               onChange={this.handleStrokeWidthChange}
             />
           </div>
