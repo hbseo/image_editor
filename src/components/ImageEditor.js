@@ -71,7 +71,6 @@ class ImageEditor extends Component {
           b: '0',
           a: '1',
       },
-      lockScale : false,
     }
     
 
@@ -86,8 +85,8 @@ class ImageEditor extends Component {
     this.testUrl = 'https://source.unsplash.com/random/500x400';
     this.action = {};
 
-    // this.isDragging = false;
-    // this.selection = true;
+    this.isDragging = false;
+    this.selection = true;
     
     this.cropImg = null;
     this.cropCanvasState = {
@@ -127,6 +126,7 @@ class ImageEditor extends Component {
     this.lastPosX = 0;
     this.lastPosY = 0;
 
+    this.lockScale = false;
     // font
     this.fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
     'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
@@ -183,7 +183,7 @@ class ImageEditor extends Component {
       this._createCanvasEvent();
       this.currentState = this._canvas.toDatalessJSON();
       this.currentState.width = this._canvas.width;
-        this.currentState.height = this._canvas.height;
+      this.currentState.height = this._canvas.height;
       this.currentState.action = "initilize";
       this.currentState.id = 0;
       this._makeGrid();
@@ -195,6 +195,7 @@ class ImageEditor extends Component {
     this._deleteCanvasEvent();
     this._deleteDomevent();  
     this.lock = false;
+    this.lockScale = false;
     this.currentState = null;
     this.stateStack.length = 0;
     this.redoStack.length = 0;
@@ -306,20 +307,21 @@ class ImageEditor extends Component {
 
     this._canvas.on('mouse:wheel', (event) => {
       //zoom
-      var delta = event.e.deltaY; 
-      var zoom = this._canvas.getZoom (); 
-      zoom *= 0.999 ** delta; 
-      if (zoom> 20) zoom = 20 ; 
-      if (zoom <0.01) zoom = 0.01; 
-      this._canvas.setZoom (zoom); 
-      this.setState({zoom : zoom});
-      event.e.preventDefault (); 
-      event.e.stopPropagation (); 
+      if(event.e.altKey){
+        var delta = event.e.deltaY; 
+        var zoom = this._canvas.getZoom (); 
+        zoom *= 0.999 ** delta; 
+        if (zoom> 20) zoom = 20 ; 
+        if (zoom <0.01) zoom = 0.01; 
+        this._canvas.setZoom (zoom); 
+        this.setState({zoom : zoom});
+        event.e.preventDefault (); 
+        event.e.stopPropagation (); 
+      }
     })
         
 
     this._canvas.on('mouse:move', (event) => {
-      const pointer = this._canvas.getPointer(event, false);
 
       //move
       if (this.isDragging) {
@@ -331,11 +333,10 @@ class ImageEditor extends Component {
         this._canvas.renderAll();
         this.lastPosX = e.clientX;
         this.lastPosY = e.clientY;
-
-        
       }
 
       if(this.state.pipette){
+        const pointer = this._canvas.getPointer(event, false);
           let context = document.getElementById('canvas').getContext('2d');
           let data = context.getImageData(pointer.x, pointer.y, 1, 1).data; 
           this.setState({...this.state.pipette, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}});
@@ -355,15 +356,9 @@ class ImageEditor extends Component {
 					break;
 				case 'activeSelection': //group using drag
 					this.switchTools('filter', 'text', true);
-					this.setState({
-            activeObject : this.getActiveObject()
-					});
           break;
         case 'group': //group using drag
 				  this.switchTools('filter', 'text', true);
-				  this.setState({
-            activeObject : this.getActiveObject()
-				  });
 				  break;
 				default:
           this.switchTools('filter', 'text', true);
@@ -385,15 +380,9 @@ class ImageEditor extends Component {
 					break;
 				case 'activeSelection': //group using drag
 					this.switchTools('filter', 'text', true);
-					this.setState({
-            activeObject : this.getActiveObject()
-					});
           break;
         case 'group': //group using drag
 				  this.switchTools('filter', 'text', true);
-				  this.setState({
-				  	activeObject : this.getActiveObject()
-				  });
 				  break;
 				default:
           this.switchTools('filter', 'text', true);
@@ -497,6 +486,7 @@ class ImageEditor extends Component {
     document.removeEventListener('keydown',this._onKeydownEvent)
     document.removeEventListener('mousedown',this._onMouseDownEvent)
     document.removeEventListener('keyup',this._onShiftKeyUpEvent)
+    document.removeEventListener('mouseup',this._onMouseUpEvent)
   }
 
   _makeGrid = () => {
@@ -527,7 +517,7 @@ class ImageEditor extends Component {
 
   resetCanvas = () => {
     this._canvas.setZoom (1); 
-    this.setState({zoom : 1});
+    this.setState({zoom : 1, canvasView : { x: 0, y: 0} });
     let vpt = this._canvas.viewportTransform;
     vpt[4] = 0;
     vpt[5] = 0;
@@ -613,7 +603,7 @@ class ImageEditor extends Component {
 			list[i].checked = index[i];
     }
 		this.setState({
-			activeObject : this.getActiveObject(),
+			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
       filters : {
         brightness: index[15] ? index[15].brightness : 0,
         contrast : index[16] ? index[16].contrast : 0,
@@ -651,10 +641,8 @@ class ImageEditor extends Component {
     };
     textBgColor = { color : toggle[1] ? text.textBackgroundColor : '#FFFFFF'};
 		this.setState({
+      activeObject : this.getActiveObject(),
 			fontsize : text.fontSize,
-      angle : text.angle,
-      stroke : text.stroke,
-      strokeWidth : text.stroke ? text.strokeWidth : 0,
       displayshadow : toggle[0],
       displayTextbgColorPicker : toggle[1],
       shadow : shadow,
@@ -697,6 +685,10 @@ class ImageEditor extends Component {
     map[action.getName()] = action;
   }
 
+  /**
+   * Get ActiveObject instance
+   * @returns {fabric.Canvas._activeObject}
+   */
   getActiveObject = () => {
     return this._canvas._activeObject;
   }
@@ -854,24 +846,20 @@ class ImageEditor extends Component {
           scaleY : option.scaleY,
           strokeWidth : 0
         });
-        // img.scaleToWidth(300);
         resolve(img);
       }, { crossOrigin: 'anonymous' }
       );
     });
   }
 
-  saveImage = (el) => {
-    this._canvas.backgroundColor = null;
+  saveImage = () => {
     let dataURL = this._canvas.toDataURL({
       format: 'png'
     });
-    el.href = dataURL;
     var a = document.createElement("a");
     a.href = dataURL;
     a.setAttribute("download", 'image.png');
     a.click();
-    this._canvas.backgroundColor = '#d8d8d8';
   }
 
   exportCanvas = () => {
@@ -910,6 +898,8 @@ class ImageEditor extends Component {
     
         this.grid = null;
         this.gridOn = false;
+
+        this.lockScale = false;
 
         this.currentState = this._canvas.toDatalessJSON();
         this.currentState.action = "initilize";
@@ -1213,7 +1203,8 @@ class ImageEditor extends Component {
         scaleX : Math.max(obj.scaleX, obj.scaleY)
       })
     }
-    this.setState({lockScale : event.target.checked, activeObject : this.getActiveObject()})
+    this.lockScale = !this.lockScale;
+    this.setState({ activeObject : this.getActiveObject()})
     this._canvas.renderAll();
   }
 
@@ -1235,7 +1226,7 @@ class ImageEditor extends Component {
   handleScaleXChange = (event) => {
     if(this.getActiveObject()){
       this.getActiveObject().scaleX = event.target.value / 100 ;
-      if(this.state.lockScale){
+      if(this.lockScale){
         this.getActiveObject().scaleY = event.target.value / 100 ;
       }
       this.setState({activeObject : this.getActiveObject()});
@@ -1246,7 +1237,7 @@ class ImageEditor extends Component {
   handleScaleYChange = (event) => {
     if(this.getActiveObject()){
       this.getActiveObject().scaleY = event.target.value / 100;
-      if(this.state.lockScale){
+      if(this.lockScale){
         this.getActiveObject().scaleX = event.target.value / 100 ;
       }
       this.setState({activeObject : this.getActiveObject()});
@@ -1333,6 +1324,7 @@ class ImageEditor extends Component {
     if(activeObject) {
       // this.action['Fill'].fill(color.hex);
       this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
+      this.setState({ activeObject : this.getActiveObject() });
       this.saveState('Fill : colorChangeComplete');
     }
   }
@@ -1455,7 +1447,7 @@ class ImageEditor extends Component {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
       this.saveState('apply filter objImg');
     }
-    else {
+    else if(this._canvas.backgroundImage){
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
       this.saveState('apply filter backgroundImg');
     }
@@ -1471,8 +1463,6 @@ class ImageEditor extends Component {
             this.action['Delete'].deleteObj();
             this.saveState('delete Textbox');
           }
-          break;
-        case 'null' :
           break;
         default :
           this.action['Delete'].deleteObj();
@@ -1804,20 +1794,13 @@ class ImageEditor extends Component {
     this.setState({ pipette: false });
   }
 
-  getStateStack = () => {
-    console.log(this.stateStack);
-  }
-
-  getCurrentStack = () => {
-    console.log(this.currentState);
-  }
 
   render() {
 		const styles = {
 			color : {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
-            }
-        };
+      }
+    };
     let i = 0;
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
@@ -1841,8 +1824,6 @@ class ImageEditor extends Component {
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
-            <button onClick={this.getCurrentStack}>currentStack 콘솔 출력</button>
-            <button onClick={this.getStateStack}>stateStack 콘솔 출력</button>
             <button onClick={this.resetCanvas}>캔버스 줌 및 위치 리셋</button>
             <br/>
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
@@ -1940,6 +1921,7 @@ class ImageEditor extends Component {
               width={48}
               className="react-switch"
               id="material-switch"
+              disabled = {this.state.activeObject.type === 'textbox' ? false : true}
               ></Switch>
             </label>
             {this.state.displayTextbgColorPicker ? 
