@@ -398,11 +398,12 @@ class ImageEditor extends Component {
 		});
     
     this._canvas.on('object:added', (event) => {
+      // 만들면서 resize 하기 때문에 이 이벤트로 savestate하면 제대로 save 되지 않아!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       // console.log('object:added', event.target);
-      let type = event.target.type;
-      if(type !== 'Cropzone'){
-        this.saveState(event.target.type +' :added event');
-      }
+      // let type = event.target.type;
+      // if(type !== 'Cropzone'){
+      //   this.saveState(event.target.type +' :added event');
+      // }
     })
     this._canvas.on('object:modified', (event) => {
       // console.log('object:modified');
@@ -590,7 +591,6 @@ class ImageEditor extends Component {
     let list = document.getElementsByClassName('filter');
     let index = Array.from({length: this.filterList.length}, () => false);
     image.filters.forEach(filter => {
-      console.log(filter);
       if(this.filterList.indexOf(filter.type) >= 15) {
         index[this.filterList.indexOf(filter.type)] = filter;
       }
@@ -698,6 +698,10 @@ class ImageEditor extends Component {
    */
   getCanvas = () => {
     return this._canvas;
+  }
+
+  getImageEditor = () => {
+    return this;
   }
 
   snapMovingEvent = (event) => {
@@ -938,6 +942,7 @@ class ImageEditor extends Component {
       this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center", scaleX : 1, scaleY : 1})
       .then((data) => {
         this._canvas.add(data).setActiveObject(data);
+        this.saveState('image add');
         // this.setState({ layers: this.state.layers.concat(data) });
         // console.log(data.getSvgSrc());
       })
@@ -970,6 +975,7 @@ class ImageEditor extends Component {
         tr: false
       });
       this._canvas.add(text).setActiveObject(text);
+      this.saveState('text add');
     }
     document.removeEventListener('mousedown', this.addTextEvent);
     this._canvas.defaultCursor = 'default';
@@ -1052,10 +1058,12 @@ class ImageEditor extends Component {
     if(activeObject.width === 0 || activeObject.height === 0){
       this._canvas.remove(activeObject);
     }
+    else{
+      this.saveState(activeObject.type + ' add');
+    }
 
     this._canvas.selection = true;
     this._canvas.renderAll();
-    this.saveState('shape add');
     if(this.disableObj){
       this.disableObj.lockMovementY = false;
       this.disableObj.lockMovementX = false;

@@ -20,6 +20,10 @@ export default class Action {
     return this.app.getCanvas();
   }
 
+  getImageEditor() {
+    return this.app.getImageEditor();
+  }
+
 
   getName() {
     return this._name;
