@@ -2049,7 +2049,7 @@ class ImageEditor extends Component {
                 ? <div> 
                     <button onClick={this.closeDrawing}>Cancel Drawing</button>
                     <br/>
-                    <label>Width</label><input type='range' className='drawing' id='width' min='0' max='150' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth.bind(this)}/>
+                    <label>Width</label><input type='range' className='drawing' id='width' min='0' max='30' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth.bind(this)}/>
                     <br/>
                     <label>Line Color</label><SketchPicker color={ this.state.lineColorRgb } onChange={ this.handleDrawingColor } />
                   </div>
