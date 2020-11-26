@@ -50,17 +50,43 @@ class Icon extends Action {
 
   _addIcon = (canvas, icon, options, event) => {
     const pointer = canvas.getPointer(event, false);
+
+    const disableObj = this.getActiveObject();
+    if(disableObj){
+      // disableObj.evented = false;
+      disableObj.lockMovementY = true;
+      disableObj.lockMovementX = true;
+    }
+
     icon.set(({
         fill : `rgba(${ options.color.r }, ${ options.color.g }, ${ options.color.b }, ${ options.color.a })`,
         // type : 'icon', // if type is modified, Cannot read property 'fromObject' of undefined
         // left : event.pointer.x, // canvas 이벤트용
         // top : event.pointer.y, // canvas 이벤트용
         left : pointer.x,
-        top : pointer.y
+        top : pointer.y,
+        originX : 'left',
+        originY : 'top'
     }))
-    canvas.add(icon);
-    canvas.setActiveObject(icon);
-    canvas.renderAll();
+    canvas.add(icon).setActiveObject(icon);
+    canvas.selection = false;
+    canvas.on('mouse:move', this._iconCreateResizeEvent);
+
+    canvas.on('mouse:up', (event) => {
+      canvas.off('mouse:move', this._iconCreateResizeEvent);
+      canvas.selection = true;
+
+      this.adjustOriginToCenter(this.getActiveObject());
+
+      if(disableObj){
+        disableObj.lockMovementY = false;
+        disableObj.lockMovementX = false;
+      }
+
+      canvas.off('mouse:up');
+
+      
+    })
   }
 
 
@@ -75,6 +101,41 @@ class Icon extends Action {
 
   _createIcon = (path) => {
       return new fabric.Path(path);
+  }
+
+  _iconCreateResizeEvent = (event) => {
+    const canvas = this.getCanvas();
+    const pointer = canvas.getPointer(event, false);
+    let activeObject = this.getActiveObject();
+    let width = Math.abs(pointer.x - activeObject.left);
+    let height = Math.abs(pointer.y - activeObject.top);
+
+    activeObject.set({
+      scaleX : width / activeObject.width,
+      scaleY : height / activeObject.height,
+      originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
+      originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
+    })
+    canvas.renderAll();
+  } 
+
+  // clone from tui.image.editor
+  adjustOriginToCenter = (shape) => {
+    const centerPoint = shape.getPointByOrigin('center', 'center');
+    const {originX, originY} = shape;
+    const origin = shape.getPointByOrigin(originX, originY);
+    const left = shape.left + (centerPoint.x - origin.x);
+    const top = shape.top + (centerPoint.y - origin.y);
+
+    shape.set({
+        hasControls: true,
+        hasBorders: true,
+        originX: 'center',
+        originY: 'center',
+        left,
+        top
+    });
+    shape.setCoords(); // For left, top properties
   }
 
 

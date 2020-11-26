@@ -12,7 +12,8 @@ import Text from './Text';
 import Fill from './Fill';
 import Icon from './Icon';
 import Shape from './Shape';
-
+import Draw from './Draw';
+import Resize from './Resize';
 // import FilterMenu from './FilterMenu';
 
 class ImageEditor extends Component {
@@ -48,7 +49,7 @@ class ImageEditor extends Component {
       text : {
         color : '#FFFFFF'
       },
-      colorHex : '#FFFFFF',
+      colorHex : '#000000',
       filters : {
         brightness: 0,
         contrast : 0,
@@ -68,9 +69,9 @@ class ImageEditor extends Component {
       },
       pipette: false,
       pipetteRGB:{
-          r: '255',
-          g: '255',
-          b: '255',
+          r: '0',
+          g: '0',
+          b: '0',
           a: '1',
       },
       lockScale : false,
@@ -117,9 +118,18 @@ class ImageEditor extends Component {
     //add function
     this.startPoint = { x : 0, y : 0 };
     this.shapeType = '';
+    this.disableObj = null;
 
+    //grid
     this.grid = null;
     this.gridOn = false;
+
+    //keyEvent
+    this.shift = false;
+
+    this.lastPosX = 0;
+    this.lastPosY = 0;
+
     // font
     this.fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
     'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
@@ -143,7 +153,9 @@ class ImageEditor extends Component {
           width: this._canvasSize.width,
           backgroundColor: '#d8d8d8',
           backgroundImage : this._backgroundImage,
-          uniformScaling: false // When true, objects can be transformed by one side
+          uniformScaling: false, // When true, objects can be transformed by one side
+          imageSmoothingEnabled : false,
+          fireRightClick: true,
         });
       })
       .then(() => {
@@ -165,7 +177,9 @@ class ImageEditor extends Component {
         width: this._canvasSize.width,
         backgroundColor: '#d8d8d8',
         backgroundImage : this._backgroundImage,
-        uniformScaling: false
+        uniformScaling: false,
+        imageSmoothingEnabled : false,
+        fireRightClick: true,
       });
       this.switchTools('filter', 'text', true);
       this._createDomEvent();
@@ -212,8 +226,18 @@ class ImageEditor extends Component {
       }
     }
   }
+
+  _onShiftKeydownEvent = (event) => {
+    const {keyCode} = event;
+    if(keyCode === 16){ this.shift = true; }
+  }
+
+  _onShiftKeyUpEvent = (event) => {
+    const {keyCode} = event;
+    if(keyCode === 16) { this.shift = false;}
+  }
   
-  _onMousdDownEvent = (event) => {
+  _onMouseDownEvent = (event) => {
     if(event.target.tagName === 'CANVAS'){
       document.addEventListener('keydown',this._onKeydownEvent);
     }
@@ -234,8 +258,9 @@ class ImageEditor extends Component {
 
 	_createDomEvent = () => {
     // document.getElementById('canvas').addEventListener('keydown',this._onKeydownEvent)
-    document.addEventListener('mousedown',this._onMousdDownEvent);
     document.addEventListener('mouseup',this._onMouseUpEvent);
+    document.addEventListener('mousedown',this._onMouseDownEvent)
+    document.addEventListener('keyup',this._onShiftKeyUpEvent)
 	}
 
   // 캔버스 이벤트 설정
@@ -258,13 +283,15 @@ class ImageEditor extends Component {
       if(this.state.pipette){
           this.setState({ pipette: false});
       }
-      // let evt = event.e;
-      // if (evt.altKey === true) {
-      //   this.isDragging = true;
-      //   this.selection = false;
-      //   this.lastPosX = evt.clientX;
-      //   this.lastPosY = evt.clientY;
-      // }
+
+      //zoom
+      if (event.e.altKey === true) {
+        this.isDragging = true;
+        this.selection = false;
+        this.lastPosX = event.e.clientX;
+        this.lastPosY = event.e.clientY;
+        this._canvas.selection = false;
+      }
 
     });
 
@@ -273,31 +300,46 @@ class ImageEditor extends Component {
 
     this._canvas.on('mouse:up', (event) => {
       // console.log('fire', event.target);
-      // this._canvas.setViewportTransform(this._canvas.viewportTransform);
-      // this.isDragging = false;
-      // this.selection = true;
+      //zoom
+      this._canvas.setViewportTransform(this._canvas.viewportTransform);
+      this.isDragging = false;
+      this.selection = true;
+      this._canvas.selection = true;
     });
 
     this._canvas.on('mouse:wheel', (event) => {
-      // var delta = event.e.deltaY; 
-      // var zoom = this._canvas.getZoom (); 
-      // zoom *= 0.999 ** delta; 
-      // if (zoom> 20) zoom = 20 ; 
-      // if (zoom <0.01) zoom = 0.01; 
-      // this._canvas.setZoom (zoom); 
-      // this.setState({zoom : zoom});
-      // event.e.preventDefault (); 
-      // event.e.stopPropagation (); 
+      //zoom
+      var delta = event.e.deltaY; 
+      var zoom = this._canvas.getZoom (); 
+      zoom *= 0.999 ** delta; 
+      if (zoom> 20) zoom = 20 ; 
+      if (zoom <0.01) zoom = 0.01; 
+      this._canvas.setZoom (zoom); 
+      this.setState({zoom : zoom});
+      event.e.preventDefault (); 
+      event.e.stopPropagation (); 
     })
         
 
     this._canvas.on('mouse:move', (event) => {
-        const pointer = this._canvas.getPointer(event, false);
-        if(this.state.pipette){
-            let context = document.getElementById('canvas').getContext('2d');
-            let data = context.getImageData(pointer.x, pointer.y, 1, 1).data; 
-            this.setState({...this.state.pipette, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}});
-        }
+      const pointer = this._canvas.getPointer(event, false);
+
+      //move
+      if (this.isDragging) {
+        let e = event.e;
+        let vpt = this._canvas.viewportTransform;
+        vpt[4] += e.clientX - this.lastPosX;
+        vpt[5] += e.clientY - this.lastPosY;
+        this._canvas.renderAll();
+        this.lastPosX = e.clientX;
+        this.lastPosY = e.clientY;
+      }
+
+      if(this.state.pipette){
+          let context = document.getElementById('canvas').getContext('2d');
+          let data = context.getImageData(pointer.x, pointer.y, 1, 1).data; 
+          this.setState({...this.state.pipette, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}});
+      }
     });
 		
 		this._canvas.on('selection:created', (event) => {
@@ -374,7 +416,7 @@ class ImageEditor extends Component {
 			else{
         this.switchTools('text', true);
 				this._imageSelection(this._canvas.backgroundImage);
-			}
+      };
 		});
     
     this._canvas.on('object:added', (event) => {
@@ -395,6 +437,7 @@ class ImageEditor extends Component {
     this._canvas.on('object:rotated', (event) => {
       this.setState({ angle: event.target.angle })
     });
+    this._canvas.on("object:moving", this.snapObjectMovingEvent);
     // this._canvas.on('object:removed', (event) => {
     //   console.log('object:removed');
     // })
@@ -450,6 +493,8 @@ class ImageEditor extends Component {
 
   _deleteDomevent = () =>{
     document.removeEventListener('keydown',this._onKeydownEvent)
+    document.removeEventListener('mousedown',this._onMouseDownEvent)
+    document.removeEventListener('keyup',this._onShiftKeyUpEvent)
   }
 
   _makeGrid = () => {
@@ -476,6 +521,17 @@ class ImageEditor extends Component {
     //   this._canvas.add(new fabric.Line([ i * 10, 0, i * 10, 1000], { stroke: '#000000', selectable: false, evented: false })); // vertical
     //   this._canvas.add(new fabric.Line([ 0, i * 10, 1000, i * 10], { stroke: '#000000', selectable: false, evented: false })); // horizon
     // }
+  }
+
+  resetCanvas = () => {
+    this._canvas.setZoom (1); 
+    this.setState({zoom : 1});
+    let vpt = this._canvas.viewportTransform;
+    vpt[4] = 0;
+    vpt[5] = 0;
+    this.lastPosX = 0;
+    this.lastPosY = 0;
+    this._canvas.renderAll();
   }
 
   onClickGrid = (event) => {
@@ -620,6 +676,7 @@ class ImageEditor extends Component {
    */
   _createAction = () => {
     this._register(this.action, new Rotation(this));
+    this._register(this.action, new Draw(this));
     this._register(this.action, new Filter(this));
     this._register(this.action, new Delete(this));
     this._register(this.action, new Crop(this));
@@ -640,7 +697,7 @@ class ImageEditor extends Component {
     map[action.getName()] = action;
   }
 
-  getActiveObject() {
+  getActiveObject = () => {
     return this._canvas._activeObject;
   }
 
@@ -648,22 +705,29 @@ class ImageEditor extends Component {
    * Get canvas instance
    * @returns {fabric.Canvas}
    */
-  getCanvas() {
+  getCanvas = () => {
     return this._canvas;
   }
 
   snapMovingEvent = (event) => {
+    let direction = {
+      x : event.e.movementX <= 0 ? 'left' : 'right',
+      y : event.e.movementY <= 0 ? 'top' : 'bottom',
+    }
     let left = Math.round(event.target.left / 10) * 10;
     let top =  Math.round(event.target.top / 10) * 10;
     event.target.set({
       left : left,
       top : top,
     })
-    const pointer = event.target.getPointByOrigin('left', 'top');
+    const pointer = event.target.getPointByOrigin(direction.x, direction.y);
+    // const pointer = event.target.getPointByOrigin('left', 'top');
     event.target.set({
       left : left - pointer.x%10,
       top : top - pointer.y%10
     })
+    event.target.setCoords();
+    this.setState({activeObject : this.getActiveObject()})
   }
 
   onClickSnap = (event) => {
@@ -673,6 +737,64 @@ class ImageEditor extends Component {
     else{
       this._canvas.off("object:moving", this.snapMovingEvent);
     }
+  }
+
+  snapObjectMovingEvent = (event) => {
+    event.target.setCoords();
+    let target_top = Math.min(event.target.aCoords.tl.y, event.target.aCoords.tr.y, event.target.aCoords.br.y, event.target.aCoords.bl.y) ;
+    let target_bottom =  Math.max(event.target.aCoords.tl.y, event.target.aCoords.tr.y, event.target.aCoords.br.y, event.target.aCoords.bl.y);
+    let target_left = Math.min(event.target.aCoords.tl.x, event.target.aCoords.tr.x, event.target.aCoords.br.x, event.target.aCoords.bl.x);
+    let target_right = Math.max(event.target.aCoords.tl.x, event.target.aCoords.tr.x, event.target.aCoords.br.x, event.target.aCoords.bl.x);
+    this._canvas.forEachObject((obj) => {
+      if(obj === event.target) {return;}
+      
+      obj.setCoords();
+      let obj_top = Math.min(obj.aCoords.tl.y, obj.aCoords.tr.y, obj.aCoords.br.y, obj.aCoords.bl.y) ;
+      let obj_bottom = Math.max(obj.aCoords.tl.y, obj.aCoords.tr.y, obj.aCoords.br.y, obj.aCoords.bl.y);
+      let obj_right = Math.max(obj.aCoords.tl.x, obj.aCoords.tr.x, obj.aCoords.br.x, obj.aCoords.bl.x);
+      let obj_left = Math.min(obj.aCoords.tl.x, obj.aCoords.tr.x, obj.aCoords.br.x, obj.aCoords.bl.x);
+
+      //right
+      if(Math.abs(obj_right - target_left) < 10){
+        event.target.set({
+          // left : obj.getPointByOrigin('right', 'bottom').x + (event.target.scaleX * event.target.width / 2) + (event.target.strokeWidth/2)
+          // left : obj_right + (event.target.scaleX * event.target.width / 2) + (event.target.strokeWidth/2) ,
+          // left : obj.getPointByOrigin('left', 'bottom').x + (obj.width * obj.scaleX) + (event.target.scaleX * event.target.width / 2)
+          left : event.target.left + obj_right - target_left
+        })
+        // obj.setCoords();
+        event.target.setCoords();
+      }
+      //left
+      // console.log(obj.aCoords.tl.x - event.target.aCoords.tr.x);
+      if(Math.abs(obj_left - target_right) < 10){
+        event.target.set({
+          // left : event.target.left - obj.left + 1,
+          // left : obj.getPointByOrigin('left', 'bottom').x - (event.target.scaleX * event.target.width / 2) - (event.target.strokeWidth/2)
+          // left : obj_left - (event.target.scaleX * event.target.width / 2) - (event.target.strokeWidth/2), 
+          left : event.target.left + obj_left - target_right
+        })
+        event.target.setCoords();
+      }
+      // top
+      if(Math.abs(obj_top - target_bottom) < 10){
+        event.target.set({
+          // top : obj.getPointByOrigin('right', 'top').y - (event.target.scaleY * event.target.height / 2) - (event.target.strokeWidth/2)
+          // top : obj_top - (event.target.scaleY * event.target.height / 2) - (event.target.strokeWidth/2),
+          top : event.target.top + obj_top - target_bottom
+        })
+        event.target.setCoords();
+      }
+      //bottom
+      if(Math.abs(obj_bottom - target_top) < 10){
+        event.target.set({
+          // top : obj.getPointByOrigin('left', 'bottom').y + (event.target.scaleY * event.target.height / 2) + (event.target.strokeWidth/2)
+          // top : obj_bottom + (event.target.scaleY * event.target.height / 2) + (event.target.strokeWidth/2)
+          top : event.target.top + obj_bottom - target_top
+        })
+        event.target.setCoords();
+      }
+    })
   }
 
   copyObject = () => {
@@ -721,6 +843,7 @@ class ImageEditor extends Component {
           top: pointer.y,
           scaleX : option.scaleX,
           scaleY : option.scaleY,
+          strokeWidth : 0
         });
         // img.scaleToWidth(300);
         resolve(img);
@@ -740,6 +863,55 @@ class ImageEditor extends Component {
     a.setAttribute("download", 'image.png');
     a.click();
     this._canvas.backgroundColor = '#d8d8d8';
+  }
+
+  exportCanvas = () => {
+    let data = JSON.stringify(this._canvas.toJSON());
+    let file = new Blob([data], {type : 'octet/stream'});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(file);
+    a.setAttribute("download", 'canvas.json');
+    a.click();
+  }
+
+  importCanvas = (event) => {
+    let file = event.target.files[0];
+    let json;
+    var reader = new FileReader();
+    reader.onload = (event) => {
+      json = JSON.parse(event.target.result);
+      console.log(json);
+
+      this._canvas.loadFromJSON(json, () => {
+        this.cropImg = null;
+  
+        // redo undo
+        this.lock = false;
+        this.currentState = { action : 'constructor' };
+        this.stateStack = [];
+        this.redoStack = [];
+        this.maxSize = 100;
+        this.state_id = 1;
+        this.undoCanvasSize = [];
+        this.redoCanvasSize = [];
+        this.currentCanvasSize = {width: null, height: null};
+  
+        //add function
+        this.shapeType = '';
+    
+        this.grid = null;
+        this.gridOn = false;
+
+        this.currentState = this._canvas.toDatalessJSON();
+        this.currentState.action = "initilize";
+        this.currentState.id = 0;
+        this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
+  
+        this._canvas.renderAll()
+        this.forceUpdate(); // for undo/redo stack
+      })
+    }
+    reader.readAsText(file);
   }
 
   fileChange = (event) => {
@@ -779,7 +951,8 @@ class ImageEditor extends Component {
         left: pointer.x,
         top: pointer.y,
         fontSize: this.state.fontsize,
-        lockScalingY: true
+        lockScalingY: true,
+        strokeWidth : 0
       });
       text.setControlsVisibility({
         mt: false,
@@ -800,57 +973,56 @@ class ImageEditor extends Component {
 		document.addEventListener('mousedown',this.addTextEvent);    
   }
 
+  _bindShapeEvent = (shape) => {
+    const canvas = this._canvas;
+    shape.on({
+      scaling(event){
+        Resize.resize(canvas, event, this);
+      },
+    })
+  }
+
   addShapeEvent = (event) => {
     let myFigure;
     if(event.target.tagName === 'CANVAS'){
-      const disableObj = this.getActiveObject();
-      if(disableObj){
+      document.removeEventListener('keydown',this._onKeydownEvent);
+
+      this.disableObj = this.getActiveObject();
+      if(this.disableObj){
         // disableObj.evented = false;
-        disableObj.lockMovementY = true;
-        disableObj.lockMovementX = true;
+        this.disableObj.lockMovementY = true;
+        this.disableObj.lockMovementX = true;
       }
       const pointer = this._canvas.getPointer(event, false)
       switch(this.shapeType) {
         case 'triangle':
-          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : false });
+          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false, });
           this._canvas.add(myFigure).setActiveObject(myFigure);
+          this._bindShapeEvent(myFigure);
           break;
         case 'rectangle':
-          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : false});
+          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false,});
+          this._canvas.add(myFigure).setActiveObject(myFigure);
+          this._bindShapeEvent(myFigure);
+          break;
+        case 'ellipse':
+          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : this.shift, strokeWidth : 0 });
           this._canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'circle':
-          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : false });
+          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false,});
           this._canvas.add(myFigure).setActiveObject(myFigure);
-          break;
+          break;        
         default:
       }
+      
       this._canvas.selection = false;
       this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
-      this._canvas.on('mouse:up', (event) => {
-        this._canvas.off('mouse:move', this.shapeCreateResizeEvent);
-
-        let activeObject = this.getActiveObject();
-
-        this.adjustOriginToCenter(activeObject);
-
-        if(activeObject.width === 0 || activeObject.height === 0){
-          this._canvas.remove(activeObject);
-        }
-
-        this._canvas.selection = true;
-        this._canvas.renderAll();
-        if(disableObj){
-          disableObj.lockMovementY = false;
-          disableObj.lockMovementX = false;
-        }
-
-        this._canvas.off('mouse:up');
-        // this._canvas.on('mouse:up', (event) => { console.log("fire", event)});
-      });
+      this._canvas.on('mouse:up', this.shapeEndResizeEvent);
     }
 
     this._canvas.defaultCursor = 'default';
+    document.removeEventListener('keydown',this._onShiftKeydownEvent);
     document.removeEventListener('mousedown',this.addShapeEvent);    
   }
 
@@ -860,10 +1032,36 @@ class ImageEditor extends Component {
     this._canvas.discardActiveObject();
     this.shapeType = event.target.getAttribute('type');
     document.addEventListener('mousedown',this.addShapeEvent);    
+    document.addEventListener('keydown',this._onShiftKeydownEvent);
+  }
+
+  shapeEndResizeEvent = (event) => {
+    this._canvas.off('mouse:move', this.shapeCreateResizeEvent);
+
+    let activeObject = this.getActiveObject();
+
+    this.adjustOriginToCenter(activeObject);
+
+    if(activeObject.width === 0 || activeObject.height === 0){
+      this._canvas.remove(activeObject);
+    }
+
+    this._canvas.selection = true;
+    this._canvas.renderAll();
+    this.saveState('shape add');
+    if(this.disableObj){
+      this.disableObj.lockMovementY = false;
+      this.disableObj.lockMovementX = false;
+      this.disableObj = null;
+    }
+    document.addEventListener('keydown',this._onKeydownEvent);
+    this.shift = false;
+    this._canvas.off('mouse:up', this.shapeEndResizeEvent);
+    // this._canvas.on('mouse:up', (event) => { console.log("fire", event)});
   }
 
   shapeCreateResizeEvent = (event) => {
-    // console.log(event.target)
+    // console.log(keyCode)
     // let activeObject = event.target
     let activeObject = this.getActiveObject();
     // console.log(activeObject, event.target)
@@ -889,6 +1087,13 @@ class ImageEditor extends Component {
         originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
       })
     }
+    else if(activeObject.type === 'circle'){
+      activeObject.set({
+        radius : Math.max(width, height) / 2,
+        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
+        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
+      })
+    }
     else{
       activeObject.set({
         width : width,
@@ -897,11 +1102,11 @@ class ImageEditor extends Component {
         originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
       })
     }
-
-
-
     this._canvas.renderAll();
   }
+
+
+
 
   // clone from tui.image.editor
   adjustOriginToCenter = (shape) => {
@@ -939,11 +1144,11 @@ class ImageEditor extends Component {
 
   addLineEvent = (event) => {
     if(event.target.tagName === 'CANVAS'){
-      const disableObj = this.getActiveObject();
-      if(disableObj){
+      this.disableObj = this.getActiveObject();
+      if(this.disableObj){
         // disableObj.evented = false;
-        disableObj.lockMovementY = true;
-        disableObj.lockMovementX = true;
+        this.disableObj.lockMovementY = true;
+        this.disableObj.lockMovementX = true;
       }
       const pointer = this._canvas.getPointer(event, false);
       let line = new fabric.Line([ pointer.x, pointer.y, pointer.x, pointer.y ], {
@@ -957,27 +1162,38 @@ class ImageEditor extends Component {
 
       this._canvas.selection = false;
       this._canvas.on('mouse:move', this.addLineResize);
-      this._canvas.on('mouse:up', () => {
-        this._canvas.off('mouse:move', this.addLineResize);
-        console.log('off')
-        this._canvas.selection = true;
-        this._canvas.renderAll();
-        this.saveState('line add');
-        if(disableObj){
-          disableObj.lockMovementY = false;
-          disableObj.lockMovementX = false;
-        }
-        this._canvas.off('mouse:up');
-      });
+      this._canvas.on('mouse:up', this.addLineEndEvent);
     }
     this._canvas.defaultCursor = 'default';
     document.removeEventListener('mousedown', this.addLineEvent);
+  }
+
+  addLineEndEvent = () => {
+    this._canvas.off('mouse:move', this.addLineResize);
+    // console.log('off')
+    this._canvas.selection = true;
+    this._canvas.renderAll();
+    this.saveState('line add');
+    if(this.disableObj){
+      this.disableObj.lockMovementY = false;
+      this.disableObj.lockMovementX = false;
+      this.disableObj = null;
+    }
+    this._canvas.off('mouse:up', this.addLineEndEvent);
   }
 
   addLine = () => {
     this._canvas.defaultCursor = 'pointer';
     this._canvas.discardActiveObject();
 		document.addEventListener('mousedown',this.addLineEvent);    
+  }
+
+  makePolygonWithDrag = () => {
+    this.action['Draw'].drawPolygonWithDrag();
+  }
+
+  makePolygonWithClick = () => {
+    this.action['Draw'].drawPolygonWithClick();
   }
 
   lockScaleRatio = (event) => {
@@ -1035,6 +1251,17 @@ class ImageEditor extends Component {
     }
   }
 
+  handleEndAngleChange = (event) => {
+    if(this.getActiveObject()){
+      let shape = this.getActiveObject();
+      shape.set({
+        endAngle : event.target.value * Math.PI / 180,
+      })
+      this.setState({activeObject : this.getActiveObject()});
+      this._canvas.renderAll();
+    }
+  }
+
   handleFilterChange = (event) => {
     const value = event.target.value
     let filterOption = event.target.getAttribute('filter');
@@ -1060,6 +1287,17 @@ class ImageEditor extends Component {
     else {
       alert('image is not activated');
     } 
+  }
+
+  handleOpacityChange = (event) => {
+    let activeObject = this.getActiveObject();
+    if(activeObject || this._backgroundImage){
+      this.action['Filter'].applyFilter(activeObject || this._backgroundImage , 'opacity', true, event.target.value);
+      if(activeObject){
+        this.setState({ activeObject : activeObject})
+      }
+      this._canvas.renderAll();
+    }
   }
 
   handlefontSizeChange = (event) => {
@@ -1225,8 +1463,8 @@ class ImageEditor extends Component {
       this.action['Flip'].flip(activeObject, option);
       this.saveState(activeObject.type + ' flip');
     }
-    else {
-      this.action['Flip'].flip(null, option);
+    else if(this._backgroundImage) {
+      this.action['Flip'].flip(this._backgroundImage, option);
       this.saveState('backgroundImg flip');
     }
   }
@@ -1262,7 +1500,9 @@ class ImageEditor extends Component {
       this.action['Crop'].cropEndCanvas();
       this.saveState('Crop Canvas');
     }
+    // this._canvas.setZoom (1);  , zoom : 1
     this.setState({displayCropCanvasSize: false});
+    // this._canvas.renderAll();
   }
 
   textObject = (event) => {
@@ -1551,17 +1791,21 @@ class ImageEditor extends Component {
 
           <div>
             <h5>개발자 기능</h5>
-            {this.state.pipette
-                ? <button onClick={this.disablePipette}>Disable Pipette</button>
-                : <button onClick={this.enablePipette}>Enable Pipette</button>
-            }
-            <p>{this.state.pipetteRGB.r}|{this.state.pipetteRGB.g}|{this.state.pipetteRGB.b}</p>
-            <br/>
+
+            {this.state.activeObject.type !== 'not active' ?
+            <div>
+              <p> left : {this.state.activeObject.aCoords.tl.x} </p>
+              <p> right : {this.state.activeObject.aCoords.br.x} </p>
+              <p> top : {this.state.activeObject.aCoords.tl.y} </p>
+              <p> bottom : {this.state.activeObject.aCoords.br.y} </p>
+            </div> : <div></div> }
+
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
             <button onClick={this.getCurrentStack}>currentStack 콘솔 출력</button>
             <button onClick={this.getStateStack}>stateStack 콘솔 출력</button>
+            <button onClick={this.resetCanvas}>캔버스 줌 및 위치 리셋</button>
             <br/>
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
@@ -1700,7 +1944,7 @@ class ImageEditor extends Component {
             <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
             <input type='checkbox' className='filter' id='kodachrome' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
             <input type='checkbox' className='filter' id='emboss' onClick={this.filterObject} filter='emboss' />Filter emboss
-
+            
             <input
               type='range'
               className='filter'
@@ -1760,6 +2004,19 @@ class ImageEditor extends Component {
               value={this.state.filters.noise || 0}
               onChange={this.handleFilterChange} filter='noise'
             />noise
+
+            
+            <input
+              type='range'
+              id='opacity'
+              min='0'
+              max='1'
+              name='opacity'
+              step='0.01'
+              value={this.state.activeObject.type === 'image' ? this.state.activeObject.opacity : 1}
+              onChange={this.handleFilterChange} filter='opacity'
+              disabled = {this.state.activeObject.type === 'image' ? false : true}
+            />opacity
           </div>
 
           <hr />
@@ -1769,8 +2026,19 @@ class ImageEditor extends Component {
             
             <button onClick={this.addShape} type="triangle">삼각형</button>
             <button onClick={this.addShape} type="rectangle">직사각형</button>
+            <button onClick={this.addShape} type="ellipse">타원</button>
             <button onClick={this.addShape} type="circle">원</button>
             <button onClick={this.addLine} type="line">직선</button>
+
+            <button onClick={this.makePolygonWithClick} type="line">클릭으로 만들기</button>
+            <button onClick={this.makePolygonWithDrag} type="line">드래그로 만들기</button>
+
+            { this.state.activeObject.type === "circle" ? 
+            <div>
+              {/* <input type="number" name="startAngle"  value = {this.state.activeObject.startAngle} /> */}
+              <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.state.activeObject.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
+            </div> : <div></div>
+            }
           </div>
 
           <hr />
@@ -1819,6 +2087,8 @@ class ImageEditor extends Component {
               </div> : null
             }
             <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
+            <button onClick={this.exportCanvas}> 캔버스 export </button>
+            <button><input type='file' id='_file' onChange={this.importCanvas} accept="json"></input>캔버스 import</button>
             <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
             <button onClick={this.undo}>Undo</button>
             <button onClick={this.redo}>Redo</button>
@@ -1835,6 +2105,22 @@ class ImageEditor extends Component {
           	  <div onClick={this.closeColorPicker}/>
           	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           	</div> : null }
+          </div>
+
+          <hr/>
+
+          <div>
+            <h5>스포이드</h5>
+            {this.state.pipette
+                ? <button onClick={this.disablePipette}>Disable Pipette</button>
+                : <button onClick={this.enablePipette}>Enable Pipette</button>
+            }
+            <p>{this.state.pipetteRGB.r}|{this.state.pipetteRGB.g}|{this.state.pipetteRGB.b}</p>
+          </div>
+
+          <hr />
+
+          <div>
             <h5>그림자</h5>
             <Switch 
               checked={this.state.displayshadow} 

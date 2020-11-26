@@ -6,35 +6,15 @@ class Flip extends Action {
 
     flip = (image, option) => {
         const canvas = this.getCanvas();
-
-        if (image) {
-
-            switch (option) {
-                case 'X':
-                    image.set({ flipX: !image.flipX });
-                    break;
-                case 'Y':
-                    image.set({ flipY: !image.flipY });
-                    break;
-                default:
-            }
+        switch (option) {
+            case 'X':
+                image.set({ flipX: !image.flipX });
+                break;
+            case 'Y':
+                image.set({ flipY: !image.flipY });
+                break;
+            default:
         }
-        else {
-            image = canvas.backgroundImage;
-            switch (option) {
-                case 'X':
-                    image.set({ flipX: !image.flipX });
-                    break;
-                case 'Y':
-                    image.set({ flipY: !image.flipY });
-                    break;
-                default:
-            }
-        }
-
-
-
-
         canvas.renderAll();
     }
 }

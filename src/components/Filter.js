@@ -69,6 +69,9 @@ class Filter extends Action {
           obj.filters[19] = (new fabric.Image.filters.Noise({
             noise : value
           }));
+          break;          
+        case 'opacity':
+          obj.opacity = value;
           break;
 
         default:
