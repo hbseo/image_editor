@@ -12,6 +12,7 @@ import Text from './Text';
 import Fill from './Fill';
 import Icon from './Icon';
 import Shape from './Shape';
+import Draw from './Draw';
 import Resize from './Resize';
 // import FilterMenu from './FilterMenu';
 
@@ -146,6 +147,7 @@ class ImageEditor extends Component {
           backgroundColor: '#d8d8d8',
           backgroundImage : this._backgroundImage,
           imageSmoothingEnabled : false,
+          fireRightClick: true,
         });
       })
       .then(() => {
@@ -167,6 +169,7 @@ class ImageEditor extends Component {
         backgroundColor: '#d8d8d8',
         backgroundImage : this._backgroundImage,
         imageSmoothingEnabled : false,
+        fireRightClick: true,
       });
       this.switchTools('filter', 'text', true);
       this._createDomEvent();
@@ -612,6 +615,7 @@ class ImageEditor extends Component {
    */
   _createAction = () => {
     this._register(this.action, new Rotation(this));
+    this._register(this.action, new Draw(this));
     this._register(this.action, new Filter(this));
     this._register(this.action, new Delete(this));
     this._register(this.action, new Crop(this));
@@ -1124,6 +1128,14 @@ class ImageEditor extends Component {
 		document.addEventListener('mousedown',this.addLineEvent);    
   }
 
+  makePolygonWithDrag = () => {
+    this.action['Draw'].drawPolygonWithDrag();
+  }
+
+  makePolygonWithClick = () => {
+    this.action['Draw'].drawPolygonWithClick();
+  }
+
   lockScaleRatio = (event) => {
     if(this.getActiveObject()){
       let obj = this.getActiveObject();
@@ -1388,8 +1400,8 @@ class ImageEditor extends Component {
       this.action['Flip'].flip(activeObject, option);
       this.saveState(activeObject.type + ' flip');
     }
-    else {
-      this.action['Flip'].flip(null, option);
+    else if(this._backgroundImage) {
+      this.action['Flip'].flip(this._backgroundImage, option);
       this.saveState('backgroundImg flip');
     }
   }
@@ -1934,6 +1946,9 @@ class ImageEditor extends Component {
             <button onClick={this.addShape} type="ellipse">타원</button>
             <button onClick={this.addShape} type="circle">원</button>
             <button onClick={this.addLine} type="line">직선</button>
+
+            <button onClick={this.makePolygonWithClick} type="line">클릭으로 만들기</button>
+            <button onClick={this.makePolygonWithDrag} type="line">드래그로 만들기</button>
 
             { this.state.activeObject.type === "circle" ? 
             <div>
