@@ -64,7 +64,6 @@ class ImageEditor extends Component {
         offsetY: 10,
         color : '#000000'
       },
-      pipette: false,
       pipetteRGB:{
           r: '0',
           g: '0',
@@ -277,11 +276,6 @@ class ImageEditor extends Component {
           this.setState({displayCropCanvasSize: false});
         }
       }
-
-      if(this.state.pipette){
-          this.setState({ pipette: false});
-      }
-
       //zoom
       if (event.e.altKey === true) {
         this.isDragging = true;
@@ -290,7 +284,6 @@ class ImageEditor extends Component {
         this.lastPosY = event.e.clientY;
         this._canvas.selection = false;
       }
-
     });
 
 
@@ -333,13 +326,6 @@ class ImageEditor extends Component {
         this._canvas.renderAll();
         this.lastPosX = e.clientX;
         this.lastPosY = e.clientY;
-      }
-
-      if(this.state.pipette){
-        const pointer = this._canvas.getPointer(event, false);
-          let context = document.getElementById('canvas').getContext('2d');
-          let data = context.getImageData(pointer.x, pointer.y, 1, 1).data; 
-          this.setState({...this.state.pipette, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}});
       }
     });
 		
@@ -1204,7 +1190,7 @@ class ImageEditor extends Component {
       })
     }
     this.lockScale = !this.lockScale;
-    this.setState({ activeObject : this.getActiveObject()})
+    this.setState({ activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0} })
     this._canvas.renderAll();
   }
 
@@ -1708,7 +1694,7 @@ class ImageEditor extends Component {
   }
 
   makeGroup = () => {
-    if(this.getActiveObject().type === 'activeSelection'){
+    if(this.getActiveObject() && this.getActiveObject().type === 'activeSelection'){
       this._canvas.getActiveObject().toGroup();
       this.setState({ activeObject : this._canvas.getActiveObject()});
       this._canvas.renderAll();
@@ -1717,7 +1703,7 @@ class ImageEditor extends Component {
   }
 
   unGroup = () => {
-    if(this.getActiveObject().type === 'group'){
+    if(this.getActiveObject() && this.getActiveObject().type === 'group'){
       this._canvas.getActiveObject().toActiveSelection();
       this.setState({ activeObject : this._canvas.getActiveObject()});
       this._canvas.renderAll();
@@ -1786,14 +1772,19 @@ class ImageEditor extends Component {
     this._canvas.renderAll();
   }
 
+  pipetteEvent = (event) => {
+    if(event.target.tagName === 'CANVAS') { 
+      const pointer = this._canvas.getPointer(event, true);
+      let context = document.getElementById('canvas').getContext('2d');
+      let data = context.getImageData(pointer.x * fabric.devicePixelRatio , pointer.y * fabric.devicePixelRatio, 1, 1).data; 
+      this.setState({pipette : false, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}, color : {r:data[0],g:data[1],b:data[2], a:1}});
+    }
+    document.removeEventListener('mousedown', this.pipetteEvent);
+  }
+
   enablePipette = () => {
-      this.setState({ pipette: true });
+    document.addEventListener('mousedown', this.pipetteEvent);
   }
-
-  disablePipette = () => {
-    this.setState({ pipette: false });
-  }
-
 
   render() {
 		const styles = {
@@ -2135,10 +2126,7 @@ class ImageEditor extends Component {
 
           <div>
             <h5>스포이드</h5>
-            {this.state.pipette
-                ? <button onClick={this.disablePipette}>Disable Pipette</button>
-                : <button onClick={this.enablePipette}>Enable Pipette</button>
-            }
+            <button onClick={this.enablePipette}>Pipette</button>
             <p>{this.state.pipetteRGB.r}|{this.state.pipetteRGB.g}|{this.state.pipetteRGB.b}</p>
           </div>
 
