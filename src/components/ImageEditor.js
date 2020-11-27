@@ -1992,17 +1992,39 @@ class ImageEditor extends Component {
             <button onClick={this.flipObject} flip="Y">Flip y</button>
             
             <br />
-
-            <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />Filter grey
-            <input type='checkbox' className='filter' id='invert' onClick={this.filterObject} filter='invert' />Filter invert
-            <input type='checkbox' className='filter' id='brownie' onClick={this.filterObject} filter='brownie' />Filter brownie
-            <input type='checkbox' className='filter' id='technicolor' onClick={this.filterObject} filter='technicolor' />Filter technicolor
-            <input type='checkbox' className='filter' id='polaroid' onClick={this.filterObject} filter='polaroid' />Filter polaroid
-            <input type='checkbox' className='filter' id='blackwhite' onClick={this.filterObject} filter='blackwhite' />Filter blackwhite
-            <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />Filter vintage
-            <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />Filter sepia
-            <input type='checkbox' className='filter' id='kodachrome' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
-            <input type='checkbox' className='filter' id='emboss' onClick={this.filterObject} filter='emboss' />Filter emboss
+            <div>
+                <label>Filter grey</label>
+                <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />
+            </div>
+            <div>
+                <label>Filter invert</label>
+                <input type='checkbox' className='filter' id='invert' onClick={this.filterObject} filter='invert' />
+            </div>
+            <div>
+                <label>Filter brownie</label>
+                <input type='checkbox' className='filter' id='brownie' onClick={this.filterObject} filter='brownie' />
+            </div>
+                <div><label>Filter technicolor</label>
+                <input type='checkbox' className='filter' id='technicolor' onClick={this.filterObject} filter='technicolor' />
+            </div>
+                <div><label>Filter polaroid</label>
+                <input type='checkbox' className='filter' id='polaroid' onClick={this.filterObject} filter='polaroid' />
+            </div>
+                <div><label>Filter blackwhite</label>
+                <input type='checkbox' className='filter' id='blackwhite' onClick={this.filterObject} filter='blackwhite' />
+            </div>
+                <div><label>Filter vintage</label>
+                <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />
+            </div>
+                <div><label>Filter sepia</label>
+                <input type='checkbox' className='filter' id='sepia' onClick={this.filterObject} filter='sepia' />
+            </div>
+                <div><label>Filter kodachrome</label>
+                <input type='checkbox' className='filter' id='kodachrome' onClick={this.filterObject} filter='kodachrome' />
+            </div>
+                <div><label>Filter emboss</label>
+                <input type='checkbox' className='filter' id='emboss' onClick={this.filterObject} filter='emboss' />
+            </div>
             
             <br />
 
