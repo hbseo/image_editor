@@ -9,7 +9,7 @@
 An image editor based on [Fabric.js](https://github.com/fabricjs/fabric.js).  
 and Some parts of code are from [ToastUI Image Editor](https://github.com/nhn/tui.image-editor) and [glfx.js](https://github.com/evanw/glfx.js)
 
-[![license](https://img.shields.io/github/license/nhn/tui.image-editor.svg)](https://github.com/nhn/tui.image-editor/blob/master/LICENSE) 
+[![license](https://img.shields.io/github/license/nhn/tui.image-editor.svg)](https://github.com/hbseo/image_editor/blob/master/LICENSE) 
 
 ## How to start
 ```

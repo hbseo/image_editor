@@ -361,7 +361,10 @@ class ImageEditor extends Component {
     }
   }
 
-  // 캔버스 이벤트 설정
+  /**
+   * Attach canvas events
+   * @private
+   */
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
       // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
@@ -515,6 +518,10 @@ class ImageEditor extends Component {
     })
   }
 
+  /**
+   * Detach canvas events
+   * @private
+   */
   _deleteCanvasEvent = () =>{
     this._canvas.off('object:added');
     this._canvas.off('object:modified');
@@ -753,10 +760,19 @@ class ImageEditor extends Component {
     return this._canvas;
   }
 
+  /**
+   * Get ImageEditor instance
+   * @returns {ImageEditor}
+   */
   getImageEditor = () => {
     return this;
   }
 
+  /**
+   * "object:moving" canvas event handler
+   * @param {{target: fabric.Object, e: MouseEvent, transform : object}} fEvent - Fabric event
+   * @public
+   */
   snapMovingEvent = (event) => {
     let direction = {
       x : event.e.movementX <= 0 ? 'left' : 'right',
@@ -795,7 +811,12 @@ class ImageEditor extends Component {
       this._canvas.off("object:moving", this.snapObjectMovingEvent);
     }
   }
-
+  
+  /**
+   * "object:moving" canvas event handler
+   * @param {{target: fabric.Object, e: MouseEvent}} fEvent - Fabric event
+   * @public
+   */
   snapObjectMovingEvent = (event) => {
     event.target.setCoords();
     let target_top = Math.min(event.target.aCoords.tl.y, event.target.aCoords.tr.y, event.target.aCoords.br.y, event.target.aCoords.bl.y) ;
