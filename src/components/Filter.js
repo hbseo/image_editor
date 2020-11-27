@@ -70,6 +70,11 @@ class Filter extends Action {
             noise : value
           }));
           break;          
+        case 'saturation':
+          obj.filters[20] = (new fabric.Image.filters.Saturation({
+            saturation : value
+          }));
+          break;
         case 'opacity':
           obj.opacity = value;
           break;

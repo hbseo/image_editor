@@ -53,6 +53,7 @@ class ImageEditor extends Component {
         pixelate : 1,
         blur : 0,
         noise : 0,
+        saturation : 0,
       },
       cropCanvasSize : {
         width : 0,
@@ -1283,6 +1284,7 @@ class ImageEditor extends Component {
         pixelate : this.state.filters.pixelate,
         blur : this.state.filters.blur,
         noise : this.state.filters.noise,
+        saturation : this.state.filters.saturation,
       };
       change_state[event.target.name] = event.target.value;
       new Promise((resolve) => {
@@ -1987,6 +1989,8 @@ class ImageEditor extends Component {
 
             <button onClick={this.flipObject} flip="X">Flip x</button>
             <button onClick={this.flipObject} flip="Y">Flip y</button>
+            
+            <br />
 
             <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />Filter grey
             <input type='checkbox' className='filter' id='invert' onClick={this.filterObject} filter='invert' />Filter invert
@@ -1999,6 +2003,8 @@ class ImageEditor extends Component {
             <input type='checkbox' className='filter' id='kodachrome' onClick={this.filterObject} filter='kodachrome' />Filter kodachrome
             <input type='checkbox' className='filter' id='emboss' onClick={this.filterObject} filter='emboss' />Filter emboss
             
+            <br />
+
             <input
               type='range'
               className='filter'
@@ -2022,6 +2028,18 @@ class ImageEditor extends Component {
               value={this.state.filters.contrast || 0}
               onChange={this.handleFilterChange} filter='contrast'
             />Contrast
+
+            <input
+              type='range'
+              className='filter'
+              id='saturation'
+              min='-1'
+              max='1'
+              name='saturation'
+              step='0.01'
+              value={this.state.filters.saturation || 0}
+              onChange={this.handleFilterChange} filter='saturation'
+            />Saturation
 
             <input
               type='range'
