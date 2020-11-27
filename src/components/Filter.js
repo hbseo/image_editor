@@ -75,6 +75,11 @@ class Filter extends Action {
             saturation : value
           }));
           break;
+        case 'hue':
+          obj.filters[21] = (new fabric.Image.filters.HueRotation({
+            rotation : value
+          }));
+          break;
         case 'opacity':
           obj.opacity = value;
           break;
