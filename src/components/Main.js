@@ -35,7 +35,27 @@ class Main extends Component {
 	}
 	imageFound = () => {
 		document.getElementById("imgRatio").disabled = false;
-		this.setState({submit : true, width:this.image.width, height : this.image.height, imgRatio : 100, imgWidth : this.image.width, imgHeight : this.image.height})
+		var ratio = 1;
+		if(this.image.width > 2048 || this.image.height > 2048) {
+			if(this.image.width > this.image.height){
+				ratio = 2048 / this.image.width 
+				this.image.width = 2048;
+				this.image.height *= ratio
+			}
+			else{
+				ratio = 2048 / this.image.height
+				this.image.height = 2048
+				this.image.width *= ratio
+			}
+		}
+		this.setState({
+			submit : true, 
+			width:this.image.width, 
+			height : this.image.height, 
+			imgRatio : 100,
+			imgWidth : this.image.width, 
+			imgHeight : this.image.height
+		})
 	}
 	
 
@@ -68,6 +88,10 @@ class Main extends Component {
 			let ratio = event.target.value;
 			let width = Math.round(this.state.imgWidth * (event.target.value / 100));
 			let height = Math.round(this.state.imgHeight * (event.target.value / 100));
+
+			if(width > 2048 || height > 2048){
+				return ;
+			}
 			// console.log((event.target.value / 100), width, height);
 			resolve({ratio, width, height})
 		})

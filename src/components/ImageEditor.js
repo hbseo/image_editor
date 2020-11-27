@@ -55,6 +55,7 @@ class ImageEditor extends Component {
         noise : 0,
         saturation : 0,
         hue : 0,
+        ink : 0,
       },
       cropCanvasSize : {
         width : 0,
@@ -110,7 +111,7 @@ class ImageEditor extends Component {
 
     // filterList (len = 20)
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise'];
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink' ];
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -289,6 +290,23 @@ class ImageEditor extends Component {
       let vpt = this._canvas.viewportTransform;
       vpt[4] += e.clientX - this.lastPosX;
       vpt[5] += e.clientY - this.lastPosY;
+      // var zoom = this._canvas.getZoom (); 
+      // if (zoom < 400 / 1000) {
+      //   vpt[4] = 200 - 1000 * zoom / 2;
+      //   vpt[5] = 200 - 1000 * zoom / 2;
+      // } else {
+      //   if (vpt[4] >= 0) {
+      //     vpt[4] = 0;
+      //   } else if (vpt[4] < this._canvas.getWidth() - 1000 * zoom) {
+      //     vpt[4] = this._canvas.getWidth() - 1000 * zoom;
+      //   }
+      //   if (vpt[5] >= 0) {
+      //     vpt[5] = 0;
+      //   } else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
+      //     vpt[5] = this._canvas.getHeight() - 1000 * zoom;
+      //   }
+      // }
+
       this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
       this._canvas.renderAll();
       this.lastPosX = e.clientX;
@@ -319,12 +337,27 @@ class ImageEditor extends Component {
       var zoom = this._canvas.getZoom (); 
       zoom *= 0.999 ** delta; 
       if (zoom> 20) zoom = 20 ; 
-      if (zoom <0.1) zoom = 0.1; 
-      this._canvas.setZoom (zoom); 
+      if (zoom < 0.5) zoom = 0.5; 
+      this._canvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
       let vpt = this._canvas.viewportTransform;
-      this.setState({zoom : zoom , canvasView : { x : vpt[4], y : vpt[5] }});
       event.e.preventDefault (); 
       event.e.stopPropagation (); 
+      // if (zoom < 400 / 1000) {
+      //   vpt[4] = 200 - 1000 * zoom / 2;
+      //   vpt[5] = 200 - 1000 * zoom / 2;
+      // } else {
+      //   if (vpt[4] >= 0) {
+      //     vpt[4] = 0;
+      //   } else if (vpt[4] < this._canvas.getWidth() - 1000  * zoom) {
+      //     vpt[4] = this._canvas.getWidth() - 1000 * zoom;
+      //   }
+      //   if (vpt[5] >= 0) {
+      //     vpt[5] = 0;
+      //   } else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
+      //     vpt[5] = this._canvas.getHeight()  * zoom;
+      //   }
+      // }
+      this.setState({zoom : zoom , canvasView : { x : vpt[4], y : vpt[5] }});
     }
   }
 
@@ -625,7 +658,10 @@ class ImageEditor extends Component {
         contrast : index[16] ? index[16].contrast : 0,
         pixelate : index[17] ? index[17].blocksize : 1,
         blur : index[18] ? index[18].blur : 0,
-        noise : index[19] ? index[19].noise : 0
+        noise : index[19] ? index[19].noise : 0,
+        saturation : index[20] ? index[20].noise : 0,
+        hue : index[21] ? index[21].noise : 0,
+        ink : index[22] ? index[22].ink_matrix.ink : 0
       }
 		});
 	}
@@ -862,8 +898,16 @@ class ImageEditor extends Component {
           originY: option.originY,
           left: pointer.x,
           top: pointer.y,
+          
           scaleX : option.scaleX,
           scaleY : option.scaleY,
+
+          // max size 2048x2048 for Webgl
+          // width : img.width * option.scaleX,
+          // height : img.height * option.scaleY,
+          // scaleX : 1,
+          // scaleY : 1,
+
           strokeWidth : 0
         });
         resolve(img);
@@ -1301,6 +1345,8 @@ class ImageEditor extends Component {
         blur : this.state.filters.blur,
         noise : this.state.filters.noise,
         saturation : this.state.filters.saturation,
+        hue : this.state.filters.hue,
+        ink : this.state.filters.ink,
       };
       change_state[event.target.name] = event.target.value;
       new Promise((resolve) => {
@@ -2076,18 +2122,6 @@ class ImageEditor extends Component {
             <input
               type='range'
               className='filter'
-              id='saturation'
-              min='-1'
-              max='1'
-              name='saturation'
-              step='0.01'
-              value={this.state.filters.saturation || 0}
-              onChange={this.handleFilterChange} filter='saturation'
-            />Saturation
-
-            <input
-              type='range'
-              className='filter'
               id='pixelate'
               min='1'
               max='50'
@@ -2096,18 +2130,6 @@ class ImageEditor extends Component {
               value={this.state.filters.pixelate || 1}
               onChange={this.handleFilterChange} filter='pixelate'
             />pixelate
-
-            <input
-              type='range'
-              className='filter'
-              id='hue'
-              min='-1'
-              max='1'
-              name='hue'
-              step='0.01'
-              value={this.state.filters.hue || 1}
-              onChange={this.handleFilterChange} filter='hue'
-            />Hue
 
             <input
               type='range'
@@ -2132,6 +2154,42 @@ class ImageEditor extends Component {
               value={this.state.filters.noise || 0}
               onChange={this.handleFilterChange} filter='noise'
             />noise
+
+            <input
+              type='range'
+              className='filter'
+              id='saturation'
+              min='-1'
+              max='1'
+              name='saturation'
+              step='0.01'
+              value={this.state.filters.saturation || 0}
+              onChange={this.handleFilterChange} filter='saturation'
+            />Saturation
+
+            <input
+              type='range'
+              className='filter'
+              id='hue'
+              min='-1'
+              max='1'
+              name='hue'
+              step='0.01'
+              value={this.state.filters.hue || 1}
+              onChange={this.handleFilterChange} filter='hue'
+            />Hue
+
+            <input
+              type='range'
+              className='filter'
+              id='ink'
+              min='0'
+              max='1'
+              name='ink'
+              step='0.01'
+              value={this.state.filters.ink || 0}
+              onChange={this.handleFilterChange} filter='ink'
+            />ink from glfx.js
 
             
             <input

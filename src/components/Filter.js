@@ -1,10 +1,11 @@
 import Action from './Action';
-
+import { Ink } from './filters/glfx/ink.js'
 import { fabric } from 'fabric';
 
 class Filter extends Action {
   constructor(App) {
     super('Filter', App);
+    console.log()
   }
 
   applyFilter = (obj, option, checked, value) => {
@@ -78,6 +79,15 @@ class Filter extends Action {
         case 'hue':
           obj.filters[21] = (new fabric.Image.filters.HueRotation({
             rotation : value
+          }));
+          break;
+        case 'ink':
+          obj.filters[22] = (new Ink({
+            ink_matrix : {
+              ink : value * value * value * value * value,
+              width : obj.width,
+              height : obj.height
+            }
           }));
           break;
         case 'opacity':
