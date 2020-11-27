@@ -319,9 +319,10 @@ class ImageEditor extends Component {
       var zoom = this._canvas.getZoom (); 
       zoom *= 0.999 ** delta; 
       if (zoom> 20) zoom = 20 ; 
-      if (zoom <0.01) zoom = 0.01; 
+      if (zoom <0.1) zoom = 0.1; 
       this._canvas.setZoom (zoom); 
-      this.setState({zoom : zoom});
+      let vpt = this._canvas.viewportTransform;
+      this.setState({zoom : zoom , canvasView : { x : vpt[4], y : vpt[5] }});
       event.e.preventDefault (); 
       event.e.stopPropagation (); 
     }
@@ -400,7 +401,6 @@ class ImageEditor extends Component {
 		});
     
     this._canvas.on('object:added', (event) => {
-      // 만들면서 resize 하기 때문에 이 이벤트로 savestate하면 제대로 save 되지 않아!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       // console.log('object:added', event.target);
       // let type = event.target.type;
       // if(type !== 'Cropzone'){
@@ -426,43 +426,58 @@ class ImageEditor extends Component {
     // })
     this._canvas.on('object:scaling', (event) => {
       // console.log('object:scaling');
-      if(this.state.displayCropCanvasSize) {
-        let obj = event.target;
-        obj.setCoords();
-        if(event.pointer.y < 0 || event.pointer.x < 0 ||
-           event.pointer.y > event.target.canvas.height ||
-           event.pointer.x > event.target.canvas.width) {
-          obj.top = this.cropCanvasState.top;
-          obj.left = this.cropCanvasState.left;
-          obj.scaleX = this.cropCanvasState.scaleX;
-          obj.scaleY = this.cropCanvasState.scaleY;
-        }
-        else {
-          this.cropCanvasState = {
-            top: obj.top,
-            left: obj.left,
-            scaleX: obj.scaleX,
-            scaleY: obj.scaleY,
-          }
-        }
-        let change_state = {width: obj.width*obj.scaleX, height: obj.height*obj.scaleY};
-        this.setState({cropCanvasSize: change_state});
-      }
+      // if(this.state.displayCropCanvasSize) {
+      //   let obj = event.target;
+      //   obj.setCoords();
+      //   if(event.pointer.y < 0 || event.pointer.x < 0 ||
+      //      event.pointer.y > event.target.canvas.height ||
+      //      event.pointer.x > event.target.canvas.width) {
+      //     obj.top = this.cropCanvasState.top;
+      //     obj.left = this.cropCanvasState.left;
+      //     obj.scaleX = this.cropCanvasState.scaleX;
+      //     obj.scaleY = this.cropCanvasState.scaleY;
+      //   }
+      //   else {
+      //     this.cropCanvasState = {
+      //       top: obj.top,
+      //       left: obj.left,
+      //       scaleX: obj.scaleX,
+      //       scaleY: obj.scaleY,
+      //     }
+      //   }
+      //   let change_state = {width: obj.width*obj.scaleX, height: obj.height*obj.scaleY};
+      //   this.setState({cropCanvasSize: change_state});
+      // }
     })
     this._canvas.on('object:moving', (event) => {
-      // prevents going out of the canvas while cutting the canvas
       if(this.state.displayCropCanvasSize) {
         let obj = event.target;
         obj.setCoords();
-        if(obj.getBoundingRect().top < 0 || obj.getBoundingRect().left < 0) {
-          obj.top = Math.max(obj.top, obj.top - obj.getBoundingRect().top);
-          obj.left = Math.max(obj.left, obj.left - obj.getBoundingRect().left);
+        // 만약 cropzone이 회전이 불가능 하다면, max, min 하지 않아도 괜찮
+        let obj_top = Math.min(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y) ;
+        let obj_bottom = Math.max(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y);
+        let obj_right = Math.max(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x);
+        let obj_left = Math.min(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x);
+
+        if(obj_top  < 0){ 
+          obj.set({
+            top : (-this.state.canvasView.y / this.state.zoom) + (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2)
+          })}
+        if(obj_left < 0){
+          obj.set({
+            left :  (-this.state.canvasView.x / this.state.zoom) + (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2)
+          })}
+        if(obj_bottom > this._canvas.height ){
+          obj.set({
+            top : ( (-this.state.canvasView.y / this.state.zoom)  + (this._canvas.height / this.state.zoom) - (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2))
+          })
         }
-        if(obj.getBoundingRect().top + obj.getBoundingRect().height > obj.canvas.height ||
-        obj.getBoundingRect().left + obj.getBoundingRect().width > obj.canvas.width) {
-          obj.top = Math.min(obj.top, obj.canvas.height - obj.getBoundingRect().height + obj.top - obj.getBoundingRect().top);
-          obj.left = Math.min(obj.left, obj.canvas.width - obj.getBoundingRect().width + obj.left - obj.getBoundingRect().left)
+        if(obj_right > this._canvas.width ) {
+          obj.set({
+            left: ( (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) - (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2))
+          })
         }
+        obj.setCoords();
       }
     })
   }
@@ -1866,7 +1881,13 @@ class ImageEditor extends Component {
             <input type="checkbox" onClick = {this.getMousePointInfo} /> 캔버스 좌표 보기
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>캔버스 크기  {this._canvas? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</p>
-            <p> 좌측 상단 좌표 = x : {-this.state.canvasView.x}  y : {-this.state.canvasView.y}</p>
+            {this._canvas ? 
+            <div>
+            <p> 좌측 상단 좌표 = x : {(-this.state.canvasView.x / this.state.zoom)}  y : {(-this.state.canvasView.y / this.state.zoom)}</p>
+            <p> 우측 하단 좌표 = x : { (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) }  y : {(-this.state.canvasView.y / this.state.zoom) + (this._canvas.height / this.state.zoom) }</p>
+            </div>
+            : <div></div>}
+            
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
             <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
             <p>선택 개체 대조 값 = {this.state.filters.contrast}</p>
