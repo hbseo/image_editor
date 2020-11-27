@@ -54,6 +54,7 @@ class ImageEditor extends Component {
         blur : 0,
         noise : 0,
         saturation : 0,
+        hue : 0,
       },
       cropCanvasSize : {
         width : 0,
@@ -2052,6 +2053,18 @@ class ImageEditor extends Component {
               value={this.state.filters.pixelate || 1}
               onChange={this.handleFilterChange} filter='pixelate'
             />pixelate
+
+            <input
+              type='range'
+              className='filter'
+              id='hue'
+              min='-1'
+              max='1'
+              name='hue'
+              step='0.01'
+              value={this.state.filters.hue || 1}
+              onChange={this.handleFilterChange} filter='hue'
+            />Hue
 
             <input
               type='range'
