@@ -140,7 +140,12 @@ class Draw extends Action {
     canvas.off('mouse:move', this.drawPolygonMouseMoveEvent);
     // console.log(this.circle_group.length , this.pointer_list.length)
     new Promise((resolve) => { 
-      if(this.circle_group.length < 3) { alert('small nuber of dots'); return; }
+      if(this.circle_group.length < 3) {
+        alert('small nuber of dots'); 
+        this.start = false;
+        return; 
+      }
+
   
       this.pos.x = this.circle_group[0].left;
       this.pos.y = this.circle_group[0].top;
@@ -176,6 +181,7 @@ class Draw extends Action {
       resolve();
     })
     .then(() => {
+      this.getImageEditor().saveState('polygon add');
       canvas.renderAll();
       this.start = false;
       this.lines.length = 0;

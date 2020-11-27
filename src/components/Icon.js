@@ -22,6 +22,8 @@ const iconList = {
 class Icon extends Action {
   constructor(App) {
     super('Icon', App);
+
+    this.disableObj = null;
   }
 
   addIcon = (options) => {
@@ -51,11 +53,11 @@ class Icon extends Action {
   _addIcon = (canvas, icon, options, event) => {
     const pointer = canvas.getPointer(event, false);
 
-    const disableObj = this.getActiveObject();
-    if(disableObj){
+    this.disableObj = this.getActiveObject();
+    if(this.disableObj){
       // disableObj.evented = false;
-      disableObj.lockMovementY = true;
-      disableObj.lockMovementX = true;
+      this.disableObj.lockMovementY = true;
+      this.disableObj.lockMovementX = true;
     }
 
     icon.set(({
@@ -72,21 +74,7 @@ class Icon extends Action {
     canvas.selection = false;
     canvas.on('mouse:move', this._iconCreateResizeEvent);
 
-    canvas.on('mouse:up', (event) => {
-      canvas.off('mouse:move', this._iconCreateResizeEvent);
-      canvas.selection = true;
-
-      this.adjustOriginToCenter(this.getActiveObject());
-
-      if(disableObj){
-        disableObj.lockMovementY = false;
-        disableObj.lockMovementX = false;
-      }
-
-      canvas.off('mouse:up');
-
-      
-    })
+    canvas.on('mouse:up', this._iconCreateEndEvent);
   }
 
 
@@ -97,6 +85,29 @@ class Icon extends Action {
     // })
   }
 
+  _iconCreateEndEvent = (event) => {
+    let canvas = this.getCanvas();
+    canvas.off('mouse:move', this._iconCreateResizeEvent);
+    canvas.selection = true;
+
+    this.adjustOriginToCenter(this.getActiveObject());
+
+    if(this.disableObj){
+      this.disableObj.lockMovementY = false;
+      this.disableObj.lockMovementX = false;
+      this.disableObj = null;
+    }
+
+    let activeObject = this.getActiveObject();
+    if(activeObject.scaleX === 0 || activeObject.scaleY === 0){
+      canvas.remove(activeObject);
+    }
+    else{
+      this.getImageEditor().saveState('icon add');
+    }
+
+    canvas.off('mouse:up', this._iconCreateEndEvent);
+  }
 
 
   _createIcon = (path) => {
@@ -137,9 +148,6 @@ class Icon extends Action {
     });
     shape.setCoords(); // For left, top properties
   }
-
-
-
 }
 
 export default Icon;
