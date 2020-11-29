@@ -462,8 +462,8 @@ class ImageEditor extends Component {
     // })
     this._canvas.on('object:scaling', (event) => {
       // console.log('object:scaling');
-      // if(this.state.displayCropCanvasSize) {
-      //   let obj = event.target;
+      if(this.state.displayCropCanvasSize) {
+        let obj = event.target;
       //   obj.setCoords();
       //   if(event.pointer.y < 0 || event.pointer.x < 0 ||
       //      event.pointer.y > event.target.canvas.height ||
@@ -481,9 +481,9 @@ class ImageEditor extends Component {
       //       scaleY: obj.scaleY,
       //     }
       //   }
-      //   let change_state = {width: obj.width*obj.scaleX, height: obj.height*obj.scaleY};
-      //   this.setState({cropCanvasSize: change_state});
-      // }
+        let change_state = {width: obj.width*obj.scaleX, height: obj.height*obj.scaleY};
+        this.setState({cropCanvasSize: change_state});
+      }
     })
     this._canvas.on('object:moving', (event) => {
       if(this.state.displayCropCanvasSize) {
@@ -647,6 +647,7 @@ class ImageEditor extends Component {
 		this.switchTools('text', true);
     let list = document.getElementsByClassName('filter');
     let index = Array.from({length: this.filterList.length}, () => false);
+    let toggle = image.shadow ? true : false;
     image.filters.forEach(filter => {
       if(this.filterList.indexOf(filter.type) >= 15) {
         index[this.filterList.indexOf(filter.type)] = filter;
@@ -669,7 +670,14 @@ class ImageEditor extends Component {
         saturation : index[20] ? index[20].noise : 0,
         hue : index[21] ? index[21].noise : 0,
         ink : index[22] ? index[22].ink_matrix.ink : 0
-      }
+      },
+      shadow : {
+        blur : toggle ? image.shadow.blur : 30,
+        offsetX : toggle ? image.shadow.offsetX : 10,
+        offsetY : toggle ? image.shadow.offsetY : 10,
+        color : toggle ? image.shadow.color : '#000000'
+      },
+      displayshadow : toggle
 		});
 	}
 
@@ -684,28 +692,24 @@ class ImageEditor extends Component {
     this.switchTools('filter', true);
     // toggle shadow, backgroundColor
     let toggle = [false, false];
-    let shadow = null;
-    let textBgColor = null;
     if(text.shadow) {
       toggle[0] = true;
     }
     if(text.textBackgroundColor) {
       toggle[1] = true;
     }
-    shadow = {
-      blur : toggle[0] ? text.shadow.blur : 30,
-      offsetX : toggle[0] ? text.shadow.offsetX : 10,
-      offsetY : toggle[0] ? text.shadow.offsetY : 10,
-      color : toggle[0] ? text.shadow.color : '#000000'
-    };
-    textBgColor = { color : toggle[1] ? text.textBackgroundColor : '#FFFFFF'};
 		this.setState({
       activeObject : this.getActiveObject(),
 			fontsize : text.fontSize,
       displayshadow : toggle[0],
       displayTextbgColorPicker : toggle[1],
-      shadow : shadow,
-      text : textBgColor
+      shadow : {
+        blur : toggle[0] ? text.shadow.blur : 30,
+        offsetX : toggle[0] ? text.shadow.offsetX : 10,
+        offsetY : toggle[0] ? text.shadow.offsetY : 10,
+        color : toggle[0] ? text.shadow.color : '#000000'
+      },
+      text : { color : toggle[1] ? text.textBackgroundColor : '#FFFFFF'}
 		});
   }
   
