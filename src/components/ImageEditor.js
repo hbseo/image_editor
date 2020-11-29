@@ -1617,6 +1617,9 @@ class ImageEditor extends Component {
   }
 
   cropCanvas = () => {
+    if(this.getActiveObject() && this.getActiveObject().type === 'Cropzone') {
+      return;
+    }
     let change_state = {width: this._canvas.width/2, height: this._canvas.height/2};
     this.setState({
       displayCropCanvasSize: true,
