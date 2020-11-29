@@ -109,7 +109,7 @@ class ImageEditor extends Component {
     this.state_id = 1;
     this.dotoggle = true;
 
-    // filterList (len = 20)
+    // filterList
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
     'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink' ];
 
@@ -603,6 +603,16 @@ class ImageEditor extends Component {
       }
       this.stateStack.push(this.currentState);
       this.currentState = this._canvas.toDatalessJSON();
+      // this.currentState.objects.forEach(object => {
+      //   if(object.type === 'image') {
+      //     let change_filters = Array.from({length: this.filterList.length}, () => false);
+      //     object.filters.forEach(filter => {
+      //       change_filters[this.filterList.indexOf(filter.type)] = filter;
+      //     });
+      //     console.log(change_filters);
+      //     object.filters = change_filters;
+      //   }
+      // });
       this.currentState.width = this._canvas.width;
       this.currentState.height = this._canvas.height;
       this.currentState.action = action;
@@ -634,6 +644,19 @@ class ImageEditor extends Component {
       this._canvas.calcOffset();
       this.lock = false;
     });
+    // this._canvas._objects.forEach(object => {
+    //   if(object.type === 'image') {
+    //     let change_filters = [];
+    //     // let change_filters = Array.from({length: this.filterList.length}, () => false);
+    //     for (let index = 0; index < this.filterList.length; index++) {
+    //       change_filters.push();
+    //     }
+    //     object.filters.forEach(filter => {
+    //       change_filters[this.filterList.indexOf(filter.type)] = filter;
+    //     });
+    //     object.filters = change_filters;
+    //   }
+    // });
     this.forceUpdate(); // for showUndo/Redo Stack
   }
 
@@ -646,30 +669,26 @@ class ImageEditor extends Component {
 		this.switchTools('filter', false);
 		this.switchTools('text', true);
     let list = document.getElementsByClassName('filter');
-    let index = Array.from({length: this.filterList.length}, () => false);
     let toggle = image.shadow ? true : false;
+    let change_filters = Array.from({length: this.filterList.length}, () => false);
     image.filters.forEach(filter => {
-      if(this.filterList.indexOf(filter.type) >= 15) {
-        index[this.filterList.indexOf(filter.type)] = filter;
-      }
-      else {
-        index[this.filterList.indexOf(filter.type)] = true;
-      }
+      change_filters[this.filterList.indexOf(filter.type)] = filter;
     });
+    image.filters = change_filters;
 		for(let i=0; i<list.length; i++){
-			list[i].checked = index[i];
+			list[i].checked = image.filters[i];
     }
 		this.setState({
 			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
       filters : {
-        brightness: index[15] ? index[15].brightness : 0,
-        contrast : index[16] ? index[16].contrast : 0,
-        pixelate : index[17] ? index[17].blocksize : 1,
-        blur : index[18] ? index[18].blur : 0,
-        noise : index[19] ? index[19].noise : 0,
-        saturation : index[20] ? index[20].noise : 0,
-        hue : index[21] ? index[21].noise : 0,
-        ink : index[22] ? index[22].ink_matrix.ink : 0
+        brightness: image.filters[15] ? image.filters[15].brightness : 0,
+        contrast : image.filters[16] ? image.filters[16].contrast : 0,
+        pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
+        blur : image.filters[18] ? image.filters[18].blur : 0,
+        noise : image.filters[19] ? image.filters[19].noise : 0,
+        saturation : image.filters[20] ? image.filters[20].noise : 0,
+        hue : image.filters[21] ? image.filters[21].noise : 0,
+        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0
       },
       shadow : {
         blur : toggle ? image.shadow.blur : 30,
