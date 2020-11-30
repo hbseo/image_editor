@@ -55,6 +55,7 @@ class ImageEditor extends Component {
         noise : 0,
         saturation : 0,
         hue : 0,
+        ink : 0,
       },
       cropCanvasSize : {
         width : 0,
@@ -108,9 +109,9 @@ class ImageEditor extends Component {
     this.state_id = 1;
     this.dotoggle = true;
 
-    // filterList (len = 20)
+    // filterList
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise'];
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink' ];
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -289,6 +290,23 @@ class ImageEditor extends Component {
       let vpt = this._canvas.viewportTransform;
       vpt[4] += e.clientX - this.lastPosX;
       vpt[5] += e.clientY - this.lastPosY;
+      // var zoom = this._canvas.getZoom (); 
+      // if (zoom < 400 / 1000) {
+      //   vpt[4] = 200 - 1000 * zoom / 2;
+      //   vpt[5] = 200 - 1000 * zoom / 2;
+      // } else {
+      //   if (vpt[4] >= 0) {
+      //     vpt[4] = 0;
+      //   } else if (vpt[4] < this._canvas.getWidth() - 1000 * zoom) {
+      //     vpt[4] = this._canvas.getWidth() - 1000 * zoom;
+      //   }
+      //   if (vpt[5] >= 0) {
+      //     vpt[5] = 0;
+      //   } else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
+      //     vpt[5] = this._canvas.getHeight() - 1000 * zoom;
+      //   }
+      // }
+
       this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
       this._canvas.renderAll();
       this.lastPosX = e.clientX;
@@ -319,15 +337,34 @@ class ImageEditor extends Component {
       var zoom = this._canvas.getZoom (); 
       zoom *= 0.999 ** delta; 
       if (zoom> 20) zoom = 20 ; 
-      if (zoom <0.01) zoom = 0.01; 
-      this._canvas.setZoom (zoom); 
-      this.setState({zoom : zoom});
+      if (zoom < 0.5) zoom = 0.5; 
+      this._canvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
+      let vpt = this._canvas.viewportTransform;
       event.e.preventDefault (); 
       event.e.stopPropagation (); 
+      // if (zoom < 400 / 1000) {
+      //   vpt[4] = 200 - 1000 * zoom / 2;
+      //   vpt[5] = 200 - 1000 * zoom / 2;
+      // } else {
+      //   if (vpt[4] >= 0) {
+      //     vpt[4] = 0;
+      //   } else if (vpt[4] < this._canvas.getWidth() - 1000  * zoom) {
+      //     vpt[4] = this._canvas.getWidth() - 1000 * zoom;
+      //   }
+      //   if (vpt[5] >= 0) {
+      //     vpt[5] = 0;
+      //   } else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
+      //     vpt[5] = this._canvas.getHeight()  * zoom;
+      //   }
+      // }
+      this.setState({zoom : zoom , canvasView : { x : vpt[4], y : vpt[5] }});
     }
   }
 
-  // 캔버스 이벤트 설정
+  /**
+   * Attach canvas events
+   * @private
+   */
   _createCanvasEvent = () => {
     this._canvas.on('mouse:down', (event) => {
       // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
@@ -400,7 +437,6 @@ class ImageEditor extends Component {
 		});
     
     this._canvas.on('object:added', (event) => {
-      // 만들면서 resize 하기 때문에 이 이벤트로 savestate하면 제대로 save 되지 않아!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       // console.log('object:added', event.target);
       // let type = event.target.type;
       // if(type !== 'Cropzone'){
@@ -428,45 +464,64 @@ class ImageEditor extends Component {
       // console.log('object:scaling');
       if(this.state.displayCropCanvasSize) {
         let obj = event.target;
-        obj.setCoords();
-        if(event.pointer.y < 0 || event.pointer.x < 0 ||
-           event.pointer.y > event.target.canvas.height ||
-           event.pointer.x > event.target.canvas.width) {
-          obj.top = this.cropCanvasState.top;
-          obj.left = this.cropCanvasState.left;
-          obj.scaleX = this.cropCanvasState.scaleX;
-          obj.scaleY = this.cropCanvasState.scaleY;
-        }
-        else {
-          this.cropCanvasState = {
-            top: obj.top,
-            left: obj.left,
-            scaleX: obj.scaleX,
-            scaleY: obj.scaleY,
-          }
-        }
+      //   obj.setCoords();
+      //   if(event.pointer.y < 0 || event.pointer.x < 0 ||
+      //      event.pointer.y > event.target.canvas.height ||
+      //      event.pointer.x > event.target.canvas.width) {
+      //     obj.top = this.cropCanvasState.top;
+      //     obj.left = this.cropCanvasState.left;
+      //     obj.scaleX = this.cropCanvasState.scaleX;
+      //     obj.scaleY = this.cropCanvasState.scaleY;
+      //   }
+      //   else {
+      //     this.cropCanvasState = {
+      //       top: obj.top,
+      //       left: obj.left,
+      //       scaleX: obj.scaleX,
+      //       scaleY: obj.scaleY,
+      //     }
+      //   }
         let change_state = {width: obj.width*obj.scaleX, height: obj.height*obj.scaleY};
         this.setState({cropCanvasSize: change_state});
       }
     })
     this._canvas.on('object:moving', (event) => {
-      // prevents going out of the canvas while cutting the canvas
       if(this.state.displayCropCanvasSize) {
         let obj = event.target;
         obj.setCoords();
-        if(obj.getBoundingRect().top < 0 || obj.getBoundingRect().left < 0) {
-          obj.top = Math.max(obj.top, obj.top - obj.getBoundingRect().top);
-          obj.left = Math.max(obj.left, obj.left - obj.getBoundingRect().left);
+        // 만약 cropzone이 회전이 불가능 하다면, max, min 하지 않아도 괜찮
+        let obj_top = Math.min(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y) ;
+        let obj_bottom = Math.max(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y);
+        let obj_right = Math.max(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x);
+        let obj_left = Math.min(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x);
+
+        if(obj_top  < 0){ 
+          obj.set({
+            top : (-this.state.canvasView.y / this.state.zoom) + (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2)
+          })}
+        if(obj_left < 0){
+          obj.set({
+            left :  (-this.state.canvasView.x / this.state.zoom) + (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2)
+          })}
+        if(obj_bottom > this._canvas.height ){
+          obj.set({
+            top : ( (-this.state.canvasView.y / this.state.zoom)  + (this._canvas.height / this.state.zoom) - (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2))
+          })
         }
-        if(obj.getBoundingRect().top + obj.getBoundingRect().height > obj.canvas.height ||
-        obj.getBoundingRect().left + obj.getBoundingRect().width > obj.canvas.width) {
-          obj.top = Math.min(obj.top, obj.canvas.height - obj.getBoundingRect().height + obj.top - obj.getBoundingRect().top);
-          obj.left = Math.min(obj.left, obj.canvas.width - obj.getBoundingRect().width + obj.left - obj.getBoundingRect().left)
+        if(obj_right > this._canvas.width ) {
+          obj.set({
+            left: ( (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) - (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2))
+          })
         }
+        obj.setCoords();
       }
     })
   }
 
+  /**
+   * Detach canvas events
+   * @private
+   */
   _deleteCanvasEvent = () =>{
     this._canvas.off('object:added');
     this._canvas.off('object:modified');
@@ -548,6 +603,16 @@ class ImageEditor extends Component {
       }
       this.stateStack.push(this.currentState);
       this.currentState = this._canvas.toDatalessJSON();
+      // this.currentState.objects.forEach(object => {
+      //   if(object.type === 'image') {
+      //     let change_filters = Array.from({length: this.filterList.length}, () => false);
+      //     object.filters.forEach(filter => {
+      //       change_filters[this.filterList.indexOf(filter.type)] = filter;
+      //     });
+      //     console.log(change_filters);
+      //     object.filters = change_filters;
+      //   }
+      // });
       this.currentState.width = this._canvas.width;
       this.currentState.height = this._canvas.height;
       this.currentState.action = action;
@@ -579,6 +644,19 @@ class ImageEditor extends Component {
       this._canvas.calcOffset();
       this.lock = false;
     });
+    // this._canvas._objects.forEach(object => {
+    //   if(object.type === 'image') {
+    //     let change_filters = [];
+    //     // let change_filters = Array.from({length: this.filterList.length}, () => false);
+    //     for (let index = 0; index < this.filterList.length; index++) {
+    //       change_filters.push();
+    //     }
+    //     object.filters.forEach(filter => {
+    //       change_filters[this.filterList.indexOf(filter.type)] = filter;
+    //     });
+    //     object.filters = change_filters;
+    //   }
+    // });
     this.forceUpdate(); // for showUndo/Redo Stack
   }
 
@@ -591,27 +669,34 @@ class ImageEditor extends Component {
 		this.switchTools('filter', false);
 		this.switchTools('text', true);
     let list = document.getElementsByClassName('filter');
-    let index = Array.from({length: this.filterList.length}, () => false);
+    let toggle = image.shadow ? true : false;
+    let change_filters = Array.from({length: this.filterList.length}, () => false);
     image.filters.forEach(filter => {
-      if(this.filterList.indexOf(filter.type) >= 15) {
-        index[this.filterList.indexOf(filter.type)] = filter;
-      }
-      else {
-        index[this.filterList.indexOf(filter.type)] = true;
-      }
+      change_filters[this.filterList.indexOf(filter.type)] = filter;
     });
+    image.filters = change_filters;
 		for(let i=0; i<list.length; i++){
-			list[i].checked = index[i];
+			list[i].checked = image.filters[i];
     }
 		this.setState({
 			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
       filters : {
-        brightness: index[15] ? index[15].brightness : 0,
-        contrast : index[16] ? index[16].contrast : 0,
-        pixelate : index[17] ? index[17].blocksize : 1,
-        blur : index[18] ? index[18].blur : 0,
-        noise : index[19] ? index[19].noise : 0
-      }
+        brightness: image.filters[15] ? image.filters[15].brightness : 0,
+        contrast : image.filters[16] ? image.filters[16].contrast : 0,
+        pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
+        blur : image.filters[18] ? image.filters[18].blur : 0,
+        noise : image.filters[19] ? image.filters[19].noise : 0,
+        saturation : image.filters[20] ? image.filters[20].noise : 0,
+        hue : image.filters[21] ? image.filters[21].noise : 0,
+        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0
+      },
+      shadow : {
+        blur : toggle ? image.shadow.blur : 30,
+        offsetX : toggle ? image.shadow.offsetX : 10,
+        offsetY : toggle ? image.shadow.offsetY : 10,
+        color : toggle ? image.shadow.color : '#000000'
+      },
+      displayshadow : toggle
 		});
 	}
 
@@ -626,28 +711,24 @@ class ImageEditor extends Component {
     this.switchTools('filter', true);
     // toggle shadow, backgroundColor
     let toggle = [false, false];
-    let shadow = null;
-    let textBgColor = null;
     if(text.shadow) {
       toggle[0] = true;
     }
     if(text.textBackgroundColor) {
       toggle[1] = true;
     }
-    shadow = {
-      blur : toggle[0] ? text.shadow.blur : 30,
-      offsetX : toggle[0] ? text.shadow.offsetX : 10,
-      offsetY : toggle[0] ? text.shadow.offsetY : 10,
-      color : toggle[0] ? text.shadow.color : '#000000'
-    };
-    textBgColor = { color : toggle[1] ? text.textBackgroundColor : '#FFFFFF'};
 		this.setState({
       activeObject : this.getActiveObject(),
 			fontsize : text.fontSize,
       displayshadow : toggle[0],
       displayTextbgColorPicker : toggle[1],
-      shadow : shadow,
-      text : textBgColor
+      shadow : {
+        blur : toggle[0] ? text.shadow.blur : 30,
+        offsetX : toggle[0] ? text.shadow.offsetX : 10,
+        offsetY : toggle[0] ? text.shadow.offsetY : 10,
+        color : toggle[0] ? text.shadow.color : '#000000'
+      },
+      text : { color : toggle[1] ? text.textBackgroundColor : '#FFFFFF'}
 		});
   }
   
@@ -702,10 +783,19 @@ class ImageEditor extends Component {
     return this._canvas;
   }
 
+  /**
+   * Get ImageEditor instance
+   * @returns {ImageEditor}
+   */
   getImageEditor = () => {
     return this;
   }
 
+  /**
+   * "object:moving" canvas event handler
+   * @param {{target: fabric.Object, e: MouseEvent, transform : object}} fEvent - Fabric event
+   * @public
+   */
   snapMovingEvent = (event) => {
     let direction = {
       x : event.e.movementX <= 0 ? 'left' : 'right',
@@ -744,7 +834,12 @@ class ImageEditor extends Component {
       this._canvas.off("object:moving", this.snapObjectMovingEvent);
     }
   }
-
+  
+  /**
+   * "object:moving" canvas event handler
+   * @param {{target: fabric.Object, e: MouseEvent}} fEvent - Fabric event
+   * @public
+   */
   snapObjectMovingEvent = (event) => {
     event.target.setCoords();
     let target_top = Math.min(event.target.aCoords.tl.y, event.target.aCoords.tr.y, event.target.aCoords.br.y, event.target.aCoords.bl.y) ;
@@ -847,8 +942,16 @@ class ImageEditor extends Component {
           originY: option.originY,
           left: pointer.x,
           top: pointer.y,
+          
           scaleX : option.scaleX,
           scaleY : option.scaleY,
+
+          // max size 2048x2048 for Webgl
+          // width : img.width * option.scaleX,
+          // height : img.height * option.scaleY,
+          // scaleX : 1,
+          // scaleY : 1,
+
           strokeWidth : 0
         });
         resolve(img);
@@ -1286,6 +1389,8 @@ class ImageEditor extends Component {
         blur : this.state.filters.blur,
         noise : this.state.filters.noise,
         saturation : this.state.filters.saturation,
+        hue : this.state.filters.hue,
+        ink : this.state.filters.ink,
       };
       change_state[event.target.name] = event.target.value;
       new Promise((resolve) => {
@@ -1531,6 +1636,9 @@ class ImageEditor extends Component {
   }
 
   cropCanvas = () => {
+    if(this.getActiveObject() && this.getActiveObject().type === 'Cropzone') {
+      return;
+    }
     let change_state = {width: this._canvas.width/2, height: this._canvas.height/2};
     this.setState({
       displayCropCanvasSize: true,
@@ -1866,7 +1974,13 @@ class ImageEditor extends Component {
             <input type="checkbox" onClick = {this.getMousePointInfo} /> 캔버스 좌표 보기
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>캔버스 크기  {this._canvas? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</p>
-            <p> 좌측 상단 좌표 = x : {-this.state.canvasView.x}  y : {-this.state.canvasView.y}</p>
+            {this._canvas ? 
+            <div>
+            <p> 좌측 상단 좌표 = x : {(-this.state.canvasView.x / this.state.zoom)}  y : {(-this.state.canvasView.y / this.state.zoom)}</p>
+            <p> 우측 하단 좌표 = x : { (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) }  y : {(-this.state.canvasView.y / this.state.zoom) + (this._canvas.height / this.state.zoom) }</p>
+            </div>
+            : <div></div>}
+            
             <p>현재 객체 타입 = {this.state.activeObject.type}</p>
             <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
             <p>선택 개체 대조 값 = {this.state.filters.contrast}</p>
@@ -2055,18 +2169,6 @@ class ImageEditor extends Component {
             <input
               type='range'
               className='filter'
-              id='saturation'
-              min='-1'
-              max='1'
-              name='saturation'
-              step='0.01'
-              value={this.state.filters.saturation || 0}
-              onChange={this.handleFilterChange} filter='saturation'
-            />Saturation
-
-            <input
-              type='range'
-              className='filter'
               id='pixelate'
               min='1'
               max='50'
@@ -2075,18 +2177,6 @@ class ImageEditor extends Component {
               value={this.state.filters.pixelate || 1}
               onChange={this.handleFilterChange} filter='pixelate'
             />pixelate
-
-            <input
-              type='range'
-              className='filter'
-              id='hue'
-              min='-1'
-              max='1'
-              name='hue'
-              step='0.01'
-              value={this.state.filters.hue || 1}
-              onChange={this.handleFilterChange} filter='hue'
-            />Hue
 
             <input
               type='range'
@@ -2111,6 +2201,42 @@ class ImageEditor extends Component {
               value={this.state.filters.noise || 0}
               onChange={this.handleFilterChange} filter='noise'
             />noise
+
+            <input
+              type='range'
+              className='filter'
+              id='saturation'
+              min='-1'
+              max='1'
+              name='saturation'
+              step='0.01'
+              value={this.state.filters.saturation || 0}
+              onChange={this.handleFilterChange} filter='saturation'
+            />Saturation
+
+            <input
+              type='range'
+              className='filter'
+              id='hue'
+              min='-1'
+              max='1'
+              name='hue'
+              step='0.01'
+              value={this.state.filters.hue || 1}
+              onChange={this.handleFilterChange} filter='hue'
+            />Hue
+
+            <input
+              type='range'
+              className='filter'
+              id='ink'
+              min='0'
+              max='1'
+              name='ink'
+              step='0.01'
+              value={this.state.filters.ink || 0}
+              onChange={this.handleFilterChange} filter='ink'
+            />ink from glfx.js
 
             
             <input
