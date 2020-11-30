@@ -37,11 +37,11 @@ class ImageEditor extends Component {
         },
       activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
       zoom : 1,
-			color: {
-				r: '255',
-				g: '255',
-				b: '255',
-				a: '1',
+      color: {
+        r: '255',
+        g: '255',
+        b: '255',
+        a: '1',
       },
       text : {
         color : '#FFFFFF'
@@ -1937,6 +1937,24 @@ class ImageEditor extends Component {
     document.addEventListener('mousedown', this.pipetteEvent);
   }
 
+  printObject = () => {
+      let first = this._canvas._objects.map(
+          x => Object.entries(x)
+      );
+      let objstack = [];
+      for (let i = 0; i < this._canvas._objects.length; i++) {
+          if(first[i][0][0] === "filters"){
+            objstack[i] = 'img';
+          }
+          else if(first[i][0][0] === "styles"){
+              objstack[i] = 'text';
+          }
+          else if(first[i][0][0] === "width"){
+              objstack[i] = 'shape';
+          }
+      }
+      console.log(objstack);
+  }
   render() {
 		const styles = {
 			color : {
@@ -1963,6 +1981,7 @@ class ImageEditor extends Component {
               <p> bottom : {this.state.activeObject.aCoords.br.y} </p>
             </div> : <div></div> }
 
+            <button onClick={this.printObject}>현재 캔버스에 있는 오브젝트 확인하기</button>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
