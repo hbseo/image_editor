@@ -11,6 +11,9 @@ export default class Action {
   //     console.log('action is completed', this.canvas);
   // }
 
+  getName() {
+    return this._name;
+  }
 
   getActiveObject() {
     return this.app.getActiveObject();
@@ -24,9 +27,12 @@ export default class Action {
     return this.app.getImageEditor();
   }
 
+  getGrid() {
+    return this.app.getGrid();
+  }
 
-  getName() {
-    return this._name;
+  setGrid(grid) {
+    return this.app.setGrid(grid);
   }
 
 }

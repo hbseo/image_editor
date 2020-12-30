@@ -13,6 +13,7 @@ import Text from './action/Text';
 import Fill from './action/Fill';
 import Icon from './action/Icon';
 import Draw from './action/Draw';
+import Grid from './action/Grid';
 import ResizeHelper from './helper/Resize';
 
 class ImageEditor extends Component {
@@ -169,7 +170,7 @@ class ImageEditor extends Component {
         this.currentState.height = this._canvas.height;
         this.currentState.action = "initilize";
         this.currentState.id = 0;
-        this._makeGrid();
+        this.action['Grid'].makeGrid();
       })
     }
     else{
@@ -191,7 +192,7 @@ class ImageEditor extends Component {
       this.currentState.height = this._canvas.height;
       this.currentState.action = "initilize";
       this.currentState.id = 0;
-      this._makeGrid();
+      this.action['Grid'].makeGrid();
     }
     this.forceUpdate(); // for showUndo/Redo Stack
   }
@@ -547,32 +548,6 @@ class ImageEditor extends Component {
     document.removeEventListener('mouseup',this._onMouseUpEvent)
   }
 
-  _makeGrid = () => {
-    if(this.grid) { return; }
-
-    let grids = [];
-    let gridoption = {
-      stroke: "#000000",
-      strokeWidth: 1,
-      // strokeDashArray: [5, 5]
-    };
-    for (let x = 0; x < (this._canvas.width); x += 10) {
-      grids.push(new fabric.Line([x, 0, x, this._canvas.height], gridoption)); // vertical
-    }
-    for (let y = 0; y < (this._canvas.height); y += 10) {
-      grids.push(new fabric.Line([0, y, this._canvas.width, y], gridoption)); // horizon
-    }
-    this.grid = new fabric.Group(grids, {
-      selectable : false,
-      evented : false
-    })
-    this.grid.addWithUpdate();
-    // for (var i = 0; i < (1000 / 10); i++) {
-    //   this._canvas.add(new fabric.Line([ i * 10, 0, i * 10, 1000], { stroke: '#000000', selectable: false, evented: false })); // vertical
-    //   this._canvas.add(new fabric.Line([ 0, i * 10, 1000, i * 10], { stroke: '#000000', selectable: false, evented: false })); // horizon
-    // }
-  }
-
   resetCanvas = () => {
     this._canvas.setZoom (1); 
     this.setState({zoom : 1, canvasView : { x: 0, y: 0} });
@@ -586,16 +561,12 @@ class ImageEditor extends Component {
 
   onClickGrid = (event) => {
     if(event.target.checked){
-      // console.log(this.grid);
       this.gridOn = true;
-      this._canvas.add(this.grid);
-      this._canvas.sendToBack(this.grid);
-      this._canvas.renderAll();
+      this.action['Grid'].showGrid();
     }
     else{
       this.gridOn = false;
-      this._canvas.remove(this.grid);
-      this._canvas.renderAll();
+      this.action['Grid'].hideGrid();
     }
   }
 
@@ -758,6 +729,7 @@ class ImageEditor extends Component {
     this._register(this.action, new Fill(this));
     this._register(this.action, new Icon(this));
     this._register(this.action, new Shape(this));
+    this._register(this.action, new Grid(this));
   }
 
   /**
@@ -792,6 +764,18 @@ class ImageEditor extends Component {
    */
   getImageEditor = () => {
     return this;
+  }
+
+  /**
+   * Get grid instance
+   * @returns {ImageEditor}
+   */
+  getGrid = () => {
+    return this.grid;
+  }
+
+  setGrid = (grid) => {
+    this.grid = grid;
   }
 
   /**
@@ -937,7 +921,6 @@ class ImageEditor extends Component {
 
 
   loadImage = (url, pointer, option) => {
-    console.log(option)
     return new Promise(resolve => {
       fabric.Image.fromURL(url, img => {
         img.set({

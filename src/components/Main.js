@@ -85,7 +85,7 @@ class Main extends Component {
 
 	handleImageSizeChange = (event) => {
 		new Promise((resolve) => {
-			if(this.state.imgWidth == 2048 || this.state.imgHeight == 2048){
+			if(this.state.imgWidth === 2048 || this.state.imgHeight === 2048){
 				return ;
 			}
 			let ratio = event.target.value;
