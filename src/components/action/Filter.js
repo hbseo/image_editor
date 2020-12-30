@@ -1,5 +1,5 @@
 import Action from './Action';
-import { Ink } from './filters/glfx/ink.js'
+import { Ink } from '../filters/glfx/ink.js'
 import { fabric } from 'fabric';
 
 class Filter extends Action {

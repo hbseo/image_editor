@@ -52,7 +52,7 @@ class Main extends Component {
 			submit : true, 
 			width:this.image.width, 
 			height : this.image.height, 
-			imgRatio : 100,
+			imgRatio : ratio*100,
 			imgWidth : this.image.width, 
 			imgHeight : this.image.height
 		})
@@ -76,15 +76,18 @@ class Main extends Component {
 	handleChange = (event) => {
 		// console.log(event.target.value);
 		document.getElementById("imgRatio").disabled = true;
-    let change_state = {};
+    	let change_state = {};
 		change_state[event.target.name] = event.target.value;
 		this.url = ""
 		this.setState({ submit : false, imgRatio : 100 })
-    this.setState(change_state);
+    	this.setState(change_state);
 	}
 
 	handleImageSizeChange = (event) => {
 		new Promise((resolve) => {
+			if(this.state.imgWidth == 2048 || this.state.imgHeight == 2048){
+				return ;
+			}
 			let ratio = event.target.value;
 			let width = Math.round(this.state.imgWidth * (event.target.value / 100));
 			let height = Math.round(this.state.imgHeight * (event.target.value / 100));
@@ -92,6 +95,7 @@ class Main extends Component {
 			if(width > 2048 || height > 2048){
 				return ;
 			}
+
 			// console.log((event.target.value / 100), width, height);
 			resolve({ratio, width, height})
 		})

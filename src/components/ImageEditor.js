@@ -3,18 +3,17 @@ import { fabric } from 'fabric';
 import { SketchPicker, CompactPicker } from 'react-color';
 import Switch from 'react-switch';
 import './ImageEditor.css'
-import Rotation from './Rotation';
-import Filter from './Filter';
-import Delete from './Delete';
-import Crop from './Crop';
-import Flip from './Flip';
-import Text from './Text';
-import Fill from './Fill';
-import Icon from './Icon';
-import Shape from './Shape';
-import Draw from './Draw';
-import Resize from './Resize';
-// import FilterMenu from './FilterMenu';
+import Rotation from './action/Rotation';
+import Filter from './action/Filter';
+import Delete from './action/Delete';
+import Shape from './action/Shape';
+import Crop from './action/Crop';
+import Flip from './action/Flip';
+import Text from './action/Text';
+import Fill from './action/Fill';
+import Icon from './action/Icon';
+import Draw from './action/Draw';
+import ResizeHelper from './helper/Resize';
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -143,7 +142,11 @@ class ImageEditor extends Component {
 
   componentDidMount() {
     if(this._canvasImageUrl){
-      this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio})
+      this.loadImage(
+        this._canvasImageUrl,
+        {x : 0, y : 0}, 
+        {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
+      )
       .then((img) => this._backgroundImage = img)
       .then(() => {
         this._canvas = new fabric.Canvas('canvas', {
@@ -934,6 +937,7 @@ class ImageEditor extends Component {
 
 
   loadImage = (url, pointer, option) => {
+    console.log(option)
     return new Promise(resolve => {
       fabric.Image.fromURL(url, img => {
         img.set({
@@ -942,7 +946,7 @@ class ImageEditor extends Component {
           originY: option.originY,
           left: pointer.x,
           top: pointer.y,
-          
+
           scaleX : option.scaleX,
           scaleY : option.scaleY,
 
@@ -1095,7 +1099,7 @@ class ImageEditor extends Component {
     const canvas = this._canvas;
     shape.on({
       scaling(event){
-        Resize.resize(canvas, event, this);
+        ResizeHelper.resize(canvas, event, this);
       },
     })
   }
