@@ -57,6 +57,7 @@ class ImageEditor extends Component {
         saturation : 0,
         hue : 0,
         ink : 0,
+        vignette : 0,
       },
       cropCanvasSize : {
         width : 0,
@@ -112,7 +113,7 @@ class ImageEditor extends Component {
 
     // filterList
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink' ];
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette' ];
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -663,7 +664,8 @@ class ImageEditor extends Component {
         noise : image.filters[19] ? image.filters[19].noise : 0,
         saturation : image.filters[20] ? image.filters[20].noise : 0,
         hue : image.filters[21] ? image.filters[21].noise : 0,
-        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0
+        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0,
+        vignette : image.filters[23] ? image.filters[23].vignette_matrix.amount : 0
       },
       shadow : {
         blur : toggle ? image.shadow.blur : 30,
@@ -1261,6 +1263,7 @@ class ImageEditor extends Component {
         saturation : this.state.filters.saturation,
         hue : this.state.filters.hue,
         ink : this.state.filters.ink,
+        vignette : this.state.filters.vignette,
       };
       change_state[event.target.name] = event.target.value;
       new Promise((resolve) => {
@@ -1757,19 +1760,18 @@ class ImageEditor extends Component {
   openDrawing = () => {
     this.setState({ drawingMode: true });
     this._canvas.isDrawingMode = true;
-    this._canvas.freeDrawingCursor = 'default';
+    this._canvas.freeDrawingCursor = 'crosshair';
   }
 
   closeDrawing = () => {
     this.setState({ drawingMode: false });
     this._canvas.isDrawingMode = false;
-    
   }
   
   handleDrawingWidth = (event) => {
-      const value = event.target.value;
-      this.setState({lineWidth: value});
-      this._canvas.freeDrawingBrush.width = this.state.lineWidth;
+    const value = event.target.value;
+    this.setState( {lineWidth: value} );
+    this._canvas.freeDrawingBrush.width =  parseInt(this.state.lineWidth, 10);
   }
 
   handleDrawingColor = (color) => {
@@ -2118,6 +2120,18 @@ class ImageEditor extends Component {
               onChange={this.handleFilterChange} filter='ink'
             />ink from glfx.js
 
+            <input
+              type='range'
+              className='filter'
+              id='vignette'
+              min='0'
+              max='1'
+              name='vignette'
+              step='0.01'
+              value={this.state.filters.vignette || 0}
+              onChange={this.handleFilterChange} filter='vignette'
+            />ink from glfx.js
+
             
             <input
               type='range'
@@ -2216,7 +2230,7 @@ class ImageEditor extends Component {
             <h5>색깔 : 기본 색</h5>
             <button onClick={this.openColorPicker}>color</button>
           	{ this.state.displayColorPicker ? <div>
-          	  <div onClick={this.closeColorPicker}/>
+          	  <div onClick={this.closeColorPicker} role="button" tabIndex="0"/>
           	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           	</div> : null }
           </div>

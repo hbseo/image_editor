@@ -1,5 +1,6 @@
 import Action from './Action';
 import { Ink } from '../filters/glfx/ink.js'
+import { Vignette } from '../filters/glfx/vignette.js'
 import { fabric } from 'fabric';
 
 class Filter extends Action {
@@ -87,6 +88,14 @@ class Filter extends Action {
               ink : value * value * value * value * value,
               width : obj.width,
               height : obj.height
+            }
+          }));
+          break;
+        case 'vignette':
+          obj.filters[23] = (new Vignette({
+            vignette_matrix : {
+              size :  0.66,
+              amount : value
             }
           }));
           break;
