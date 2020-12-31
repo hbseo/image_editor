@@ -692,6 +692,12 @@ class ImageEditor extends Component {
     if(text.textBackgroundColor) {
       toggle[1] = true;
     }
+    if(text.fontStyle === "italic"){
+      document.getElementById('italic_checkbox').checked = true;
+    }
+    else{
+      document.getElementById('italic_checkbox').checked = false;
+    }
 		this.setState({
       activeObject : this.getActiveObject(),
 			fontsize : text.fontSize,
@@ -951,34 +957,8 @@ class ImageEditor extends Component {
     document.addEventListener('mousedown',this.addImageEvent);
   }
 
-  addTextEvent = (event) => {
-    const pointer = this._canvas.getPointer(event, false)
-    if(event.target.tagName === 'CANVAS'){
-      let text = new fabric.Textbox('Hello world', {
-        left: pointer.x,
-        top: pointer.y,
-        fontSize: this.state.fontsize,
-        lockScalingY: true,
-        strokeWidth : 0
-      });
-      text.setControlsVisibility({
-        mt: false,
-        mb: false,
-        bl: false,
-        br: false,
-        tl: false,
-        tr: false
-      });
-      this._canvas.add(text).setActiveObject(text);
-      this.saveState('text add');
-    }
-    document.removeEventListener('mousedown', this.addTextEvent);
-    this._canvas.defaultCursor = 'default';
-  }
-
   addText = () => {
-    this._canvas.defaultCursor = 'pointer';
-		document.addEventListener('mousedown',this.addTextEvent);    
+    this.action['Text'].addText();
   }
 
   _bindShapeEvent = (shape) => {
@@ -1549,16 +1529,7 @@ class ImageEditor extends Component {
 
   textObject = (event) => {
     let textOption = event.target.getAttribute('text');
-    let activeObject = this.getActiveObject();
-
-    if (activeObject) {
-      this.action['Text'].textObj(activeObject, textOption, event.target.checked, event.target.value);
-      this.saveState('Text modified ' + textOption);
-    }
-    else {
-      alert('text is not activated');
-      event.target.checked = false;
-    }
+    this.action['Text'].textObj(this.getActiveObject(), textOption, event.target.checked, event.target.value);
   }
 
   toggletextbg = () => {
@@ -1985,7 +1956,7 @@ class ImageEditor extends Component {
             <CompactPicker color={this.state.text.color} onChange={this.handletextBgChange}></CompactPicker> : null}
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
-            <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
+            <input type='checkbox' className='text' onClick={this.textObject} text='italic' id='italic_checkbox' />italic
             <button type='checkbox' className='text' onClick={this.textObject} text='left-align'>좌측정렬</button>
             <button type='checkbox' className='text' onClick={this.textObject} text='center-align' >가운데정렬</button>
             <button type='checkbox' className='text' onClick={this.textObject} text='right-align' >우측정렬</button>
