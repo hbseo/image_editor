@@ -108,6 +108,7 @@ class ImageEditor extends Component {
     this.currentState = { width: null, height: null, action : 'constructor' };
     this.stateStack = [];
     this.redoStack = [];
+    this.firstState = null;
     this.maxSize = 100;
     this.state_id = 1;
     this.dotoggle = true;
@@ -173,6 +174,7 @@ class ImageEditor extends Component {
         this.currentState.height = this._canvas.height;
         this.currentState.action = "initilize";
         this.currentState.id = 0;
+        this.firstState = this.currentState;
         this.action['Grid'].makeGrid();
       })
     }
@@ -195,6 +197,7 @@ class ImageEditor extends Component {
       this.currentState.height = this._canvas.height;
       this.currentState.action = "initilize";
       this.currentState.id = 0;
+      this.firstState = this.currentState;
       this.action['Grid'].makeGrid();
     }
     this.forceUpdate(); // for showUndo/Redo Stack
@@ -214,6 +217,7 @@ class ImageEditor extends Component {
     this._backgroundImage = null;
     this._canvas = null;
     this.grid = null;
+    this.firstState = null;
   }
 	
 	_onKeydownEvent = (event) => {
@@ -593,7 +597,7 @@ class ImageEditor extends Component {
       this.currentState.width = this._canvas.width;
       this.currentState.height = this._canvas.height;
       this.currentState.action = action;
-      this.currentState.id = this.state_id++;
+      this.currentState.id = this.stateStack.length > 0 ? this.stateStack[this.stateStack.length -1].id + 1 : 1;
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
     }
@@ -634,6 +638,20 @@ class ImageEditor extends Component {
     //     object.filters = change_filters;
     //   }
     // });
+    this.forceUpdate(); // for showUndo/Redo Stack
+  }
+
+  resetState = () => {
+    this.stateStack.length = 0;
+    this.redoStack.length = 0;
+    this.state_id = 1;
+    this.currentState = this.firstState;
+    this._canvas.loadFromJSON(this.firstState, () => {
+      this._canvas.setWidth(this.firstState.width);
+      this._canvas.setHeight(this.firstState.height);
+      this._canvas.calcOffset();
+      this.lock = false;
+    });
     this.forceUpdate(); // for showUndo/Redo Stack
   }
 
@@ -917,6 +935,7 @@ class ImageEditor extends Component {
         this.currentState.width = json.width ? json.width : 800;
         this.currentState.height = json.height ? json.height : 600;
         this.currentState.id = 0;
+        this.firstState = this.currentState;
         this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
 
         this._canvas.setWidth( json.width ? json.width : 800 );
@@ -1661,10 +1680,35 @@ class ImageEditor extends Component {
     }
   }
 
+  onclickUndoStack = (event) => {
+    let origin = this.currentState.id;
+    let dest = parseInt(event.target.getAttribute('number'), 10);
+    // console.log('current id : ', this.currentState.id);
+    // console.log('click id : ', parseInt(event.target.getAttribute('number'), 10));
+
+
+    if(this.stateStack.length > 0){
+      this.redoStack.push(this.currentState);
+      for(let i = dest; i < origin - 1 ; i++ ){
+        this.redoStack.push( this.stateStack.pop() );
+      }
+
+      this.currentState = this.stateStack.pop();
+  
+      this._canvas.loadFromJSON(this.currentState, () => {
+        this._canvas.setWidth(this.currentState.width);
+        this._canvas.setHeight(this.currentState.height);
+        this._canvas.calcOffset();
+      });
+      this.forceUpdate();
+    }
+
+  }
+
   showUndoStack = () => {
     // console.log(this.stateStack);
     const listitem = this.stateStack.map((state) =>
-      <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack">{state.action}</p>
+      <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
     );
     return(
       <div>
@@ -1676,7 +1720,7 @@ class ImageEditor extends Component {
   showRedoStack = () => {
     // console.log(this.redoStack);
     const listitem = this.redoStack.map((state) =>
-      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack">{state.action}</p>
+      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack">{state.id} : {state.action}</p>
     );
     return(
       <div>
@@ -1856,6 +1900,7 @@ class ImageEditor extends Component {
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
             <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
+            <button onClick={this.resetState}>state 초기화</button>
             <input type="checkbox" onClick = {this.getMousePointInfo} /> 캔버스 좌표 보기
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>캔버스 크기  {this._canvas? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</p>
