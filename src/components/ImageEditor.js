@@ -58,6 +58,7 @@ class ImageEditor extends Component {
         hue : 0,
         ink : 0,
         vignette : 0,
+        zoomblur : 0,
       },
       cropCanvasSize : {
         width : 0,
@@ -113,7 +114,7 @@ class ImageEditor extends Component {
 
     // filterList
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette' ];
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur' ];
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -665,7 +666,8 @@ class ImageEditor extends Component {
         saturation : image.filters[20] ? image.filters[20].noise : 0,
         hue : image.filters[21] ? image.filters[21].noise : 0,
         ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0,
-        vignette : image.filters[23] ? image.filters[23].vignette_matrix.amount : 0
+        vignette : image.filters[23] ? image.filters[23].vignette_matrix.amount : 0,
+        zoomblur : image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0,
       },
       shadow : {
         blur : toggle ? image.shadow.blur : 30,
@@ -1264,6 +1266,7 @@ class ImageEditor extends Component {
         hue : this.state.filters.hue,
         ink : this.state.filters.ink,
         vignette : this.state.filters.vignette,
+        zoomblur : this.state.filters.zoomblur,
       };
       change_state[event.target.name] = event.target.value;
       new Promise((resolve) => {
@@ -2130,7 +2133,19 @@ class ImageEditor extends Component {
               step='0.01'
               value={this.state.filters.vignette || 0}
               onChange={this.handleFilterChange} filter='vignette'
-            />ink from glfx.js
+            />vignette from glfx.js
+
+            <input
+              type='range'
+              className='filter'
+              id='zoomblur'
+              min='0'
+              max='1'
+              name='zoomblur'
+              step='0.01'
+              value={this.state.filters.zoomblur || 0}
+              onChange={this.handleFilterChange} filter='zoomblur'
+            />zoomblur from glfx.js
 
             
             <input
