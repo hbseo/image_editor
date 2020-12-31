@@ -1,6 +1,6 @@
-import Action from './Action';
+import Extension from './Extension';
 import { fabric } from 'fabric';
-class Grid extends Action {
+class Grid extends Extension {
     constructor(App) {
       super('Grid', App);
     }
