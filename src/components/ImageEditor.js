@@ -12,6 +12,7 @@ import Flip from './action/Flip';
 import Text from './action/Text';
 import Fill from './action/Fill';
 import Icon from './action/Icon';
+import Line from './action/Line';
 import Draw from './action/Draw';
 import Grid from './extension/Grid';
 import Snap from './extension/Snap';
@@ -759,6 +760,7 @@ class ImageEditor extends Component {
     this._register(this.action, new Icon(this));
     this._register(this.action, new Shape(this));
     this._register(this.action, new Grid(this));
+    this._register(this.action, new Line(this));
     this._register(this.action, new Snap(this));
   }
 
@@ -1148,57 +1150,8 @@ class ImageEditor extends Component {
     this.action['Icon'].addIcon(options);
   }
 
-  addLineResize = (event) => {
-    let line = this.getActiveObject();
-    const pointer = this._canvas.getPointer(event, false);
-    line.set({x2 : pointer.x, y2 : pointer.y});
-    this._canvas.renderAll();
-  }
-
-  addLineEvent = (event) => {
-    if(event.target.tagName === 'CANVAS'){
-      this.disableObj = this.getActiveObject();
-      if(this.disableObj){
-        // disableObj.evented = false;
-        this.disableObj.lockMovementY = true;
-        this.disableObj.lockMovementX = true;
-      }
-      const pointer = this._canvas.getPointer(event, false);
-      let line = new fabric.Line([ pointer.x, pointer.y, pointer.x, pointer.y ], {
-        left : pointer.x,
-        right :pointer.y,
-        strokeWidth : 5,
-        stroke : 'black',
-        fill : 'black'
-      })
-      this._canvas.add(line).setActiveObject(line);
-
-      this._canvas.selection = false;
-      this._canvas.on('mouse:move', this.addLineResize);
-      this._canvas.on('mouse:up', this.addLineEndEvent);
-    }
-    this._canvas.defaultCursor = 'default';
-    document.removeEventListener('mousedown', this.addLineEvent);
-  }
-
-  addLineEndEvent = () => {
-    this._canvas.off('mouse:move', this.addLineResize);
-    // console.log('off')
-    this._canvas.selection = true;
-    this._canvas.renderAll();
-    this.saveState('line add');
-    if(this.disableObj){
-      this.disableObj.lockMovementY = false;
-      this.disableObj.lockMovementX = false;
-      this.disableObj = null;
-    }
-    this._canvas.off('mouse:up', this.addLineEndEvent);
-  }
-
   addLine = () => {
-    this._canvas.defaultCursor = 'pointer';
-    this._canvas.discardActiveObject();
-		document.addEventListener('mousedown',this.addLineEvent);    
+    this.action['Line'].addLine();
   }
 
   makePolygonWithDrag = () => {
