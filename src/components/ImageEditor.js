@@ -3,18 +3,20 @@ import { fabric } from 'fabric';
 import { SketchPicker, CompactPicker } from 'react-color';
 import Switch from 'react-switch';
 import './ImageEditor.css'
-import Rotation from './Rotation';
-import Filter from './Filter';
-import Delete from './Delete';
-import Crop from './Crop';
-import Flip from './Flip';
-import Text from './Text';
-import Fill from './Fill';
-import Icon from './Icon';
-import Shape from './Shape';
-import Draw from './Draw';
-import Resize from './Resize';
-// import FilterMenu from './FilterMenu';
+import Rotation from './action/Rotation';
+import Filter from './action/Filter';
+import Delete from './action/Delete';
+import Shape from './action/Shape';
+import Crop from './action/Crop';
+import Flip from './action/Flip';
+import Text from './action/Text';
+import Fill from './action/Fill';
+import Icon from './action/Icon';
+import Line from './action/Line';
+import Draw from './action/Draw';
+import Grid from './extension/Grid';
+import Snap from './extension/Snap';
+import ResizeHelper from './helper/Resize';
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -56,6 +58,8 @@ class ImageEditor extends Component {
         saturation : 0,
         hue : 0,
         ink : 0,
+        vignette : 0,
+        zoomblur : 0,
       },
       cropCanvasSize : {
         width : 0,
@@ -105,13 +109,14 @@ class ImageEditor extends Component {
     this.currentState = { width: null, height: null, action : 'constructor' };
     this.stateStack = [];
     this.redoStack = [];
+    this.firstState = null;
     this.maxSize = 100;
     this.state_id = 1;
     this.dotoggle = true;
 
     // filterList
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink' ];
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur' ];
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -143,7 +148,11 @@ class ImageEditor extends Component {
 
   componentDidMount() {
     if(this._canvasImageUrl){
-      this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio})
+      this.loadImage(
+        this._canvasImageUrl,
+        {x : 0, y : 0}, 
+        {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
+      )
       .then((img) => this._backgroundImage = img)
       .then(() => {
         this._canvas = new fabric.Canvas('canvas', {
@@ -166,7 +175,8 @@ class ImageEditor extends Component {
         this.currentState.height = this._canvas.height;
         this.currentState.action = "initilize";
         this.currentState.id = 0;
-        this._makeGrid();
+        this.firstState = this.currentState;
+        this.action['Grid'].makeGrid();
       })
     }
     else{
@@ -188,7 +198,8 @@ class ImageEditor extends Component {
       this.currentState.height = this._canvas.height;
       this.currentState.action = "initilize";
       this.currentState.id = 0;
-      this._makeGrid();
+      this.firstState = this.currentState;
+      this.action['Grid'].makeGrid();
     }
     this.forceUpdate(); // for showUndo/Redo Stack
   }
@@ -207,6 +218,7 @@ class ImageEditor extends Component {
     this._backgroundImage = null;
     this._canvas = null;
     this.grid = null;
+    this.firstState = null;
   }
 	
 	_onKeydownEvent = (event) => {
@@ -544,32 +556,6 @@ class ImageEditor extends Component {
     document.removeEventListener('mouseup',this._onMouseUpEvent)
   }
 
-  _makeGrid = () => {
-    if(this.grid) { return; }
-
-    let grids = [];
-    let gridoption = {
-      stroke: "#000000",
-      strokeWidth: 1,
-      // strokeDashArray: [5, 5]
-    };
-    for (let x = 0; x < (this._canvas.width); x += 10) {
-      grids.push(new fabric.Line([x, 0, x, this._canvas.height], gridoption)); // vertical
-    }
-    for (let y = 0; y < (this._canvas.height); y += 10) {
-      grids.push(new fabric.Line([0, y, this._canvas.width, y], gridoption)); // horizon
-    }
-    this.grid = new fabric.Group(grids, {
-      selectable : false,
-      evented : false
-    })
-    this.grid.addWithUpdate();
-    // for (var i = 0; i < (1000 / 10); i++) {
-    //   this._canvas.add(new fabric.Line([ i * 10, 0, i * 10, 1000], { stroke: '#000000', selectable: false, evented: false })); // vertical
-    //   this._canvas.add(new fabric.Line([ 0, i * 10, 1000, i * 10], { stroke: '#000000', selectable: false, evented: false })); // horizon
-    // }
-  }
-
   resetCanvas = () => {
     this._canvas.setZoom (1); 
     this.setState({zoom : 1, canvasView : { x: 0, y: 0} });
@@ -583,16 +569,12 @@ class ImageEditor extends Component {
 
   onClickGrid = (event) => {
     if(event.target.checked){
-      // console.log(this.grid);
       this.gridOn = true;
-      this._canvas.add(this.grid);
-      this._canvas.sendToBack(this.grid);
-      this._canvas.renderAll();
+      this.action['Grid'].showGrid();
     }
     else{
       this.gridOn = false;
-      this._canvas.remove(this.grid);
-      this._canvas.renderAll();
+      this.action['Grid'].hideGrid();
     }
   }
 
@@ -616,7 +598,7 @@ class ImageEditor extends Component {
       this.currentState.width = this._canvas.width;
       this.currentState.height = this._canvas.height;
       this.currentState.action = action;
-      this.currentState.id = this.state_id++;
+      this.currentState.id = this.stateStack.length > 0 ? this.stateStack[this.stateStack.length -1].id + 1 : 1;
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
     }
@@ -660,6 +642,20 @@ class ImageEditor extends Component {
     this.forceUpdate(); // for showUndo/Redo Stack
   }
 
+  resetState = () => {
+    this.stateStack.length = 0;
+    this.redoStack.length = 0;
+    this.state_id = 1;
+    this.currentState = this.firstState;
+    this._canvas.loadFromJSON(this.firstState, () => {
+      this._canvas.setWidth(this.firstState.width);
+      this._canvas.setHeight(this.firstState.height);
+      this._canvas.calcOffset();
+      this.lock = false;
+    });
+    this.forceUpdate(); // for showUndo/Redo Stack
+  }
+
 	/**
    * action on selected image
 	 * @param {Object} image : selectedImage or backgroundImage
@@ -688,7 +684,9 @@ class ImageEditor extends Component {
         noise : image.filters[19] ? image.filters[19].noise : 0,
         saturation : image.filters[20] ? image.filters[20].noise : 0,
         hue : image.filters[21] ? image.filters[21].noise : 0,
-        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0
+        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0,
+        vignette : image.filters[23] ? image.filters[23].vignette_matrix.amount : 0,
+        zoomblur : image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0,
       },
       shadow : {
         blur : toggle ? image.shadow.blur : 30,
@@ -716,6 +714,12 @@ class ImageEditor extends Component {
     }
     if(text.textBackgroundColor) {
       toggle[1] = true;
+    }
+    if(text.fontStyle === "italic"){
+      document.getElementById('italic_checkbox').checked = true;
+    }
+    else{
+      document.getElementById('italic_checkbox').checked = false;
     }
 		this.setState({
       activeObject : this.getActiveObject(),
@@ -755,6 +759,9 @@ class ImageEditor extends Component {
     this._register(this.action, new Fill(this));
     this._register(this.action, new Icon(this));
     this._register(this.action, new Shape(this));
+    this._register(this.action, new Grid(this));
+    this._register(this.action, new Line(this));
+    this._register(this.action, new Snap(this));
   }
 
   /**
@@ -792,112 +799,25 @@ class ImageEditor extends Component {
   }
 
   /**
-   * "object:moving" canvas event handler
-   * @param {{target: fabric.Object, e: MouseEvent, transform : object}} fEvent - Fabric event
-   * @public
+   * Get grid instance
+   * @returns {ImageEditor}
    */
-  snapMovingEvent = (event) => {
-    let direction = {
-      x : event.e.movementX <= 0 ? 'left' : 'right',
-      y : event.e.movementY <= 0 ? 'top' : 'bottom',
-    }
-    let left = Math.round(event.target.left / 10) * 10;
-    let top =  Math.round(event.target.top / 10) * 10;
-    event.target.set({
-      left : left,
-      top : top,
-    })
-    const pointer = event.target.getPointByOrigin(direction.x, direction.y);
-    // const pointer = event.target.getPointByOrigin('left', 'top');
-    event.target.set({
-      left : left - pointer.x%10,
-      top : top - pointer.y%10
-    })
-    event.target.setCoords();
-    this.setState({activeObject : this.getActiveObject()})
+  getGrid = () => {
+    return this.grid;
+  }
+
+  setGrid = (grid) => {
+    this.grid = grid;
   }
 
   onClickSnap = (event) => {
-    if(event.target.checked){
-      this._canvas.on("object:moving", this.snapMovingEvent);
-    }
-    else{
-      this._canvas.off("object:moving", this.snapMovingEvent);
-    }
+    this.action['Snap'].onClickSnap(event);
   }
 
   onClickObjectSnap = (event) => {
-    if(event.target.checked){
-      this._canvas.on("object:moving", this.snapObjectMovingEvent);
-    }
-    else{
-      this._canvas.off("object:moving", this.snapObjectMovingEvent);
-    }
+    this.action['Snap'].onClickObjectSnap(event);
   }
   
-  /**
-   * "object:moving" canvas event handler
-   * @param {{target: fabric.Object, e: MouseEvent}} fEvent - Fabric event
-   * @public
-   */
-  snapObjectMovingEvent = (event) => {
-    event.target.setCoords();
-    let target_top = Math.min(event.target.aCoords.tl.y, event.target.aCoords.tr.y, event.target.aCoords.br.y, event.target.aCoords.bl.y) ;
-    let target_bottom =  Math.max(event.target.aCoords.tl.y, event.target.aCoords.tr.y, event.target.aCoords.br.y, event.target.aCoords.bl.y);
-    let target_left = Math.min(event.target.aCoords.tl.x, event.target.aCoords.tr.x, event.target.aCoords.br.x, event.target.aCoords.bl.x);
-    let target_right = Math.max(event.target.aCoords.tl.x, event.target.aCoords.tr.x, event.target.aCoords.br.x, event.target.aCoords.bl.x);
-    this._canvas.forEachObject((obj) => {
-      if(obj === event.target) {return;}
-      
-      obj.setCoords();
-      let obj_top = Math.min(obj.aCoords.tl.y, obj.aCoords.tr.y, obj.aCoords.br.y, obj.aCoords.bl.y) ;
-      let obj_bottom = Math.max(obj.aCoords.tl.y, obj.aCoords.tr.y, obj.aCoords.br.y, obj.aCoords.bl.y);
-      let obj_right = Math.max(obj.aCoords.tl.x, obj.aCoords.tr.x, obj.aCoords.br.x, obj.aCoords.bl.x);
-      let obj_left = Math.min(obj.aCoords.tl.x, obj.aCoords.tr.x, obj.aCoords.br.x, obj.aCoords.bl.x);
-
-      //right
-      if(Math.abs(obj_right - target_left) < 10){
-        event.target.set({
-          // left : obj.getPointByOrigin('right', 'bottom').x + (event.target.scaleX * event.target.width / 2) + (event.target.strokeWidth/2)
-          // left : obj_right + (event.target.scaleX * event.target.width / 2) + (event.target.strokeWidth/2) ,
-          // left : obj.getPointByOrigin('left', 'bottom').x + (obj.width * obj.scaleX) + (event.target.scaleX * event.target.width / 2)
-          left : event.target.left + obj_right - target_left
-        })
-        // obj.setCoords();
-        event.target.setCoords();
-      }
-      //left
-      // console.log(obj.aCoords.tl.x - event.target.aCoords.tr.x);
-      if(Math.abs(obj_left - target_right) < 10){
-        event.target.set({
-          // left : event.target.left - obj.left + 1,
-          // left : obj.getPointByOrigin('left', 'bottom').x - (event.target.scaleX * event.target.width / 2) - (event.target.strokeWidth/2)
-          // left : obj_left - (event.target.scaleX * event.target.width / 2) - (event.target.strokeWidth/2), 
-          left : event.target.left + obj_left - target_right
-        })
-        event.target.setCoords();
-      }
-      // top
-      if(Math.abs(obj_top - target_bottom) < 10){
-        event.target.set({
-          // top : obj.getPointByOrigin('right', 'top').y - (event.target.scaleY * event.target.height / 2) - (event.target.strokeWidth/2)
-          // top : obj_top - (event.target.scaleY * event.target.height / 2) - (event.target.strokeWidth/2),
-          top : event.target.top + obj_top - target_bottom
-        })
-        event.target.setCoords();
-      }
-      //bottom
-      if(Math.abs(obj_bottom - target_top) < 10){
-        event.target.set({
-          // top : obj.getPointByOrigin('left', 'bottom').y + (event.target.scaleY * event.target.height / 2) + (event.target.strokeWidth/2)
-          // top : obj_bottom + (event.target.scaleY * event.target.height / 2) + (event.target.strokeWidth/2)
-          top : event.target.top + obj_bottom - target_top
-        })
-        event.target.setCoords();
-      }
-    })
-  }
-
   copyObject = () => {
     if(this.getActiveObject()){
       this.getActiveObject().clone((cloned) => {
@@ -942,7 +862,7 @@ class ImageEditor extends Component {
           originY: option.originY,
           left: pointer.x,
           top: pointer.y,
-          
+
           scaleX : option.scaleX,
           scaleY : option.scaleY,
 
@@ -1017,6 +937,7 @@ class ImageEditor extends Component {
         this.currentState.width = json.width ? json.width : 800;
         this.currentState.height = json.height ? json.height : 600;
         this.currentState.id = 0;
+        this.firstState = this.currentState;
         this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
 
         this._canvas.setWidth( json.width ? json.width : 800 );
@@ -1061,41 +982,15 @@ class ImageEditor extends Component {
     document.addEventListener('mousedown',this.addImageEvent);
   }
 
-  addTextEvent = (event) => {
-    const pointer = this._canvas.getPointer(event, false)
-    if(event.target.tagName === 'CANVAS'){
-      let text = new fabric.Textbox('Hello world', {
-        left: pointer.x,
-        top: pointer.y,
-        fontSize: this.state.fontsize,
-        lockScalingY: true,
-        strokeWidth : 0
-      });
-      text.setControlsVisibility({
-        mt: false,
-        mb: false,
-        bl: false,
-        br: false,
-        tl: false,
-        tr: false
-      });
-      this._canvas.add(text).setActiveObject(text);
-      this.saveState('text add');
-    }
-    document.removeEventListener('mousedown', this.addTextEvent);
-    this._canvas.defaultCursor = 'default';
-  }
-
   addText = () => {
-    this._canvas.defaultCursor = 'pointer';
-		document.addEventListener('mousedown',this.addTextEvent);    
+    this.action['Text'].addText();
   }
 
   _bindShapeEvent = (shape) => {
     const canvas = this._canvas;
     shape.on({
       scaling(event){
-        Resize.resize(canvas, event, this);
+        ResizeHelper.resize(canvas, event, this);
       },
     })
   }
@@ -1255,57 +1150,8 @@ class ImageEditor extends Component {
     this.action['Icon'].addIcon(options);
   }
 
-  addLineResize = (event) => {
-    let line = this.getActiveObject();
-    const pointer = this._canvas.getPointer(event, false);
-    line.set({x2 : pointer.x, y2 : pointer.y});
-    this._canvas.renderAll();
-  }
-
-  addLineEvent = (event) => {
-    if(event.target.tagName === 'CANVAS'){
-      this.disableObj = this.getActiveObject();
-      if(this.disableObj){
-        // disableObj.evented = false;
-        this.disableObj.lockMovementY = true;
-        this.disableObj.lockMovementX = true;
-      }
-      const pointer = this._canvas.getPointer(event, false);
-      let line = new fabric.Line([ pointer.x, pointer.y, pointer.x, pointer.y ], {
-        left : pointer.x,
-        right :pointer.y,
-        strokeWidth : 5,
-        stroke : 'black',
-        fill : 'black'
-      })
-      this._canvas.add(line).setActiveObject(line);
-
-      this._canvas.selection = false;
-      this._canvas.on('mouse:move', this.addLineResize);
-      this._canvas.on('mouse:up', this.addLineEndEvent);
-    }
-    this._canvas.defaultCursor = 'default';
-    document.removeEventListener('mousedown', this.addLineEvent);
-  }
-
-  addLineEndEvent = () => {
-    this._canvas.off('mouse:move', this.addLineResize);
-    // console.log('off')
-    this._canvas.selection = true;
-    this._canvas.renderAll();
-    this.saveState('line add');
-    if(this.disableObj){
-      this.disableObj.lockMovementY = false;
-      this.disableObj.lockMovementX = false;
-      this.disableObj = null;
-    }
-    this._canvas.off('mouse:up', this.addLineEndEvent);
-  }
-
   addLine = () => {
-    this._canvas.defaultCursor = 'pointer';
-    this._canvas.discardActiveObject();
-		document.addEventListener('mousedown',this.addLineEvent);    
+    this.action['Line'].addLine();
   }
 
   makePolygonWithDrag = () => {
@@ -1391,6 +1237,8 @@ class ImageEditor extends Component {
         saturation : this.state.filters.saturation,
         hue : this.state.filters.hue,
         ink : this.state.filters.ink,
+        vignette : this.state.filters.vignette,
+        zoomblur : this.state.filters.zoomblur,
       };
       change_state[event.target.name] = event.target.value;
       new Promise((resolve) => {
@@ -1659,16 +1507,7 @@ class ImageEditor extends Component {
 
   textObject = (event) => {
     let textOption = event.target.getAttribute('text');
-    let activeObject = this.getActiveObject();
-
-    if (activeObject) {
-      this.action['Text'].textObj(activeObject, textOption, event.target.checked, event.target.value);
-      this.saveState('Text modified ' + textOption);
-    }
-    else {
-      alert('text is not activated');
-      event.target.checked = false;
-    }
+    this.action['Text'].textObj(this.getActiveObject(), textOption, event.target.checked, event.target.value);
   }
 
   toggletextbg = () => {
@@ -1794,10 +1633,35 @@ class ImageEditor extends Component {
     }
   }
 
+  onclickUndoStack = (event) => {
+    let origin = this.currentState.id;
+    let dest = parseInt(event.target.getAttribute('number'), 10);
+    // console.log('current id : ', this.currentState.id);
+    // console.log('click id : ', parseInt(event.target.getAttribute('number'), 10));
+
+
+    if(this.stateStack.length > 0){
+      this.redoStack.push(this.currentState);
+      for(let i = dest; i < origin - 1 ; i++ ){
+        this.redoStack.push( this.stateStack.pop() );
+      }
+
+      this.currentState = this.stateStack.pop();
+  
+      this._canvas.loadFromJSON(this.currentState, () => {
+        this._canvas.setWidth(this.currentState.width);
+        this._canvas.setHeight(this.currentState.height);
+        this._canvas.calcOffset();
+      });
+      this.forceUpdate();
+    }
+
+  }
+
   showUndoStack = () => {
     // console.log(this.stateStack);
     const listitem = this.stateStack.map((state) =>
-      <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack">{state.action}</p>
+      <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
     );
     return(
       <div>
@@ -1809,7 +1673,7 @@ class ImageEditor extends Component {
   showRedoStack = () => {
     // console.log(this.redoStack);
     const listitem = this.redoStack.map((state) =>
-      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack">{state.action}</p>
+      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack">{state.id} : {state.action}</p>
     );
     return(
       <div>
@@ -1896,19 +1760,18 @@ class ImageEditor extends Component {
   openDrawing = () => {
     this.setState({ drawingMode: true });
     this._canvas.isDrawingMode = true;
-    this._canvas.freeDrawingCursor = 'default';
+    this._canvas.freeDrawingCursor = 'crosshair';
   }
 
   closeDrawing = () => {
     this.setState({ drawingMode: false });
     this._canvas.isDrawingMode = false;
-    
   }
   
   handleDrawingWidth = (event) => {
-      const value = event.target.value;
-      this.setState({lineWidth: value});
-      this._canvas.freeDrawingBrush.width = this.state.lineWidth;
+    const value = event.target.value;
+    this.setState( {lineWidth: value} );
+    this._canvas.freeDrawingBrush.width =  parseInt(this.state.lineWidth, 10);
   }
 
   handleDrawingColor = (color) => {
@@ -1990,6 +1853,7 @@ class ImageEditor extends Component {
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
             <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
+            <button onClick={this.resetState}>state 초기화</button>
             <input type="checkbox" onClick = {this.getMousePointInfo} /> 캔버스 좌표 보기
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>캔버스 크기  {this._canvas? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</p>
@@ -2095,7 +1959,7 @@ class ImageEditor extends Component {
             <CompactPicker color={this.state.text.color} onChange={this.handletextBgChange}></CompactPicker> : null}
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
-            <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
+            <input type='checkbox' className='text' onClick={this.textObject} text='italic' id='italic_checkbox' />italic
             <button type='checkbox' className='text' onClick={this.textObject} text='left-align'>좌측정렬</button>
             <button type='checkbox' className='text' onClick={this.textObject} text='center-align' >가운데정렬</button>
             <button type='checkbox' className='text' onClick={this.textObject} text='right-align' >우측정렬</button>
@@ -2257,6 +2121,30 @@ class ImageEditor extends Component {
               onChange={this.handleFilterChange} filter='ink'
             />ink from glfx.js
 
+            <input
+              type='range'
+              className='filter'
+              id='vignette'
+              min='0'
+              max='1'
+              name='vignette'
+              step='0.01'
+              value={this.state.filters.vignette || 0}
+              onChange={this.handleFilterChange} filter='vignette'
+            />vignette from glfx.js
+
+            <input
+              type='range'
+              className='filter'
+              id='zoomblur'
+              min='0'
+              max='1'
+              name='zoomblur'
+              step='0.01'
+              value={this.state.filters.zoomblur || 0}
+              onChange={this.handleFilterChange} filter='zoomblur'
+            />zoomblur from glfx.js
+
             
             <input
               type='range'
@@ -2356,7 +2244,7 @@ class ImageEditor extends Component {
             <h5>색깔 : 기본 색</h5>
             <button onClick={this.openColorPicker}>color</button>
           	{ this.state.displayColorPicker ? <div>
-          	  <div onClick={this.closeColorPicker}/>
+          	  <div onClick={this.closeColorPicker} role="button" tabIndex="0"/>
           	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           	</div> : null }
           </div>

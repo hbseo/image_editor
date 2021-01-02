@@ -1,5 +1,7 @@
 import Action from './Action';
-import { Ink } from './filters/glfx/ink.js'
+import { Ink } from '../filters/glfx/ink.js'
+import { Vignette } from '../filters/glfx/vignette.js'
+import { ZoomBlur } from '../filters/glfx/zoomblur.js'
 import { fabric } from 'fabric';
 
 class Filter extends Action {
@@ -85,6 +87,25 @@ class Filter extends Action {
           obj.filters[22] = (new Ink({
             ink_matrix : {
               ink : value * value * value * value * value,
+              width : obj.width,
+              height : obj.height
+            }
+          }));
+          break;
+        case 'vignette':
+          obj.filters[23] = (new Vignette({
+            vignette_matrix : {
+              size :  0.66,
+              amount : value
+            }
+          }));
+          break;
+        case 'zoomblur':
+          obj.filters[24] = (new ZoomBlur({
+            zoomblur_matrix : {
+              center_x : obj.width/2,
+              center_y : obj.height/2,
+              strength : value,
               width : obj.width,
               height : obj.height
             }

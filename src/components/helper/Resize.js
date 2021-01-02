@@ -1,6 +1,5 @@
 
 function shapeScalingResizeEvent(canvas, pointer, obj){
-
   let width = Math.abs(obj.left - pointer.x);
   let height = Math.abs(obj.top - pointer.y);
 
@@ -12,7 +11,6 @@ function shapeScalingResizeEvent(canvas, pointer, obj){
   })
   obj.setCoords();
   canvas.renderAll();
-  
 }
 
 /**
