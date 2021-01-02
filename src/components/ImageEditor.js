@@ -1426,21 +1426,12 @@ class ImageEditor extends Component {
 
   }
 
-  deleteObject = (event) => {
-    let obj = this.getActiveObject();
-    if(obj){
-      switch(obj.type){
-        case 'textbox' : 
-          if(!this.getActiveObject().isEditing){
-            this.action['Delete'].deleteObj();
-            this.saveState('delete Textbox');
-          }
-          break;
-        default :
-          this.action['Delete'].deleteObj();
-          this.saveState('delete '+ obj.type);
-      }
-    }
+  deleteObject = () => {
+    this.action['Delete'].deleteObject();
+  }
+
+  deleteAllObject = () => {
+    this.action['Delete'].deleteAllObject();
   }
 
   flipObject = (event) => {
@@ -1896,6 +1887,7 @@ class ImageEditor extends Component {
             <button onClick={this.bringToFront}>맨 앞으로 보내기</button>
             <button onClick={this.bringForward}>앞으로 보내기</button>
             <button onClick={this.deleteObject}>선택 개체 삭제</button>
+            <button onClick={this.deleteAllObject}>모든 객체 삭제</button>
             <button onClick={this.makeGroup}>그룹화</button>
             <button onClick={this.unGroup}>그룹해제</button>
             <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
