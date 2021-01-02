@@ -1,0 +1,19 @@
+/* 
+1. install & run mysql
+2. insert code
+*/
+
+CREATE DATABASE IF NOT EXISTS db;
+
+USE db;
+
+CREATE TABLE IF NOT EXISTS USERS (
+  idx INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  userid VARCHAR(32) NOT NULL UNIQUE,
+  password VARCHAR(32) NOT NULL,
+  project INT NOT NULL DEFAULT 0,
+  create_date TIMESTAMP,
+  modify_date TIMESTAMP,
+  login_date TIMESTAMP,
+  ip INT UNSIGNED DEFAULT NULL
+)

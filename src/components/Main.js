@@ -1,6 +1,7 @@
 import React, { Component} from 'react';
 import { Link } from 'react-router-dom';
 import ImageList from './ImageList';
+import Login from './Login';
 import './Main.scss'
 
 class Main extends Component {
@@ -217,7 +218,7 @@ class Main extends Component {
 					<button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
 				</div>
 
-				
+				<Login></Login>
       </div>
     )
   }

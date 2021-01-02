@@ -1,0 +1,46 @@
+// dependencies
+const express = require('express');
+const morgan = require('morgan')
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser')
+
+// load configuration
+const port = process.env.PORT || 8000;
+const config = require('./config/key')
+
+// express configuration
+const app = express();
+
+// cross domain
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+})
+
+// parse
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
+
+// print the request log on console
+app.use(morgan('dev'));
+
+// set the secret key variable for jwt
+app.set('jwt-secret', config.secret);
+
+// // index page
+// app.get('/', (req, res) => {
+//     res.send('hello world');
+// })
+
+// router
+app.use('/', require('./routes/index'));
+
+// open server
+app.listen(port, () => {
+    console.log(`express is running on ${port}`);
+})
+
+
+// connection.end();

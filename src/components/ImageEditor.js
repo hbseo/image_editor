@@ -2344,6 +2344,7 @@ class ImageEditor extends Component {
             <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
             <button onClick={this.undo}>Undo</button>
             <button onClick={this.redo}>Redo</button>
+            <h5>{this.currentState.action}</h5>
             <input type="checkbox" onClick={this.onClickSnap}/>그리드 스냅 옵션
             <input type="checkbox" onClick={this.onClickGrid}/>그리드 on/off
             <input type="checkbox" onClick={this.onClickObjectSnap}/> 오브젝트 스냅 옵션
