@@ -1887,7 +1887,7 @@ class ImageEditor extends Component {
           </div> : null }
           <hr />
           <h5>레이어</h5>
-          {this.action['Layers'].showLayers()}
+          {/* {this.action['Layers'].showLayers()} */}
           <hr />
         </div>
         

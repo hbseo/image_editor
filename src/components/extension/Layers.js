@@ -9,7 +9,6 @@ class Layers extends Extension {
 
     showLayers = () => {
         const canvas = this.getCanvas();
-
         if(canvas){
             let objs = canvas.getObjects();
             let canvas_list = [];
@@ -20,7 +19,7 @@ class Layers extends Extension {
                     width: canvas.getWidth(),
                     backgroundColor: 'grey'
                 });
-                c.add(objs[i]);
+                c.add(fabric.util.object.clone(objs[i]));
                 canvas_list.push(c);
             }
 
