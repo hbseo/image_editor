@@ -16,12 +16,14 @@ import Line from './action/Line';
 import Draw from './action/Draw';
 import Grid from './extension/Grid';
 import Snap from './extension/Snap';
+import Layers from './extension/Layers';
 import ResizeHelper from './helper/Resize';
 
 class ImageEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showRoot : false,
       fontsize: 50, //active object's fontSize
       canvasView : { x: 0, y: 0},
       layers: [],
@@ -762,6 +764,7 @@ class ImageEditor extends Component {
     this._register(this.action, new Grid(this));
     this._register(this.action, new Line(this));
     this._register(this.action, new Snap(this));
+    this._register(this.action, new Layers(this));
   }
 
   /**
@@ -1809,6 +1812,10 @@ class ImageEditor extends Component {
       }
       console.log(objstack);
   }
+
+  displayRoot = () => {
+    this.setState({showRoot : !this.state.showRoot})
+  }
   render() {
 		const styles = {
 			color : {
@@ -1823,9 +1830,10 @@ class ImageEditor extends Component {
           <div>
             <canvas id='canvas' tabIndex='0'></canvas>
           </div>
+          <h5 onClick = {this.displayRoot}>개발자 기능</h5>
 
+          {this.state.showRoot ?
           <div>
-            <h5>개발자 기능</h5>
 
             {this.state.activeObject.type !== 'not active' ?
             <div>
@@ -1874,8 +1882,12 @@ class ImageEditor extends Component {
             <hr />
             <p>- Redo Stack  </p>
             {this.showRedoStack()}
-          </div>
+            
 
+          </div> : null }
+          <hr />
+          <h5>레이어</h5>
+          {this.action['Layers'].showLayers()}
           <hr />
         </div>
         
