@@ -7,6 +7,7 @@ import Rotation from './action/Rotation';
 import Filter from './action/Filter';
 import Delete from './action/Delete';
 import Shape from './action/Shape';
+import Image from './action/Image';
 import Crop from './action/Crop';
 import Flip from './action/Flip';
 import Text from './action/Text';
@@ -761,6 +762,7 @@ class ImageEditor extends Component {
     this._register(this.action, new Fill(this));
     this._register(this.action, new Icon(this));
     this._register(this.action, new Shape(this));
+    this._register(this.action, new Image(this));
     this._register(this.action, new Grid(this));
     this._register(this.action, new Line(this));
     this._register(this.action, new Snap(this));
@@ -857,40 +859,11 @@ class ImageEditor extends Component {
 
 
   loadImage = (url, pointer, option) => {
-    return new Promise(resolve => {
-      fabric.Image.fromURL(url, img => {
-        img.set({
-          angle: 0,
-          originX: option.originX,
-          originY: option.originY,
-          left: pointer.x,
-          top: pointer.y,
-
-          scaleX : option.scaleX,
-          scaleY : option.scaleY,
-
-          // max size 2048x2048 for Webgl
-          // width : img.width * option.scaleX,
-          // height : img.height * option.scaleY,
-          // scaleX : 1,
-          // scaleY : 1,
-
-          strokeWidth : 0
-        });
-        resolve(img);
-      }, { crossOrigin: 'anonymous' }
-      );
-    });
+    return this.action['Image'].loadImage(url, pointer, option);
   }
 
   saveImage = () => {
-    let dataURL = this._canvas.toDataURL({
-      format: 'png'
-    });
-    var a = document.createElement("a");
-    a.href = dataURL;
-    a.setAttribute("download", 'image.png');
-    a.click();
+    this.action['Image'].saveImage();
   }
 
   exportCanvas = () => {
