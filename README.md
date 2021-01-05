@@ -75,6 +75,7 @@ image_editor
     │─── config
     │     │───db-config.json
     │     │───key.js
+    │     │───jwt.js
     │     └───user.sql
     │
     │─── database
