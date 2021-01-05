@@ -5,7 +5,6 @@ class Crop extends Action {
   constructor(App) {
     super('Crop', App);
     this._cropzone = null;
-    this._cropImage = null;
 
     fabric.Cropzone = fabric.util.createClass(fabric.Rect, {
       type: 'Cropzone',
@@ -34,32 +33,35 @@ class Crop extends Action {
           this.isInVirtualMode = true;
           this.backgroundColor = this.virtualModeColor;
       },
-  
       _render: function(ctx) {
           this.callSuper('_render', ctx);
       }
     });
+
+  }
+
+  cropzoneOption = (image) => {
+    return {label: 'cropObj',
+      top: image.top, 
+      left: image.left, 
+      height: image.height + image.strokeWidth, 
+      width:image.width + image.strokeWidth,
+      scaleX : image.scaleX,
+      scaleY : image.scaleY,
+      angle : image.angle,
+   };
   }
 
   cropObj = (activeObject, option) => {
     let canvas = this.getCanvas();
-
     let image = activeObject;
-    // this._cropzone = image;
-    this._cropzone = new fabric.Cropzone(
-      {label: 'cropObj',
-       top: image.top, 
-       left: image.left, 
-       height: image.height + image.strokeWidth, 
-       width:image.width + image.strokeWidth,
-       scaleX : image.scaleX,
-       scaleY : image.scaleY,
-       angle : image.angle,
-    })
-    canvas.add(this._cropzone);
-    canvas.renderAll();
+
+    this._cropzone = new fabric.Cropzone(this.cropzoneOption(image));
     this.addEvent();
+
+    canvas.add(this._cropzone);
     canvas.setActiveObject(this._cropzone);
+    canvas.renderAll();
     canvas.requestRenderAll();
   }
 
@@ -82,11 +84,7 @@ class Crop extends Action {
     group._restoreObjectsState();
     test_canvas.add(group.item(0));
     test_canvas.add(group.item(1));
-    // console.log(test_canvas._objects[1]);
-    // var a = document.createElement("a");
-    // a.href = test_canvas.toDataURL();
-    // a.setAttribute("download", 'image.png');
-    // a.click();
+
     let cropRect = {
       left : test_canvas._objects[1].oCoords.tl.x,
       top : test_canvas._objects[1].oCoords.tl.y,
@@ -94,7 +92,7 @@ class Crop extends Action {
       width : this._cropzone.width * this._cropzone.scaleX,
     }
     const imageData = {
-      imageName: "test",
+      imageName: "crop",
       url: test_canvas.toDataURL(cropRect)
     };
     test_canvas.clear();
@@ -194,13 +192,7 @@ class Crop extends Action {
 
   fillOuterBox = () => {
     let canvas = this.getCanvas();
-    // const xy = {
-    //   left : this._cropzone.left,
-    //   top : this._cropzone.top,
-    //   height : this._cropzone.height * this._cropzone.scaleY,
-    //   width : this._cropzone.width * this._cropzone.scaleX,
-    // }
-    // console.log(xy)
+
     if (canvas.getContext) {
       var ctx = canvas.getContext('2d');
       ctx.fillStyle = 'rgb(0,0,0,0.8)';
@@ -217,16 +209,6 @@ class Crop extends Action {
       ctx.lineTo(0 , 0);
       ctx.closePath();
 
-
-
-      // //inner
-      // ctx.moveTo(xy.left , xy.top);
-      // ctx.lineTo(xy.left, xy.top + xy.height);
-      // ctx.lineTo(xy.left + xy.width, xy.top + xy.height);
-      // ctx.lineTo(xy.left + xy.width, xy.top);
-      // ctx.lineTo(xy.left , xy.top);
-      // ctx.closePath();
-
       //inner
       ctx.moveTo(this._cropzone.oCoords.tl.x , this._cropzone.oCoords.tl.y);
       ctx.lineTo(this._cropzone.oCoords.bl.x , this._cropzone.oCoords.bl.y);
@@ -235,13 +217,9 @@ class Crop extends Action {
       ctx.moveTo(this._cropzone.oCoords.tl.x , this._cropzone.oCoords.tl.y);
       ctx.closePath();
 
-
-
       ctx.fill();
       ctx.restore();
 
-
-      // console.log(ctx);
     }
   }
 
@@ -249,33 +227,17 @@ class Crop extends Action {
   addEvent = () => {
     const canvas = this.getCanvas();
     this.fillOuterBox();
-    // canvas.on('object:moving', (event) => {
-      
-    //   console.log("move");    
-    //   this.fillOuterBox();
-
-    // });
 
     canvas.on('after:render', (event) => {
       this.fillOuterBox();
 
     });
 
-
-
-
-
   }
-
-
-
   deleteEvent = () => {
     const canvas = this.getCanvas();
-
     canvas.off('after:render');
-
   }
-
 }
 
 export default Crop;

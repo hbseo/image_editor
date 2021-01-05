@@ -36,42 +36,66 @@ image_editor
 │   │
 │   └───components
 │       │───ImageEditor.js
+│       │───ImageList.js
 │       │───Error.js
 │       |───Main.js
-|       |───Action.js
 │       │───Login.js
 │       │    
 │       └─── action
+│       │     │───Action.js
 │       │     │───Crop.js
 │       │     │───Delete.js
+│       │     │───Draw.js
 │       │     │───Fill.js
 │       │     │───Filter.js
 │       │     │───Flip.js
 │       │     │───Icon.js
+│       │     │───Image.js
+│       │     │───Line.js
 │       │     │───Rotation.js
 │       │     │───Shape.js
 │       │     └───Text.js
 │       │
+│       └─── extension
+│       │     │───Extension.js
+│       │     │───Grid.js
+│       │     │───Layers.js
+│       │     └───Snap.js
+│       │   
 │       └─── filters
-|            └─── glfx
-|                  └─── ink.js
-|                   
+|       │    └─── glfx
+│       │          └───ink.js
+│       │
+│       └─── helper
+│             └───Resize.js                            
 │   
 └───server
-│   └───index.js
-|   
-└───routes ─── api 
-│              |───auth.controller.js
-│              └───index.js
-│              
-└───middlewares ─── auth.js
+    │─── app.js
+    │
+    │─── config
+    │     │───db-config.json
+    │     │───key.js
+    │     └───user.sql
+    │
+    │─── database
+    │     └───index.js
+    │
+    │─── middlewares
+    │     └───auth.js
+    │
+    └─── routes
+          └───api
+              └───auth
+                  │───controller.js 
+                  └───index.js
+
+
+
+
+   
+
 
 ```
-
-
-
-## Notice
-### /config/database.config 확인해서 데이터베이스 설정된거 자기 실행환경에 맞게 바꾸기 
 
 ` / `
 > npm run start
@@ -81,9 +105,9 @@ client port number 8080
 ---
 
 ` /server `
-> node index
+> node app
 
 server port number 8000
 
-### check config/database.config !!!!!
-install mysql and create a database before using the app
+### server/config/db-config.json
+### server/config/user.sql

@@ -7,6 +7,7 @@ import Rotation from './action/Rotation';
 import Filter from './action/Filter';
 import Delete from './action/Delete';
 import Shape from './action/Shape';
+import Image from './action/Image';
 import Crop from './action/Crop';
 import Flip from './action/Flip';
 import Text from './action/Text';
@@ -16,12 +17,14 @@ import Line from './action/Line';
 import Draw from './action/Draw';
 import Grid from './extension/Grid';
 import Snap from './extension/Snap';
+import Layers from './extension/Layers';
 import ResizeHelper from './helper/Resize';
 
 class ImageEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showRoot : false,
       fontsize: 50, //active object's fontSize
       canvasView : { x: 0, y: 0},
       layers: [],
@@ -759,9 +762,11 @@ class ImageEditor extends Component {
     this._register(this.action, new Fill(this));
     this._register(this.action, new Icon(this));
     this._register(this.action, new Shape(this));
+    this._register(this.action, new Image(this));
     this._register(this.action, new Grid(this));
     this._register(this.action, new Line(this));
     this._register(this.action, new Snap(this));
+    this._register(this.action, new Layers(this));
   }
 
   /**
@@ -854,40 +859,11 @@ class ImageEditor extends Component {
 
 
   loadImage = (url, pointer, option) => {
-    return new Promise(resolve => {
-      fabric.Image.fromURL(url, img => {
-        img.set({
-          angle: 0,
-          originX: option.originX,
-          originY: option.originY,
-          left: pointer.x,
-          top: pointer.y,
-
-          scaleX : option.scaleX,
-          scaleY : option.scaleY,
-
-          // max size 2048x2048 for Webgl
-          // width : img.width * option.scaleX,
-          // height : img.height * option.scaleY,
-          // scaleX : 1,
-          // scaleY : 1,
-
-          strokeWidth : 0
-        });
-        resolve(img);
-      }, { crossOrigin: 'anonymous' }
-      );
-    });
+    return this.action['Image'].loadImage(url, pointer, option);
   }
 
   saveImage = () => {
-    let dataURL = this._canvas.toDataURL({
-      format: 'png'
-    });
-    var a = document.createElement("a");
-    a.href = dataURL;
-    a.setAttribute("download", 'image.png');
-    a.click();
+    this.action['Image'].saveImage();
   }
 
   exportCanvas = () => {
@@ -1426,21 +1402,12 @@ class ImageEditor extends Component {
 
   }
 
-  deleteObject = (event) => {
-    let obj = this.getActiveObject();
-    if(obj){
-      switch(obj.type){
-        case 'textbox' : 
-          if(!this.getActiveObject().isEditing){
-            this.action['Delete'].deleteObj();
-            this.saveState('delete Textbox');
-          }
-          break;
-        default :
-          this.action['Delete'].deleteObj();
-          this.saveState('delete '+ obj.type);
-      }
-    }
+  deleteObject = () => {
+    this.action['Delete'].deleteObject();
+  }
+
+  deleteAllObject = () => {
+    this.action['Delete'].deleteAllObject();
   }
 
   flipObject = (event) => {
@@ -1818,6 +1785,10 @@ class ImageEditor extends Component {
       }
       console.log(objstack);
   }
+
+  displayRoot = () => {
+    this.setState({showRoot : !this.state.showRoot})
+  }
   render() {
 		const styles = {
 			color : {
@@ -1832,9 +1803,10 @@ class ImageEditor extends Component {
           <div>
             <canvas id='canvas' tabIndex='0'></canvas>
           </div>
+          <h5 onClick = {this.displayRoot}>개발자 기능</h5>
 
+          {this.state.showRoot ?
           <div>
-            <h5>개발자 기능</h5>
 
             {this.state.activeObject.type !== 'not active' ?
             <div>
@@ -1883,8 +1855,12 @@ class ImageEditor extends Component {
             <hr />
             <p>- Redo Stack  </p>
             {this.showRedoStack()}
-          </div>
+            
 
+          </div> : null }
+          <hr />
+          <h5>레이어</h5>
+          {/* {this.action['Layers'].showLayers()} */}
           <hr />
         </div>
         
@@ -1896,6 +1872,7 @@ class ImageEditor extends Component {
             <button onClick={this.bringToFront}>맨 앞으로 보내기</button>
             <button onClick={this.bringForward}>앞으로 보내기</button>
             <button onClick={this.deleteObject}>선택 개체 삭제</button>
+            <button onClick={this.deleteAllObject}>모든 객체 삭제</button>
             <button onClick={this.makeGroup}>그룹화</button>
             <button onClick={this.unGroup}>그룹해제</button>
             <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
