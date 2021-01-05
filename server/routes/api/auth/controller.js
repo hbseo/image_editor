@@ -1,47 +1,60 @@
 const jwt = require("jsonwebtoken");
-const database = require('../../../database/index')
-
+const database = require('../../../database/index');
+const crypto = require('crypto');
 const moment = require('moment');
 
 exports.dupCheck = (req, res) => {
   const {id} = req.body;
   let query = `SELECT EXISTS (SELECT * FROM USERS WHERE userid = "${id}") as success`;
-  if(id) {
-    database.connection.query(query, (error, result, fields) => {
-      if(error) {
-        console.log(error);
-      }
-      else {
-        // already exist
-        if(result[0].success) {
-          res.status(200).json({
-            msg: 'exist'
-          })
-        }
-        else {
-          res.status(200).json({
-            msg: 'not exist'
-          })
-        }
-      }
+
+  const respond = (result) => {
+    if(result[0].success) {
+      res.status(200).json({
+        msg: 'exist'
+      })
+    }
+    else {
+      res.status(200).json({
+        msg: 'not exist'
+      })
+    }
+  }
+
+  const onError = (error) => {
+    res.status(400).json({
+      msg: error.message
     })
   }
+
+  database.query(query)
+  .then(respond)
+  .catch(onError)
 }
 
 exports.login = (req, res) => {
-  const { id, password } = req.body
-  console.log(id, password);
-  const secret = req.app.get('jwt-secret')
-  let query = `SELECT * FROM USERS WHERE userid = "${id}" AND  password = "${password}";`;
+  const { id, password } = req.body;
+  const secret = req.app.get('jwt-secret');
+  let query = `SELECT EXISTS (SELECT * FROM USERS WHERE userid = "${id}") as success`;
 
-  if (id) {
-    database.connection.query(query, (error, result, fields) => {
-      if (error) {
-        console.log(error);
-      }
-      console.log(result);
-    });
-  }
+  // const check = (result) => {
+  //   if(result[0].success) {
+      
+  //   }
+  //   else {
+  //     res.status(200).json({
+  //       msg: 'not exist'
+  //     })
+  //   }
+  // }
+  // let query = `SELECT * FROM USERS WHERE userid = "${id}" AND  password = "${password}";`;
+  // if (id) {
+  //   database.connection.query(query, (error, result, fields) => {
+  //     if (error) {
+  //       console.log(error);
+  //     }
+  //     console.log(result);
+  //   });
+  // }
 
   // const check = (user) => {
   //     if(user.length === 1){
@@ -88,31 +101,25 @@ exports.login = (req, res) => {
 
 }
 
-exports.check = (req, res) => {
-  res.json({
-    success: true,
-    info: req.decoded
-  });
-}
-
 exports.register = (req, res) => {
   const { id, password } = req.body
+  let salt = crypto.randomBytes(64).toString('base64');
+  let hashPassword = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('base64');
+  let query = `INSERT INTO USERS (userid, password, salt) VALUES ("${id}", "${hashPassword}", "${salt}")`;
 
-  let query = `INSERT INTO USERS (userid, password) VALUES ("${id}", "${password}")`;
-
-  if(id) {
-    database.connection.query(query, (error, result, fields) => {
-      if (error) {
-        console.log(error);
-        res.status(400).json({
-          msg: 'error ocurred'
-        })
-      }
-      else {
-        res.status(200).json({
-          msg: 'success'
-        })
-      }
-    });
+  const respond = (result) => {
+    res.status(200).json({
+      msg: 'success'
+    })
   }
+
+  const onError = (error) => {
+    res.status(400).json({
+      msg: error.message
+    })
+  }
+
+  database.query(query)
+  .then(respond)
+  .catch(onError)
 }
