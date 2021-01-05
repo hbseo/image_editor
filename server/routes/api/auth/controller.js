@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const database = require('../../../database/index');
+const secretObj = require('../../../config/jwt');
 const crypto = require('crypto');
 const moment = require('moment');
 
@@ -33,72 +34,62 @@ exports.dupCheck = (req, res) => {
 
 exports.login = (req, res) => {
   const { id, password } = req.body;
-  const secret = req.app.get('jwt-secret');
-  let query = `SELECT EXISTS (SELECT * FROM USERS WHERE userid = "${id}") as success`;
+  
+  let query = `SELECT password, salt FROM USERS WHERE userid = "${id}"`;
 
-  // const check = (result) => {
-  //   if(result[0].success) {
-      
-  //   }
-  //   else {
-  //     res.status(200).json({
-  //       msg: 'not exist'
-  //     })
-  //   }
-  // }
-  // let query = `SELECT * FROM USERS WHERE userid = "${id}" AND  password = "${password}";`;
-  // if (id) {
-  //   database.connection.query(query, (error, result, fields) => {
-  //     if (error) {
-  //       console.log(error);
-  //     }
-  //     console.log(result);
-  //   });
-  // }
+  const getData = (result) => {
+    if(result.length === 1) {
+      let dbPassword = result[0].password;
+      let salt = result[0].salt;
+      return {dbPassword, salt};
+    }
+    else {
+      throw new Error('wrong id');
+    }
+  }
 
-  // const check = (user) => {
-  //     if(user.length === 1){
-  //         return new Promise((resolve, reject) => {
-  //             jwt.sign(
-  //                 {
-  //                     _id : user.userid,
-  //                     email : user.email
-  //                 },
-  //                 secret,
-  //                 {
-  //                     expiresIn: '10000'
-  //                 }, (err, token) => {
-  //                     if (err) reject(err)
-  //                     resolve(token)
-  //                 }
-  //             )
-  //         })
-  //     } else{
-  //         throw new Error('not valid user')
-  //     }
-  // }
+  const check = (data) => {
+    let hashPassword = crypto.pbkdf2Sync(password, data.salt, 100000, 64, 'sha512').toString('base64');
+    if(data.dbPassword === hashPassword) {
+      return new Promise((resolve, reject) => {
+        jwt.sign(
+          {
+            user_id: id
+          },
+          secretObj.secret,
+          {
+            expiresIn: '1h'
+          },
+          (error, token) => {
+            if (error) reject(error);
+            resolve(token);
+          }
+        )
+      })
+    }
+    else {
+      throw new Error('wrong password');
+    }
+  }
 
-  // const respond = (token) => {
-  //     res.cookie('user', token, {maxAge : 10000});
-  //     res.json({
-  //         message : 'login success',
-  //         state : true,
-  //         token
-  //     })
-  // }
+  const respond = (token) => {
+    res.status(200).json({
+      msg: 'login success',
+      token
+    })
+  }
 
-  // const onError = (error) => {
-  //     res.status(403).json({
-  //         message : error.message,
-  //         state : false
-  //     })
-  // }
+  const onError = (error) => {
+    res.status(400).json({
+      msg: 'login failed'
+    })
+  }
 
-  // database.query(query)
-  //     .then(check)
-  //     .then(respond)
-  //     .catch(onError)
-
+  database.query(query)
+  .then(getData)
+  .then(check)
+  .then(respond)
+  .catch(onError)
 }
 
 exports.register = (req, res) => {

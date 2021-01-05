@@ -23,6 +23,15 @@ class SignIn extends Component {
       body: JSON.stringify({id, password})
     })
     .then((res) => res.json())
+    .then((data) => {
+      if(data.msg === 'login success') {
+        alert('로그인 성공!');
+        this.props.close();
+      }
+      else {
+        alert('아이디 또는 비밀번호 잘못 입력했습니다.');
+      }
+    })
   }
   toggle = () => {
     this.props.set_State('SignUp');
