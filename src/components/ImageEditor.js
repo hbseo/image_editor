@@ -19,6 +19,7 @@ import Grid from './extension/Grid';
 import Snap from './extension/Snap';
 import Layers from './extension/Layers';
 import ResizeHelper from './helper/Resize';
+import Save from './Save';
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -63,6 +64,7 @@ class ImageEditor extends Component {
         ink : 0,
         vignette : 0,
         zoomblur : 0,
+        opacity : 1,
       },
       cropCanvasSize : {
         width : 0,
@@ -80,6 +82,7 @@ class ImageEditor extends Component {
           b: '0',
           a: '1',
       },
+      isSave : false,
     }
     
 
@@ -171,6 +174,7 @@ class ImageEditor extends Component {
       })
       .then(() => {
         this.switchTools('text', true);
+        this.switchTools('filter', false);
         this._createDomEvent();
         this._createCanvasEvent();
         this.currentState = this._canvas.toDatalessJSON();
@@ -866,6 +870,14 @@ class ImageEditor extends Component {
     this.action['Image'].saveImage();
   }
 
+  openSaveModal = () => {
+    this.setState({isSave : true})
+  }
+
+  closeSaveModal = () => {
+    this.setState({isSave : false})
+  }
+
   exportCanvas = () => {
     let c = this._canvas.toJSON();
     c.width = this._canvas.width;
@@ -1515,14 +1527,6 @@ class ImageEditor extends Component {
     })
   }
 
-  layerThumb = () => {
-    var layer_list = null;
-    // if (this._canvas) {
-    //     layer_list = this._canvas._objects.map(obj => <li key={obj.cacheKey}><img src={obj.getSvgSrc()} alt="" height="10%" width="10%" /></li>)
-    // }
-    return layer_list
-  }
-
   onImgUrlChange = (url) => {
     this.testUrl = url;
     this.addImage();
@@ -2125,12 +2129,13 @@ class ImageEditor extends Component {
             
             <input
               type='range'
+              className='filter'
               id='opacity'
               min='0'
               max='1'
               name='opacity'
               step='0.01'
-              value={this.state.activeObject.type === 'image' ? this.state.activeObject.opacity : 1}
+              value={this.state.filters.opacity || 1}
               onChange={this.handleFilterChange} filter='opacity'
               disabled = {this.state.activeObject.type === 'image' ? false : true}
             />opacity
@@ -2203,7 +2208,7 @@ class ImageEditor extends Component {
                 />
               </div> : null
             }
-            <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
+            <button onClick={this.openSaveModal}> 지금 캔버스 배경색 없이 다운 </button>
             <button onClick={this.exportCanvas}> 캔버스 export </button>
             <button><input type='file' id='_file' onChange={this.importCanvas} accept="json"></input>캔버스 import</button>
             <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
@@ -2330,9 +2335,7 @@ class ImageEditor extends Component {
           </div>
         </div>
 
-
-
-        <hr />
+        <Save open = {this.state.isSave} close = {this.closeSaveModal} save = {this.saveImage} />
       </div>
     );
   }
