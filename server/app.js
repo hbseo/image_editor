@@ -1,8 +1,8 @@
 // dependencies
 const express = require('express');
-const morgan = require('morgan')
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 
 // load configuration
 const port = process.env.PORT || 8000;
@@ -28,11 +28,6 @@ app.use(morgan('dev'));
 
 // set the secret key variable for jwt
 app.set('jwt-secret', config.secret);
-
-// // index page
-// app.get('/', (req, res) => {
-//     res.send('hello world');
-// })
 
 // router
 app.use('/', require('./routes/index'));

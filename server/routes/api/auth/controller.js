@@ -73,10 +73,10 @@ exports.login = (req, res) => {
   }
 
   const respond = (token) => {
+    res.cookie('token', token, {maxAge: 1000*60*60});
     res.status(200).json({
-      msg: 'login success',
-      token
-    })
+      msg: 'login success'
+    });
   }
 
   const onError = (error) => {
@@ -113,4 +113,18 @@ exports.register = (req, res) => {
   database.query(query)
   .then(respond)
   .catch(onError)
+}
+
+exports.logout = (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json({
+    success: true,
+  })
+}
+
+exports.check = (req, res) => {
+  res.status(200).json({
+    success: true,
+    info: req.decoded
+  })
 }

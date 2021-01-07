@@ -27,6 +27,7 @@ class SignIn extends Component {
       if(data.msg === 'login success') {
         alert('로그인 성공!');
         this.props.close();
+        this.props.check();
       }
       else {
         alert('아이디 또는 비밀번호 잘못 입력했습니다.');

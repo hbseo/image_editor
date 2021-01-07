@@ -1,35 +1,36 @@
 const jwt = require('jsonwebtoken');
+const secretObj = require('../config/jwt');
 
-const authMiddleware = (req,res,next) => {
-    // console.log(req.cookies)
-    const token = req.cookies.user || req.headers['x-access-token']  || ''
-    if(!token) {
-        return res.status(403).json({
-            success : false,
-            message : 'not login'
-        })
-    }
+const authMiddleware = (req, res, next) => {
+  const token = req.cookies.token || req.headers['x-access-token'] || ''
+  if (!token) {
+    return res.status(403).json({
+      success: false,
+      msg: 'not login'
+    })
+  }
 
-    const p = new Promise(
-        (resolve, reject) => {
-            jwt.verify(token, req.app.get('jwt-secret'), (err,decoded) => {
-                if(err) reject(err)
-                resolve(decoded)
-            })
-        }
-    )
+  const decodeToken = () => {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, secretObj.secret, (error, decoded) => {
+        if (error) reject(error);
+        resolve(decoded);
+      });
+    });
+  }
 
-    const onError = (error) => {
-        res.status(403).json({
-            success : false,
-            message : error.message,
-        })
-    }
+  const onError = (error) => {
+    res.status(403).json({
+      success: false,
+      mas: error.message,
+    })
+  }
 
-    p.then((decoded) => {
-        req.decoded = decoded
-        next()
-    }).catch(onError)
+  decodeToken()
+  .then((decoded) => {
+    req.decoded = decoded;
+    next()
+  }).catch(onError)
 }
 
 module.exports = authMiddleware
