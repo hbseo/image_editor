@@ -22,7 +22,7 @@ const authMiddleware = (req, res, next) => {
   const onError = (error) => {
     res.status(403).json({
       success: false,
-      mas: error.message,
+      msg: error.message,
     })
   }
 
