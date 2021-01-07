@@ -13,6 +13,11 @@ class Draw extends Action {
     this.start = false;
 
   }
+
+  _stopEvent = (event) => {
+    event.preventDefault();    
+    document.removeEventListener("contextmenu",this._stopEvent);
+  }
   
   drawPolygonWithClick = () => {
     let canvas = this.getCanvas();
@@ -21,6 +26,7 @@ class Draw extends Action {
     this.lines.length = 0;
     this.start = true;
     canvas.selection = false;
+    document.addEventListener("contextmenu",this._stopEvent);
     canvas.on('mouse:down',this.drawPolygonMouseDownEvent);
     canvas.on('mouse:move', this.drawPolygonMouseMoveEvent);
   }
@@ -133,6 +139,20 @@ class Draw extends Action {
 
   }
 
+  deleteCircle = () => {
+    const canvas = this.getCanvas();
+    for(let i = 0; i < this.circle_group.length; i++){
+      if(this.circle_group[i].left < this.pos.x) { this.pos.x = this.circle_group[i].left }
+      if(this.circle_group[i].top < this.pos.y) { this.pos.y = this.circle_group[i].top }
+      
+      canvas.remove(this.circle_group[i]);
+      
+      if(this.lines.length !== 0) {
+        canvas.remove(this.lines[i]);
+      }
+    }
+  }
+
   makePolygon = () => {
     let canvas = this.getCanvas();
     canvas.selection = true;
@@ -143,6 +163,7 @@ class Draw extends Action {
       if(this.circle_group.length < 3) {
         alert('small nuber of dots'); 
         this.start = false;
+        this.deleteCircle();
         return; 
       }
 
@@ -150,16 +171,7 @@ class Draw extends Action {
       this.pos.x = this.circle_group[0].left;
       this.pos.y = this.circle_group[0].top;
   
-      for(let i = 0; i < this.circle_group.length; i++){
-        if(this.circle_group[i].left < this.pos.x) { this.pos.x = this.circle_group[i].left }
-        if(this.circle_group[i].top < this.pos.y) { this.pos.y = this.circle_group[i].top }
-        
-        canvas.remove(this.circle_group[i]);
-        
-        if(this.lines.length !== 0) {
-          canvas.remove(this.lines[i]);
-        }
-      }
+      this.deleteCircle();
 
       let polygon = new fabric.Polygon(this.pointer_list.slice(), {   // because of pointer address,
         left: this.pos.x,
