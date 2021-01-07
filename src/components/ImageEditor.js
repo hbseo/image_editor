@@ -18,7 +18,6 @@ import Draw from './action/Draw';
 import Grid from './extension/Grid';
 import Snap from './extension/Snap';
 import Layers from './extension/Layers';
-import ResizeHelper from './helper/Resize';
 import Save from './Save';
 
 class ImageEditor extends Component {
@@ -126,8 +125,6 @@ class ImageEditor extends Component {
 
     //add function
     this.startPoint = { x : 0, y : 0 };
-    this.shapeType = '';
-    this.disableObj = null;
 
     //grid
     this.grid = null;
@@ -913,7 +910,6 @@ class ImageEditor extends Component {
         this.currentCanvasSize = {width: null, height: null};
   
         //add function
-        this.shapeType = '';
     
         this.grid = null;
         this.gridOn = false;
@@ -958,160 +954,8 @@ class ImageEditor extends Component {
     this.action['Text'].addText();
   }
 
-  _bindShapeEvent = (shape) => {
-    const canvas = this._canvas;
-    shape.on({
-      scaling(event){
-        ResizeHelper.resize(canvas, event, this);
-      },
-    })
-  }
-
-  addShapeEvent = (event) => {
-    let myFigure;
-    if(event.target.tagName === 'CANVAS'){
-      document.removeEventListener('keydown',this._onKeydownEvent);
-
-      this.disableObj = this.getActiveObject();
-      if(this.disableObj){
-        // disableObj.evented = false;
-        this.disableObj.lockMovementY = true;
-        this.disableObj.lockMovementX = true;
-      }
-      const pointer = this._canvas.getPointer(event, false)
-      switch(this.shapeType) {
-        case 'triangle':
-          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false, });
-          this._canvas.add(myFigure).setActiveObject(myFigure);
-          this._bindShapeEvent(myFigure);
-          break;
-        case 'rectangle':
-          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false,});
-          this._canvas.add(myFigure).setActiveObject(myFigure);
-          this._bindShapeEvent(myFigure);
-          break;
-        case 'ellipse':
-          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : this.shift, strokeWidth : 0 });
-          this._canvas.add(myFigure).setActiveObject(myFigure);
-          break;
-        case 'circle':
-          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false,});
-          this._canvas.add(myFigure).setActiveObject(myFigure);
-          break;        
-        default:
-      }
-      
-      this._canvas.selection = false;
-      this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
-      this._canvas.on('mouse:up', this.shapeEndResizeEvent);
-    }
-
-    this._canvas.defaultCursor = 'default';
-    document.removeEventListener('keydown',this._onShiftKeydownEvent);
-    document.removeEventListener('mousedown',this.addShapeEvent);    
-  }
-
   addShape = (event) => {
-    // let body = document.body;
-    this._canvas.defaultCursor = 'pointer';
-    this._canvas.discardActiveObject();
-    this.shapeType = event.target.getAttribute('type');
-    document.addEventListener('mousedown',this.addShapeEvent);    
-    document.addEventListener('keydown',this._onShiftKeydownEvent);
-  }
-
-  shapeEndResizeEvent = (event) => {
-    this._canvas.off('mouse:move', this.shapeCreateResizeEvent);
-
-    let activeObject = this.getActiveObject();
-
-    this.adjustOriginToCenter(activeObject);
-
-    if(activeObject.width === 0 || activeObject.height === 0){
-      this._canvas.remove(activeObject);
-    }
-    else{
-      this.saveState(activeObject.type + ' add');
-    }
-
-    this._canvas.selection = true;
-    this._canvas.renderAll();
-    if(this.disableObj){
-      this.disableObj.lockMovementY = false;
-      this.disableObj.lockMovementX = false;
-      this.disableObj = null;
-    }
-    document.addEventListener('keydown',this._onKeydownEvent);
-    this.shift = false;
-    this._canvas.off('mouse:up', this.shapeEndResizeEvent);
-    // this._canvas.on('mouse:up', (event) => { console.log("fire", event)});
-  }
-
-  shapeCreateResizeEvent = (event) => {
-    // console.log(keyCode)
-    // let activeObject = event.target
-    let activeObject = this.getActiveObject();
-    // console.log(activeObject, event.target)
-
-    const pointer = this._canvas.getPointer(event, false)
-    let width = Math.abs(pointer.x - activeObject.left);
-    let height = Math.abs(pointer.y - activeObject.top);
-
-    
-    if (activeObject.isRegular) {
-      width = height =  Math.max(width, height);
-
-      if (activeObject.type === 'triangle') {
-          height = Math.sqrt(3) / 2 * width;
-      }
-    }
-
-    if(activeObject.type === 'ellipse'){
-      activeObject.set({
-        rx : width /2 ,
-        ry : height / 2,
-        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
-        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
-      })
-    }
-    else if(activeObject.type === 'circle'){
-      activeObject.set({
-        radius : Math.max(width, height) / 2,
-        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
-        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
-      })
-    }
-    else{
-      activeObject.set({
-        width : width,
-        height :height,
-        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
-        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
-      })
-    }
-    this._canvas.renderAll();
-  }
-
-
-
-
-  // clone from tui.image.editor
-  adjustOriginToCenter = (shape) => {
-    const centerPoint = shape.getPointByOrigin('center', 'center');
-    const {originX, originY} = shape;
-    const origin = shape.getPointByOrigin(originX, originY);
-    const left = shape.left + (centerPoint.x - origin.x);
-    const top = shape.top + (centerPoint.y - origin.y);
-
-    shape.set({
-        hasControls: true,
-        hasBorders: true,
-        originX: 'center',
-        originY: 'center',
-        left,
-        top
-    });
-    shape.setCoords(); // For left, top properties
+    this.action['Shape'].addShape(event.target.getAttribute('type'));
   }
 
   addIcon = (event) => {

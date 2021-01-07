@@ -94,5 +94,8 @@ module.exports = {
     adjustOriginByStartPoint(pointer, obj)
     shapeScalingResizeEvent(canvas, pointer, obj);
     adjustOriginToCenter(obj)
+  },
+  adjustOriginToCenter(shape){
+    adjustOriginToCenter  (shape)
   }
 }
