@@ -950,24 +950,8 @@ class ImageEditor extends Component {
       })
   }
 
-  addImageEvent = (event) => {
-    const pointer = this._canvas.getPointer(event, false)
-    if(event.target.tagName === 'CANVAS'){
-      this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center", scaleX : 1, scaleY : 1})
-      .then((data) => {
-        this._canvas.add(data).setActiveObject(data);
-        this.saveState('image add');
-        // this.setState({ layers: this.state.layers.concat(data) });
-        // console.log(data.getSvgSrc());
-      })
-    }
-    document.removeEventListener('mousedown', this.addImageEvent);
-    this._canvas.defaultCursor = 'default';
-  }
-
   addImage = () => {
-    this._canvas.defaultCursor = 'pointer';
-    document.addEventListener('mousedown',this.addImageEvent);
+    this.action['Image'].addImage(this.testUrl);
   }
 
   addText = () => {

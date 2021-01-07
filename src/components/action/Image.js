@@ -4,6 +4,27 @@ import { fabric } from 'fabric';
 class Image extends Action {
   constructor(App) {
     super('Image', App);
+    this.testUrl = null;
+  }
+
+  addImageEvent = (event) => {
+    const canvas = this.getCanvas();
+    const pointer = canvas.getPointer(event, false)
+    if(event.target.tagName === 'CANVAS'){
+      this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center", scaleX : 1, scaleY : 1})
+      .then((data) => {
+        canvas.add(data).setActiveObject(data);
+        this.getImageEditor().saveState('image add');
+      })
+    }
+    document.removeEventListener('mousedown', this.addImageEvent);
+    canvas.defaultCursor = 'default';
+  }
+
+  addImage = (url) => {
+    this.getCanvas().defaultCursor = 'pointer';
+    this.testUrl = url;
+    document.addEventListener('mousedown',this.addImageEvent);
   }
 
   
