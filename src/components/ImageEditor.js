@@ -812,6 +812,10 @@ class ImageEditor extends Component {
     return this.grid;
   }
 
+  getCanvasSize = () => {
+    return this._canvas ? {x : this._canvas.width, y: this._canvas.height} : {x : 0, y: 0}
+  }
+
   setGrid = (grid) => {
     this.grid = grid;
   }
@@ -2163,7 +2167,7 @@ class ImageEditor extends Component {
           </div>
         </div>
 
-        <Save open = {this.state.isSave} close = {this.closeSaveModal} save = {this.saveImage} />
+        <Save open = {this.state.isSave} close = {this.closeSaveModal} save = {this.saveImage} size = {this.getCanvasSize} />
       </div>
     );
   }
