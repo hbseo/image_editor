@@ -52,16 +52,28 @@ class Image extends Action {
 
   saveImage = () => {
     let quality = $('input[name=quality]:checked').val()
-    let option = {
-      format : 'jpeg',
-      quality : parseFloat(quality)
+    let format= $('input[name=format]:checked').val()
+    let option;
+    let name;
+    if(format === 'jpeg'){
+      option = {
+        format : 'jpeg',
+        quality : parseFloat(quality)
+      }
+      name = 'image.jpeg'
+    }
+    else{
+      option = {
+        format : 'jpeg'
+      }
+      name = 'image.png'
     }
 
     const canvas = this.getCanvas();
     let dataURL = canvas.toDataURL(option);
     var a = document.createElement("a");
     a.href = dataURL;
-    a.setAttribute("download", 'image.png');
+    a.setAttribute("download", name);
     a.click();
   }
 
