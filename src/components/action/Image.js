@@ -1,6 +1,6 @@
 import Action from './Action';
 import { fabric } from 'fabric';
-
+import $ from 'jquery';
 class Image extends Action {
   constructor(App) {
     super('Image', App);
@@ -51,10 +51,14 @@ class Image extends Action {
   }
 
   saveImage = () => {
+    let quality = $('input[name=quality]:checked').val()
+    let option = {
+      format : 'jpeg',
+      quality : parseFloat(quality)
+    }
+
     const canvas = this.getCanvas();
-    let dataURL = canvas.toDataURL({
-      format: 'png'
-    });
+    let dataURL = canvas.toDataURL(option);
     var a = document.createElement("a");
     a.href = dataURL;
     a.setAttribute("download", 'image.png');
