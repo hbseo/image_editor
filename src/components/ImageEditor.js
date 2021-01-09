@@ -14,6 +14,7 @@ import Text from './action/Text';
 import Fill from './action/Fill';
 import Icon from './action/Icon';
 import Line from './action/Line';
+import Clip from './action/Clip';
 import Draw from './action/Draw';
 import Grid from './extension/Grid';
 import Snap from './extension/Snap';
@@ -759,6 +760,7 @@ class ImageEditor extends Component {
     this._register(this.action, new Delete(this));
     this._register(this.action, new Crop(this));
     this._register(this.action, new Text(this));
+    this._register(this.action, new Clip(this));
     this._register(this.action, new Flip(this));
     this._register(this.action, new Fill(this));
     this._register(this.action, new Icon(this));
@@ -806,14 +808,30 @@ class ImageEditor extends Component {
 
   /**
    * Get grid instance
-   * @returns {ImageEditor}
+   * @returns {this.grid}
    */
   getGrid = () => {
     return this.grid;
   }
 
+  /**
+   * Get Canvas size
+   * @returns {{x:width, y:height}} 
+   */
   getCanvasSize = () => {
     return this._canvas ? {x : this._canvas.width, y: this._canvas.height} : {x : 0, y: 0}
+  }
+
+  /**
+   * Get grid instance
+   * @returns {this._clipboard}
+   */
+  getClipboard = () => {
+    return this._clipboard;
+  }
+
+  setClipboard = (clip) => {
+    this._clipboard = clip;
   }
 
   setGrid = (grid) => {
@@ -829,37 +847,11 @@ class ImageEditor extends Component {
   }
   
   copyObject = () => {
-    if(this.getActiveObject()){
-      this.getActiveObject().clone((cloned) => {
-        this._clipboard = cloned;
-      });
-    }
+    this.action['Clip'].copyObject();
   }
 
   pasteObject = () => {
-    const canvas = this._canvas;
-    this._clipboard.clone((clonedObj) => {
-      canvas.discardActiveObject();
-      clonedObj.set({
-        left: clonedObj.left + 10,
-        top: clonedObj.top + 10,
-        evented: true,
-      });
-      if (clonedObj.type === 'activeSelection') {
-        clonedObj.canvas = canvas;
-        clonedObj.forEachObject(function(obj) {
-          canvas.add(obj);
-        });
-        // this should solve the unselectability
-        clonedObj.setCoords();
-      } else {
-        canvas.add(clonedObj);
-      }
-      this._clipboard.top += 10;
-      this._clipboard.left += 10;
-      canvas.setActiveObject(clonedObj);
-      canvas.requestRenderAll();
-    });
+    this.action['Clip'].pasteObject();
   }
 
 

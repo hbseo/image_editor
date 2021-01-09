@@ -35,6 +35,14 @@ export default class Action {
     return this.app.setGrid(grid);
   }
 
+  getClipboard() {
+    return this.app.getClipboard();
+  }
+
+  setClipboard(clip) {
+    return this.app.setClipboard(clip);
+  }
+
 }
 
 
