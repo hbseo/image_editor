@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Modal from 'react-awesome-modal';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 
@@ -16,6 +15,7 @@ class Login extends Component {
     this.getCheck();
   }
   openModal = () => {
+    console.log('dd');
     this.setState({visible: true});
   }
   closeModal = () => {
@@ -64,9 +64,10 @@ class Login extends Component {
         </div> : 
         <div>
           <button onClick={this.openModal}>로그인</button>
-          <Modal visible={this.state.visible} width='300' height='400' effect='fadeInDown' onClickAway={this.closeModal}>
-            {view}
-          </Modal>
+          {this.state.visible ? 
+          view :
+          null
+          }
         </div>}
       </div>
     )
