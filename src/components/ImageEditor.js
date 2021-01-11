@@ -378,21 +378,20 @@ class ImageEditor extends Component {
     }
   }
 
+  _displayCropCanvas = (event) => {
+    if(this.state.displayCropCanvasSize) {
+      if(event.target === null || event.target.type !== 'Cropzone') {
+        this.action['Crop'].removeCropzone();
+        this.setState({displayCropCanvasSize: false});
+      }
+    }
+  }
+
   /**
    * Attach canvas events
    * @private
    */
   _createCanvasEvent = () => {
-    this._canvas.on('mouse:down', (event) => {
-      // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
-      if(this.state.displayCropCanvasSize) {
-        if(event.target === null || event.target.type !== 'Cropzone') {
-          this.action['Crop'].removeCropzone();
-          this.setState({displayCropCanvasSize: false});
-        }
-      }
-    });
-
     this._canvas.on('mouse:down', this._canvasMoveStartEvent);
     this._canvas.on('mouse:move', this._canvasMovingEvent);
     this._canvas.on('mouse:up', this._canvasMoveEndEvent);
@@ -1295,6 +1294,7 @@ class ImageEditor extends Component {
       displayCropCanvasSize: true,
       cropCanvasSize: change_state
     });
+    this._canvas.on('mouse:down', this._displayCropCanvas);
     this.action['Crop'].cropCanvas();
   }
 
@@ -1304,6 +1304,7 @@ class ImageEditor extends Component {
       this.saveState('Crop Canvas');
     }
     // this._canvas.setZoom (1);  , zoom : 1
+    this._canvas.off('mouse:down', this._displayCropCanvas);
     this.setState({displayCropCanvasSize: false});
     // this._canvas.renderAll();
   }
