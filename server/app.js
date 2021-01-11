@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 
 // load configuration
 const port = process.env.PORT || 8000;
-const config = require('./config/key')
+const config = require('./config/jwt')
 
 // express configuration
 const app = express();

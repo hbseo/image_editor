@@ -15,7 +15,6 @@ class Login extends Component {
     this.getCheck();
   }
   openModal = () => {
-    console.log('dd');
     this.setState({visible: true});
   }
   closeModal = () => {

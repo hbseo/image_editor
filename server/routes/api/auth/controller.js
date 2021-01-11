@@ -34,8 +34,10 @@ exports.dupCheck = (req, res) => {
 
 exports.login = (req, res) => {
   const { id, password } = req.body;
-  
-  let query = `SELECT password, salt FROM USERS WHERE userid = "${id}"`;
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  let date = moment().format('YYYY-MM-DD HH:mm:ss');
+  let query = `SELECT password, salt FROM USERS WHERE userid = "${id}";`;
+  let query2 = `UPDATE USERS SET login_date = "${date}" WHERE userid = "${id}";`;
 
   const getData = (result) => {
     if(result.length === 1) {
@@ -81,7 +83,7 @@ exports.login = (req, res) => {
 
   const onError = (error) => {
     res.status(400).json({
-      msg: 'login failed'
+      msg: error.message
     })
   }
 
@@ -90,13 +92,17 @@ exports.login = (req, res) => {
   .then(check)
   .then(respond)
   .catch(onError)
+
+  database.query(query2)
+  .catch(onError)
 }
 
 exports.register = (req, res) => {
   const { id, password } = req.body
   let salt = crypto.randomBytes(64).toString('base64');
   let hashPassword = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('base64');
-  let query = `INSERT INTO USERS (userid, password, salt) VALUES ("${id}", "${hashPassword}", "${salt}")`;
+  let date = moment().format('YYYY-MM-DD HH:mm:ss');
+  let query = `INSERT INTO USERS (userid, password, salt, create_date) VALUES ("${id}", "${hashPassword}", "${salt}", "${date}")`;
 
   const respond = (result) => {
     res.status(200).json({
