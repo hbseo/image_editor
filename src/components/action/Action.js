@@ -47,6 +47,14 @@ export default class Action {
     return this.app.setClipboard(clip);
   }
 
+  addKeyDownEvent() {
+    return this.app.addKeyDownEvent();
+  }
+
+  removeKeyDownEvent() {
+    return this.app.removeKeyDownEvent();
+  }
+
 }
 
 

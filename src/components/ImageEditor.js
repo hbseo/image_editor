@@ -837,6 +837,14 @@ class ImageEditor extends Component {
     return this._backgroundImage;
   }
 
+  addKeyDownEvent = () => {
+    document.addEventListener('keydown',this._onKeydownEvent);
+  }
+
+  removeKeyDownEvent = () => {
+    document.removeEventListener('keydown',this._onKeydownEvent);
+  }
+
   setClipboard = (clip) => {
     this._clipboard = clip;
   }
@@ -1256,7 +1264,6 @@ class ImageEditor extends Component {
   flipObject = (event) => {
     let option = event.target.getAttribute('flip');
     this.action['Flip'].flip(option);
-    this.saveState('flip');
   }
 
   cropObjMouseDown = (event) => {
