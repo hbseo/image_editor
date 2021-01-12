@@ -829,6 +829,14 @@ class ImageEditor extends Component {
     return this._clipboard;
   }
 
+  /**
+   * Get BackgroundImage instance
+   * @returns {this._backgroundImage}
+   */
+  getBackgroundImage = () => {
+    return this._backgroundImage;
+  }
+
   setClipboard = (clip) => {
     this._clipboard = clip;
   }
@@ -1246,16 +1254,9 @@ class ImageEditor extends Component {
   }
 
   flipObject = (event) => {
-    let activeObject = this.getActiveObject();
     let option = event.target.getAttribute('flip');
-    if (activeObject) {
-      this.action['Flip'].flip(activeObject, option);
-      this.saveState(activeObject.type + ' flip');
-    }
-    else if(this._backgroundImage) {
-      this.action['Flip'].flip(this._backgroundImage, option);
-      this.saveState('backgroundImg flip');
-    }
+    this.action['Flip'].flip(option);
+    this.saveState('flip');
   }
 
   cropObjMouseDown = (event) => {

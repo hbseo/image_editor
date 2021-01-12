@@ -27,6 +27,10 @@ export default class Action {
     return this.app.getImageEditor();
   }
 
+  getBackgroundImage() {
+    return this.app.getBackgroundImage();
+  }
+
   getGrid() {
     return this.app.getGrid();
   }
