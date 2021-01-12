@@ -5,6 +5,7 @@ class ImageList extends Component {
     super(props);
 
     this.state = {
+      random_count : 0,
       images: [],
       search: '',
       image_count: 1,
@@ -31,7 +32,7 @@ class ImageList extends Component {
     var url = new URL("https://api.unsplash.com/photos/random");
     var params = {
       client_id: 'ua3Yx_zNDTdYyxlcX5JaO-KoZs4ri2-xZXZqc7_rcp0',
-      count: 10
+      count: this.state.random_count
     }
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     fetch(url, {
@@ -58,29 +59,24 @@ class ImageList extends Component {
       method: 'get',
     })
       .then(res => res.json())
-      // .then(res=>console.log(res))
       .then(res => this.setState({ images: res }))
       .catch((error) => {
         console.log("error : ", error);
+        alert('fail');
       });
   }
 
   handleSubmit = (event) => {
-    // console.log("submit", this.state.search);
     event.preventDefault();
     this.getImage();
   }
   searchChange = (event) => {
-    // console.log(event.target.value);
-    // this.setState({ search : event.target.value});
     let change_state = {};
     change_state[event.target.name] = event.target.value;
-    // console.log(event.target.name, event.target.value, change_state);
     this.setState(change_state);
   }
 
   showImage = (imagelist) => {
-    // console.log('show image', imagelist)
     const listitem = imagelist.map((image) =>
 
       <img key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small}/>
@@ -89,14 +85,11 @@ class ImageList extends Component {
     );
 
     return (
-      // <div>me</div>
       <div id="image-list">{listitem}</div>
     )
   }
 
   onClickThumb = (event) => {
-    // console.log(event.target.getAttribute('image'));
-
     new Promise((resolve) => {
       this.setState({
         image : {
@@ -115,7 +108,6 @@ class ImageList extends Component {
   }
 
   onClickImg = (event) => {
-    // console.log(event.target.getAttribute('url'))
     this.props.onClick(event.target.getAttribute('url'));
   }
 
@@ -126,16 +118,15 @@ class ImageList extends Component {
 
 	imageNotFound = () => {
 
-	}
+  }
+  
 	imageFound = (img) => {
     console.log()
-
   }
   
   getImageSize = () => {
     let full_img = new Image();
     full_img.onload = () => {
-      // console.log('onload')
       this.setState({
         imageSize : {
           full : { x: full_img.width, y: full_img.height},
@@ -151,11 +142,12 @@ class ImageList extends Component {
 
   imageSizeVersion = () => {
     let image = this.state.image;
-    // console.log("img", image);
 
     if(!image){
       return(
-        <div><p>no img</p></div>
+        <div id="image-list-size-none">
+          <p>no img</p>
+        </div>
       )
     }
     else{
@@ -185,8 +177,12 @@ class ImageList extends Component {
         </div>
       )
     }
-    
+  }
 
+  randomCountChange = (event) => {
+    let change_state = {};
+    change_state[event.target.name] = event.target.value;
+    this.setState(change_state);
   }
 
 
@@ -195,12 +191,12 @@ class ImageList extends Component {
 
     return (
       <div>
+        <input type="number" name = "random_count" value={this.state.random_count} onChange = {this.randomCountChange}></input>
         <button onClick={() => this.getRandomImage()}>get a random image 10 count</button>
-
         <form onSubmit={this.handleSubmit}>
 
           이미지 이름 : <input name="search" value={this.state.search} onChange={this.searchChange} />
-                숫자 : <input type="number" name="image_count" value={this.state.image_count} onChange={this.searchChange} />
+          숫자 : <input type="number" name="image_count" value={this.state.image_count} onChange={this.searchChange} />
 
           <input type="submit" value="Submit" />
 
