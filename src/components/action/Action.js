@@ -27,6 +27,10 @@ export default class Action {
     return this.app.getImageEditor();
   }
 
+  getBackgroundImage() {
+    return this.app.getBackgroundImage();
+  }
+
   getGrid() {
     return this.app.getGrid();
   }
@@ -41,6 +45,14 @@ export default class Action {
 
   setClipboard(clip) {
     return this.app.setClipboard(clip);
+  }
+
+  addKeyDownEvent() {
+    return this.app.addKeyDownEvent();
+  }
+
+  removeKeyDownEvent() {
+    return this.app.removeKeyDownEvent();
   }
 
 }

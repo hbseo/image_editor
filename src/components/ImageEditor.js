@@ -378,21 +378,20 @@ class ImageEditor extends Component {
     }
   }
 
+  _displayCropCanvas = (event) => {
+    if(this.state.displayCropCanvasSize) {
+      if(event.target === null || event.target.type !== 'Cropzone') {
+        this.action['Crop'].removeCropzone();
+        this.setState({displayCropCanvasSize: false});
+      }
+    }
+  }
+
   /**
    * Attach canvas events
    * @private
    */
   _createCanvasEvent = () => {
-    this._canvas.on('mouse:down', (event) => {
-      // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
-      if(this.state.displayCropCanvasSize) {
-        if(event.target === null || event.target.type !== 'Cropzone') {
-          this.action['Crop'].removeCropzone();
-          this.setState({displayCropCanvasSize: false});
-        }
-      }
-    });
-
     this._canvas.on('mouse:down', this._canvasMoveStartEvent);
     this._canvas.on('mouse:move', this._canvasMovingEvent);
     this._canvas.on('mouse:up', this._canvasMoveEndEvent);
@@ -830,6 +829,22 @@ class ImageEditor extends Component {
     return this._clipboard;
   }
 
+  /**
+   * Get BackgroundImage instance
+   * @returns {this._backgroundImage}
+   */
+  getBackgroundImage = () => {
+    return this._backgroundImage;
+  }
+
+  addKeyDownEvent = () => {
+    document.addEventListener('keydown',this._onKeydownEvent);
+  }
+
+  removeKeyDownEvent = () => {
+    document.removeEventListener('keydown',this._onKeydownEvent);
+  }
+
   setClipboard = (clip) => {
     this._clipboard = clip;
   }
@@ -1247,16 +1262,8 @@ class ImageEditor extends Component {
   }
 
   flipObject = (event) => {
-    let activeObject = this.getActiveObject();
     let option = event.target.getAttribute('flip');
-    if (activeObject) {
-      this.action['Flip'].flip(activeObject, option);
-      this.saveState(activeObject.type + ' flip');
-    }
-    else if(this._backgroundImage) {
-      this.action['Flip'].flip(this._backgroundImage, option);
-      this.saveState('backgroundImg flip');
-    }
+    this.action['Flip'].flip(option);
   }
 
   cropObjMouseDown = (event) => {
@@ -1295,6 +1302,7 @@ class ImageEditor extends Component {
       displayCropCanvasSize: true,
       cropCanvasSize: change_state
     });
+    this._canvas.on('mouse:down', this._displayCropCanvas);
     this.action['Crop'].cropCanvas();
   }
 
@@ -1304,6 +1312,7 @@ class ImageEditor extends Component {
       this.saveState('Crop Canvas');
     }
     // this._canvas.setZoom (1);  , zoom : 1
+    this._canvas.off('mouse:down', this._displayCropCanvas);
     this.setState({displayCropCanvasSize: false});
     // this._canvas.renderAll();
   }

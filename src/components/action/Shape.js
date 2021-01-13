@@ -42,7 +42,7 @@ class Shape extends Action {
     const canvas = this.getCanvas();
     let myFigure;
     if(event.target.tagName === 'CANVAS'){
-      document.removeEventListener('keydown',this._onKeydownEvent);
+      this.removeKeyDownEvent();
       this.disableObj = this.getActiveObject();
       
       if(this.disableObj){
@@ -108,7 +108,7 @@ class Shape extends Action {
       this.disableObj.lockMovementX = false;
       this.disableObj = null;
     }
-    document.addEventListener('keydown',this._onKeydownEvent);
+    this.addKeyDownEvent();
     canvas.off('mouse:up', this.shapeEndResizeEvent);
   }
 
