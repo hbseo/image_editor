@@ -64,7 +64,11 @@ exports.login = (req, res) => {
           },
           (error, token) => {
             if (error) reject(error);
-            resolve(token);
+            else {
+              database.query(query2)
+              .catch(onError)
+              resolve(token);
+            }
           }
         )
       })
@@ -91,9 +95,6 @@ exports.login = (req, res) => {
   .then(getData)
   .then(check)
   .then(respond)
-  .catch(onError)
-
-  database.query(query2)
   .catch(onError)
 }
 
