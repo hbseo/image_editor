@@ -3,11 +3,9 @@ import Action from './Action';
 class Rotation extends Action {
   constructor(App) {
     super('Rotation', App);
-    // console.log(this.canvas);
   }
 
   getCurrentAngle() {
-    // console.log('active',this.getActiveObject().angle);
     if (this.getActiveObject()) {
       return this.getActiveObject().angle;
     }
@@ -17,22 +15,16 @@ class Rotation extends Action {
   }
 
 
-  setAngle(angle) {
-    angle %= 360
-    // const oldAngle = this.getCurrentAngle() % 360;
-    // const angleDiff = oldAngle - angle;
-    const activeImage = this.getActiveObject();
+  setAngle(obj, angle) {
     const canvas = this.getCanvas();
-    // console.log(activeImage);
-    // const oldImageCenter = activeImage.getCenterPoint();
+    if(obj){
+      obj.set({
+        angle: angle % 360,
+      });
+      this.getImageEditor().saveState('angle change');
+      canvas.renderAll();
 
-    activeImage.set({
-      angle: angle,
-    });
-    canvas.renderAll();
-
-    
-
+    }
   }
 }
 

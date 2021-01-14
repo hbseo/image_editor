@@ -5,9 +5,9 @@ class Clip extends Action {
     super('Clip', App);
   }
 
-  copyObject = () => {
-    if(this.getActiveObject()){
-      this.getActiveObject().clone((cloned) => {
+  copyObject = (obj) => {
+    if(obj){
+      obj.clone((cloned) => {
         this.setClipboard(cloned);
       });
     }

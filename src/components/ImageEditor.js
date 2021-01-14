@@ -862,7 +862,7 @@ class ImageEditor extends Component {
   }
   
   copyObject = () => {
-    this.action['Clip'].copyObject();
+    this.action['Clip'].copyObject(this.getActiveObject());
   }
 
   pasteObject = () => {
@@ -1003,18 +1003,8 @@ class ImageEditor extends Component {
   }
 
   handleAngleChange = (event) => {
-    if (this.getActiveObject()) {
-      this.action['Rotation'].setAngle(event.target.value);
-      this.setState({ activeObject : this.getActiveObject() });
-      this.saveState('angle change');
-      this._canvas.renderAll();
-    }
-    // else {
-    //   if(this._backgroundImage){
-    //     this._canvas.backgroundImage.angle = event.target.value;
-    //     this._canvas.renderAll();
-    //   }
-    // }
+    this.action['Rotation'].setAngle(this.getActiveObject(), event.target.value);
+    this.setState({ activeObject : this.getActiveObject() });
   }
 
   handleScaleXChange = (event) => {
