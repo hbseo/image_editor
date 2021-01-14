@@ -1,10 +1,11 @@
 const jwt = require("jsonwebtoken");
-const database = require('../../../database/index');
+const Database = require('../../../database/index');
 const secretObj = require('../../../config/jwt');
 const crypto = require('crypto');
 const moment = require('moment');
 
 exports.dupCheck = (req, res) => {
+  const database = new Database();
   const {id} = req.body;
   let query = `SELECT EXISTS (SELECT * FROM USERS WHERE userid = "${id}") as success`;
 
@@ -33,11 +34,14 @@ exports.dupCheck = (req, res) => {
 }
 
 exports.login = (req, res) => {
+  const database = new Database();
   const { id, password } = req.body;
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log(ip);
   let date = moment().format('YYYY-MM-DD HH:mm:ss');
   let query = `SELECT password, salt FROM USERS WHERE userid = "${id}";`;
   let query2 = `UPDATE USERS SET login_date = "${date}" WHERE userid = "${id}";`;
+  // , ip = INET_ATON"${ip}"
 
   const getData = (result) => {
     if(result.length === 1) {
@@ -99,6 +103,7 @@ exports.login = (req, res) => {
 }
 
 exports.register = (req, res) => {
+  const database = new Database();
   const { id, password } = req.body
   let salt = crypto.randomBytes(64).toString('base64');
   let hashPassword = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('base64');

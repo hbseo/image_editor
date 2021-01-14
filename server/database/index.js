@@ -16,6 +16,5 @@ class Database {
   }
 }
 
-const database = new Database(config);
-module.exports = database;
+module.exports = Database;
 
