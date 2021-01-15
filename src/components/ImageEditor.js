@@ -1626,10 +1626,70 @@ class ImageEditor extends Component {
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
-        <div id='editor'>
-          <div>
+        <nav>
+          <ul className="menu">
+            <li>
+              <a><img src="image/text.svg" alt="text" /></a>
+              <span className="tooltip">Text</span>
+            </li>
+            <li>
+              <a><img src="image/image-edit.svg" alt="image"/></a>
+              <span className="tooltip">Image</span>
+            </li>
+            <li>
+              <a><img src="image/filter.svg" alt="filter"/></a>
+              <span className="tooltip">Filters</span>
+            </li>
+            <li>
+              <a><img src="image/shape.svg" alt="shape"/></a>
+              <span className="tooltip">Shape</span>
+            </li>
+            <li>
+              <a><img src="image/drawing.svg" alt="drawing"/></a>
+              <span className="tooltip">Drawing</span>
+            </li>
+          </ul>
+          <div className="sub">
+            <div className="sub-title">
+                Filters
+            </div>
+            <div className="sub-filters">
+              <div>
+                Vintage
+                <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />
+              </div>
+              <div>
+                Sepia
+              </div>
+              <div>
+                Polaroid
+              </div>
+            </div>
+          </div>
+        </nav>
+        <div className="editor" id='editor'>
+          <div className="editor-nav">
+            <div className="do">
+                <button>Undo</button>
+                <button>Redo</button>
+              </div>
+            <div className="more">
+                <button>more</button>
+            </div>
+          </div>
+          <div className="real">
             <canvas id='canvas' tabIndex='0'></canvas>
           </div>
+        </div>
+
+
+
+
+        <hr/>
+
+
+        <div >
+
           <h5 onClick = {this.displayRoot}>개발자 기능</h5>
 
           {this.state.showRoot ?
@@ -1692,6 +1752,10 @@ class ImageEditor extends Component {
         </div>
         
         <div id='tool'>
+
+
+
+
           <div>
             <h5>오브젝트 기능</h5>
             <button onClick={this.sendToBack}>맨 뒤로 보내기</button>
@@ -2156,8 +2220,7 @@ class ImageEditor extends Component {
             <button onClick={this.newCanvas} disabled>배경이미지 캔버스로 변경</button>
             <button onClick={this.convertSvg}>svg로 변환하기</button>
           </div>
-        </div>
-
+        </div> 
         <Save open = {this.state.isSave} close = {this.closeSaveModal} save = {this.saveImage} size = {this.getCanvasSize} />
       </div>
     );
