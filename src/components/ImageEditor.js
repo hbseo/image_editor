@@ -84,6 +84,7 @@ class ImageEditor extends Component {
           a: '1',
       },
       isSave : false,
+      tab : 0,
     }
     
 
@@ -746,7 +747,6 @@ class ImageEditor extends Component {
       fabric.util.toArray(document.getElementsByClassName(args[i])).forEach(el => 
         el.disabled = args[args.length-1]
         );
-        
     }
   }
 
@@ -961,6 +961,7 @@ class ImageEditor extends Component {
   }
 
   addImage = () => {
+    console.log('test');
     this.action['Image'].addImage(this.testUrl);
   }
 
@@ -1232,7 +1233,6 @@ class ImageEditor extends Component {
   }
 
   filterObject = (event) => {
-    console.log('filterObject')
     let filterOption = event.target.getAttribute('filter');
     let activeObject = this.getActiveObject();
 
@@ -1620,6 +1620,11 @@ class ImageEditor extends Component {
   displayRoot = () => {
     this.setState({showRoot : !this.state.showRoot})
   }
+
+  changeTab = (event) => {
+    this.setState({tab : parseInt(event.target.getAttribute('tab'), 10)});
+  }
+
   render() {
 		const styles = {
 			color : {
@@ -1630,7 +1635,7 @@ class ImageEditor extends Component {
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
-        <SideNav filter={this.filterObject}/>
+        <SideNav filter={this.filterObject} changeTab = {this.changeTab} tab = {this.state.tab} addImage = {this.addImage}/>
         <div className="editor" id='editor'>
           <div className="editor-nav">
             <div className="do">
@@ -1651,7 +1656,7 @@ class ImageEditor extends Component {
 
         <hr/>
 
-
+{/* 
         <div >
 
           <h5 onClick = {this.displayRoot}>개발자 기능</h5>
@@ -1711,7 +1716,6 @@ class ImageEditor extends Component {
           </div> : null }
           <hr />
           <h5>레이어</h5>
-          {/* {this.action['Layers'].showLayers()} */}
           <hr />
         </div>
         
@@ -2007,7 +2011,6 @@ class ImageEditor extends Component {
 
             { this.state.activeObject.type === "circle" ? 
             <div>
-              {/* <input type="number" name="startAngle"  value = {this.state.activeObject.startAngle} /> */}
               <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.state.activeObject.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
             </div> : <div></div>
             }
@@ -2184,6 +2187,8 @@ class ImageEditor extends Component {
             <button onClick={this.convertSvg}>svg로 변환하기</button>
           </div>
         </div> 
+         */}
+        
         <Save open = {this.state.isSave} close = {this.closeSaveModal} save = {this.saveImage} size = {this.getCanvasSize} />
       </div>
     );

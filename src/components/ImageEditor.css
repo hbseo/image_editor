@@ -7,16 +7,10 @@
   padding: 0;
 }
 
-a,
-a:hover,
-a:focus,
-a:active {
-  text-decoration: none;
-  color: inherit;
-}
+
 
 body {
-  display: flex;
+  /* display: flex; */
 }
 
 nav {
@@ -27,6 +21,17 @@ nav {
 
 ul {
   list-style-type: none;
+}
+
+.nav-bar-button,
+.nav-bar-button:hover,
+.nav-bar-button:focus,
+.nav-bar-button:active {
+  text-decoration: none;
+  color: inherit;
+  margin : 0;
+  border : 0;
+  background-color: rgba(0, 0,0, 0);
 }
 
 .menu {
