@@ -20,6 +20,7 @@ import Grid from './extension/Grid';
 import Snap from './extension/Snap';
 import Layers from './extension/Layers';
 import Save from './Save';
+import SideNav from './ui/SideNav'
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -743,7 +744,9 @@ class ImageEditor extends Component {
   switchTools = (...args) => {
     for(let i = 0; i< args.length-1; i++) {
       fabric.util.toArray(document.getElementsByClassName(args[i])).forEach(el => 
-        el.disabled = args[args.length-1]);
+        el.disabled = args[args.length-1]
+        );
+        
     }
   }
 
@@ -1229,6 +1232,7 @@ class ImageEditor extends Component {
   }
 
   filterObject = (event) => {
+    console.log('filterObject')
     let filterOption = event.target.getAttribute('filter');
     let activeObject = this.getActiveObject();
 
@@ -1626,47 +1630,7 @@ class ImageEditor extends Component {
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
-        <nav>
-          <ul className="menu">
-            <li>
-              <a><img src="image/text.svg" alt="text" /></a>
-              <span className="tooltip">Text</span>
-            </li>
-            <li>
-              <a><img src="image/image-edit.svg" alt="image"/></a>
-              <span className="tooltip">Image</span>
-            </li>
-            <li>
-              <a><img src="image/filter.svg" alt="filter"/></a>
-              <span className="tooltip">Filters</span>
-            </li>
-            <li>
-              <a><img src="image/shape.svg" alt="shape"/></a>
-              <span className="tooltip">Shape</span>
-            </li>
-            <li>
-              <a><img src="image/drawing.svg" alt="drawing"/></a>
-              <span className="tooltip">Drawing</span>
-            </li>
-          </ul>
-          <div className="sub">
-            <div className="sub-title">
-                Filters
-            </div>
-            <div className="sub-filters">
-              <div>
-                Vintage
-                <input type='checkbox' className='filter' id='vintage' onClick={this.filterObject} filter='vintage' />
-              </div>
-              <div>
-                Sepia
-              </div>
-              <div>
-                Polaroid
-              </div>
-            </div>
-          </div>
-        </nav>
+        <SideNav filter={this.filterObject}/>
         <div className="editor" id='editor'>
           <div className="editor-nav">
             <div className="do">
@@ -1858,8 +1822,7 @@ class ImageEditor extends Component {
             
             <br />
             <div>
-                <label>Filter grey</label>
-                <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />
+                <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' /><label>Filter grey</label>
             </div>
             <div>
                 <label>Filter invert</label>
