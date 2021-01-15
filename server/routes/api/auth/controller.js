@@ -30,6 +30,7 @@ exports.dupCheck = (req, res) => {
 
   database.query(query)
   .then(respond)
+  .then(database.end())
   .catch(onError)
 }
 
@@ -100,6 +101,11 @@ exports.login = (req, res) => {
   .then(check)
   .then(respond)
   .catch(onError)
+
+  // database.end()
+  // .catch((error) => {
+  //   console.log(error);
+  // })
 }
 
 exports.register = (req, res) => {
@@ -124,6 +130,7 @@ exports.register = (req, res) => {
 
   database.query(query)
   .then(respond)
+  .then(database.end())
   .catch(onError)
 }
 

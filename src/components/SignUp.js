@@ -34,6 +34,9 @@ class SignUp extends Component {
         }
         this.props.close();
       })
+      .catch(() => {
+        alert('error');
+      })
     }
     else {
       alert('아이디 중복확인 필요');
@@ -42,7 +45,7 @@ class SignUp extends Component {
   registerDupHandler = () => {
     const id = this.state.id;
     fetch('/auth/dupCheck', {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -59,6 +62,9 @@ class SignUp extends Component {
         document.getElementById('registerId').disabled = true;
         alert('사용가능')
       }
+    })
+    .catch(() => {
+      alert('error');
     })
   }
 

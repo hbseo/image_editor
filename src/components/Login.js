@@ -36,6 +36,9 @@ class Login extends Component {
         this.setState({state: 'SignIn'});
       }
     })
+    .catch(() => {
+      this.setState({state: 'SignIn'});
+    })
   }
   logoutClickHandler = () => {
     fetch('/auth/logout', {
@@ -44,6 +47,9 @@ class Login extends Component {
     .then((res) => res.json())
     .then((data) => {
       this.getCheck();
+    })
+    .catch(() => {
+      alert('error');
     })
   }
   render() {
