@@ -7,7 +7,7 @@ class SignUp extends Component {
     this.state = {
       id: '',
       password: '',
-      passDup: false
+      idDup: false
     }
   }
   registerHandler = (e) => {
@@ -15,7 +15,7 @@ class SignUp extends Component {
     this.setState({[name]: value});
   }
   registerClickHandler = () => {
-    if(this.state.passDup) {
+    if(this.state.idDup) {
       const {id, password} = this.state;
       fetch('/auth/register', {
         method: 'POST',
@@ -57,7 +57,7 @@ class SignUp extends Component {
         alert('아이디 중복');
       }
       else {
-        this.setState({passDup: true});
+        this.setState({idDup: true});
         document.getElementById('dupCheck').disabled = true;
         document.getElementById('registerId').disabled = true;
         alert('사용가능')
