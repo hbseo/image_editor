@@ -67,7 +67,16 @@ image_editor
 │       │          └───ink.js
 │       │
 │       └─── helper
-│             └───Resize.js                            
+│       │     └───Resize.js
+│       │
+│       └─── ui
+│             │───Filter.js
+│             │───Filter.scss
+│             │───Image.js
+│             │───SideNav.js
+│             │───Text.js
+│             └───Tools.js
+│                                               
 │   
 └───server
     │─── app.js
