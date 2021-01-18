@@ -22,11 +22,12 @@ import Layers from './extension/Layers';
 import Save from './Save';
 import SideNav from './ui/SideNav'
 
-// import Filter from './ui/Filter';
-// import Image from './ui/Image';
-// import Tools from './ui/Tools';
-// import Shape from './ui/Shape';
-// import Text from './ui/Text';
+import FilterUI from './ui/Filter';
+import ImageUI from './ui/Image';
+import ToolsUI from './ui/Tools';
+import ShapeUI from './ui/Shape';
+import TextUI from './ui/Text';
+import ObjectUI from './ui/Object';
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -92,7 +93,7 @@ class ImageEditor extends Component {
       isSave : false,
       tab : 0,
     }
-    
+
 
     this._canvas = null;
     if(!props.location.state) { props.history.push('/'); }
@@ -213,6 +214,9 @@ class ImageEditor extends Component {
       this.firstState = this.currentState;
       this.action['Grid'].makeGrid();
     }
+    
+
+    
     this.forceUpdate(); // for showUndo/Redo Stack
   }
   
@@ -1637,28 +1641,36 @@ class ImageEditor extends Component {
       }
     };
 
-    // const tab = {
-    //   0: <Text object = {this.state.activeObject} textObject={this.textObject} addText={this.addText}/>,
-    //   1: <Image object = {this.state.activeObject}/>,
-    //   2: <Filter object = {this.state.activeObject} filter={this.filterObject} />,
-    //   3: <Shape object= {this.state.activeObject} addIcon = {this.addIcon} />,
-    //   4: <Tools addImage= {this.addImage} objectInfo = {this.objectInfo}/>,
-    // };
+    const tab = {
+      0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText}/>,
+      1: <ImageUI object={this.state.activeObject}/>,
+      2: <FilterUI object={this.state.activeObject} filter={this.filterObject}/>,
+      3: <ShapeUI object={this.state.activeObject} addIcon = {this.addIcon}/>,
+      4: <ObjectUI 
+          object={this.state.activeObject} 
+          lockScaleRatio = {this.lockScaleRatio}
+          sendToBack = {this.sendToBack}
+          sendBackwards = {this.sendBackwards}
+          bringToFront = {this.bringToFront}
+          bringForward = {this.bringForward}
+          deleteObject = {this.deleteObject}
+          deleteAllObject = {this.deleteAllObject}
+          makeGroup = {this.makeGroup}
+          unGroup = {this.unGroup}
+          rotateObject = {this.rotateObject}
+          />,
+      5: <ToolsUI addImage={this.addImage} objectInfo = {this.objectInfo}/>,
+    };
     let i = 0;
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
         <SideNav 
-          object = {this.state.activeObject}
-          addIcon = {this.addIcon} 
-          addText = {this.addText}
-          filter={this.filterObject} 
           changeTab = {this.changeTab} 
           tab = {this.state.tab} 
-          addImage = {this.addImage}
-          objectInfo = {this.objectInfo}
-          textObject = {this.textObject}
-        />
+          UI = { tab }
+        >
+        </SideNav>
         <div className="editor" id='editor'>
           <div className="editor-nav">
             <div className="do">
