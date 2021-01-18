@@ -7,8 +7,8 @@ import Text from './Text';
 
 export default function SideNav(props) {
   const tab = {
-    0: <Text/>,
-    1: <Image/>,
+    0: <Text object = {props.object} textObject={props.textObject} addText = {props.addText}/>,
+    1: <Image object = {props.object}/>,
     2: <Filter object = {props.object} filter={props.filter}/>,
     3: <Shape object={props.object} addIcon = {props.addIcon}/>,
     4: <Tools addImage={props.addImage} objectInfo = {props.objectInfo}/>,
@@ -33,7 +33,7 @@ export default function SideNav(props) {
           <span className="tooltip">Shape</span>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/drawing.svg" alt="filter" tab="0" /></button>
+          <button className="nav-bar-button" disabled type="button" onClick={props.changeTab}><img src="image/drawing.svg" alt="filter" tab="0" /></button>
           <span className="tooltip">Drawing</span>
         </li>
         <li>

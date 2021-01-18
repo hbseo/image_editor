@@ -22,6 +22,12 @@ import Layers from './extension/Layers';
 import Save from './Save';
 import SideNav from './ui/SideNav'
 
+// import Filter from './ui/Filter';
+// import Image from './ui/Image';
+// import Tools from './ui/Tools';
+// import Shape from './ui/Shape';
+// import Text from './ui/Text';
+
 class ImageEditor extends Component {
   constructor(props) {
     super(props);
@@ -147,7 +153,6 @@ class ImageEditor extends Component {
     'Copperplate'];
 
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-
     this._createAction();
 
   }
@@ -721,12 +726,12 @@ class ImageEditor extends Component {
     if(text.textBackgroundColor) {
       toggle[1] = true;
     }
-    if(text.fontStyle === "italic"){
-      document.getElementById('italic_checkbox').checked = true;
-    }
-    else{
-      document.getElementById('italic_checkbox').checked = false;
-    }
+    // if(text.fontStyle === "italic"){
+    //   document.getElementById('italic_checkbox').checked = true;
+    // }
+    // else{
+    //   document.getElementById('italic_checkbox').checked = false;
+    // }
 		this.setState({
       activeObject : this.getActiveObject(),
 			fontsize : text.fontSize,
@@ -1631,6 +1636,14 @@ class ImageEditor extends Component {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
       }
     };
+
+    // const tab = {
+    //   0: <Text object = {this.state.activeObject} textObject={this.textObject} addText={this.addText}/>,
+    //   1: <Image object = {this.state.activeObject}/>,
+    //   2: <Filter object = {this.state.activeObject} filter={this.filterObject} />,
+    //   3: <Shape object= {this.state.activeObject} addIcon = {this.addIcon} />,
+    //   4: <Tools addImage= {this.addImage} objectInfo = {this.objectInfo}/>,
+    // };
     let i = 0;
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
@@ -1638,11 +1651,13 @@ class ImageEditor extends Component {
         <SideNav 
           object = {this.state.activeObject}
           addIcon = {this.addIcon} 
+          addText = {this.addText}
           filter={this.filterObject} 
           changeTab = {this.changeTab} 
           tab = {this.state.tab} 
           addImage = {this.addImage}
           objectInfo = {this.objectInfo}
+          textObject = {this.textObject}
         />
         <div className="editor" id='editor'>
           <div className="editor-nav">
