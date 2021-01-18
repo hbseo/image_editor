@@ -2,14 +2,16 @@ import React from 'react';
 import Filter from './Filter';
 import Image from './Image';
 import Tools from './Tools';
+import Shape from './Shape';
 import Text from './Text';
 
 export default function SideNav(props) {
   const tab = {
     0: <Text/>,
     1: <Image/>,
-    2: <Filter filter={props.filter}/>,
-    3: <Tools addImage={props.addImage}/>,
+    2: <Filter object = {props.object} filter={props.filter}/>,
+    3: <Shape object={props.object} addIcon = {props.addIcon}/>,
+    4: <Tools addImage={props.addImage} objectInfo = {props.objectInfo}/>,
   };
   return (
     <nav>
@@ -27,7 +29,7 @@ export default function SideNav(props) {
           <span className="tooltip">Filters</span>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/shape.svg" alt="filter" tab="1" /></button>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/shape.svg" alt="shape" tab="3" /></button>
           <span className="tooltip">Shape</span>
         </li>
         <li>
@@ -35,7 +37,7 @@ export default function SideNav(props) {
           <span className="tooltip">Drawing</span>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-tools fa-4x" tab="3"></i></span></button>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-tools fa-4x" tab="4"></i></span></button>
           <span className="tooltip">Tools</span>
         </li>
       </ul>

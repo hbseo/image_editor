@@ -20,6 +20,12 @@
     color : grey;
   }
 
+  input[type=checkbox]:disabled:checked+ label{
+    background-color: #a79e98;
+    border : 1px solid #a79e98;
+    color : grey;
+  }
+
   input[type=checkbox]:disabled:hover+ label{
     background-color: #a79e98;
     color : grey;

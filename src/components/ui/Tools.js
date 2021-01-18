@@ -9,6 +9,9 @@ export default function Tools(props) {
         <div>
             <button onClick={props.addImage}><h2>테스트용 이미지 추가</h2></button>
         </div>
+        <div>
+            <button onClick={props.objectInfo}><h2>오브젝트 정보 출력</h2></button>
+        </div>
       </div>
     </div>
   );

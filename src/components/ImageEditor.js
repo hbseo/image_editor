@@ -668,18 +668,18 @@ class ImageEditor extends Component {
    * @private
    */
 	_imageSelection = (image) => {
-		this.switchTools('filter', false);
-		this.switchTools('text', true);
-    let list = document.getElementsByClassName('filter');
+		// this.switchTools('filter', false);
+		// this.switchTools('text', true);
+    // let list = document.getElementsByClassName('filter');
     let toggle = image.shadow ? true : false;
-    let change_filters = Array.from({length: this.filterList.length}, () => false);
-    image.filters.forEach(filter => {
-      change_filters[this.filterList.indexOf(filter.type)] = filter;
-    });
-    image.filters = change_filters;
-		for(let i=0; i<list.length; i++){
-			list[i].checked = image.filters[i];
-    }
+    // let change_filters = Array.from({length: this.filterList.length}, () => false);
+    // image.filters.forEach(filter => {
+    //   change_filters[this.filterList.indexOf(filter.type)] = filter;
+    // });
+    // image.filters = change_filters;
+		// for(let i=0; i<list.length; i++){
+		// 	list[i].checked = image.filters[i];
+    // }
 		this.setState({
 			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
       filters : {
@@ -1635,7 +1635,15 @@ class ImageEditor extends Component {
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
-        <SideNav filter={this.filterObject} changeTab = {this.changeTab} tab = {this.state.tab} addImage = {this.addImage}/>
+        <SideNav 
+          object = {this.state.activeObject}
+          addIcon = {this.addIcon} 
+          filter={this.filterObject} 
+          changeTab = {this.changeTab} 
+          tab = {this.state.tab} 
+          addImage = {this.addImage}
+          objectInfo = {this.objectInfo}
+        />
         <div className="editor" id='editor'>
           <div className="editor-nav">
             <div className="do">
