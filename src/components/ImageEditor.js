@@ -28,6 +28,7 @@ import ToolsUI from './ui/Tools';
 import ShapeUI from './ui/Shape';
 import TextUI from './ui/Text';
 import ObjectUI from './ui/Object';
+import RotationUI from './ui/Rotation';
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -49,7 +50,7 @@ class ImageEditor extends Component {
           b: '255',
           a: '1',
         },
-      activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
+      activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
       zoom : 1,
       color: {
         r: '255',
@@ -453,7 +454,7 @@ class ImageEditor extends Component {
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
-      this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0} });
+      this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0} });
 			if(!this._canvas.backgroundImage){
         this.switchTools('filter', 'text', true);
 			}
@@ -690,7 +691,7 @@ class ImageEditor extends Component {
 		// 	list[i].checked = image.filters[i];
     // }
 		this.setState({
-			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
+			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
       filters : {
         brightness: image.filters[15] ? image.filters[15].brightness : 0,
         contrast : image.filters[16] ? image.filters[16].contrast : 0,
@@ -1011,7 +1012,7 @@ class ImageEditor extends Component {
       })
     }
     this.lockScale = !this.lockScale;
-    this.setState({ activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0} })
+    this.setState({ activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0} })
     this._canvas.renderAll();
   }
 
@@ -1227,19 +1228,15 @@ class ImageEditor extends Component {
   }
 
 
-  rotateObject = (event) => {
-    var changeAngle = event.target.getAttribute('angle');
-    var activeObject = this.getActiveObject();
-
-    if (activeObject) {
-      this.action['Rotation'].setAngle(activeObject.angle + Number(changeAngle));
-      this.setState({ activeObject : activeObject })
-      this.saveState('Object is rotated');
-    }
-    else {
-      alert('image is not activated')
-    }
+  setObjectAngle = (changeAngle) => {
+    this.action['Rotation'].setAngle(Number(changeAngle));
+    // this.setState({activeObject : this.getActiveObject()})
   }
+
+  rotateObjectAngle = (angle) => {
+    this.action['Rotation'].changeAngle(angle);
+  }
+  
 
   filterObject = (event) => {
     let filterOption = event.target.getAttribute('filter');
@@ -1657,9 +1654,9 @@ class ImageEditor extends Component {
           deleteAllObject = {this.deleteAllObject}
           makeGroup = {this.makeGroup}
           unGroup = {this.unGroup}
-          rotateObject = {this.rotateObject}
           />,
-      5: <ToolsUI addImage={this.addImage} objectInfo = {this.objectInfo}/>,
+      5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
+      6: <ToolsUI addImage={this.addImage} objectInfo = {this.objectInfo}/>,
     };
     let i = 0;
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
@@ -1769,7 +1766,7 @@ class ImageEditor extends Component {
             <button onClick={this.deleteAllObject}>모든 객체 삭제</button>
             <button onClick={this.makeGroup}>그룹화</button>
             <button onClick={this.unGroup}>그룹해제</button>
-            <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
+            <button onClick={this.setObjectAngle} angle='90' > 선택 개체 90도 회전</button>
             <p>회전</p>
             <input
               type='number'

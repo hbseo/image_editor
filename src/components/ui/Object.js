@@ -58,9 +58,6 @@ export default class Object extends Component{
             <button onClick={this.props.unGroup}>그룹해제</button>
           </div>
           <div>
-            <button onClick={this.props.rotateObject} angle='90' > 선택 개체 90도 회전</button>
-          </div>
-          <div>
             <p>회전</p>
             {/* <input
               type='number'
