@@ -9,8 +9,9 @@
 An image editor based on [Fabric.js](https://github.com/fabricjs/fabric.js).  
 and Some parts of code are from [ToastUI Image Editor](https://github.com/nhn/tui.image-editor) and [glfx.js](https://github.com/evanw/glfx.js)
 
-[![license](https://img.shields.io/github/license/nhn/tui.image-editor.svg)](https://github.com/hbseo/image_editor/blob/master/LICENSE) 
-
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hbseo/image_editor/blob/master/LICENSE) 
+[![version](https://img.shields.io/badge/react-16.13.1-blue)](https://reactjs.org/)
+![node](https://img.shields.io/node/v/fabric)
 ## How to start
 ```
 npm install
@@ -20,7 +21,7 @@ Dependency conflicts may happen.
 
 ## Contributor
 [Hyeon Beom Seo](https://github.com/hbseo)  
-[Ju Kyung Yoon](https://github.com/JuKyYoon)  
+[Ju Kyung Yoon](https://github.com/JuKyYoon)[![time tracker](https://wakatime.com/badge/github/hbseo/image_editor.svg)](https://wakatime.com/badge/github/hbseo/image_editor)   
 [Se Myeong Lee](https://github.com/3people)  
 
 ## Features
@@ -31,15 +32,30 @@ Dependency conflicts may happen.
 image_editor
 │───README.md   
 │
+└───public
+│   │───index.html
+│   │
+│   └───image
+│       └───.svg
+│
 └───src
 │   │───index.js
 │   │
 │   └───components
+│       │───Error.css
+│       │───Error.js
+│       │───ImageEditor.css
 │       │───ImageEditor.js
 │       │───ImageList.js
-│       │───Error.js
-│       |───Main.js
 │       │───Login.js
+│       │───Main.js
+│       │───Main.scss
+│       │───Save.js
+│       │───Save.scss
+│       │───SignIn.js
+│       │───SignIn.scss
+│       │───SignUp.js
+│       │───SignUp.scss
 │       │    
 │       └─── action
 │       │     │───Action.js
@@ -64,26 +80,32 @@ image_editor
 │       │   
 │       └─── filters
 |       │    └─── glfx
-│       │          └───ink.js
+│       │          │───ink.js
+│       │          │───vignette.js
+│       │          └───zoomblur.js
 │       │
 │       └─── helper
-│       │     └───Resize.js
+│       │     │───Resize.js
+│       │     └───SwithTools.js
 │       │
 │       └─── ui
+│             │───Draw.js
 │             │───Filter.js
 │             │───Filter.scss
+│             │───Icon.js
 │             │───Image.js
+│             │───Object.js
+│             │───Rotation.js
+│             │───Shape.js
 │             │───SideNav.js
 │             │───Text.js
 │             └───Tools.js
 │                                               
-│   
 └───server
     │─── app.js
     │
     │─── config
     │     │───db-config.json
-    │     │───key.js
     │     │───jwt.js
     │     └───user.sql
     │
@@ -95,29 +117,28 @@ image_editor
     │
     └─── routes
           └───api
-              └───auth
+              │───auth
+              │   │───controller.js 
+              │   └───index.js
+              │
+              └───content
                   │───controller.js 
                   └───index.js
 
-
-
-
-   
-
-
 ```
 
-` / `
 > npm run start
 
 client port number 8080
 
 ---
 
-` /server `
-> node app
+>` /server `
+>  node app
 
 server port number 8000
+
+---
 
 ### server/config/db-config.json
 ### server/config/user.sql
