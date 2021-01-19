@@ -1,4 +1,4 @@
-import { fabric } from 'fabric';
+import switchTools from '../helper/SwitchTools'
 import React, {Component} from 'react';
 
 export default class Text extends Component{
@@ -20,11 +20,11 @@ export default class Text extends Component{
 
   documentUpdate = () => {
     if(this.props.object.type === 'textbox'){
-      this.switchTools('text', false)
+      switchTools('text', false)
       this.textSelection(this.props.object);
     }
     else{
-      this.switchTools('text', true)
+      switchTools('text', true)
     }
   }
 
@@ -40,14 +40,6 @@ export default class Text extends Component{
     }
     else{
       document.getElementById('bold_checkbox').checked = false;
-    }
-  }
-
-  switchTools = (...args) => {
-    for(let i = 0; i< args.length-1; i++) {
-      fabric.util.toArray(document.getElementsByClassName(args[i])).forEach(el => 
-        el.disabled = args[args.length-1]
-      );
     }
   }
 

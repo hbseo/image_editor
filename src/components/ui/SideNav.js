@@ -15,7 +15,7 @@ export default function SideNav(props) {
           <span className="tooltip">Text</span>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/image-edit.svg" alt="image-edit" tab="1"/></button>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/image-edit.svg" alt="imageEdit" tab="1"/></button>
           <span className="tooltip">Image</span>
         </li>
         <li>

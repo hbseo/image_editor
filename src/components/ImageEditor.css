@@ -111,11 +111,9 @@ ul {
 }
 
 .sub .sub-filters div {
-  border-radius: 5px;
-  margin: 10px;
   text-align: center;
   width: 18vmin;
-  height: 10vmin;
+  height: 4vmin;
   display: flex;
   justify-content: center;
   align-items: flex-end;
