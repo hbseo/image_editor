@@ -106,6 +106,7 @@ class ImageEditor extends Component {
     this._backgroundImage = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.testUrl = 'https://source.unsplash.com/random/500x400';
+    // this.testUrl = 'http://fabricjs.com/docs/'
     this.action = {};
 
     this.isDragging = false;
@@ -1267,8 +1268,7 @@ class ImageEditor extends Component {
     this.action['Delete'].deleteAllObject();
   }
 
-  flipObject = (event) => {
-    let option = event.target.getAttribute('flip');
+  flipObject = (option) => {
     this.action['Flip'].flip(option);
   }
 
@@ -1280,8 +1280,7 @@ class ImageEditor extends Component {
     }
   }
 
-  cropObject = (event) => {
-    let cropOption = event.target.getAttribute('crop');
+  cropObject = (cropOption) => {
     let activeObject = this.getActiveObject();
     if(activeObject && activeObject.type === 'image'){
       this.cropImg = activeObject;
@@ -1290,11 +1289,10 @@ class ImageEditor extends Component {
     }
   }
 
-  cropEndObject = (event) => {
-    let cropOption = event.target.getAttribute('crop');
+  cropEndObject = () => {
     if(this.cropImg){
       this._canvas.off('mouse:down', this.cropObjMouseDown);
-      this.action['Crop'].cropObjend(this.cropImg, cropOption);
+      this.action['Crop'].cropObjend(this.cropImg);
       this.cropImg = null;
     }
   }
@@ -1654,7 +1652,7 @@ class ImageEditor extends Component {
 
     const tab = {
       0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText}/>,
-      1: <ImageUI object={this.state.activeObject}/>,
+      1: <ImageUI object={this.state.activeObject} cropObject={this.cropObject} cropEndObject={this.cropEndObject}/>,
       2: <FilterUI object={this.state.activeObject} filter={this.filterObject}/>,
       3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon}/>,
       4: <ObjectUI 
@@ -1668,6 +1666,7 @@ class ImageEditor extends Component {
           deleteAllObject = {this.deleteAllObject}
           makeGroup = {this.makeGroup}
           unGroup = {this.unGroup}
+          flipObject = {this.flipObject}
           />,
       5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
       6: <ShapeUI 

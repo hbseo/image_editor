@@ -1,4 +1,3 @@
-import { fabric } from 'fabric';
 import React, {Component} from 'react';
 
 export default class Object extends Component{
@@ -24,6 +23,11 @@ export default class Object extends Component{
 
   ObjectSelection = (object) => {
 
+  }
+
+  flipObject = (event) => {
+    let option = event.target.getAttribute('flip');
+    this.props.flipObject(option);
   }
 
   render(){
@@ -56,6 +60,10 @@ export default class Object extends Component{
           </div>
           <div>
             <button onClick={this.props.unGroup}>그룹해제</button>
+          </div>
+          <div>
+            <button onClick={this.flipObject} flip="X">Flip x</button>
+            <button onClick={this.flipObject} flip="Y">Flip y</button>
           </div>
           <div>
             <p>확대 및 축소</p>

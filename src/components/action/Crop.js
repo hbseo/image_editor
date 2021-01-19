@@ -22,7 +22,8 @@ class Crop extends Action {
               'angle' : options.angle || 0,
               'fill' : options.fill || 'this.backgroundColor',
               'borderColor' : 'black',
-              'hasControls' : true
+              'hasControls' : true,
+              'strokeWidth' : 0
           });
       },
   
@@ -40,12 +41,27 @@ class Crop extends Action {
 
   }
 
-  cropzoneOption = (image) => {
+  cropzoneOption = (image, option) => {
+    let height = (image.height + image.strokeWidth);
+    let width = (image.width + image.strokeWidth);
+    switch(option){
+      case "4:3":
+        width = (image.width + image.strokeWidth) *  (3/4);
+        break;
+      case "3:2":
+        width = (image.width + image.strokeWidth) *  (2/3);
+        break;
+      case "16:9":
+        height = (image.height + image.strokeWidth) *  (9/16);
+        break;
+      default :
+    }
+
     return {label: 'cropObj',
       top: image.top, 
       left: image.left, 
-      height: image.height + image.strokeWidth, 
-      width:image.width + image.strokeWidth,
+      height: height, 
+      width: width,
       scaleX : image.scaleX,
       scaleY : image.scaleY,
       angle : image.angle,
@@ -55,17 +71,18 @@ class Crop extends Action {
   cropObj = (activeObject, option) => {
     let canvas = this.getCanvas();
     let image = activeObject;
-
-    this._cropzone = new fabric.Cropzone(this.cropzoneOption(image));
-    this.addEvent();
-
+    if(this._cropzone){
+      canvas.remove(this._cropzone);
+    }
+    this._cropzone = new fabric.Cropzone(this.cropzoneOption(image, option));
     canvas.add(this._cropzone);
+    this.addEvent();
     canvas.setActiveObject(this._cropzone);
     canvas.renderAll();
     canvas.requestRenderAll();
   }
 
-  cropObjend = (activeObject, cropOption) => {
+  cropObjend = (activeObject) => {
     let canvas = this.getCanvas();
     let image = activeObject;
     let test_canvas = new fabric.Canvas('test', {

@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import { fabric } from 'fabric';
-import './Filter.scss'
 export default class Rotation extends Component{
   constructor(props){
     super(props);
