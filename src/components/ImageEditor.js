@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { SketchPicker, CompactPicker } from 'react-color';
 import Switch from 'react-switch';
 import './ImageEditor.css'
 import Rotation from './action/Rotation';
@@ -25,10 +24,12 @@ import SideNav from './ui/SideNav'
 import FilterUI from './ui/Filter';
 import ImageUI from './ui/Image';
 import ToolsUI from './ui/Tools';
-import ShapeUI from './ui/Shape';
+import IconUI from './ui/Icon';
 import TextUI from './ui/Text';
 import ObjectUI from './ui/Object';
 import RotationUI from './ui/Rotation';
+import ShapeUI from './ui/Shape';
+import DrawUI from './ui/Draw';
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -979,8 +980,13 @@ class ImageEditor extends Component {
     this.action['Text'].addText();
   }
 
-  addShape = (event) => {
-    this.action['Shape'].addShape(event.target.getAttribute('type'));
+  addShape = (type) => {
+    this.action['Shape'].addShape(type);
+  }
+
+  setEndAngle = (value) => {
+    this.action['Shape'].setEndAngle(value);
+    this.setState({activeObject : this.getActiveObject()})
   }
 
   addIcon = (event) => {
@@ -1571,18 +1577,26 @@ class ImageEditor extends Component {
     this.setState({ drawingMode: false });
     this._canvas.isDrawingMode = false;
   }
-  
-  handleDrawingWidth = (event) => {
-    const value = event.target.value;
-    this.setState( {lineWidth: value} );
-    this._canvas.freeDrawingBrush.width =  parseInt(this.state.lineWidth, 10);
+
+  changeDrawingWidth = (width) => {
+    this._canvas.freeDrawingBrush.width =  width;
   }
 
-  handleDrawingColor = (color) => {
-    this.setState({ lineColorRgb: color.rgb})
-    let rgb = "rgb(" + this.state.lineColorRgb['r'] + ", " + this.state.lineColorRgb['g'] + ", " + this.state.lineColorRgb['b'] + ")"
+  changeDrawingColor = (rgb) => {
     this._canvas.freeDrawingBrush.color = rgb;
   }
+  
+  // handleDrawingWidth = (event) => {
+  //   const value = event.target.value;
+  //   this.setState( {lineWidth: value} );
+  //   this._canvas.freeDrawingBrush.width =  parseInt(this.state.lineWidth, 10);
+  // }
+
+  // handleDrawingColor = (color) => {
+  //   this.setState({ lineColorRgb: color.rgb})
+  //   let rgb = "rgb(" + this.state.lineColorRgb['r'] + ", " + this.state.lineColorRgb['g'] + ", " + this.state.lineColorRgb['b'] + ")"
+  //   this._canvas.freeDrawingBrush.color = rgb;
+  // }
 
   changeBackgroundColor = () => {
     this._canvas.backgroundColor = `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`;
@@ -1642,7 +1656,7 @@ class ImageEditor extends Component {
       0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText}/>,
       1: <ImageUI object={this.state.activeObject}/>,
       2: <FilterUI object={this.state.activeObject} filter={this.filterObject}/>,
-      3: <ShapeUI object={this.state.activeObject} addIcon = {this.addIcon}/>,
+      3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon}/>,
       4: <ObjectUI 
           object={this.state.activeObject} 
           lockScaleRatio = {this.lockScaleRatio}
@@ -1656,7 +1670,22 @@ class ImageEditor extends Component {
           unGroup = {this.unGroup}
           />,
       5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
-      6: <ToolsUI addImage={this.addImage} objectInfo = {this.objectInfo}/>,
+      6: <ShapeUI 
+          object={this.state.activeObject} 
+          addShape={this.addShape} 
+          addLine={this.addLine} 
+          setEndAngle = {this.setEndAngle}
+          makePolygonWithDrag={this.makePolygonWithDrag} 
+          makePolygonWithClick={this.makePolygonWithClick}
+          />,
+      7: <DrawUI 
+          object={this.state.activeObject} 
+          openDrawing={this.openDrawing} 
+          closeDrawing={this.closeDrawing} 
+          changeDrawingColor={this.changeDrawingColor} 
+          changeDrawingWidth={this.changeDrawingWidth} 
+          />,
+      8: <ToolsUI addImage={this.addImage} objectInfo = {this.objectInfo}/>,
     };
     let i = 0;
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));

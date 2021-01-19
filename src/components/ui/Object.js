@@ -58,18 +58,6 @@ export default class Object extends Component{
             <button onClick={this.props.unGroup}>그룹해제</button>
           </div>
           <div>
-            <p>회전</p>
-            {/* <input
-              type='number'
-              name='angle'
-              min='-360'
-              max='360'
-              step='1'
-              value={this.state.activeObject.type !== 'not active' ? this.state.activeObject.angle : 0}
-              onChange={this.handleAngleChange}
-            /> */}
-          </div>
-          <div>
             <p>확대 및 축소</p>
             {/* <input
               type='number'

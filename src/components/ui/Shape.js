@@ -13,6 +13,16 @@ export default class Shape extends Component {
   componentWillUnmount(){
     console.log('Shape UI Unmount');
   }
+
+  addShape = (event) => {
+    console.log(event.target.getAttribute('type'))
+    this.props.addShape(event.target.getAttribute('type'));
+  }
+
+  handleEndAngleChange = (event) => {
+    this.props.setEndAngle(event.target.value)
+  }
+
   render(){
     return (
       <div className="sub">
@@ -21,19 +31,31 @@ export default class Shape extends Component {
         </div>
         <div className="sub-filters">
           <div>
-            <button className="fas fa-times fa-5x" onClick={this.props.addIcon} type = "cancel"></button>
+            <button onClick={this.addShape} type="triangle">삼각형</button>
           </div>
           <div>
-            <button className="fas fa-arrow-right" onClick={this.props.addIcon} type = "icon_arrow_2"></button>
-            <button className="fas fa-angle-right" onClick={this.props.addIcon} type = "icon_arrow_3"></button>
-            <button className="fas fa-star" onClick={this.props.addIcon} type = "icon_star"></button>
-            <button className="fas fa-certificate" onClick={this.props.addIcon} type = "icon_star_2"></button>
-            <button className="fas fa-times" onClick={this.props.addIcon} type = "icon_polygon"></button>
-            <button className="fas fa-map-marker-alt" onClick={this.props.addIcon} type = "icon_location"></button>
-            <button className="fas fa-heart" onClick={this.props.addIcon} type = "icon_heart"></button>
-            <button className="fas fa-comment-alt" onClick={this.props.addIcon} type = "icon_bubble"></button>
-            <button className="fas fa-cloud" onClick={this.props.addIcon} type = "icon_cloud"></button>
+            <button onClick={this.addShape} type="rectangle">직사각형</button>
           </div>
+          <div>
+            <button onClick={this.addShape} type="ellipse">타원</button>
+          </div>
+          <div>
+            <button onClick={this.addShape} type="circle">원</button>
+          </div>
+          <div>
+            <button onClick={this.props.addLine} type="line">직선</button>
+          </div>
+          <div>
+            <button onClick={this.props.makePolygonWithClick} type="line">클릭으로 만들기</button>
+          </div>
+          <div>
+            <button onClick={this.props.makePolygonWithDrag} type="line">드래그로 만들기</button>
+          </div>
+          { this.props.object.type === "circle" ? 
+            <div>
+              <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.props.object.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
+            </div> : <div></div>
+          }
         </div>
       </div>
     );

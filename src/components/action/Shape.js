@@ -8,6 +8,16 @@ class Shape extends Action {
     this.disableObj = null;
   }
 
+  setEndAngle = (value) => {
+    if(this.getActiveObject()){
+      let shape = this.getActiveObject();
+      shape.set({
+        endAngle : value * Math.PI / 180,
+      })
+      this.getCanvas().renderAll();
+    }
+  }
+
   setStroke = (obj, options) => {
       const canvas = this.getCanvas();
       obj.set({
