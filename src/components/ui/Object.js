@@ -1,0 +1,99 @@
+import React, {Component} from 'react';
+
+export default class Object extends Component{
+  constructor(props){
+    super(props);
+  }
+
+  componentDidMount(){
+    console.log('Object UI Mount');
+    this.documentUpdate();
+  }
+  componentDidUpdate(){
+    console.log('Object UI Update');
+    this.documentUpdate();
+  }
+  componentWillUnmount(){
+    console.log('Object UI Unmount');
+  }
+
+  documentUpdate = () => {
+
+  }
+
+  ObjectSelection = (object) => {
+
+  }
+
+  flipObject = (event) => {
+    let option = event.target.getAttribute('flip');
+    this.props.flipObject(option);
+  }
+
+  render(){
+    return (
+      <div className="sub">
+        <div className="sub-title">
+            Object ( {this.props.object.type} )
+        </div>
+        <div className="sub-textmenu">
+          <div>
+            <button onClick={this.props.sendToBack}>맨 뒤로 보내기</button>
+          </div>
+          <div>
+            <button onClick={this.props.sendBackwards}>뒤로 보내기</button>
+          </div>
+          <div>
+            <button onClick={this.props.bringToFront}>맨 앞으로 보내기</button> 
+          </div>
+          <div>
+            <button onClick={this.props.bringForward}>앞으로 보내기</button>
+          </div>
+          <div>
+            <button onClick={this.props.deleteObject}>선택 개체 삭제</button>
+          </div>
+          <div>
+            <button onClick={this.props.deleteAllObject}>모든 객체 삭제</button>
+          </div>
+          <div>
+            <button onClick={this.props.makeGroup}>그룹화</button>
+          </div>
+          <div>
+            <button onClick={this.props.unGroup}>그룹해제</button>
+          </div>
+          <div>
+            <button onClick={this.flipObject} flip="X">Flip x</button>
+            <button onClick={this.flipObject} flip="Y">Flip y</button>
+          </div>
+          <div>
+            <p>확대 및 축소</p>
+            {/* <input
+              type='number'
+              name='scaleX'
+              min='1'
+              max='200'
+              step='1'
+              value={this.state.activeObject.scaleX * 100}
+              onChange={this.handleScaleXChange}
+            />% */}
+          </div>
+          <div>     
+            {/* <input
+              type='number'
+              name='scaleY'
+              min='1'
+              max='200'
+              step='1'
+              value={this.state.activeObject.scaleY * 100}
+              onChange={this.handleScaleYChange}
+            />% */}
+          </div>
+          <div>
+            <input type='checkbox' onClick={this.props.lockScaleRatio} /> 비율 고정
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+}

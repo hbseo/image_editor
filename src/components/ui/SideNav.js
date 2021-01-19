@@ -1,16 +1,12 @@
 import React from 'react';
-import Filter from './Filter';
-import Image from './Image';
-import Tools from './Tools';
-import Text from './Text';
+// import FilterUI from './Filter';
+// import ImageUI from './Image';
+// import ToolsUI from './Tools';
+// import ShapeUI from './Shape';
+// import TextUI from './Text';
+// import ObjectUI from './Object';
 
 export default function SideNav(props) {
-  const tab = {
-    0: <Text/>,
-    1: <Image/>,
-    2: <Filter filter={props.filter}/>,
-    3: <Tools addImage={props.addImage}/>,
-  };
   return (
     <nav>
       <ul className="menu">
@@ -19,7 +15,7 @@ export default function SideNav(props) {
           <span className="tooltip">Text</span>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/image-edit.svg" alt="image-edit" tab="1"/></button>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/image-edit.svg" alt="imageEdit" tab="1"/></button>
           <span className="tooltip">Image</span>
         </li>
         <li>
@@ -27,19 +23,31 @@ export default function SideNav(props) {
           <span className="tooltip">Filters</span>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/shape.svg" alt="filter" tab="1" /></button>
+        <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-icons fa-4x" tab="3"></i></span></button>
+          <span className="tooltip">Icon</span>
+        </li>
+        <li>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-vector-square fa-4x" tab="4"></i></span></button>
+          <span className="tooltip">Object</span>
+        </li>
+        <li>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-sync-alt fa-4x" tab="5"></i></span></button>
+          <span className="tooltip">Rotation</span>
+        </li>
+        <li>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/shape.svg" alt="Shape" tab="6" /></button>
           <span className="tooltip">Shape</span>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/drawing.svg" alt="filter" tab="0" /></button>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/drawing.svg" alt="draw" tab="7" /></button>
           <span className="tooltip">Drawing</span>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-tools fa-4x" tab="3"></i></span></button>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-tools fa-4x" tab="8"></i></span></button>
           <span className="tooltip">Tools</span>
         </li>
       </ul>
-      {tab[props.tab]}
+      {props.UI[props.tab]}
     </nav>
   );
 }

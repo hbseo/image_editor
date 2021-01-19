@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { SketchPicker, CompactPicker } from 'react-color';
 import Switch from 'react-switch';
 import './ImageEditor.css'
 import Rotation from './action/Rotation';
@@ -22,6 +21,16 @@ import Layers from './extension/Layers';
 import Save from './Save';
 import SideNav from './ui/SideNav'
 
+import FilterUI from './ui/Filter';
+import ImageUI from './ui/Image';
+import ToolsUI from './ui/Tools';
+import IconUI from './ui/Icon';
+import TextUI from './ui/Text';
+import ObjectUI from './ui/Object';
+import RotationUI from './ui/Rotation';
+import ShapeUI from './ui/Shape';
+import DrawUI from './ui/Draw';
+
 class ImageEditor extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +51,7 @@ class ImageEditor extends Component {
           b: '255',
           a: '1',
         },
-      activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
+      activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
       zoom : 1,
       color: {
         r: '255',
@@ -86,7 +95,7 @@ class ImageEditor extends Component {
       isSave : false,
       tab : 0,
     }
-    
+
 
     this._canvas = null;
     if(!props.location.state) { props.history.push('/'); }
@@ -97,6 +106,7 @@ class ImageEditor extends Component {
     this._backgroundImage = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.testUrl = 'https://source.unsplash.com/random/500x400';
+    // this.testUrl = 'http://fabricjs.com/docs/'
     this.action = {};
 
     this.isDragging = false;
@@ -147,7 +157,6 @@ class ImageEditor extends Component {
     'Copperplate'];
 
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-
     this._createAction();
 
   }
@@ -208,6 +217,9 @@ class ImageEditor extends Component {
       this.firstState = this.currentState;
       this.action['Grid'].makeGrid();
     }
+    
+
+    
     this.forceUpdate(); // for showUndo/Redo Stack
   }
   
@@ -444,7 +456,7 @@ class ImageEditor extends Component {
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
-      this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0} });
+      this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0} });
 			if(!this._canvas.backgroundImage){
         this.switchTools('filter', 'text', true);
 			}
@@ -668,32 +680,20 @@ class ImageEditor extends Component {
    * @private
    */
 	_imageSelection = (image) => {
-		this.switchTools('filter', false);
-		this.switchTools('text', true);
-    let list = document.getElementsByClassName('filter');
+		// this.switchTools('filter', false);
+		// this.switchTools('text', true);
+    // let list = document.getElementsByClassName('filter');
     let toggle = image.shadow ? true : false;
-    let change_filters = Array.from({length: this.filterList.length}, () => false);
-    image.filters.forEach(filter => {
-      change_filters[this.filterList.indexOf(filter.type)] = filter;
-    });
-    image.filters = change_filters;
-		for(let i=0; i<list.length; i++){
-			list[i].checked = image.filters[i];
-    }
+    // let change_filters = Array.from({length: this.filterList.length}, () => false);
+    // image.filters.forEach(filter => {
+    //   change_filters[this.filterList.indexOf(filter.type)] = filter;
+    // });
+    // image.filters = change_filters;
+		// for(let i=0; i<list.length; i++){
+		// 	list[i].checked = image.filters[i];
+    // }
 		this.setState({
-			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
-      filters : {
-        brightness: image.filters[15] ? image.filters[15].brightness : 0,
-        contrast : image.filters[16] ? image.filters[16].contrast : 0,
-        pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
-        blur : image.filters[18] ? image.filters[18].blur : 0,
-        noise : image.filters[19] ? image.filters[19].noise : 0,
-        saturation : image.filters[20] ? image.filters[20].noise : 0,
-        hue : image.filters[21] ? image.filters[21].noise : 0,
-        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0,
-        vignette : image.filters[23] ? image.filters[23].vignette_matrix.amount : 0,
-        zoomblur : image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0,
-      },
+			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
       shadow : {
         blur : toggle ? image.shadow.blur : 30,
         offsetX : toggle ? image.shadow.offsetX : 10,
@@ -721,12 +721,12 @@ class ImageEditor extends Component {
     if(text.textBackgroundColor) {
       toggle[1] = true;
     }
-    if(text.fontStyle === "italic"){
-      document.getElementById('italic_checkbox').checked = true;
-    }
-    else{
-      document.getElementById('italic_checkbox').checked = false;
-    }
+    // if(text.fontStyle === "italic"){
+    //   document.getElementById('italic_checkbox').checked = true;
+    // }
+    // else{
+    //   document.getElementById('italic_checkbox').checked = false;
+    // }
 		this.setState({
       activeObject : this.getActiveObject(),
 			fontsize : text.fontSize,
@@ -969,8 +969,13 @@ class ImageEditor extends Component {
     this.action['Text'].addText();
   }
 
-  addShape = (event) => {
-    this.action['Shape'].addShape(event.target.getAttribute('type'));
+  addShape = (type) => {
+    this.action['Shape'].addShape(type);
+  }
+
+  setEndAngle = (value) => {
+    this.action['Shape'].setEndAngle(value);
+    this.setState({activeObject : this.getActiveObject()})
   }
 
   addIcon = (event) => {
@@ -1002,7 +1007,7 @@ class ImageEditor extends Component {
       })
     }
     this.lockScale = !this.lockScale;
-    this.setState({ activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0} })
+    this.setState({ activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0} })
     this._canvas.renderAll();
   }
 
@@ -1218,19 +1223,15 @@ class ImageEditor extends Component {
   }
 
 
-  rotateObject = (event) => {
-    var changeAngle = event.target.getAttribute('angle');
-    var activeObject = this.getActiveObject();
-
-    if (activeObject) {
-      this.action['Rotation'].setAngle(activeObject.angle + Number(changeAngle));
-      this.setState({ activeObject : activeObject })
-      this.saveState('Object is rotated');
-    }
-    else {
-      alert('image is not activated')
-    }
+  setObjectAngle = (changeAngle) => {
+    this.action['Rotation'].setAngle(Number(changeAngle));
+    // this.setState({activeObject : this.getActiveObject()})
   }
+
+  rotateObjectAngle = (angle) => {
+    this.action['Rotation'].changeAngle(angle);
+  }
+  
 
   filterObject = (event) => {
     let filterOption = event.target.getAttribute('filter');
@@ -1244,7 +1245,10 @@ class ImageEditor extends Component {
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
       this.saveState('apply filter backgroundImg');
     }
+  }
 
+  rangeFilterObject = (filterOption, value) => {
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._backgroundImage , filterOption, true, value);
   }
 
   deleteObject = () => {
@@ -1255,8 +1259,7 @@ class ImageEditor extends Component {
     this.action['Delete'].deleteAllObject();
   }
 
-  flipObject = (event) => {
-    let option = event.target.getAttribute('flip');
+  flipObject = (option) => {
     this.action['Flip'].flip(option);
   }
 
@@ -1268,8 +1271,7 @@ class ImageEditor extends Component {
     }
   }
 
-  cropObject = (event) => {
-    let cropOption = event.target.getAttribute('crop');
+  cropObject = (cropOption) => {
     let activeObject = this.getActiveObject();
     if(activeObject && activeObject.type === 'image'){
       this.cropImg = activeObject;
@@ -1278,11 +1280,10 @@ class ImageEditor extends Component {
     }
   }
 
-  cropEndObject = (event) => {
-    let cropOption = event.target.getAttribute('crop');
+  cropEndObject = () => {
     if(this.cropImg){
       this._canvas.off('mouse:down', this.cropObjMouseDown);
-      this.action['Crop'].cropObjend(this.cropImg, cropOption);
+      this.action['Crop'].cropObjend(this.cropImg);
       this.cropImg = null;
     }
   }
@@ -1565,18 +1566,26 @@ class ImageEditor extends Component {
     this.setState({ drawingMode: false });
     this._canvas.isDrawingMode = false;
   }
-  
-  handleDrawingWidth = (event) => {
-    const value = event.target.value;
-    this.setState( {lineWidth: value} );
-    this._canvas.freeDrawingBrush.width =  parseInt(this.state.lineWidth, 10);
+
+  changeDrawingWidth = (width) => {
+    this._canvas.freeDrawingBrush.width =  width;
   }
 
-  handleDrawingColor = (color) => {
-    this.setState({ lineColorRgb: color.rgb})
-    let rgb = "rgb(" + this.state.lineColorRgb['r'] + ", " + this.state.lineColorRgb['g'] + ", " + this.state.lineColorRgb['b'] + ")"
+  changeDrawingColor = (rgb) => {
     this._canvas.freeDrawingBrush.color = rgb;
   }
+  
+  // handleDrawingWidth = (event) => {
+  //   const value = event.target.value;
+  //   this.setState( {lineWidth: value} );
+  //   this._canvas.freeDrawingBrush.width =  parseInt(this.state.lineWidth, 10);
+  // }
+
+  // handleDrawingColor = (color) => {
+  //   this.setState({ lineColorRgb: color.rgb})
+  //   let rgb = "rgb(" + this.state.lineColorRgb['r'] + ", " + this.state.lineColorRgb['g'] + ", " + this.state.lineColorRgb['b'] + ")"
+  //   this._canvas.freeDrawingBrush.color = rgb;
+  // }
 
   changeBackgroundColor = () => {
     this._canvas.backgroundColor = `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`;
@@ -1631,11 +1640,53 @@ class ImageEditor extends Component {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
       }
     };
+
+    const tab = {
+      0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText}/>,
+      1: <ImageUI object={this.state.activeObject} cropObject={this.cropObject} cropEndObject={this.cropEndObject}/>,
+      2: <FilterUI object={this.state.activeObject} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
+      3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon}/>,
+      4: <ObjectUI 
+          object={this.state.activeObject} 
+          lockScaleRatio = {this.lockScaleRatio}
+          sendToBack = {this.sendToBack}
+          sendBackwards = {this.sendBackwards}
+          bringToFront = {this.bringToFront}
+          bringForward = {this.bringForward}
+          deleteObject = {this.deleteObject}
+          deleteAllObject = {this.deleteAllObject}
+          makeGroup = {this.makeGroup}
+          unGroup = {this.unGroup}
+          flipObject = {this.flipObject}
+          />,
+      5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
+      6: <ShapeUI 
+          object={this.state.activeObject} 
+          addShape={this.addShape} 
+          addLine={this.addLine} 
+          setEndAngle = {this.setEndAngle}
+          makePolygonWithDrag={this.makePolygonWithDrag} 
+          makePolygonWithClick={this.makePolygonWithClick}
+          />,
+      7: <DrawUI 
+          object={this.state.activeObject} 
+          openDrawing={this.openDrawing} 
+          closeDrawing={this.closeDrawing} 
+          changeDrawingColor={this.changeDrawingColor} 
+          changeDrawingWidth={this.changeDrawingWidth} 
+          />,
+      8: <ToolsUI addImage={this.addImage} objectInfo = {this.objectInfo}/>,
+    };
     let i = 0;
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
-        <SideNav filter={this.filterObject} changeTab = {this.changeTab} tab = {this.state.tab} addImage = {this.addImage}/>
+        <SideNav 
+          changeTab = {this.changeTab} 
+          tab = {this.state.tab} 
+          UI = { tab }
+        >
+        </SideNav>
         <div className="editor" id='editor'>
           <div className="editor-nav">
             <div className="do">
@@ -1734,7 +1785,7 @@ class ImageEditor extends Component {
             <button onClick={this.deleteAllObject}>모든 객체 삭제</button>
             <button onClick={this.makeGroup}>그룹화</button>
             <button onClick={this.unGroup}>그룹해제</button>
-            <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
+            <button onClick={this.setObjectAngle} angle='90' > 선택 개체 90도 회전</button>
             <p>회전</p>
             <input
               type='number'

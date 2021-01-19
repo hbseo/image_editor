@@ -1,22 +1,77 @@
-import React from 'react';
-// import './Text.scss'
-export default function Text(props) {
-  return (
-    <div className="sub">
-      <div className="sub-title">
-          TExt
+import switchTools from '../helper/SwitchTools'
+import React, {Component} from 'react';
+
+export default class Text extends Component{
+  constructor(props){
+    super(props);
+  }
+
+  componentDidMount(){
+    console.log('Text UI Mount');
+    this.documentUpdate();
+  }
+  componentDidUpdate(){
+    console.log('Text UI Update');
+    this.documentUpdate();
+  }
+  componentWillUnmount(){
+    console.log('Text UI Unmount');
+  }
+
+  documentUpdate = () => {
+    if(this.props.object.type === 'textbox'){
+      switchTools('text', false)
+      this.textSelection(this.props.object);
+    }
+    else{
+      switchTools('text', true)
+    }
+  }
+
+  textSelection = (text) => {
+    if(text.fontStyle === "italic"){
+      document.getElementById('italic_checkbox').checked = true;
+    }
+    else{
+      document.getElementById('italic_checkbox').checked = false;
+    }
+    if(text.fontWeight === "bold"){
+      document.getElementById('bold_checkbox').checked = true;
+    }
+    else{
+      document.getElementById('bold_checkbox').checked = false;
+    }
+  }
+
+  render(){
+    return (
+      <div className="sub">
+        <div className="sub-title">
+            Text ( {this.props.object.type} )
+        </div>
+        <div className="sub-textmenu">
+          <div>
+            <button onClick={this.props.addText}>텍스트 추가</button>
+          </div>
+          <div>
+            <input type='checkbox' className='text' onClick={this.props.textObject} text='bold' id='bold_checkbox' />bold
+          </div>
+          <div>
+            <input type='checkbox' className='text' onClick={this.props.textObject} text='italic' id='italic_checkbox' />italic
+          </div>
+          <div>
+            <button type='checkbox' className='text' onClick={this.props.textObject} text='left-align'>좌측정렬</button>
+          </div>
+          <div>
+            <button type='checkbox' className='text' onClick={this.props.textObject} text='center-align' >가운데정렬</button>
+          </div>
+          <div>
+            <button type='checkbox' className='text' onClick={this.props.textObject} text='right-align' >우측정렬</button>
+          </div>
+          
+        </div>
       </div>
-      <div className="sub-filters">
-        <div>
-          test3
-        </div>
-        <div>
-          test2
-        </div>
-        <div>
-          test1
-        </div>
-      </div>
-    </div>
-  );
+    );
+  }
+
 }

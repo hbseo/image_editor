@@ -16,35 +16,46 @@ class Image extends Action {
         canvas.add(data).setActiveObject(data);
         this.getImageEditor().saveState('image add');
       })
+      .catch(() => {
+        alert("image load error");
+      })
     }
     document.removeEventListener('mousedown', this.addImageEvent);
     canvas.defaultCursor = 'default';
+    canvas.selection = true;
   }
 
   addImage = (url) => {
-    this.getCanvas().defaultCursor = 'pointer';
+    const canvas = this.getCanvas();
+    canvas.defaultCursor = 'pointer';
+    canvas.selection = false;
     this.testUrl = url;
     document.addEventListener('mousedown',this.addImageEvent);
   }
 
   
   loadImage = (url, pointer, option) => {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       fabric.Image.fromURL(url, img => {
-        img.set({
-          angle: 0,
-          originX: option.originX,
-          originY: option.originY,
-
-          left: pointer.x,
-          top: pointer.y,
-
-          scaleX : option.scaleX,
-          scaleY : option.scaleY,
-
-          strokeWidth : 0
-        });
-        resolve(img);
+        if(img._element != null){
+          img.set({
+            angle: 0,
+            originX: option.originX,
+            originY: option.originY,
+  
+            left: pointer.x,
+            top: pointer.y,
+  
+            scaleX : option.scaleX,
+            scaleY : option.scaleY,
+  
+            strokeWidth : 0
+          });
+          resolve(img);
+        }
+        else{
+          reject();
+        }
       }, { crossOrigin: 'anonymous' }
       );
     });

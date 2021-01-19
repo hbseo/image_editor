@@ -111,6 +111,23 @@ ul {
 }
 
 .sub .sub-filters div {
+  text-align: center;
+  width: 18vmin;
+  height: 4vmin;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  color: white;
+}
+
+.sub .sub-textmenu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.sub .sub-textmenu div {
   border-radius: 5px;
   margin: 10px;
   text-align: center;

@@ -1,4 +1,5 @@
 import Action from './Action';
+import ResizeHelper from '../helper/Resize';
 import { fabric } from 'fabric';
 
 //from tui.image.editor
@@ -90,7 +91,7 @@ class Icon extends Action {
     canvas.off('mouse:move', this._iconCreateResizeEvent);
     canvas.selection = true;
 
-    this.adjustOriginToCenter(this.getActiveObject());
+    ResizeHelper.adjustOriginToCenter(this.getActiveObject())
 
     if(this.disableObj){
       this.disableObj.lockMovementY = false;
