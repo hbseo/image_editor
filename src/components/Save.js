@@ -6,7 +6,8 @@ class Save extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      format : 'png'
+      format : 'png',
+      title : '',
     };
   }
 
@@ -15,8 +16,27 @@ class Save extends Component {
     this.setState({format : format});
   }
 
+  saveHandler = () => {
+    var json = this.props.canvas;
+    fetch('/content/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id : this.props.user_name , title : 'test', data : json})
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      alert('save success');
+    })
+    .catch(() => {
+      alert('error');
+    })
+  }
+
   render(){
-    const { open, close, save, size } = this.props;
+    const { open, close, save, size, user_name } = this.props;
     let imageSize = <label className="canvas-size">{size().x} X {size().y}</label>
 		return(
 			<div>
@@ -24,8 +44,8 @@ class Save extends Component {
 				  <div className = "modal">
 						<div className = "saveModal">
               <div className="top-div">
-							  <label id="headline">Save</label>
-                <button id="close" onClick = {close}><i class="fa fa-times" aria-hidden="true"></i></button>
+							  <label id="headline">Save {user_name}</label>
+                <button id="close" onClick = {close}><i className="fa fa-times" aria-hidden="true"></i></button>
               </div>
               <hr className = "modal-line"></hr>
               <div className="content">
@@ -44,9 +64,10 @@ class Save extends Component {
               </div>
 
               <div className = "bottom-div">
-                {imageSize}
+                {imageSize} 
 							  <button id = "close-button" onClick = {close}>close</button>
 							  <button id = "save-button" onClick = {save}>save</button>
+							  <button id = "save-button" onClick = {this.saveHandler}><h4>서버</h4></button>
               </div>
 
 

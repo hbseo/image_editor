@@ -94,6 +94,7 @@ class ImageEditor extends Component {
       },
       isSave : false,
       tab : 0,
+      user_name : '',
     }
 
 
@@ -219,7 +220,7 @@ class ImageEditor extends Component {
     }
     
 
-    
+    this.getCheck();
     this.forceUpdate(); // for showUndo/Redo Stack
   }
   
@@ -693,7 +694,19 @@ class ImageEditor extends Component {
 		// 	list[i].checked = image.filters[i];
     // }
 		this.setState({
-			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
+      activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
+      filters : {
+        brightness: image.filters[15] ? image.filters[15].brightness : 0,
+        contrast : image.filters[16] ? image.filters[16].contrast : 0,
+        pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
+        blur : image.filters[18] ? image.filters[18].blur : 0,
+        noise : image.filters[19] ? image.filters[19].noise : 0,
+        saturation : image.filters[20] ? image.filters[20].noise : 0,
+        hue : image.filters[21] ? image.filters[21].noise : 0,
+        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0,
+        vignette : image.filters[23] ? image.filters[23].vignette_matrix.amount : 0,
+        zoomblur : image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0,
+      },
       shadow : {
         blur : toggle ? image.shadow.blur : 30,
         offsetX : toggle ? image.shadow.offsetX : 10,
@@ -893,7 +906,8 @@ class ImageEditor extends Component {
     let c = this._canvas.toJSON();
     c.width = this._canvas.width;
     c.height = this._canvas.height;
-    let data = JSON.stringify(c);
+    // let data = JSON.stringify(c);
+    let data = JSON.stringify(this.currentState);
     let file = new Blob([data], {type : 'octet/stream'});
     var a = document.createElement("a");
     a.href = URL.createObjectURL(file);
@@ -1634,6 +1648,18 @@ class ImageEditor extends Component {
     this.setState({tab : parseInt(event.target.getAttribute('tab'), 10)});
   }
 
+  getCheck = () => {
+    fetch('/auth/check', {
+      method: 'GET'
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.success) {
+        this.setState({user_name: data.info.user_id});
+      }
+    });
+  }
+
   render() {
 		const styles = {
 			color : {
@@ -1644,7 +1670,7 @@ class ImageEditor extends Component {
     const tab = {
       0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText}/>,
       1: <ImageUI object={this.state.activeObject} cropObject={this.cropObject} cropEndObject={this.cropEndObject}/>,
-      2: <FilterUI object={this.state.activeObject} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
+      2: <FilterUI object={this.state.activeObject} filters={this.state.filters} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
       3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon}/>,
       4: <ObjectUI 
           object={this.state.activeObject} 
@@ -1675,7 +1701,7 @@ class ImageEditor extends Component {
           changeDrawingColor={this.changeDrawingColor} 
           changeDrawingWidth={this.changeDrawingWidth} 
           />,
-      8: <ToolsUI addImage={this.addImage} objectInfo = {this.objectInfo}/>,
+      8: <ToolsUI addImage={this.addImage} objectInfo = {this.objectInfo} openSaveModal = {this.openSaveModal} />,
     };
     let i = 0;
     const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
@@ -1701,6 +1727,7 @@ class ImageEditor extends Component {
             <canvas id='canvas' tabIndex='0'></canvas>
           </div>
         </div>
+        <Save open = {this.state.isSave} close = {this.closeSaveModal} save = {this.saveImage} size = {this.getCanvasSize} user_name = {this.state.user_name} getCanvas = {this.getCanvas} canvas={this.currentState} />
 
 
 
@@ -2240,7 +2267,6 @@ class ImageEditor extends Component {
         </div> 
          */}
         
-        <Save open = {this.state.isSave} close = {this.closeSaveModal} save = {this.saveImage} size = {this.getCanvasSize} />
       </div>
     );
   }

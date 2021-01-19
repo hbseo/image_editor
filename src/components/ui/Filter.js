@@ -60,18 +60,18 @@ export default class Filter extends Component{
       list[i].checked = image.filters[i];
     }
 
-    document.getElementById('brightness').value = image.filters[15] ? image.filters[15].brightness : 0;
-    document.getElementById('contrast').value = image.filters[16] ? image.filters[16].contrast : 0;
-    document.getElementById('pixelate').value = image.filters[17] ? image.filters[17].blocksize : 1;
-    document.getElementById('blur').value = image.filters[18] ? image.filters[18].blur : 0;
-    document.getElementById('noise').value = image.filters[19] ? image.filters[19].noise : 0;
-    document.getElementById('saturation').value = image.filters[20] ? image.filters[20].saturation : 0;
-    document.getElementById('hue').value = image.filters[21] ? image.filters[21].rotation : 0;
-    document.getElementById('ink').value = image.filters[22] ? image.filters[22].ink_matrix.ink : 0;
-    document.getElementById('vignette').value = image.filters[23] ? image.filters[23].vignette_matrix.amount : 0;
-    document.getElementById('zoomblur').value = image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0;
-    document.getElementById('opacity').value = image.opacity
-
+    // document.getElementById('brightness').value = image.filters[15] ? image.filters[15].brightness : 0;
+    // document.getElementById('contrast').value = image.filters[16] ? image.filters[16].contrast : 0;
+    // document.getElementById('pixelate').value = image.filters[17] ? image.filters[17].blocksize : 1;
+    // document.getElementById('blur').value = image.filters[18] ? image.filters[18].blur : 0;
+    // document.getElementById('noise').value = image.filters[19] ? image.filters[19].noise : 0;
+    // document.getElementById('saturation').value = image.filters[20] ? image.filters[20].saturation : 0;
+    // document.getElementById('hue').value = image.filters[21] ? image.filters[21].rotation : 0;
+    // document.getElementById('ink').value = image.filters[22] ? image.filters[22].ink_matrix.ink : 0;
+    // document.getElementById('vignette').value = image.filters[23] ? image.filters[23].vignette_matrix.amount : 0;
+    // document.getElementById('zoomblur').value = image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0;
+    // document.getElementById('opacity').value = image.opacity
+    // document.getElementById('brightness-value').innerHTML = image.filters[15] ? image.filters[15].brightness : 0;
   }
 
   handleFilterChange = (event) => {
@@ -79,6 +79,7 @@ export default class Filter extends Component{
     let filterOption = event.target.getAttribute('filter');
     new Promise((resolve) => {
       this.setState({[event.target.name] : event.target.value});
+      this.props.filters.brightness = value;
       resolve();
     })
     .then(() => {
@@ -132,10 +133,11 @@ export default class Filter extends Component{
               max='1'
               name='brightness'
               step='0.01'
-              value={this.state.brightness || 0}
+              value={this.props.filters.brightness || 0}
               onChange={this.handleFilterChange} filter='brightness'
             />Brightness
-            {this.props.object.type === 'image' && this.props.object.filters[15] ? this.props.object.filters[15].brightness : 0 }
+            <br/>
+            <label id='brightness-value'>{this.props.filters.brightness}</label>
           </div>
           <div>
             <input
