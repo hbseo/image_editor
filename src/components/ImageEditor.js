@@ -464,7 +464,7 @@ class ImageEditor extends Component {
 			else{
         this.switchTools('text', true);
 				this._imageSelection(this._canvas.backgroundImage);
-      };
+      }
 		});
     
     this._canvas.on('object:added', (event) => {
@@ -1063,37 +1063,37 @@ class ImageEditor extends Component {
     }
   }
 
-  handleFilterChange = (event) => {
-    const value = event.target.value
-    let filterOption = event.target.getAttribute('filter');
-    let activeObject = this.getActiveObject();
-    if ( activeObject || this._backgroundImage ) {
-      let change_state = {
-        brightness : this.state.filters.brightness, 
-        contrast : this.state.filters.contrast, 
-        pixelate : this.state.filters.pixelate,
-        blur : this.state.filters.blur,
-        noise : this.state.filters.noise,
-        saturation : this.state.filters.saturation,
-        hue : this.state.filters.hue,
-        ink : this.state.filters.ink,
-        vignette : this.state.filters.vignette,
-        zoomblur : this.state.filters.zoomblur,
-      };
-      change_state[event.target.name] = event.target.value;
-      new Promise((resolve) => {
-        this.setState({filters : change_state});
-        resolve();
-      })
-        .then(() => {
-          this.action['Filter'].applyFilter(activeObject || this._backgroundImage , filterOption, true, value);
-          this.saveState('input filter change : ' + filterOption);
-        })
-    }
-    else {
-      alert('image is not activated');
-    } 
-  }
+  // handleFilterChange = (event) => {
+  //   const value = event.target.value
+  //   let filterOption = event.target.getAttribute('filter');
+  //   let activeObject = this.getActiveObject();
+  //   if ( activeObject || this._backgroundImage ) {
+  //     let change_state = {
+  //       brightness : this.state.filters.brightness, 
+  //       contrast : this.state.filters.contrast, 
+  //       pixelate : this.state.filters.pixelate,
+  //       blur : this.state.filters.blur,
+  //       noise : this.state.filters.noise,
+  //       saturation : this.state.filters.saturation,
+  //       hue : this.state.filters.hue,
+  //       ink : this.state.filters.ink,
+  //       vignette : this.state.filters.vignette,
+  //       zoomblur : this.state.filters.zoomblur,
+  //     };
+  //     change_state[event.target.name] = event.target.value;
+  //     new Promise((resolve) => {
+  //       this.setState({filters : change_state});
+  //       resolve();
+  //     })
+  //       .then(() => {
+  //         this.action['Filter'].applyFilter(activeObject || this._backgroundImage , filterOption, true, value);
+  //         this.saveState('input filter change : ' + filterOption);
+  //       })
+  //   }
+  //   else {
+  //     alert('image is not activated');
+  //   } 
+  // }
 
   handleOpacityChange = (event) => {
     let activeObject = this.getActiveObject();
@@ -1253,7 +1253,7 @@ class ImageEditor extends Component {
 
     if (activeObject) {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
-      this.saveState('apply filter objImg');
+      
     }
     else if(this._canvas.backgroundImage){
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
@@ -1326,9 +1326,8 @@ class ImageEditor extends Component {
     // this._canvas.renderAll();
   }
 
-  textObject = (event) => {
-    let textOption = event.target.getAttribute('text');
-    this.action['Text'].textObj(this.getActiveObject(), textOption, event.target.checked, event.target.value);
+  textObject = (textOption, checked, value) => {
+    this.action['Text'].textObj(this.getActiveObject(), textOption, checked, value);
   }
 
   toggletextbg = () => {
@@ -1701,10 +1700,15 @@ class ImageEditor extends Component {
           changeDrawingColor={this.changeDrawingColor} 
           changeDrawingWidth={this.changeDrawingWidth} 
           />,
-      8: <ToolsUI addImage={this.addImage} objectInfo = {this.objectInfo} openSaveModal = {this.openSaveModal} />,
+      8: <ToolsUI 
+          addImage={this.addImage} 
+          objectInfo = {this.objectInfo} 
+          openSaveModal = {this.openSaveModal} 
+          onClickSnap={this.onClickSnap}
+          onClickGrid={this.onClickGrid}
+          onClickObjectSnap={this.onClickObjectSnap}
+        />,
     };
-    let i = 0;
-    const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
     return (
       <div className='App'>
         <SideNav 

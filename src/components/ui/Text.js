@@ -4,6 +4,12 @@ import React, {Component} from 'react';
 export default class Text extends Component{
   constructor(props){
     super(props);
+    this.fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
+    'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
+    'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
+    'Copperplate'];
+    this.state = { fontSize : 20 };
+
   }
 
   componentDidMount(){
@@ -41,6 +47,24 @@ export default class Text extends Component{
     else{
       document.getElementById('bold_checkbox').checked = false;
     }
+    document.getElementById('fontSize').value = text.fontSize;
+  }
+
+  handlefontSizeChange = (event) => {
+    const fontSize = event.target.value;
+    let textOption = event.target.getAttribute('text');
+    this.setState({fontSize : fontSize})
+    this.props.textObject(textOption, true, fontSize);
+  }
+  
+  fontListUp = () => {
+    let i = 0;
+    return this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
+  }
+
+  textAction = (event) => {
+    let textOption = event.target.getAttribute('text');
+    this.props.textObject(textOption, event.target.checked, event.target.value);
   }
 
   render(){
@@ -54,19 +78,37 @@ export default class Text extends Component{
             <button onClick={this.props.addText}>텍스트 추가</button>
           </div>
           <div>
-            <input type='checkbox' className='text' onClick={this.props.textObject} text='bold' id='bold_checkbox' />bold
+            <input type='checkbox' className='text' onClick={this.textAction} text='bold' id='bold_checkbox' />bold
           </div>
           <div>
-            <input type='checkbox' className='text' onClick={this.props.textObject} text='italic' id='italic_checkbox' />italic
+            <input type='checkbox' className='text' onClick={this.textAction} text='italic' id='italic_checkbox' />italic
           </div>
           <div>
-            <button type='checkbox' className='text' onClick={this.props.textObject} text='left-align'>좌측정렬</button>
+            <button type='checkbox' className='text' onClick={this.textAction} text='left-align'>좌측정렬</button>
           </div>
           <div>
-            <button type='checkbox' className='text' onClick={this.props.textObject} text='center-align' >가운데정렬</button>
+            <button type='checkbox' className='text' onClick={this.textAction} text='center-align' >가운데정렬</button>
           </div>
           <div>
-            <button type='checkbox' className='text' onClick={this.props.textObject} text='right-align' >우측정렬</button>
+            <button type='checkbox' className='text' onClick={this.textAction} text='right-align' >우측정렬</button>
+          </div>
+          <div>
+            <label htmlFor='fontfamily'>글꼴: </label>
+            <select className='text' name='fontfamily' text='fontfamily' onChange={this.textAction}>
+              {this.fontListUp()}
+            </select>
+          </div>
+          <div>
+            <label htmlFor='fontSize'> 글자 크기: </label>
+            <input 
+              type='number' 
+              onChange={this.handlefontSizeChange} 
+              text='fontSize'
+              name='fontSize'
+              id='fontSize'
+              min='1'
+              value={this.state.fontSize} 
+            />
           </div>
           
         </div>

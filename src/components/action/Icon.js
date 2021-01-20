@@ -130,25 +130,6 @@ class Icon extends Action {
     })
     canvas.renderAll();
   } 
-
-  // clone from tui.image.editor
-  adjustOriginToCenter = (shape) => {
-    const centerPoint = shape.getPointByOrigin('center', 'center');
-    const {originX, originY} = shape;
-    const origin = shape.getPointByOrigin(originX, originY);
-    const left = shape.left + (centerPoint.x - origin.x);
-    const top = shape.top + (centerPoint.y - origin.y);
-
-    shape.set({
-        hasControls: true,
-        hasBorders: true,
-        originX: 'center',
-        originY: 'center',
-        left,
-        top
-    });
-    shape.setCoords(); // For left, top properties
-  }
 }
 
 export default Icon;

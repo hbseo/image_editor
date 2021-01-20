@@ -55,6 +55,10 @@ export default class Action {
     return this.app.removeKeyDownEvent();
   }
 
+  saveState(action){
+    return this.app.saveState(action);
+  }
+
 }
 
 
