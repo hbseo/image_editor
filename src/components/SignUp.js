@@ -45,7 +45,7 @@ class SignUp extends Component {
   registerDupHandler = () => {
     const id = this.state.id;
     fetch('/auth/dupCheck', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },

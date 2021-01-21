@@ -5,7 +5,7 @@ const controller = require('./controller');
 router.post('/login', controller.login);
 router.post('/register', controller.register);
 router.post('/changeUserPassword', controller.changeUserPassword);
-router.get('/dupCheck', controller.dupCheck);
+router.post('/dupCheck', controller.dupCheck);
 
 router.use('/check', authMiddleware);
 router.use('/logout', authMiddleware);
