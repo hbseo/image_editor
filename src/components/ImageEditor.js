@@ -1602,7 +1602,7 @@ class ImageEditor extends Component {
 
   closeDrawing = () => {
     this.setState({ drawingMode: false });
-    this._canvas.isDrawingMode = false;
+    if(this._canvas) { this._canvas.isDrawingMode = false; }
   }
 
   changeDrawingWidth = (width) => {
