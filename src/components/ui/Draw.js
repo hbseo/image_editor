@@ -12,7 +12,7 @@ export default class Draw extends Component{
       },
       lineWidth : 10,
     };
-    this.brush = ['vLinePatternBrush', 'hLinePatternBrush', 'squarePatternBrush', 'diamondPatternBrush'];
+    this.brush = ['pencilBrush', 'circleBrush', 'patternBrush', 'sprayBrush', 'vLinePatternBrush', 'hLinePatternBrush', 'squarePatternBrush', 'diamondPatternBrush'];
   }
 
   componentDidMount(){
@@ -33,7 +33,7 @@ export default class Draw extends Component{
 
   handleColorChangeComplete = (color) => {
     this.setState({ color: color.rgb})
-    let rgb = "rgb(" + this.state.color['r'] + ", " + this.state.color['g'] + ", " + this.state.color['b'] + ")"
+    let rgb = "rgb(" + this.state.color['r'] + ", " + this.state.color['g'] + ", " + this.state.color['b'] + ", " + this.state.color['a'] +")"
     this.props.changeDrawingColor(rgb);
   }
 
@@ -44,7 +44,8 @@ export default class Draw extends Component{
   }
 
   handleDrawingBrush = (event) => {
-    this.props.changeDrawingBrush(event.target.value, this.state.color, this.state.lineWidth);
+    let rgb = "rgb(" + this.state.color['r'] + ", " + this.state.color['g'] + ", " + this.state.color['b'] + ", " + this.state.color['a'] +")"
+    this.props.changeDrawingBrush(event.target.value, rgb, this.state.lineWidth);
   }
 
   brushListUp = () => {
@@ -60,8 +61,8 @@ export default class Draw extends Component{
         </div>
         <div className="sub-filters">
           <div>
-          < label htmlFor='brush'>타입: 색깔 오류 및 원상 복구위해 잠궈놈 </label>
-            <select className='text' name='brush' text='brush' onChange={this.handleDrawingBrush} disabled>
+          < label htmlFor='brush'>brush type </label>
+            <select className='text' name='brush' text='brush' onChange={this.handleDrawingBrush}>
               {this.brushListUp()}
             </select>
           </div>

@@ -1610,14 +1610,20 @@ class ImageEditor extends Component {
   }
 
   changeDrawingColor = (rgb) => {
-    this._canvas.freeDrawingBrush.color = rgb;
+    this._canvas.freeDrawingBrush.color = String(rgb);
+    if(this._canvas.freeDrawingBrush.getPatternSrc){
+      this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
+    }
   }
 
   changeDrawingBrush = (type, color, width) => {
     this._canvas.freeDrawingBrush = this.action['Draw'].getBrush(type);
-    this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
-    // this._canvas.freeDrawingBrush.color = color;
+    this._canvas.freeDrawingBrush.color = String(color);
     this._canvas.freeDrawingBrush.width = parseInt(width);
+    if(this._canvas.freeDrawingBrush.getPatternSrc){
+      this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
+    }
+    // this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
   }
 
   changeBackgroundColor = () => {
