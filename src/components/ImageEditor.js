@@ -220,7 +220,7 @@ class ImageEditor extends Component {
       this.action['Grid'].makeGrid();
     }
     
-
+    this.action['Draw'].setBrush();
     this.getCheck();
     this.forceUpdate(); // for showUndo/Redo Stack
   }
@@ -1612,18 +1612,13 @@ class ImageEditor extends Component {
   changeDrawingColor = (rgb) => {
     this._canvas.freeDrawingBrush.color = rgb;
   }
-  
-  // handleDrawingWidth = (event) => {
-  //   const value = event.target.value;
-  //   this.setState( {lineWidth: value} );
-  //   this._canvas.freeDrawingBrush.width =  parseInt(this.state.lineWidth, 10);
-  // }
 
-  // handleDrawingColor = (color) => {
-  //   this.setState({ lineColorRgb: color.rgb})
-  //   let rgb = "rgb(" + this.state.lineColorRgb['r'] + ", " + this.state.lineColorRgb['g'] + ", " + this.state.lineColorRgb['b'] + ")"
-  //   this._canvas.freeDrawingBrush.color = rgb;
-  // }
+  changeDrawingBrush = (type, color, width) => {
+    this._canvas.freeDrawingBrush = this.action['Draw'].getBrush(type);
+    this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
+    // this._canvas.freeDrawingBrush.color = color;
+    this._canvas.freeDrawingBrush.width = parseInt(width);
+  }
 
   changeBackgroundColor = () => {
     this._canvas.backgroundColor = `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`;
@@ -1730,6 +1725,7 @@ class ImageEditor extends Component {
           closeDrawing={this.closeDrawing} 
           changeDrawingColor={this.changeDrawingColor} 
           changeDrawingWidth={this.changeDrawingWidth} 
+          changeDrawingBrush={this.changeDrawingBrush} 
           />,
       8: <ToolsUI 
           addImage={this.addImage} 

@@ -12,6 +12,7 @@ export default class Draw extends Component{
       },
       lineWidth : 10,
     };
+    this.brush = ['vLinePatternBrush', 'hLinePatternBrush', 'squarePatternBrush', 'diamondPatternBrush'];
   }
 
   componentDidMount(){
@@ -42,6 +43,15 @@ export default class Draw extends Component{
     this.props.changeDrawingWidth(parseInt(this.state.lineWidth, 10));
   }
 
+  handleDrawingBrush = (event) => {
+    this.props.changeDrawingBrush(event.target.value, this.state.color, this.state.lineWidth);
+  }
+
+  brushListUp = () => {
+    let i = 0;
+    return this.brush.map(br => (<option key={i++} value={i}>{br}</option>));
+  }
+
   render(){
     return (
       <div className="sub">
@@ -49,6 +59,12 @@ export default class Draw extends Component{
             Draw ( {this.props.object.type} )
         </div>
         <div className="sub-filters">
+          <div>
+          < label htmlFor='brush'>타입: 색깔 오류 및 원상 복구위해 잠궈놈 </label>
+            <select className='text' name='brush' text='brush' onChange={this.handleDrawingBrush} disabled>
+              {this.brushListUp()}
+            </select>
+          </div>
           <div> 
             <label>Width</label><input type='range' className='drawing' id='width' min='0' max='60' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth}/>
           </div>

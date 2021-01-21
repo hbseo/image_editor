@@ -46,6 +46,10 @@ export default function SideNav(props) {
           <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-tools fa-4x" tab="8"></i></span></button>
           <span className="tooltip">Tools</span>
         </li>
+        <li>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-times fa-4x" tab="99"></i></span></button>
+          <span className="tooltip">Close</span>
+        </li>
       </ul>
       {props.UI[props.tab]}
     </nav>

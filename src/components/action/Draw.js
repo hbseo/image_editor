@@ -1,6 +1,7 @@
 import Action from './Action';
 import { throttle } from 'lodash';
 import { fabric } from 'fabric';
+import brushList from '../helper/Brush';
 
 class Draw extends Action {
   constructor(App) {
@@ -11,8 +12,18 @@ class Draw extends Action {
     this.lines = [];
     this.pos = { x : 0, y : 0 };
     this.start = false;
-
+    this.brush = [];
   }
+
+  setBrush = () => {
+    this.brush = brushList(this.getCanvas());
+  }
+
+  getBrush = (type) => {
+    return this.brush[type-1];
+  }
+
+
 
   _stopEvent = (event) => {
     event.preventDefault();    
