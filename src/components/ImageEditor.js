@@ -1448,9 +1448,6 @@ class ImageEditor extends Component {
   onclickUndoStack = (event) => {
     let origin = this.currentState.id;
     let dest = parseInt(event.target.getAttribute('number'), 10);
-    // console.log('current id : ', this.currentState.id);
-    // console.log('click id : ', parseInt(event.target.getAttribute('number'), 10));
-
 
     if(this.stateStack.length > 0){
       this.redoStack.push(this.currentState);
@@ -1467,11 +1464,30 @@ class ImageEditor extends Component {
       });
       this.forceUpdate();
     }
+  
+  }
+  
+  onclickRedoStack = (event) => {
+    let origin = this.currentState.id;
+    let dest = parseInt(event.target.getAttribute('number'), 10);
+    console.log(dest, origin - 1);
+    if(this.redoStack.length > 0){
+      this.stateStack.push(this.currentState);
+      for(let i = origin; i < dest - 1 ; i++ ){
+        this.stateStack.push(this.redoStack.pop());
+      }
+      this.currentState = this.redoStack.pop();
 
+      this._canvas.loadFromJSON(this.currentState, () => {
+        this._canvas.setWidth(this.currentState.width);
+        this._canvas.setHeight(this.currentState.height);
+        this._canvas.calcOffset();
+      });
+      this.forceUpdate();
+    }
   }
 
   showUndoStack = () => {
-    // console.log(this.stateStack);
     const listitem = this.stateStack.map((state) =>
       <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
     );
@@ -1483,9 +1499,8 @@ class ImageEditor extends Component {
   }
 
   showRedoStack = () => {
-    // console.log(this.redoStack);
     const listitem = this.redoStack.map((state) =>
-      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack">{state.id} : {state.action}</p>
+      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack" number = {state.id} onClick = {this.onclickRedoStack}>{state.id} : {state.action}</p>
     );
     return(
       <div>
@@ -1721,11 +1736,12 @@ class ImageEditor extends Component {
           UI = { tab }
         >
         </SideNav>
+
         <div className="editor" id='editor'>
           <div className="editor-nav">
             <div className="do">
-                <button>Undo</button>
-                <button>Redo</button>
+                <button onClick = {this.undo}>Undo</button>
+                <button onClick = {this.redo}>Redo</button>
               </div>
             <div className="more">
                 <button>more</button>
@@ -1736,7 +1752,6 @@ class ImageEditor extends Component {
           </div>
         </div>
         <Save open = {this.state.isSave} close = {this.closeSaveModal} save = {this.saveImage} size = {this.getCanvasSize} user_name = {this.state.user_name} getCanvas = {this.getCanvas} canvas={this.currentState} />
-
 
 
 
@@ -2253,20 +2268,6 @@ class ImageEditor extends Component {
             />
           </div>
             
-          <div>
-            <h5>아이콘 기능</h5>
-            <button className="fas fa-times" onClick={this.addIcon} type = "cancel"></button>
-            <button className="fas fa-arrow-right" onClick={this.addIcon} type = "icon_arrow_2"></button>
-            <button className="fas fa-angle-right" onClick={this.addIcon} type = "icon_arrow_3"></button>
-            <button className="fas fa-star" onClick={this.addIcon} type = "icon_star"></button>
-            <button className="fas fa-certificate" onClick={this.addIcon} type = "icon_star_2"></button>
-            <button className="fas fa-times" onClick={this.addIcon} type = "icon_polygon"></button>
-            <button className="fas fa-map-marker-alt" onClick={this.addIcon} type = "icon_location"></button>
-            <button className="fas fa-heart" onClick={this.addIcon} type = "icon_heart"></button>
-            <button className="fas fa-comment-alt" onClick={this.addIcon} type = "icon_bubble"></button>
-            <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
-          </div>
-
           <div>
             <h5>일단은 안 쓰는 기능</h5>
             <button onClick={this.newCanvas} disabled>배경이미지 캔버스로 변경</button>
