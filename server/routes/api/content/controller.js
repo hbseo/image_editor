@@ -45,3 +45,42 @@ exports.save = (req, res) => {
   .catch(onError)
 }
 
+exports.get = (req, res) => {
+  const database = new Database();
+  const {id, count} = req.body;
+  let check_query = `SELECT idx FROM USERS WHERE userid = "${id}";`;
+
+  const get = (result) => {
+    if(result[0]) {
+      let get_query = `SELECT * FROM PROJECTS WHERE useridx = ${result[0].idx} LIMIT ${count};`;
+      database.query(get_query)
+      .then(respond)
+      .catch(onError);
+    }
+    else {
+      res.status(200).json({
+        msg: 'idx error : no user id'
+      })
+    }
+  }
+  const respond = (result) => {
+    if(result) {
+      res.status(200).send(result)
+    }
+    else {
+      res.status(200).json({
+        msg: 'get fail'
+      })
+    }
+  }
+
+  const onError = (error) => {
+    res.status(400).json({
+      msg: error.message
+    })
+  }
+
+  database.query(check_query)
+  .then(get)
+  .catch(onError)
+}

@@ -1,15 +1,16 @@
 import React, { Component} from 'react';
 import { Link } from 'react-router-dom';
 import ImageList from './ImageList';
+import Project from './Project';
 import Login from './Login';
 import './Main.scss'
 
 class Main extends Component {
   constructor(props) {
 		super(props);
-		this.state = {width : 5, height : 5, url :  "", submit : false, imgRatio : 100, imgWidth : 0, imgHeight : 0};
+		this.state = {width : 5, height : 5, url :  "", submit : false, imgRatio : 100, imgWidth : 0, imgHeight : 0, login : false, id : ''};
 		this.url= "";
-		this.image = null;
+    this.image = null;
   }
     
   componentDidMount() {
@@ -28,7 +29,16 @@ class Main extends Component {
 		this.image.onload = this.imageFound;
 		this.image.onerror = this.imageNotFound;
 		this.image.src = this.url;
-	}
+  }
+  
+  loginCheck = (id) => {
+    if(id){
+      this.setState({login : true, id : id});
+    } 
+    else{
+      this.setState({login : false, id : ''});
+    }
+  }
 
 	imageNotFound = () => {
 		this.image = null;
@@ -79,6 +89,7 @@ class Main extends Component {
 		document.getElementById("imgRatio").disabled = true;
     	let change_state = {};
 		change_state[event.target.name] = event.target.value;
+		// change_state["submit"] = false
 		this.url = ""
 		this.setState({ submit : false, imgRatio : 100 })
     	this.setState(change_state);
@@ -134,7 +145,8 @@ class Main extends Component {
 					<h2 id="main-title">MAIN</h2>
 				</div>
 				<hr />
-
+        {this.state.login ? <div>로그인 : {this.state.id}</div> : null}
+				<hr />
 				<div id="canvas-template">
 					<h4>빈 캔버스 시작</h4>
 					<ul className="canvas-list-ul">
@@ -222,7 +234,9 @@ class Main extends Component {
 					<button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
 				</div>
 
-				<Login></Login>
+				<Login loginCheck = {this.loginCheck}></Login>
+        <hr/>
+				<Project login={this.state.login} id = {this.state.id}/>
       </div>
     )
   }

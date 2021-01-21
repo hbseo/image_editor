@@ -30,6 +30,7 @@ class Login extends Component {
     .then((res) => res.json())
     .then((data) => {
       if(data.success) {
+        this.props.loginCheck(data.info.user_id);
         this.setState({state: 'done', user_name: data.info.user_id});
       }
       else {
@@ -46,6 +47,7 @@ class Login extends Component {
     })
     .then((res) => res.json())
     .then((data) => {
+      this.props.loginCheck();
       this.getCheck();
     })
     .catch(() => {
