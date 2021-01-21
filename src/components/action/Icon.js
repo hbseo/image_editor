@@ -53,7 +53,7 @@ class Icon extends Action {
 
   _addIcon = (canvas, icon, options, event) => {
     const pointer = canvas.getPointer(event, false);
-
+    this.removeKeyDownEvent();
     this.disableObj = this.getActiveObject();
     if(this.disableObj){
       // disableObj.evented = false;
@@ -69,7 +69,9 @@ class Icon extends Action {
         left : pointer.x,
         top : pointer.y,
         originX : 'left',
-        originY : 'top'
+        originY : 'top',
+        scaleX : 0,
+        scaleY : 0,
     }))
     canvas.add(icon).setActiveObject(icon);
     canvas.selection = false;
@@ -106,7 +108,7 @@ class Icon extends Action {
     else{
       this.getImageEditor().saveState('icon add');
     }
-
+    this.addKeyDownEvent();
     canvas.off('mouse:up', this._iconCreateEndEvent);
   }
 

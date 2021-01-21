@@ -1656,6 +1656,10 @@ class ImageEditor extends Component {
       if(data.success) {
         this.setState({user_name: data.info.user_id});
       }
+    })
+    .catch(() => {
+      console.log('no login');
+      // alert('error');
     });
   }
 

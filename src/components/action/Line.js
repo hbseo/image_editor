@@ -15,6 +15,7 @@ class Line extends Action {
 	}
 	addLineEvent = (event) => {
 		const canvas = this.getCanvas();
+		this.removeKeyDownEvent();
 		if(event.target.tagName === 'CANVAS'){
 			this.disableObj = this.getActiveObject();
 			if(this.disableObj){
@@ -63,6 +64,7 @@ class Line extends Action {
 			this.disableObj.lockMovementX = false;
 			this.disableObj = null;
 		}
+		this.addKeyDownEvent();
 		canvas.off('mouse:up', this.addLineEndEvent);
 	}
 	addLine = () => {

@@ -29,6 +29,13 @@ class Draw extends Action {
     document.addEventListener("contextmenu",this._stopEvent);
     canvas.on('mouse:down',this.drawPolygonMouseDownEvent);
     canvas.on('mouse:move', this.drawPolygonMouseMoveEvent);
+
+    document.onmousedown = (event) => {
+      if(event.target.tagName !== 'CANVAS'){
+        this.makePolygon();
+      }
+      document.onmousedown = null;
+    }
   }
 
   drawPolygonMouseDownEvent = (event) => {
@@ -89,6 +96,13 @@ class Draw extends Action {
     this.pointer_list.length = 0;
     this.circle_group.length = 0;
     canvas.on('mouse:down', this.dragPolygonStart);
+    
+    document.onmousedown = (event) => {
+      if(event.target.tagName !== 'CANVAS'){
+        this.makePolygon();
+      }
+      document.onmousedown = null;
+    }
   }
 
   dragPolygonStart = () => {
@@ -158,6 +172,7 @@ class Draw extends Action {
     canvas.selection = true;
     canvas.off('mouse:down',this.drawPolygonMouseDownEvent);
     canvas.off('mouse:move', this.drawPolygonMouseMoveEvent);
+    document.onmousedown = null;
     // console.log(this.circle_group.length , this.pointer_list.length)
     new Promise((resolve) => { 
       if(this.circle_group.length < 3) {
