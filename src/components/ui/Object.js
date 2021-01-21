@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
 
-export default class Object extends Component{
+export default class Objects extends Component{
   constructor(props){
     super(props);
+    this.state = {
+      blur : 30, //shadow
+      offsetX : 10, //shadow
+      offsetY: 10, //shadow
+      color : '#000000'//shadow
+    }
   }
 
   componentDidMount(){
@@ -10,7 +16,7 @@ export default class Object extends Component{
     this.documentUpdate();
   }
   componentDidUpdate(){
-    console.log('Object UI Update');
+    // console.log('Object UI Update');
     this.documentUpdate();
   }
   componentWillUnmount(){
@@ -18,16 +24,39 @@ export default class Object extends Component{
   }
 
   documentUpdate = () => {
+    if(this.props.object.shadow){
+      document.getElementById('shadow_toggle').disabled = false;
+      document.getElementById('shadow_toggle').checked = true;
 
+    }
+    else{
+      document.getElementById('shadow_toggle').disabled = true;
+    }
   }
 
-  ObjectSelection = (object) => {
+  // ObjectSelection = (object) => {
 
-  }
+  // }
 
   flipObject = (event) => {
     let option = event.target.getAttribute('flip');
     this.props.flipObject(option);
+  }
+
+  handleShadowChange = (event) => {
+    let change_state = {};
+    change_state[event.target.name] = event.target.value
+    this.setState(change_state);
+    this.props.setShadow({color : 'black', blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
+  }
+
+  toggleShadow = (event) => {
+    if(event.target.checked){
+      this.props.setShadow({color : 'black', blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
+    }
+    else{
+      this.props.removeShadow();
+    }
   }
 
   render(){
@@ -37,6 +66,44 @@ export default class Object extends Component{
             Object ( {this.props.object.type} )
         </div>
         <div className="sub-textmenu">
+        <div>
+            <input id = "shadow_toggle" type="checkbox" onClick = {this.toggleShadow}></input>
+            <label htmlFor='shadow'>
+            <span>블러</span>
+            <input
+              type='range'
+              className='shadow'
+              id='shadow'
+              min='1'
+              max='100'
+              name='blur'
+              step='1'
+              value={this.state.blur}
+              onChange={this.handleShadowChange}/>
+            <span>세로 위치</span>
+            <input
+              type='range'
+              className='shadow'
+              id='shadow'
+              min='-100'
+              max='100'
+              name='offsetY'
+              step='1'
+              value={this.state.offsetY}
+              onChange={this.handleShadowChange}/>
+            <span>가로 위치</span>
+            <input
+              type='range'
+              className='shadow'
+              id='shadow'
+              min='-100'
+              max='100'
+              name='offsetX'
+              step='1'
+              value={this.state.offsetX}
+              onChange={this.handleShadowChange}/>
+            </label>
+          </div>
           <div>
             <button onClick={this.props.sendToBack}>맨 뒤로 보내기</button>
           </div>

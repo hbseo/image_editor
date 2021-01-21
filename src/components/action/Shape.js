@@ -18,18 +18,6 @@ class Shape extends Action {
     }
   }
 
-  setStroke = (obj, options) => {
-      const canvas = this.getCanvas();
-      obj.set({
-          stroke : options.strokeColor|| null,
-          strokeWidth : options.strokeWidth || null
-      })
-      if(options.strokeWidth === 0){
-          obj.set({stroke : null});
-      }
-      canvas.renderAll();
-  }
-
   _bindShapeEvent = (shape) => {
       const canvas = this.getCanvas();
       shape.on({

@@ -4,6 +4,7 @@ import Switch from 'react-switch';
 import './ImageEditor.css'
 import Rotation from './action/Rotation';
 import Filter from './action/Filter';
+import Object from './action/Object';
 import Delete from './action/Delete';
 import Shape from './action/Shape';
 import Image from './action/Image';
@@ -770,6 +771,7 @@ class ImageEditor extends Component {
    */
   _createAction = () => {
     this._register(this.action, new Rotation(this));
+    this._register(this.action, new Object(this));
     this._register(this.action, new Draw(this));
     this._register(this.action, new Filter(this));
     this._register(this.action, new Delete(this));
@@ -992,6 +994,14 @@ class ImageEditor extends Component {
     this.setState({activeObject : this.getActiveObject()})
   }
 
+  setShadow = (option) => {
+    this.action['Object'].setShadow(option);
+  }
+
+  removeShadow = () => {
+    this.action['Object'].removeShadow();
+  }
+
   addIcon = (event) => {
     const options = {
       type : event.target.getAttribute('type'),
@@ -1148,7 +1158,7 @@ class ImageEditor extends Component {
         strokeColor : '#ffffff',
         strokeWidth : Number(event.target.value)
       }
-      this.action['Shape'].setStroke(this.getActiveObject(), options);
+      this.action['Object'].setStroke(this.getActiveObject(), options);
       this.saveState('stroke change');
     }
     this.setState({ activeObject : this.getActiveObject() })
@@ -1160,7 +1170,7 @@ class ImageEditor extends Component {
     //     strokeColor : color.hex
     //   }
     //   this.setState({strokeColor : color.hex})
-    //   this.action['Shape'].setStroke(this.getActiveObject(), options);
+    //   this.action['Object'].setStroke(this.getActiveObject(), options);
     // }
   }
 
@@ -1702,6 +1712,8 @@ class ImageEditor extends Component {
           makeGroup = {this.makeGroup}
           unGroup = {this.unGroup}
           flipObject = {this.flipObject}
+          setShadow = {this.setShadow}
+          removeShadow = {this.removeShadow}
           />,
       5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
       6: <ShapeUI 
