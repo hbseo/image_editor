@@ -15,6 +15,7 @@ class Project extends Component {
   }
 
   getProjects = () => {
+    if(this.props.id === '') { return; }
     fetch('/content/get', {
       method: 'POST',
       headers: {
@@ -46,6 +47,7 @@ class Project extends Component {
   initCanvas = () => {
     this.canvas = new fabric.Canvas('c');
   }
+
   fromJsontoPng = (json, idx) => {
     this.canvas.loadFromJSON(json, () => {
       // this.canvas.renderAll();
@@ -54,7 +56,6 @@ class Project extends Component {
     })
     return '';
   }
-
 
   showProjects = () => {
     if(this.props.login){
