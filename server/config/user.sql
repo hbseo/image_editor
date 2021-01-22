@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS USERS (
   password VARCHAR(255) NOT NULL,
   salt VARCHAR(255) NOT NULL,
   project INT NOT NULL DEFAULT 0,
+  size INT NOT NULL DEFAULT 0,
   create_date TIMESTAMP,
   modify_date TIMESTAMP,
   login_date TIMESTAMP,
