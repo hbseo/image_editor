@@ -73,5 +73,10 @@ export default function brushList(canvas) {
     return patternCanvas;
   };
 
-  return [vLinePatternBrush, hLinePatternBrush, squarePatternBrush, diamondPatternBrush];
+  var pencilBrush = new fabric.PencilBrush(canvas)
+  var circleBrush = new fabric.CircleBrush(canvas)
+  var patternBrush = new fabric.PatternBrush(canvas);
+  var sprayBrush = new fabric.SprayBrush(canvas)
+
+  return [pencilBrush, circleBrush, patternBrush, sprayBrush, vLinePatternBrush, hLinePatternBrush, squarePatternBrush, diamondPatternBrush];
 }
