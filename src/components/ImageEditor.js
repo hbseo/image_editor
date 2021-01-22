@@ -976,9 +976,8 @@ class ImageEditor extends Component {
       })
   }
 
-  addImage = () => {
-    console.log('test');
-    this.action['Image'].addImage(this.testUrl);
+  addImage = (url) => {
+    this.action['Image'].addImage(url);
   }
 
   addText = () => {
@@ -1380,7 +1379,7 @@ class ImageEditor extends Component {
 
   onImgUrlChange = (url) => {
     this.testUrl = url;
-    this.addImage();
+    this.addImage(url);
   }
 
   objectInfo = () => {
@@ -1698,7 +1697,12 @@ class ImageEditor extends Component {
 
     const tab = {
       0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText}/>,
-      1: <ImageUI object={this.state.activeObject} cropObject={this.cropObject} cropEndObject={this.cropEndObject}/>,
+      1: <ImageUI 
+          object={this.state.activeObject} 
+          cropObject={this.cropObject} 
+          cropEndObject={this.cropEndObject}
+          addImage = {this.addImage}
+          />,
       2: <FilterUI object={this.state.activeObject} filters={this.state.filters} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
       3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon}/>,
       4: <ObjectUI 

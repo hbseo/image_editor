@@ -13,6 +13,9 @@ export default class Tools extends Component {
   componentWillUnmount(){
     console.log('Tools UI Unmount');
   }
+  addImage = () => {
+    this.props.addImage('https://source.unsplash.com/random/500x400');
+  }
   render(){
     return (
       <div className="sub">
@@ -21,7 +24,7 @@ export default class Tools extends Component {
         </div>
         <div className="sub-filters">
           <div>
-              <button onClick={this.props.addImage}><h2>테스트용 이미지 추가</h2></button>
+              <button onClick={this.addImage}><h2>테스트용 이미지 추가</h2></button>
           </div>
           <div>
               <button onClick={this.props.objectInfo}><h2>오브젝트 정보 출력</h2></button>

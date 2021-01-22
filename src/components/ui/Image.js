@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 export default class Image extends Component {
   constructor(props){
     super(props);
+    this.state = { 
+      imgURL : ''
+    }
+    this.url = '';
   }
 
   componentDidMount(){
@@ -17,6 +21,29 @@ export default class Image extends Component {
     let cropOption = event.target.getAttribute('crop');
     this.props.cropObject(cropOption)
   }
+
+  handleChange = (event) => {
+    this.setState({imgURL : event.target.value})
+  }
+
+  handleSubmit = (event) => {
+    if(event){ event.preventDefault(); }
+    this.url = this.state.imgURL;
+    this.setState({imgURL : ""});
+    this.props.addImage(this.url);
+  }
+
+  importImage = (event) => {
+    new Promise((resolve) => {
+      let file = event.target.files[0];
+      this.url = URL.createObjectURL(file);
+      resolve();
+    })
+    .then(() => {
+			this.props.addImage(this.url);
+    })
+  }
+
   render(){
     return (
       <div className="sub">
@@ -32,6 +59,15 @@ export default class Image extends Component {
           </div>
           <div>
             <button onClick={this.props.cropEndObject} crop="left">자르기 완료</button>
+          </div>
+          <div>
+            <button><input type='file' id='_file' onChange={this.importImage} accept="image/*"></input>로컬 이미지 불러오기</button>
+          </div>
+          <div>
+            <form id="imgload" onSubmit={this.handleSubmit}>
+              url : <input name="url" value={this.state.imgURL} onChange = {this.handleChange}/>
+					    <input type="submit" value="Submit" />
+					  </form>
           </div>
         </div>
       </div>
