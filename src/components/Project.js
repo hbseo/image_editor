@@ -51,7 +51,6 @@ class Project extends Component {
       // this.canvas.renderAll();
       // console.log(this.canvas.backgroundImage); // 밖에다 두면 backgrounImage를 null로 인식함... 이유? 콜백함수라서 img 태그가 다 load되고 나서 불러와지기 때문
       document.getElementById(idx).src = this.canvas.toDataURL({format : 'png'});
-      ;
     })
     return '';
   }
@@ -59,13 +58,15 @@ class Project extends Component {
 
   showProjects = () => {
     if(this.props.login){
-
-      const listitem = this.state.projects.map((prj) =>
-        <div key={prj.idx}>
-          <p>{prj.title}</p>
-          <img id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="300px" alt="none"/>
-        </div>
-      );
+      let listitem = null;
+      if(this.state.projects.length > 0) {
+        listitem = this.state.projects.map((prj) =>
+          <div key={prj.idx}>
+            <p>{prj.title}</p>
+            <img id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="300px" alt="none"/>
+          </div>
+        );
+      }
       return(
         <div>
             {this.props.id} 유저
