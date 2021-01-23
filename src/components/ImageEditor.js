@@ -93,9 +93,11 @@ class ImageEditor extends Component {
           b: '0',
           a: '1',
       },
-      isSave : false,
-      tab : 0,
-      user_name : '',
+      openSave : false, // save Modal 여는 용도
+      tab : 0, // 사이드 NavBar 탭 번호
+      user_name : '', // 로그인 되어있는 유저 id
+      isSaved : false, // 서버에 저장되어 있는가?
+      prj_idx : -1, // 현재 열려있는 저장된 프로젝트 idx
     }
 
 
@@ -897,11 +899,11 @@ class ImageEditor extends Component {
   }
 
   openSaveModal = () => {
-    this.setState({isSave : true})
+    this.setState({openSave : true})
   }
 
   closeSaveModal = () => {
-    this.setState({isSave : false})
+    this.setState({openSave : false})
   }
 
   exportCanvas = () => {
@@ -1688,6 +1690,10 @@ class ImageEditor extends Component {
     });
   }
 
+  getCheckSave = (idx) => {
+    this.setState({isSaved : true, prj_idx : idx});
+  }
+
   render() {
 		const styles = {
 			color : {
@@ -1769,7 +1775,18 @@ class ImageEditor extends Component {
             <canvas id='canvas' tabIndex='0'></canvas>
           </div>
         </div>
-        <Save open = {this.state.isSave} close = {this.closeSaveModal} save = {this.saveImage} size = {this.getCanvasSize} user_name = {this.state.user_name} getCanvas = {this.getCanvas} canvas={this.currentState} />
+        <Save 
+          open = {this.state.openSave} 
+          close = {this.closeSaveModal} 
+          save = {this.saveImage} 
+          size = {this.getCanvasSize} 
+          user_name = {this.state.user_name} 
+          getCanvas = {this.getCanvas} 
+          canvas={this.currentState} 
+          isSaved = {this.state.isSaved}
+          prj_idx = {this.state.prj_idx}
+          getCheckSave = {this.getCheckSave}
+          />
 
 
 

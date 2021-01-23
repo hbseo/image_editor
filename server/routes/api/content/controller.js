@@ -8,6 +8,7 @@ exports.save = (req, res) => {
   let date = moment().format('YYYY-MM-DD HH:mm:ss');
   let check_query = `SELECT idx FROM USERS WHERE userid = "${id}";`;
   let user_idx;
+  let prj_idx;
 
   const save = (result) => {
     if(result[0]) {
@@ -26,6 +27,7 @@ exports.save = (req, res) => {
 
   const userUpdate = (result) => {
     if(result) {
+      prj_idx = result.insertId;
       let update_query = `UPDATE USERS SET project = project + 1 WHERE idx = '${user_idx}'`;
       database.query(update_query)
       .then(respond)
@@ -41,7 +43,8 @@ exports.save = (req, res) => {
   const respond = (result) => {
     if(result) {
       res.status(200).json({
-        msg: 'save success'
+        msg: 'save success',
+        prj_idx : prj_idx
       })
     }
     else {
@@ -70,7 +73,7 @@ exports.update = (req, res) => {
 
   const save = (result) => {
     if(result[0]) {
-      let update_query = `UPDATE PROJECTS SET ( project_data = '${JSON.stringify(data)}', modify_date = '${date}') WHERE idx = "${prj_idx}";`;
+      let update_query = `UPDATE PROJECTS SET project_data = '${JSON.stringify(data)}', modify_date = '${date}' WHERE idx = "${prj_idx}";`;
       database.query(update_query)
       .then(respond)
       .catch(onError);

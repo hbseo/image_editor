@@ -29,10 +29,35 @@ class Save extends Component {
     .then((data) => {
       console.log(data);
       alert('save success');
+      this.props.getCheckSave(data.prj_idx);
     })
     .catch(() => {
       alert('error');
     })
+  }
+
+  updateHandler = () => {
+    if(this.props.isSaved && this.props.prj_idx > 0){
+      var json = this.props.canvas;
+      fetch('/content/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({id : this.props.user_name , prj_idx : this.props.prj_idx, data : json})
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        alert('update success');
+      })
+      .catch(() => {
+        alert('error');
+      })
+    }
+    else{
+      this.saveHandler();
+    }
   }
 
   render(){
@@ -44,7 +69,7 @@ class Save extends Component {
 				  <div className = "modal">
 						<div className = "saveModal">
               <div className="top-div">
-							  <label id="headline">Save {user_name}</label>
+							  <label id="headline">Save {user_name} {this.props.prj_idx} </label>
                 <button id="close" onClick = {close}><i className="fa fa-times" aria-hidden="true"></i></button>
               </div>
               <hr className = "modal-line"></hr>
@@ -67,7 +92,9 @@ class Save extends Component {
                 {imageSize} 
 							  <button id = "close-button" onClick = {close}>close</button>
 							  <button id = "save-button" onClick = {save}>save</button>
-							  <button id = "save-button" onClick = {this.saveHandler}><h4>서버</h4></button>
+							  <button id = "save-button" onClick = {this.saveHandler}><h4>다른이름으로 저장</h4></button>
+
+							  <button id = "save-button" onClick = {this.updateHandler}><h4>저장</h4></button>
               </div>
 
 
