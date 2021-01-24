@@ -44,7 +44,6 @@ class ImageEditor extends Component {
       displayCropCanvasSize: false,
       displayTextbgColorPicker: false,
       displayshadow: false,
-      drawingMode: false,
       lineWidth: 10,
       lineColorRgb:{
           r: '255',
@@ -106,11 +105,11 @@ class ImageEditor extends Component {
     this._canvasImageUrl = props.location.state ? props.location.state.url : '';
     this._canvasSize = {width : props.location.state? props.location.state.width : 500, height : props.location.state? props.location.state.height : 500}
     this._backgroundImageRatio = props.location.state ? props.location.state.ratio/100 : 1;
+
     this._clipboard = null;
     this._backgroundImage = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.testUrl = 'https://source.unsplash.com/random/500x400';
-    // this.testUrl = 'http://fabricjs.com/docs/'
     this.action = {};
 
     this.isDragging = false;
@@ -1596,35 +1595,23 @@ class ImageEditor extends Component {
   }
 
   openDrawing = () => {
-    this.setState({ drawingMode: true });
-    this._canvas.isDrawingMode = true;
-    this._canvas.freeDrawingCursor = 'crosshair';
+    this.action['Draw'].openDrawing();
   }
 
   closeDrawing = () => {
-    this.setState({ drawingMode: false });
-    if(this._canvas) { this._canvas.isDrawingMode = false; }
+    this.action['Draw'].closeDrawing();
   }
 
   changeDrawingWidth = (width) => {
-    this._canvas.freeDrawingBrush.width =  width;
+    this.action['Draw'].changeDrawingWidth(width);
   }
 
   changeDrawingColor = (rgb) => {
-    this._canvas.freeDrawingBrush.color = String(rgb);
-    if(this._canvas.freeDrawingBrush.getPatternSrc){
-      this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
-    }
+    this.action['Draw'].changeDrawingColor(rgb);
   }
 
   changeDrawingBrush = (type, color, width) => {
-    this._canvas.freeDrawingBrush = this.action['Draw'].getBrush(type);
-    this._canvas.freeDrawingBrush.color = String(color);
-    this._canvas.freeDrawingBrush.width = parseInt(width);
-    if(this._canvas.freeDrawingBrush.getPatternSrc){
-      this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
-    }
-    // this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
+    this.action['Draw'].changeDrawingBrush(type, color, width);
   }
 
   changeBackgroundColor = () => {

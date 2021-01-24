@@ -23,7 +23,44 @@ class Draw extends Action {
     return this.brush[type-1];
   }
 
+  openDrawing = () => {
+    const canvas = this.getCanvas();
+    if(canvas){
+      canvas.isDrawingMode = true;
+      canvas.freeDrawingCursor = 'crosshair';
+    }
+  }
 
+  closeDrawing = () => {
+    const canvas = this.getCanvas();
+    if(canvas){
+      canvas.isDrawingMode = false;
+    }
+  }
+
+  changeDrawingWidth = (width) => {
+    const canvas = this.getCanvas();
+    canvas.freeDrawingBrush.width =  width;
+  }
+
+  changeDrawingColor = (rgb) => {
+    const canvas = this.getCanvas();
+    canvas.freeDrawingBrush.color = String(rgb);
+    if(canvas.freeDrawingBrush.getPatternSrc){
+      canvas.freeDrawingBrush.source = canvas.freeDrawingBrush.getPatternSrc.call(canvas.freeDrawingBrush)
+    }
+  }
+
+  changeDrawingBrush = (type, color, width) => {
+    const canvas = this.getCanvas();
+    canvas.freeDrawingBrush = this.getBrush(type);
+    canvas.freeDrawingBrush.color = String(color);
+    canvas.freeDrawingBrush.width = parseInt(width);
+    if(canvas.freeDrawingBrush.getPatternSrc){
+      canvas.freeDrawingBrush.source = canvas.freeDrawingBrush.getPatternSrc.call(canvas.freeDrawingBrush)
+    }
+    // this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
+  }
 
   _stopEvent = (event) => {
     event.preventDefault();    
