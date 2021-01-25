@@ -1,26 +1,42 @@
 import React, {Component} from 'react';
+import { ChromePicker } from 'react-color';
 // import './Text.scss'
 export default class Shape extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      color: {
+        r: '0',
+        g: '0',
+        b: '0',
+        a: '1'
+      },
+    }
   }
   componentDidMount(){
-    console.log('Shape UI Mount');
+    // console.log('Shape UI Mount');
   }
   componentDidUpdate(){
-    console.log('Shape UI Update');
+    // console.log('Shape UI Update');
   }
   componentWillUnmount(){
-    console.log('Shape UI Unmount');
+    // console.log('Shape UI Unmount');
   }
 
   addShape = (event) => {
-    console.log(event.target.getAttribute('type'))
-    this.props.addShape(event.target.getAttribute('type'));
+    this.props.addShape(event.target.getAttribute('type'), this.state.color);
   }
 
   handleEndAngleChange = (event) => {
     this.props.setEndAngle(event.target.value)
+  }
+
+  handleColorChange = (color) => {
+    this.setState({ color: color.rgb })
+  }
+
+  handleColorChangeComplete = (color) => {
+    this.props.setColor(color);
   }
 
   render(){
@@ -56,6 +72,10 @@ export default class Shape extends Component {
               <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.props.object.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
             </div> : <div></div>
           }
+        </div>
+        <div>
+          <label>color</label>
+          <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
         </div>
       </div>
     );

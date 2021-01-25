@@ -985,8 +985,12 @@ class ImageEditor extends Component {
     this.action['Text'].addText();
   }
 
-  addShape = (type) => {
-    this.action['Shape'].addShape(type);
+  addShape = (type, color) => {
+    this.action['Shape'].addShape(type,`rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`);
+  }
+
+  setColor = (color) => {
+    this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
   }
 
   setEndAngle = (value) => {
@@ -1697,7 +1701,7 @@ class ImageEditor extends Component {
           addImage = {this.addImage}
           />,
       2: <FilterUI object={this.state.activeObject} filters={this.state.filters} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
-      3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon}/>,
+      3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon} setColor={this.setColor}/>,
       4: <ObjectUI 
           object={this.state.activeObject} 
           lockScaleRatio = {this.lockScaleRatio}
@@ -1721,6 +1725,7 @@ class ImageEditor extends Component {
           setEndAngle = {this.setEndAngle}
           makePolygonWithDrag={this.makePolygonWithDrag} 
           makePolygonWithClick={this.makePolygonWithClick}
+          setColor={this.setColor}
           />,
       7: <DrawUI 
           object={this.state.activeObject} 
