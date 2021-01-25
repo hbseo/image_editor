@@ -36,6 +36,7 @@ class Image extends Action {
   
   loadImage = (url, pointer, option) => {
     return new Promise((resolve, reject) => {
+      console.log(url);
       fabric.Image.fromURL(url, img => {
         if(img._element != null){
           img.set({

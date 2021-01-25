@@ -188,9 +188,8 @@ class ImageList extends Component {
 
 
   render() {
-
     return (
-      <div>
+      <div className='main'>
         <input type="number" name = "random_count" value={this.state.random_count} onChange = {this.randomCountChange}></input>
         <button onClick={() => this.getRandomImage()}>get a random image 10 count</button>
         <form onSubmit={this.handleSubmit}>
