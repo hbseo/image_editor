@@ -1008,11 +1008,7 @@ class ImageEditor extends Component {
     this.action['Object'].removeShadow();
   }
 
-  addIcon = (event) => {
-    const options = {
-      type : event.target.getAttribute('type'),
-      color : this.state.color,
-    }
+  addIcon = (options) => {
     this.action['Icon'].addIcon(options);
   }
 
