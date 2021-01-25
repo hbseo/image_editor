@@ -56,7 +56,7 @@ class Image extends Action {
         else{
           reject();
         }
-      }, { crossOrigin: 'anonymous' }
+      }, null, { crossOrigin: 'anonymous' }
       );
     });
   }
