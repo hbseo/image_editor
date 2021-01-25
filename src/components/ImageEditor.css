@@ -5,9 +5,16 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: 'Roboto', sans-serif;
 }
 
-
+a,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+  color: inherit;
+}
 
 body {
   /* display: flex; */
@@ -21,17 +28,6 @@ nav {
 
 ul {
   list-style-type: none;
-}
-
-.nav-bar-button,
-.nav-bar-button:hover,
-.nav-bar-button:focus,
-.nav-bar-button:active {
-  text-decoration: none;
-  color: inherit;
-  margin : 0;
-  border : 0;
-  background-color: rgba(0, 0,0, 0);
 }
 
 .menu {
@@ -111,23 +107,6 @@ ul {
 }
 
 .sub .sub-filters div {
-  text-align: center;
-  width: 18vmin;
-  height: 4vmin;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  color: white;
-}
-
-.sub .sub-textmenu {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.sub .sub-textmenu div {
   border-radius: 5px;
   margin: 10px;
   text-align: center;
@@ -147,17 +126,22 @@ ul {
 
 .editor-nav {
   display: flex;
+  justify-content: space-between;
 }
 
-.do .more {
-  flex: none;
+.nav-bar-button,
+.nav-bar-button:hover,
+.nav-bar-button:focus,
+.nav-bar-button:active {
+  text-decoration: none;
+  color: inherit;
+  margin : 0;
+  border : 0;
+  background-color: rgba(0, 0,0, 0);
 }
 
-.more {
-  margin-left: auto;
-}
-
-.editor-nav .do button {
+.do button,
+.save button {
   background: none;
   color: #a0a0a0;
   border: none;
@@ -169,12 +153,13 @@ ul {
   margin: 10px;
 }
 
-.editor-nav .do button:hover {
+.do button:hover,
+.save button:hover {
   background-color: #353535;
   transition: 0.5s;
 }
 
-.editor-nav .more button {
+.more button {
   background: none;
   background-color: #4667fc;
   border: none;
@@ -187,7 +172,7 @@ ul {
   margin: 10px;
 }
 
-.editor-nav .more button:hover {
+.more button:hover {
   background-color: rgb(96, 125, 255);
 }
 
@@ -195,13 +180,56 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
 }
 
 .photo {
+  /* background-image: url(image/editor.jpg); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   width: 80%;
   height: 50%;
+}
+
+.tooltip {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  color: #a0a0a0;
+  margin: 10px;
+  padding: 10px;
+  font-size: 1.1em;
+}
+
+.tooltip .left {
+  min-width: 150px;
+  top: 50%;
+  right: 100%;
+  margin-right: 40%;
+  transform: translate(0, -50%);
+  padding: 20px;
+  background-color: #4667fc;
+  color: white;
+  font-weight: normal;
+  font-size: 13px;
+  border-radius: 8px;
+  position: absolute;
+  z-index: 99999999;
+  box-sizing: border-box;
+  display: none;
+}
+
+.tooltip:hover .left {
+  display: block;
+}
+
+.tooltip .left i {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -12px;
+  width: 12px;
+  height: 24px;
+  overflow: hidden;
 }

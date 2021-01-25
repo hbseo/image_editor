@@ -1758,13 +1758,26 @@ class ImageEditor extends Component {
             <div className="do">
                 <button onClick = {this.undo}>Undo</button>
                 <button onClick = {this.redo}>Redo</button>
-              </div>
+            </div>
+            <div className="save">
+                <button>Save</button>
+            </div>
             <div className="more">
                 <button>more</button>
             </div>
           </div>
           <div className="real">
             <canvas id='canvas' tabIndex='0'></canvas>
+          </div>
+          <div className="tooltip">
+            History
+            <div className="left">
+                <ol>
+                    <li>Undo</li>
+                    <li>Filter object</li>
+                </ol>
+                <i></i>
+            </div>
           </div>
         </div>
         <Save 
@@ -1778,7 +1791,7 @@ class ImageEditor extends Component {
           isSaved = {this.state.isSaved}
           prj_idx = {this.state.prj_idx}
           getCheckSave = {this.getCheckSave}
-          />
+        />
 
 
 
