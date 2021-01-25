@@ -8,7 +8,9 @@ class Save extends Component {
     this.state = {
       format : 'png',
       title : '',
+      saveState : true
     };
+    this.err = false;
   }
 
   changeFormat = () => {
@@ -17,6 +19,7 @@ class Save extends Component {
   }
 
   saveHandler = () => {
+    if(this.props.user_name === ""){alert('server err'); return;}
     var json = this.props.canvas;
     fetch('/content/save', {
       method: 'POST',
@@ -60,8 +63,30 @@ class Save extends Component {
     }
   }
 
+  handleTitleChange = (event) => {
+    new Promise((resolve) => {
+      this.setState({ title : event.target.value});
+      resolve();
+    })
+    .then(() => {
+      if(this.state.title === ""){
+        this.setState({ saveState : true});
+      }
+      else{
+        this.setState({ saveState : false});
+      }
+    })
+    
+  }
+
+  imageHandler = () => {
+    this.props.save(this.state.title);
+    this.setState({title : "", saveState : true});
+  }
+
   render(){
-    const { open, close, save, size, user_name } = this.props;
+    const { open, close, size, user_name } = this.props;
+    if(this.props.prj_idx === -1){this.err = true;}
     let imageSize = <label className="canvas-size">{size().x} X {size().y}</label>
 		return(
 			<div>
@@ -73,6 +98,9 @@ class Save extends Component {
                 <button id="close" onClick = {close}><i className="fa fa-times" aria-hidden="true"></i></button>
               </div>
               <hr className = "modal-line"></hr>
+              <div className="title-input">
+					      <input id = "title" name="title" value={this.state.title} onChange = {this.handleTitleChange}/>
+              </div>
               <div className="content">
                 <label id="option">Format</label>
                 <input type="radio" id="png" name="format" value="png" defaultChecked onClick={this.changeFormat}/><label htmlFor="png">png</label>
@@ -91,10 +119,9 @@ class Save extends Component {
               <div className = "bottom-div">
                 {imageSize} 
 							  <button id = "close-button" onClick = {close}>close</button>
-							  <button id = "save-button" onClick = {save}>save</button>
-							  <button id = "save-button" onClick = {this.saveHandler}><h4>다른이름으로 저장</h4></button>
-
-							  <button id = "save-button" onClick = {this.updateHandler}><h4>저장</h4></button>
+							  <button id = "save-image-button" onClick = {this.imageHandler} disabled = {this.state.saveState}>이미지로 저장</button>
+							  <button id = "save-button" onClick = {this.saveHandler} disabled = {this.err}><h4>다른이름으로 저장</h4></button>
+							  <button id = "save-button" onClick = {this.updateHandler} disabled = {this.err}><h4>서버 저장</h4></button>
               </div>
 
 

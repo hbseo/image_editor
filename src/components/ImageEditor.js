@@ -895,8 +895,8 @@ class ImageEditor extends Component {
     return this.action['Image'].loadImage(url, pointer, option);
   }
 
-  saveImage = () => {
-    this.action['Image'].saveImage();
+  saveImage = (title) => {
+    this.action['Image'].saveImage(title);
   }
 
   openSaveModal = () => {
@@ -1764,7 +1764,7 @@ class ImageEditor extends Component {
                 <button onClick = {this.redo}>Redo</button>
             </div>
             <div className="save">
-                <button>Save</button>
+                <button onClick={this.openSaveModal} >Save</button>
             </div>
             <div className="more">
                 <button>more</button>

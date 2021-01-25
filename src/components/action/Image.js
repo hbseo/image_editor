@@ -61,9 +61,9 @@ class Image extends Action {
     });
   }
 
-  saveImage = () => {
+  saveImage = (title) => {
     let quality = $('input[name=quality]:checked').val()
-    let format= $('input[name=format]:checked').val()
+    let format= $('input[name=format]:checked').val()    
     let option;
     let name;
     if(format === 'jpeg'){
@@ -71,13 +71,13 @@ class Image extends Action {
         format : 'jpeg',
         quality : parseFloat(quality)
       }
-      name = 'image.jpeg'
+      name = title + '.jpeg'
     }
     else{
       option = {
         format : 'jpeg'
       }
-      name = 'image.png'
+      name = title + '.png'
     }
 
     const canvas = this.getCanvas();
