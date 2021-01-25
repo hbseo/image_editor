@@ -31,6 +31,8 @@ import ObjectUI from './ui/Object';
 import RotationUI from './ui/Rotation';
 import ShapeUI from './ui/Shape';
 import DrawUI from './ui/Draw';
+import HistoryUI from './ui/History';
+
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -1503,11 +1505,13 @@ class ImageEditor extends Component {
 
   showUndoStack = () => {
     const listitem = this.stateStack.map((state) =>
-      <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
+      <p style = {{color : '#ffffff'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
     );
     return(
       <div>
-        {listitem}
+        <ol>
+          {listitem}
+        </ol>
       </div>
     )
   }
@@ -1769,16 +1773,7 @@ class ImageEditor extends Component {
           <div className="real">
             <canvas id='canvas' tabIndex='0'></canvas>
           </div>
-          <div className="tooltip">
-            History
-            <div className="left">
-                <ol>
-                    <li>Undo</li>
-                    <li>Filter object</li>
-                </ol>
-                <i></i>
-            </div>
-          </div>
+          <HistoryUI showUndoStack = {this.showUndoStack} currentState={this.currentState} />
         </div>
         <Save 
           open = {this.state.openSave} 

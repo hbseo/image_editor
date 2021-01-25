@@ -203,7 +203,7 @@ ul {
 }
 
 .tooltip .left {
-  min-width: 150px;
+  min-width: 200px;
   top: 50%;
   right: 100%;
   margin-right: 40%;
