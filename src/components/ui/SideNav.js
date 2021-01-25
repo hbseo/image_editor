@@ -1,10 +1,4 @@
 import React from 'react';
-// import FilterUI from './Filter';
-// import ImageUI from './Image';
-// import ToolsUI from './Tools';
-// import ShapeUI from './Shape';
-// import TextUI from './Text';
-// import ObjectUI from './Object';
 
 export default function SideNav(props) {
   return (

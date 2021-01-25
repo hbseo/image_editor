@@ -79,6 +79,11 @@
                 background-color: #0573d6;
                 color : white;
             }
+            #save-button:disabled {
+                background-color: #9da89b;
+                color : grey;
+                border : 1px solid black;
+            }
 
             #close-button {
                 margin-bottom : 0px;

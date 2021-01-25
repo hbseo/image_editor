@@ -23,8 +23,12 @@ class Crop extends Action {
               'fill' : options.fill || 'this.backgroundColor',
               'borderColor' : 'black',
               'hasControls' : true,
-              'strokeWidth' : 0
+              'strokeWidth' : 0,
+              'hasRotatingPoint' : false
           });
+          this.setControlsVisibility({
+            mtr : false,
+          })
       },
   
       /**

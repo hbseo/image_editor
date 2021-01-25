@@ -6,6 +6,7 @@ class Shape extends Action {
     super('Shape', App);
     this.shapeType = null;
     this.disableObj = null;
+    this.color = null;
   }
 
   setEndAngle = (value) => {
@@ -27,11 +28,12 @@ class Shape extends Action {
       })
     }
 
-  addShape = (shapeType) => {
+  addShape = (shapeType, color) => {
     const canvas = this.getCanvas();
     canvas.defaultCursor = 'pointer';
     canvas.discardActiveObject();
     this.shapeType = shapeType;
+    this.color = color;
     document.addEventListener('mousedown',this.addShapeEvent);    
     // document.addEventListener('keydown',this._onShiftKeydownEvent);
   }
@@ -51,21 +53,21 @@ class Shape extends Action {
       const pointer = canvas.getPointer(event, false)
       switch(this.shapeType) {
         case 'triangle':
-          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", strokeWidth : 0, noScaleCache: false, });
+          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: this.color,  originX : "left", originY:"top", strokeWidth : 0, noScaleCache: false, });
           canvas.add(myFigure).setActiveObject(myFigure);
           // this._bindShapeEvent(myFigure);
           break;
         case 'rectangle':
-          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", strokeWidth : 0, noScaleCache: false,});
+          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: this.color, originX : "left", originY:"top", strokeWidth : 0, noScaleCache: false,});
           canvas.add(myFigure).setActiveObject(myFigure);
           // this._bindShapeEvent(myFigure);
           break;
         case 'ellipse':
-          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", strokeWidth : 0 });
+          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: this.color, strokeWidth : 0 });
           canvas.add(myFigure).setActiveObject(myFigure);
           break;
         case 'circle':
-          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", strokeWidth : 0, noScaleCache: false,});
+          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: this.color, originX : "left", originY:"top", strokeWidth : 0, noScaleCache: false,});
           canvas.add(myFigure).setActiveObject(myFigure);
           break;        
         default:

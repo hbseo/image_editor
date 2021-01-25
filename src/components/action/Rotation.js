@@ -9,6 +9,7 @@ class Rotation extends Action {
     const canvas = this.getCanvas();
     let obj = this.getActiveObject();
     if(obj){
+      if(obj.type === 'Cropzone') { return; }
       obj.set({
         angle: (angle + obj.angle)% 360,
       });
@@ -21,6 +22,7 @@ class Rotation extends Action {
     const canvas = this.getCanvas();
     let obj = this.getActiveObject();
     if(obj){
+      if(obj.type === 'Cropzone') { return; }
       obj.set({
         angle: angle % 360,
       });

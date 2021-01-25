@@ -34,6 +34,7 @@ export default class Image extends Component {
   }
 
   importImage = (event) => {
+    if(!event.target.files[0]) { return; }
     new Promise((resolve) => {
       let file = event.target.files[0];
       this.url = URL.createObjectURL(file);

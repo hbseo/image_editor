@@ -31,6 +31,8 @@ import ObjectUI from './ui/Object';
 import RotationUI from './ui/Rotation';
 import ShapeUI from './ui/Shape';
 import DrawUI from './ui/Draw';
+import HistoryUI from './ui/History';
+
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -44,7 +46,6 @@ class ImageEditor extends Component {
       displayCropCanvasSize: false,
       displayTextbgColorPicker: false,
       displayshadow: false,
-      drawingMode: false,
       lineWidth: 10,
       lineColorRgb:{
           r: '255',
@@ -106,11 +107,11 @@ class ImageEditor extends Component {
     this._canvasImageUrl = props.location.state ? props.location.state.url : '';
     this._canvasSize = {width : props.location.state? props.location.state.width : 500, height : props.location.state? props.location.state.height : 500}
     this._backgroundImageRatio = props.location.state ? props.location.state.ratio/100 : 1;
+
     this._clipboard = null;
     this._backgroundImage = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
     this.testUrl = 'https://source.unsplash.com/random/500x400';
-    // this.testUrl = 'http://fabricjs.com/docs/'
     this.action = {};
 
     this.isDragging = false;
@@ -894,8 +895,8 @@ class ImageEditor extends Component {
     return this.action['Image'].loadImage(url, pointer, option);
   }
 
-  saveImage = () => {
-    this.action['Image'].saveImage();
+  saveImage = (title) => {
+    this.action['Image'].saveImage(title);
   }
 
   openSaveModal = () => {
@@ -986,8 +987,12 @@ class ImageEditor extends Component {
     this.action['Text'].addText();
   }
 
-  addShape = (type) => {
-    this.action['Shape'].addShape(type);
+  addShape = (type, color) => {
+    this.action['Shape'].addShape(type,`rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`);
+  }
+
+  setColor = (color) => {
+    this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
   }
 
   setEndAngle = (value) => {
@@ -1003,11 +1008,7 @@ class ImageEditor extends Component {
     this.action['Object'].removeShadow();
   }
 
-  addIcon = (event) => {
-    const options = {
-      type : event.target.getAttribute('type'),
-      color : this.state.color,
-    }
+  addIcon = (options) => {
     this.action['Icon'].addIcon(options);
   }
 
@@ -1500,11 +1501,13 @@ class ImageEditor extends Component {
 
   showUndoStack = () => {
     const listitem = this.stateStack.map((state) =>
-      <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
+      <p style = {{color : '#ffffff'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
     );
     return(
       <div>
-        {listitem}
+        <ol>
+          {listitem}
+        </ol>
       </div>
     )
   }
@@ -1596,35 +1599,23 @@ class ImageEditor extends Component {
   }
 
   openDrawing = () => {
-    this.setState({ drawingMode: true });
-    this._canvas.isDrawingMode = true;
-    this._canvas.freeDrawingCursor = 'crosshair';
+    this.action['Draw'].openDrawing();
   }
 
   closeDrawing = () => {
-    this.setState({ drawingMode: false });
-    if(this._canvas) { this._canvas.isDrawingMode = false; }
+    this.action['Draw'].closeDrawing();
   }
 
   changeDrawingWidth = (width) => {
-    this._canvas.freeDrawingBrush.width =  width;
+    this.action['Draw'].changeDrawingWidth(width);
   }
 
   changeDrawingColor = (rgb) => {
-    this._canvas.freeDrawingBrush.color = String(rgb);
-    if(this._canvas.freeDrawingBrush.getPatternSrc){
-      this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
-    }
+    this.action['Draw'].changeDrawingColor(rgb);
   }
 
   changeDrawingBrush = (type, color, width) => {
-    this._canvas.freeDrawingBrush = this.action['Draw'].getBrush(type);
-    this._canvas.freeDrawingBrush.color = String(color);
-    this._canvas.freeDrawingBrush.width = parseInt(width);
-    if(this._canvas.freeDrawingBrush.getPatternSrc){
-      this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
-    }
-    // this._canvas.freeDrawingBrush.source = this._canvas.freeDrawingBrush.getPatternSrc.call(this._canvas.freeDrawingBrush)
+    this.action['Draw'].changeDrawingBrush(type, color, width);
   }
 
   changeBackgroundColor = () => {
@@ -1710,7 +1701,7 @@ class ImageEditor extends Component {
           addImage = {this.addImage}
           />,
       2: <FilterUI object={this.state.activeObject} filters={this.state.filters} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
-      3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon}/>,
+      3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon} setColor={this.setColor}/>,
       4: <ObjectUI 
           object={this.state.activeObject} 
           lockScaleRatio = {this.lockScaleRatio}
@@ -1734,6 +1725,7 @@ class ImageEditor extends Component {
           setEndAngle = {this.setEndAngle}
           makePolygonWithDrag={this.makePolygonWithDrag} 
           makePolygonWithClick={this.makePolygonWithClick}
+          setColor={this.setColor}
           />,
       7: <DrawUI 
           object={this.state.activeObject} 
@@ -1766,7 +1758,10 @@ class ImageEditor extends Component {
             <div className="do">
                 <button onClick = {this.undo}>Undo</button>
                 <button onClick = {this.redo}>Redo</button>
-              </div>
+            </div>
+            <div className="save">
+                <button onClick={this.openSaveModal} >Save</button>
+            </div>
             <div className="more">
                 <button>more</button>
             </div>
@@ -1774,6 +1769,7 @@ class ImageEditor extends Component {
           <div className="real">
             <canvas id='canvas' tabIndex='0'></canvas>
           </div>
+          <HistoryUI showUndoStack = {this.showUndoStack} currentState={this.currentState} />
         </div>
         <Save 
           open = {this.state.openSave} 
@@ -1786,7 +1782,7 @@ class ImageEditor extends Component {
           isSaved = {this.state.isSaved}
           prj_idx = {this.state.prj_idx}
           getCheckSave = {this.getCheckSave}
-          />
+        />
 
 
 

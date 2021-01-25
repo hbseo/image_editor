@@ -7,12 +7,14 @@ class Fill extends Action {
   fill = (color) => {
     const activeObject = this.getActiveObject();
     const canvas = this.getCanvas();
+    if(activeObject){
+      activeObject.set({
+        fill : color
+      })
+      this.saveState('Fill ', activeObject.type);
+      canvas.renderAll();
+    }
 
-    activeObject.set({
-      fill : color
-    })
-
-    canvas.renderAll();
   }
 }
 
