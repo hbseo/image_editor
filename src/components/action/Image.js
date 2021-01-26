@@ -29,7 +29,7 @@ class Image extends Action {
     const canvas = this.getCanvas();
     canvas.defaultCursor = 'pointer';
     canvas.selection = false;
-    this.testUrl = url;
+    this.testUrl = 'https://cors-anywhere.herokuapp.com/' + url;
     document.addEventListener('mousedown',this.addImageEvent);
   }
 

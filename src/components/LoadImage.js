@@ -32,6 +32,17 @@ class LoadImage extends Component {
     this.image.src = this.url;
   }
 
+  handleUrlSubmit = (event) => {
+    if (event) { event.preventDefault(); }
+    this.url = 'https://cors-anywhere.herokuapp.com/' + this.state.url;
+    console.log(this.url); 
+    this.setState({ url: "", submit: false, width: 0, height: 0, imgRatio: 100 });
+    this.image = new Image();
+    this.image.onload = this.imageFound;
+    this.image.onerror = this.imageNotFound;
+    this.image.src = this.url;
+  }
+
   handleChange = (event) => {
     document.getElementById("imgRatio").disabled = true;
     let change_state = {};
@@ -133,6 +144,7 @@ class LoadImage extends Component {
           fileChange = {this.fileChange}
           handleChange = {this.handleChange}
           handleSubmit = {this.handleSubmit}
+          handleUrlSubmit = {this.handleUrlSubmit}
           url = {this.state.url}
           imgUrl = {this.url}>
           {this.showPreviewImg()}
