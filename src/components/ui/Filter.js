@@ -31,8 +31,23 @@ export default class Filter extends Component{
     console.log('Filter UI Update');
     this.documentUpdate();
   }
+  
   componentWillUnmount(){
     console.log('Filter UI Unmount');
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if(nextProps.object.type === 'image') {
+      if(nextProps.object.filters[15]) {
+        if(nextProps.object.filters[15].brightness !== prevState.brightness) {
+          return { brightness: nextProps.object.filters[15].brightness };
+        }
+      }
+      else {  // object의 filters[15] (brightness) 가 false 일 때
+        return { brightness: 0 };
+      }
+    }
+    return null;
   }
 
   documentUpdate = () => {
@@ -79,7 +94,6 @@ export default class Filter extends Component{
     let filterOption = event.target.getAttribute('filter');
     new Promise((resolve) => {
       this.setState({[event.target.name] : event.target.value});
-      this.props.filters.brightness = value;
       resolve();
     })
     .then(() => {
@@ -133,11 +147,12 @@ export default class Filter extends Component{
               max='1'
               name='brightness'
               step='0.01'
-              value={this.props.filters.brightness || 0}
+              value={this.state.brightness || 0}
               onChange={this.handleFilterChange} filter='brightness'
             />Brightness
-            <br/>
-            <label id='brightness-value'>{this.props.filters.brightness}</label>
+            {this.props.object.type === 'image' && this.props.object.filters[15] ? this.props.object.filters[15].brightness : 0 }
+            {/* <br/> */}
+            {/* <label id='brightness-value'>{this.props.object.filters[15]}</label> */}
           </div>
           <div>
             <input

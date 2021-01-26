@@ -65,19 +65,6 @@ class ImageEditor extends Component {
         color : '#FFFFFF'
       },
       colorHex : '#000000',
-      filters : {
-        brightness: 0,
-        contrast : 0,
-        pixelate : 1,
-        blur : 0,
-        noise : 0,
-        saturation : 0,
-        hue : 0,
-        ink : 0,
-        vignette : 0,
-        zoomblur : 0,
-        opacity : 1,
-      },
       cropCanvasSize : {
         width : 0,
         height : 0
@@ -1700,7 +1687,7 @@ class ImageEditor extends Component {
           cropEndObject={this.cropEndObject}
           addImage = {this.addImage}
           />,
-      2: <FilterUI object={this.state.activeObject} filters={this.state.filters} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
+      2: <FilterUI object={this.state.activeObject} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
       3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon} setColor={this.setColor}/>,
       4: <ObjectUI 
           object={this.state.activeObject} 
