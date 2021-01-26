@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './New_project.css';
+import '../css/New_project.scss';
 
 class New_project extends Component {
 

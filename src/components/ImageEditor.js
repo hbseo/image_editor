@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import Switch from 'react-switch';
-import './ImageEditor.css'
+import '../css/ImageEditor.scss'
 import Rotation from './action/Rotation';
 import Filter from './action/Filter';
 import Object from './action/Object';

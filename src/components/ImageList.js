@@ -108,7 +108,7 @@ class ImageList extends Component {
   }
 
   onClickImg = (event) => {
-    this.props.onClick(event.target.getAttribute('url'));
+    this.props.onImgUrlChange(event.target.getAttribute('url'));
   }
 
   handleSubmit = (event) => {

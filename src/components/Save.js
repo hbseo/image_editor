@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
-import './Save.scss'
+import '../css/Save.scss'
 
 class Save extends Component {
   constructor(props) {
