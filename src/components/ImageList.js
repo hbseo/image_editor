@@ -154,22 +154,22 @@ class ImageList extends Component {
       return (
         <div id="image-list-size">
           <ul>
-            <li>
+            <li style = {{ float : 'left'  }}>
               full : {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}
               <img src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}  />
             </li>
             {/* <li>
               <img src = {image.thumb} url={image.raw} alt="." onClick={this.onClickImg}  />
             </li> */}
-            <li>
+            <li style = {{ float : 'left'  }}>
               regular : {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}
               <img src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg}  />
             </li>
-            <li>
+            <li style = {{ float : 'left'  }}>
               small : {this.state.imageSize.small.x} X {this.state.imageSize.small.y}
               <img src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg}  />
             </li>
-            <li>
+            <li style = {{ float : 'left'  }}>
               thumb : {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}
               <img src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg}  />
             </li>
@@ -184,8 +184,6 @@ class ImageList extends Component {
     change_state[event.target.name] = event.target.value;
     this.setState(change_state);
   }
-
-
 
   render() {
     return (
@@ -206,6 +204,8 @@ class ImageList extends Component {
         {this.showImage(this.state.images)}
         <p>아래는 선택한 이미지 크기</p>
         { this.imageSizeVersion() }
+        {this.props.children}
+
       </div>
     )
   }
