@@ -4,7 +4,7 @@ import Switch from 'react-switch';
 import '../css/ImageEditor.scss'
 import Rotation from './action/Rotation';
 import Filter from './action/Filter';
-import Object from './action/Object';
+import ObjectAction from './action/ObjectAction';
 import Delete from './action/Delete';
 import Shape from './action/Shape';
 import Image from './action/Image';
@@ -774,7 +774,7 @@ class ImageEditor extends Component {
    */
   _createAction = () => {
     this._register(this.action, new Rotation(this));
-    this._register(this.action, new Object(this));
+    this._register(this.action, new ObjectAction(this));
     this._register(this.action, new Draw(this));
     this._register(this.action, new Filter(this));
     this._register(this.action, new Delete(this));
