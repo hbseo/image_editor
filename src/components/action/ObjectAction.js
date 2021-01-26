@@ -1,7 +1,7 @@
 import Action from './Action';
 import { fabric } from 'fabric';
 
-class Object extends Action {
+class ObjectAction extends Action {
   constructor(App) {
     super('Object', App);
   }
@@ -38,4 +38,4 @@ class Object extends Action {
   }
 }
 
-export default Object;
+export default ObjectAction;
