@@ -1,13 +1,10 @@
 import switchTools from '../helper/SwitchTools'
 import React, {Component} from 'react';
+import {fontList} from '../const/consts';
 
 export default class Text extends Component{
   constructor(props){
     super(props);
-    this.fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
-    'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
-    'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
-    'Copperplate'];
     this.state = { fontSize : 20 };
 
   }
@@ -59,7 +56,7 @@ export default class Text extends Component{
   
   fontListUp = () => {
     let i = 0;
-    return this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
+    return fontList.map(font => (<option key={i++} value={font}>{font}</option>));
   }
 
   textAction = (event) => {

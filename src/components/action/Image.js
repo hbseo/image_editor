@@ -1,6 +1,6 @@
 import Action from './Action';
 import { fabric } from 'fabric';
-import convertImage from '../helper/ConvertImage';
+import originImage from '../helper/originImage';
 import $ from 'jquery';
 class Image extends Action {
   constructor(App) {
@@ -28,12 +28,11 @@ class Image extends Action {
 
   addImage = (url) => {
     const canvas = this.getCanvas();
-    // canvas.defaultCursor = 'pointer';
-    // canvas.selection = false;
     this.testUrl = url;
-    // console.log();
-    let imgObj = convertImage();
+
+    let imgObj = originImage();
     imgObj.crossOrigin = "anonymous";
+
     imgObj.onload  = () => {
       console.log("onload", imgObj);
       canvas.defaultCursor = 'pointer';
@@ -50,11 +49,11 @@ class Image extends Action {
         document.addEventListener('mousedown',this.addImageEvent);
       }, 2000);
     }
+
     imgObj.onerror = () => {
       alert('image load error');
       console.log('fail');
     }
-    // imgObj.src = "http://fabricjs.com/assets/pug_small.jpg";
     imgObj.src = this.testUrl;
   }
 

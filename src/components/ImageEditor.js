@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import Switch from 'react-switch';
 import '../css/ImageEditor.scss'
 import Rotation from './action/Rotation';
 import Filter from './action/Filter';
@@ -142,11 +141,6 @@ class ImageEditor extends Component {
     this.lastPosY = 0;
 
     this.lockScale = false;
-    // font
-    this.fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
-    'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
-    'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
-    'Copperplate'];
 
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     this._createAction();
@@ -186,6 +180,9 @@ class ImageEditor extends Component {
         this.firstState = this.currentState;
         this.action['Grid'].makeGrid();
       })
+      .catch(() => {
+        this.props.history.push('/');
+      })
     }
     else{
       this._canvas = new fabric.Canvas('canvas', {
@@ -224,7 +221,6 @@ class ImageEditor extends Component {
     this.stateStack.length = 0;
     this.redoStack.length = 0;
     this.cropImg = null;
-    this.fontList.length = 0;
     this._clipboard = null;
     this._backgroundImage = null;
     this._canvas = null;
@@ -916,19 +912,33 @@ class ImageEditor extends Component {
       console.log(json);
 
       this._canvas.loadFromJSON(json, () => {
+        this.isDragging = false;
+        this.selection = true;
         this.cropImg = null;
-  
+        this.cropCanvasState = {
+          left : 0,
+          top : 0,
+          scaleX : 0,
+          scaleY : 0,
+          width : 0,
+          height : 0
+        };
         // redo undo
         this.lock = false;
-        this.currentState = { action : 'constructor' };
         this.stateStack = [];
         this.redoStack = [];
+        this.firstState = null;
         this.maxSize = 100;
         this.state_id = 1;
         this.undoCanvasSize = [];
         this.redoCanvasSize = [];
         this.currentCanvasSize = {width: null, height: null};
-  
+        this.dotoggle = true;
+
+        this.lastPosX = 0;
+        this.lastPosY = 0;
+        this.shift = false;
+
         //add function
     
         this.grid = null;
