@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
+import Loading from './Loading';
 export default class Image extends Component {
   constructor(props){
     super(props);
     this.state = { 
-      imgURL : ''
+      imgURL : '',
+      imgStatus : 'loaded'
     }
     this.url = '';
   }
@@ -13,6 +15,12 @@ export default class Image extends Component {
   }
   componentDidUpdate(){
     console.log('Image UI Update');
+    if(this.state.imgStatus === 'loading'){
+      console.log('로딩 완료');      
+      setTimeout(() => {
+        this.setState({imgStatus : 'loaded'});
+      }, 2000);
+    }
   }
   componentWillUnmount(){
     console.log('Image UI Unmount');
@@ -29,8 +37,9 @@ export default class Image extends Component {
   handleSubmit = (event) => {
     if(event){ event.preventDefault(); }
     this.url = this.state.imgURL;
-    this.setState({imgURL : ""});
-    this.props.addImage(this.url);
+    this.setState({imgURL : "", imgStatus : 'loading'});
+    console.log("loading");
+    this.props.addImage('https://cors-anywhere.herokuapp.com/' + this.url);
   }
 
   importImage = (event) => {
@@ -41,6 +50,7 @@ export default class Image extends Component {
       resolve();
     })
     .then(() => {
+      console.log("loading");
 			this.props.addImage(this.url);
     })
   }
@@ -71,6 +81,7 @@ export default class Image extends Component {
 					  </form>
           </div>
         </div>
+        <Loading open = {this.state.imgStatus} />
       </div>
     );
   }

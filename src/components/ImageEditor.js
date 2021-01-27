@@ -1729,6 +1729,8 @@ class ImageEditor extends Component {
           onClickSnap={this.onClickSnap}
           onClickGrid={this.onClickGrid}
           onClickObjectSnap={this.onClickObjectSnap}
+          exportCanvas = {this.exportCanvas}
+          importCanvas = {this.importCanvas}
         />,
     };
     return (

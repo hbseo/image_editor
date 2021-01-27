@@ -1,5 +1,6 @@
 import Action from './Action';
 import { fabric } from 'fabric';
+import convertImage from '../helper/ConvertImage';
 import $ from 'jquery';
 class Image extends Action {
   constructor(App) {
@@ -27,10 +28,34 @@ class Image extends Action {
 
   addImage = (url) => {
     const canvas = this.getCanvas();
-    canvas.defaultCursor = 'pointer';
-    canvas.selection = false;
-    this.testUrl = 'https://cors-anywhere.herokuapp.com/' + url;
-    document.addEventListener('mousedown',this.addImageEvent);
+    // canvas.defaultCursor = 'pointer';
+    // canvas.selection = false;
+    this.testUrl = url;
+    // console.log();
+    let imgObj = convertImage();
+    imgObj.crossOrigin = "anonymous";
+    imgObj.onload  = () => {
+      console.log("onload", imgObj);
+      canvas.defaultCursor = 'pointer';
+      canvas.selection = false;
+      var tempCanvas = document.createElement('CANVAS');
+      var tempCtx = tempCanvas.getContext('2d');
+      // tempCtx.drawImage(this, 0, 0);
+      tempCanvas.height = imgObj.naturalHeight;
+      tempCanvas.width = imgObj.naturalWidth;
+      tempCtx.drawImage(imgObj, 0, 0);
+      var dataURL = tempCanvas.toDataURL();
+      this.testUrl = dataURL;
+      setTimeout(() => {
+        document.addEventListener('mousedown',this.addImageEvent);
+      }, 2000);
+    }
+    imgObj.onerror = () => {
+      alert('image load error');
+      console.log('fail');
+    }
+    // imgObj.src = "http://fabricjs.com/assets/pug_small.jpg";
+    imgObj.src = this.testUrl;
   }
 
   
