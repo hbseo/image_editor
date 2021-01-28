@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import '../css/SignIn.scss';
+import '../css/Login/bootstrap.min.scss';
+import '../css/Login/font-awesome.min.scss';
+import '../css/Login/main.scss';
+import '../css/Login/util.scss';
 
 class SignIn extends Component {
   constructor(props) {
@@ -13,7 +16,8 @@ class SignIn extends Component {
     const {name, value} = e.target;
     this.setState({[name]: value});
   }
-  loginClickHandler = () => {
+  loginClickHandler = (e) => {
+    e.preventDefault();
     const {id, password} = this.state;
     fetch('/auth/login', {
       method: 'POST',
@@ -26,45 +30,64 @@ class SignIn extends Component {
     .then((data) => {
       if(data.msg === 'login success') {
         alert('로그인 성공!');
-        this.props.close();
-        this.props.check();
+        this.props.history.push('/');
       }
       else {
         alert('아이디 또는 비밀번호 잘못 입력했습니다.');
       }
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       alert('error');
     })
   }
-  toggle = () => {
-    this.props.set_State('SignUp');
-  }
   render(){
     return(
-      <div className='modal'>
-        <div className='loginModal'>
-          <span className='close' onClick={this.props.close}>&times;</span>
-          <div className='modalContents'>
-            <input
-              name='id'
-              className='loginId'
-              type='text'
-              placeholder='ID'
-              onChange={this.loginHandler}
-            />
-            <input
-              name='password'
-              className='loginPw'
-              type='password'
-              placeholder='PASSWORD'
-              onChange={this.loginHandler}
-            />
-            <button className='loginBtn' onClick={this.loginClickHandler}>로그인</button>
-            <div className='loginEnd'>
-              <div className='registerLink'>회원가입 ㄱㄱ
-                <b onClick={this.toggle}>SignUp</b>
+      <div className='SignIn'>
+        <div className="limiter">
+          <div className="container-login100">
+            <div className="wrap-login100">
+              <div className="login100-pic js-tilt" data-tilt>
+                <img src='https://t1.daumcdn.net/cfile/tistory/998019475A445E7A2F' alt="IMG" />
               </div>
+              <form className="login100-form validate-form" onSubmit={this.loginClickHandler}>
+                <span className="login100-form-title">
+                  Member Login
+              </span>
+                <div className="wrap-input100 validate-input">
+                  <input className="input100" type="text" name="id" placeholder="ID" value={this.state.id} onChange={this.loginHandler} />
+                  <span className="focus-input100" />
+                  <span className="symbol-input100">
+                    <i className="fa fa-envelope" aria-hidden="true" />
+                  </span>
+                </div>
+                <div className="wrap-input100 validate-input" data-validate="Password is required">
+                  <input className="input100" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.loginHandler}/>
+                  <span className="focus-input100" />
+                  <span className="symbol-input100">
+                    <i className="fa fa-lock" aria-hidden="true" />
+                  </span>
+                </div>
+                <div className="container-login100-form-btn">
+                  <button className="login100-form-btn" type='submit'>
+                    Login
+                </button>
+                </div>
+                <div className="text-center p-t-12">
+                  <span className="txt1">
+                    Forgot
+                </span>
+                  <a className="txt2" href="#">
+                    Username / Password?
+                </a>
+                </div>
+                <div className="text-center p-t-136">
+                  <a className="txt2" href="#">
+                    Create your Account
+                  <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true" />
+                  </a>
+                </div>
+              </form>
             </div>
           </div>
         </div>

@@ -20,7 +20,7 @@ class Main extends Component {
       0: <Newproject/>,
       1: <LoadImage tab = '1'/>,
       2: <LoadImage tab = '2'/>,
-      3: <Login/>,
+      3: <Login tab = '3'/>,
     }
     return (
       <div className='Main'>
@@ -48,3 +48,4 @@ class Main extends Component {
   }
 }
 export default Main;
+
