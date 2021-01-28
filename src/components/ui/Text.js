@@ -72,42 +72,49 @@ export default class Text extends Component{
         </div>
         <div className="sub-textmenu">
           <div>
-            <button onClick={this.props.addText}>텍스트 추가</button>
+            <button onClick={this.props.addText} className="add-text">텍스트 추가</button>
           </div>
-          <div>
-            <input type='checkbox' className='text' onClick={this.textAction} text='bold' id='bold_checkbox' />bold
-          </div>
-          <div>
-            <input type='checkbox' className='text' onClick={this.textAction} text='italic' id='italic_checkbox' />italic
-          </div>
-          <div>
-            <button type='checkbox' className='text' onClick={this.textAction} text='left-align'>좌측정렬</button>
-          </div>
-          <div>
-            <button type='checkbox' className='text' onClick={this.textAction} text='center-align' >가운데정렬</button>
-          </div>
-          <div>
-            <button type='checkbox' className='text' onClick={this.textAction} text='right-align' >우측정렬</button>
-          </div>
-          <div>
-            <label htmlFor='fontfamily'>글꼴: </label>
+          <div className="font-style">
+            <label htmlFor='fontfamily'>글꼴 </label>
             <select className='text' name='fontfamily' text='fontfamily' onChange={this.textAction}>
               {this.fontListUp()}
             </select>
           </div>
-          <div>
-            <label htmlFor='fontSize'> 글자 크기: </label>
-            <input 
-              type='number' 
-              onChange={this.handlefontSizeChange} 
-              text='fontSize'
-              name='fontSize'
-              id='fontSize'
-              min='1'
-              value={this.state.fontSize} 
-            />
+          <div className="size-align">
+            <div className="font-size">
+              <label htmlFor='fontSize'> 글자 크기 </label>
+              <input 
+                type='number' 
+                onChange={this.handlefontSizeChange} 
+                text='fontSize'
+                name='fontSize'
+                id='fontSize'
+                min='1'
+                value={this.state.fontSize} 
+              />
+            </div>
+            <div className="text-align">
+              <label for="align">정렬</label>
+              <div className="align-button">
+                <button type='checkbox' className='align' id="left-align" onClick={this.textAction} text='left-align'></button>
+                <button type='checkbox' className='align' id="center-align" onClick={this.textAction} text='center-align'></button>
+                <button type='checkbox' className='align' id="right-align" onClick={this.textAction} text='right-align' ></button>
+              </div>
+            </div>
           </div>
-          
+          <div className="font-weight">
+            <label for="text">Weight</label>
+            <div className="weight-button">
+              <div className="bold">
+                <input type='checkbox' className='weight' onClick={this.textAction} text='bold' id='bold_checkbox' />
+                <label for="bold_checkbox">bold</label>
+              </div>
+              <div className="italic">
+                <input type='checkbox' className='weight' onClick={this.textAction} text='italic' id='italic_checkbox' />
+                <label for="italic_checkbox">italic</label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
