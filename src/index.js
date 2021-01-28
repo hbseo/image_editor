@@ -5,6 +5,7 @@ import Error from './components/Error';
 import Main from './components/Main';
 import ImageEditor from './components/ImageEditor';
 import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
 import { Route, Switch } from 'react-router';
 
 
@@ -14,6 +15,7 @@ ReactDOM.render(
       <Route exact path="/" component={Main} />
 			<Route exact path="/edit" component={ImageEditor} />
       <Route exact path="/login" component={SignIn} />
+      <Route exact path="/register" component={SignUp} />
       <Route component={Error} />
     </Switch>
   </Router>,

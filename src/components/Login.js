@@ -55,7 +55,9 @@ class Login extends Component {
           <Link to={{
             pathname: '/login',
           }}><button>로그인</button></Link>
-          <button>회원가입</button>
+          <Link to={{
+            pathname: '/register',
+          }}><button>회원가입</button></Link>
         </div>}
       </div>
     )

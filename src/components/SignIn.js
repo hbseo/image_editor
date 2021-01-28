@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import '../css/Login/bootstrap.min.scss';
 import '../css/Login/font-awesome.min.scss';
 import '../css/Login/main.scss';
@@ -82,10 +83,12 @@ class SignIn extends Component {
                 </a>
                 </div>
                 <div className="text-center p-t-136">
-                  <a className="txt2" href="#">
-                    Create your Account
-                  <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true" />
-                  </a>
+                  <Link to={{
+                    pathname: '/register'
+                  }}><div className="txt2 was-a">
+                      Create your Account
+                    <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true" />
+                    </div></Link>
                 </div>
               </form>
             </div>

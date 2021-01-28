@@ -52,11 +52,11 @@ a {
   -moz-transition: all 0.4s;
 }
 
-a:focus {
+.was-a:focus {
 	outline: none !important;
 }
 
-a:hover {
+.was-a:hover {
 	text-decoration: none;
   color: #57b846;
 }
