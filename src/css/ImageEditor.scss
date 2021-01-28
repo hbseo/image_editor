@@ -304,3 +304,100 @@ ul {
   width: 100%;
   padding: 5%;
 }
+
+/* rotate css */
+
+.sub-rotatemenu{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.rotate-degree{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 5%;
+}
+
+.degree-button{
+  display: flex;
+  justify-content: space-around;
+}
+
+.rotate-degree button{
+  width: 5vmin;
+  height: 5vmin;
+  border-radius: 5px;
+}
+
+.rotate-degree button:hover{
+  background-color: #DFDFDF;
+}
+
+.rotate-clock{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 5%;
+}
+
+.clock-button{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 5%;
+}
+
+.clock-button div{
+  width: 7vmin;
+  height: 7vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.clock-button div:hover{
+  background-color: #DFDFDF;
+}
+
+#clockwise{
+  background-image: url(./img/rotate-right.svg);
+  background-repeat: no-repeat;
+  width: 5vmin;
+  height: 5vmin;
+  background-size: contain;
+}
+
+#c-clockwise{
+  background-image: url(./img/rotate-left.svg);
+  background-repeat: no-repeat;
+  width: 5vmin;
+  height: 5vmin;
+  background-size: contain;
+}
+
+.rotate-input{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 5%;
+}
+
+.rotate-input input{
+  background-color: #EEEEEE;
+  border-bottom: 1px solid #D9D9D9;
+  width: 7vmin;
+  height: 3vmin;
+}
+
+.rotate-input input:hover{
+  border-bottom: 1px solid black;
+  transition: .5s;
+}
+
+.rotate-input input:focus{
+  border-bottom: 1px solid black !important;
+}

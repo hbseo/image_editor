@@ -35,32 +35,40 @@ export default class Rotation extends Component{
         <div className="sub-title">
             Rotation ( {this.props.object.type} : {this.props.object.angle})
         </div>
-        <div className="sub-filters">
-          <div>
-            <button onClick={this.setAngle} angle='0' > 각도 0</button>
+        <div className="sub-rotatemenu">
+          <div className="rotate-degree">
+            <div>
+              각도 설정
+            </div>
+            <div className="degree-button">
+              <button onClick={this.setAngle} angle='0' >0</button>
+              <button onClick={this.setAngle} angle='90' >90</button>
+              <button onClick={this.setAngle} angle='180' >180</button>
+              <button onClick={this.setAngle} angle='270' >270</button>
+            </div>
           </div>
-          <div>
-            <button onClick={this.setAngle} angle='90' > 각도 90</button>
+          <div className="rotate-clock">
+            <div>
+              30도 회전
+            </div>
+            <div className="clock-button">
+              <div>
+                <button id="clockwise" onClick={this.rotateObject} angle='30'></button>
+              </div>
+              <div>
+                <button id="c-clockwise" onClick={this.rotateObject} angle='-30'></button>
+              </div>
+            </div>
           </div>
-          <div>
-            <button onClick={this.setAngle} angle='180' > 각도 180</button>
-          </div>
-          <div>
-            <button onClick={this.setAngle} angle='270' > 각도 270</button>
-          </div>
-          <div>
-            <button onClick={this.rotateObject} angle='30' > 시계방향 30</button>
-          </div>
-          <div>
-            <button onClick={this.rotateObject} angle='-30' > 반시계방향 30</button>
-          </div>
-          <div>
+          <div className="rotate-input">
+            <label for="angle">직접 입력</label>
             <input
               type='number'
               name='angle'
               min='-360'
               max='360'
               step='1'
+              placeholder='0'
               value={this.props.object.type !== 'not active' ? this.props.object.angle : 0}
               onChange={this.handleAngleChange}
             />
