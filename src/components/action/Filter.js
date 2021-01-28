@@ -118,6 +118,7 @@ class Filter extends Action {
         default:
       }
       this.saveState('apply filter ' + option);
+      this.updateObject();
       obj.applyFilters();
     }
     canvas.renderAll();

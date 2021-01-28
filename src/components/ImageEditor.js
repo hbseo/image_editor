@@ -84,7 +84,8 @@ class ImageEditor extends Component {
       tab : 0, // 사이드 NavBar 탭 번호
       user_name : '', // 로그인 되어있는 유저 id
       isSaved : false, // 서버에 저장되어 있는가?
-      prj_idx : -1, // 현재 열려있는 저장된 프로젝트 idx
+      prj_idx : -1, // 현재 열려있는 저장된 프로젝트 idx,
+      imgStatus : false // false : idle 상태. true 로딩 중
     }
 
 
@@ -1654,6 +1655,18 @@ class ImageEditor extends Component {
       console.log(objstack);
   }
 
+  updateObject = () => {
+    this.setState({activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0}})
+  }
+
+  loadingStart = () => {
+    this.setState({imgStatus : true})
+  }
+  loadingFinish = () => {
+    console.log('이 함수 실행 시 로딩화면 끝내야 하는데......')
+    this.setState({imgStatus : false});
+  }
+
   displayRoot = () => {
     this.setState({showRoot : !this.state.showRoot})
   }
@@ -1697,6 +1710,7 @@ class ImageEditor extends Component {
           cropObject={this.cropObject} 
           cropEndObject={this.cropEndObject}
           addImage = {this.addImage}
+          imgStatus = {this.state.imgStatus}
           />,
       2: <FilterUI object={this.state.activeObject} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
       3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon} setColor={this.setColor}/>,

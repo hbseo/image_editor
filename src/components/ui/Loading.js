@@ -9,7 +9,7 @@ class Loading extends Component {
     const { open } = this.props;
 		return(
 			<div>
-				{open === "loading" ?
+				{open === true ?
 				  <div className = "modal">
 						<div className = "loadingModal">
               <h1>롱ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ오오오오딩</h1>

@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import Loading from './Loading';
+import '../../css/ui/Image.scss'
 export default class Image extends Component {
   constructor(props){
     super(props);
     this.state = { 
       imgURL : '',
-      imgStatus : 'loaded'
     }
     this.url = '';
   }
@@ -15,12 +15,6 @@ export default class Image extends Component {
   }
   componentDidUpdate(){
     console.log('Image UI Update');
-    if(this.state.imgStatus === 'loading'){
-      console.log('로딩 완료');      
-      setTimeout(() => {
-        this.setState({imgStatus : 'loaded'});
-      }, 2000);
-    }
   }
   componentWillUnmount(){
     console.log('Image UI Unmount');
@@ -37,7 +31,7 @@ export default class Image extends Component {
   handleSubmit = (event) => {
     if(event){ event.preventDefault(); }
     this.url = this.state.imgURL;
-    this.setState({imgURL : "", imgStatus : 'loading'});
+    this.setState({imgURL : ""});
     console.log("loading");
     this.props.addImage('https://cors-anywhere.herokuapp.com/' + this.url);
   }
@@ -57,11 +51,11 @@ export default class Image extends Component {
 
   render(){
     return (
-      <div className="sub">
+      <div className="nav-sub-image">
         <div className="sub-title">
             Image ( { this.props.object.type })
         </div>
-        <div className="sub-filters">
+        <div className="sub-images">
           <div>
             <button onClick={this.handleCropImage} className = "cropStart" crop="4:3">4:3자르기 시작</button>
             <button onClick={this.handleCropImage} className = "cropStart" crop="16:9">16:9자르기 시작</button>
@@ -81,7 +75,7 @@ export default class Image extends Component {
 					  </form>
           </div>
         </div>
-        <Loading open = {this.state.imgStatus} />
+        {this.props.imgStatus ? <Loading open = {true} /> : null}
       </div>
     );
   }

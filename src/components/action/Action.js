@@ -59,6 +59,18 @@ export default class Action {
     return this.app.saveState(action);
   }
 
+  updateObject() {
+    return this.app.updateObject();
+  }
+
+  loadingFinish(){
+    return this.app.loadingFinish();
+  }
+
+  loadingStart(){
+    return this.app.loadingStart();
+  }
+
 }
 
 

@@ -15,12 +15,13 @@ class Image extends Action {
       this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center", scaleX : 1, scaleY : 1})
       .then((data) => {
         canvas.add(data).setActiveObject(data);
-        this.getImageEditor().saveState('image add');
+        this.saveState('image add');
       })
       .catch(() => {
         alert("image load error");
       })
     }
+    this.loadingFinish();
     document.removeEventListener('mousedown', this.addImageEvent);
     canvas.defaultCursor = 'default';
     canvas.selection = true;
@@ -29,6 +30,8 @@ class Image extends Action {
   addImage = (url) => {
     const canvas = this.getCanvas();
     this.testUrl = url;
+
+    this.loadingStart();
 
     let imgObj = originImage();
     imgObj.crossOrigin = "anonymous";
@@ -47,11 +50,12 @@ class Image extends Action {
       this.testUrl = dataURL;
       setTimeout(() => {
         document.addEventListener('mousedown',this.addImageEvent);
-      }, 2000);
+      }, 100);
     }
 
     imgObj.onerror = () => {
       alert('image load error');
+      this.loadingFinish();
       console.log('fail');
     }
     imgObj.src = this.testUrl;
