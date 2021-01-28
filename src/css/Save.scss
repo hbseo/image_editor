@@ -1,0 +1,132 @@
+.modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+
+    .saveModal {
+        width: 480px;
+        height: 621px;
+        background-color: #363636;
+        color : white;
+        position: relative;
+        box-sizing: border-box;
+        margin: 50px auto;
+
+        .top-div {
+            background-color : #363636;
+            height : 10%;
+            padding-top : 10px;
+
+            #headline {
+                position: relative;
+                font-size : 39px;
+                margin-left : 20px;
+            }
+            
+            #close {
+                float : right;
+                background-color: #363636;
+                border : 0px;
+                padding : 18px;
+            }
+
+            #close:hover {
+                background-color: #404040;
+            }
+        }
+
+        .content {
+            padding : 10px;
+
+            #option {
+                margin : 5px;
+            }
+
+            .quality-div {
+                margin-top : 20px;
+            }
+        }
+
+        
+
+
+        .bottom-div {
+            position: absolute;
+            padding : 20px;
+            bottom : 0;
+            right : 0;
+
+            .canvas-size {
+                padding : 10px;
+            }
+
+            #save-button {
+                margin-bottom : 0px;
+                background-color: #034683;
+                color : white;
+                border-radius : 5px;
+                border : 0px;
+            }
+
+            #save-button:hover {
+                background-color: #0573d6;
+                color : white;
+            }
+            #save-button:active {
+                background-color: #0573d6;
+                color : white;
+            }
+            #save-button:disabled {
+                background-color: #9da89b;
+                color : grey;
+                border : 1px solid black;
+            }
+
+            #close-button {
+                margin-bottom : 0px;
+                background-color: #737373;
+                color : white;
+                border-radius : 5px;
+                border : 0px;
+            }
+
+            #close-button:hover {
+                background-color: #034683;
+                color : white;
+            }
+            #close-button:active {
+                background-color: #034683;
+                color : white;
+            }
+        }
+    } 
+
+    input[type=radio]{
+        display: none;
+    }
+    input[type=radio] + label{
+        display: inline-block;
+        background-color: #737373;
+        padding : 8px 19px;
+        border : 1px solid black;
+        cursor: pointer;
+        color : white;
+        border-radius : 5px;
+        border : 0px;
+        margin : 1px;
+    }
+
+    input[type=radio]:hover+ label{
+        background-color: #034683;
+        color : white;
+    }
+    
+    input[type=radio]:checked + label{
+        background-color: #022b4f;
+        color : white;
+    }
+}
+

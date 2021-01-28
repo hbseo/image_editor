@@ -1,25 +1,43 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { SketchPicker, CompactPicker } from 'react-color';
-import Switch from 'react-switch';
-import './ImageEditor.css'
-import Rotation from './Rotation';
-import Filter from './Filter';
-import Delete from './Delete';
-import Crop from './Crop';
-import Flip from './Flip';
-import Text from './Text';
-import Fill from './Fill';
-import Icon from './Icon';
-import Shape from './Shape';
-import Draw from './Draw';
-import Resize from './Resize';
-// import FilterMenu from './FilterMenu';
+import '../css/ImageEditor.scss'
+import Rotation from './action/Rotation';
+import Filter from './action/Filter';
+import ObjectAction from './action/ObjectAction';
+import Delete from './action/Delete';
+import Shape from './action/Shape';
+import Image from './action/Image';
+import Crop from './action/Crop';
+import Flip from './action/Flip';
+import Text from './action/Text';
+import Fill from './action/Fill';
+import Icon from './action/Icon';
+import Line from './action/Line';
+import Clip from './action/Clip';
+import Draw from './action/Draw';
+import Grid from './extension/Grid';
+import Snap from './extension/Snap';
+import Layers from './extension/Layers';
+import Save from './Save';
+import SideNav from './ui/SideNav'
+
+import FilterUI from './ui/Filter';
+import ImageUI from './ui/Image';
+import ToolsUI from './ui/Tools';
+import IconUI from './ui/Icon';
+import TextUI from './ui/Text';
+import ObjectUI from './ui/Object';
+import RotationUI from './ui/Rotation';
+import ShapeUI from './ui/Shape';
+import DrawUI from './ui/Draw';
+import HistoryUI from './ui/History';
+
 
 class ImageEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showRoot : false,
       fontsize: 50, //active object's fontSize
       canvasView : { x: 0, y: 0},
       layers: [],
@@ -27,7 +45,6 @@ class ImageEditor extends Component {
       displayCropCanvasSize: false,
       displayTextbgColorPicker: false,
       displayshadow: false,
-      drawingMode: false,
       lineWidth: 10,
       lineColorRgb:{
           r: '255',
@@ -35,7 +52,7 @@ class ImageEditor extends Component {
           b: '255',
           a: '1',
         },
-      activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
+      activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
       zoom : 1,
       color: {
         r: '255',
@@ -47,16 +64,6 @@ class ImageEditor extends Component {
         color : '#FFFFFF'
       },
       colorHex : '#000000',
-      filters : {
-        brightness: 0,
-        contrast : 0,
-        pixelate : 1,
-        blur : 0,
-        noise : 0,
-        saturation : 0,
-        hue : 0,
-        ink : 0,
-      },
       cropCanvasSize : {
         width : 0,
         height : 0
@@ -73,14 +80,21 @@ class ImageEditor extends Component {
           b: '0',
           a: '1',
       },
+      openSave : false, // save Modal 여는 용도
+      tab : 0, // 사이드 NavBar 탭 번호
+      user_name : '', // 로그인 되어있는 유저 id
+      isSaved : false, // 서버에 저장되어 있는가?
+      prj_idx : -1, // 현재 열려있는 저장된 프로젝트 idx,
+      imgStatus : false // false : idle 상태. true 로딩 중
     }
-    
+
 
     this._canvas = null;
     if(!props.location.state) { props.history.push('/'); }
     this._canvasImageUrl = props.location.state ? props.location.state.url : '';
     this._canvasSize = {width : props.location.state? props.location.state.width : 500, height : props.location.state? props.location.state.height : 500}
     this._backgroundImageRatio = props.location.state ? props.location.state.ratio/100 : 1;
+
     this._clipboard = null;
     this._backgroundImage = null;
     // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
@@ -105,18 +119,17 @@ class ImageEditor extends Component {
     this.currentState = { width: null, height: null, action : 'constructor' };
     this.stateStack = [];
     this.redoStack = [];
+    this.firstState = null;
     this.maxSize = 100;
     this.state_id = 1;
     this.dotoggle = true;
 
     // filterList
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink' ];
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur' ];
 
     //add function
     this.startPoint = { x : 0, y : 0 };
-    this.shapeType = '';
-    this.disableObj = null;
 
     //grid
     this.grid = null;
@@ -129,21 +142,19 @@ class ImageEditor extends Component {
     this.lastPosY = 0;
 
     this.lockScale = false;
-    // font
-    this.fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New', 
-    'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
-    'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
-    'Copperplate'];
 
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
-
     this._createAction();
 
   }
 
   componentDidMount() {
     if(this._canvasImageUrl){
-      this.loadImage(this._canvasImageUrl,{x : 0, y : 0}, {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio})
+      this.loadImage(
+        this._canvasImageUrl,
+        {x : 0, y : 0}, 
+        {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
+      )
       .then((img) => this._backgroundImage = img)
       .then(() => {
         this._canvas = new fabric.Canvas('canvas', {
@@ -159,6 +170,7 @@ class ImageEditor extends Component {
       })
       .then(() => {
         this.switchTools('text', true);
+        this.switchTools('filter', false);
         this._createDomEvent();
         this._createCanvasEvent();
         this.currentState = this._canvas.toDatalessJSON();
@@ -166,7 +178,11 @@ class ImageEditor extends Component {
         this.currentState.height = this._canvas.height;
         this.currentState.action = "initilize";
         this.currentState.id = 0;
-        this._makeGrid();
+        this.firstState = this.currentState;
+        this.action['Grid'].makeGrid();
+      })
+      .catch(() => {
+        this.props.history.push('/');
       })
     }
     else{
@@ -188,8 +204,12 @@ class ImageEditor extends Component {
       this.currentState.height = this._canvas.height;
       this.currentState.action = "initilize";
       this.currentState.id = 0;
-      this._makeGrid();
+      this.firstState = this.currentState;
+      this.action['Grid'].makeGrid();
     }
+    
+    this.action['Draw'].setBrush();
+    this.getCheck();
     this.forceUpdate(); // for showUndo/Redo Stack
   }
   
@@ -202,11 +222,11 @@ class ImageEditor extends Component {
     this.stateStack.length = 0;
     this.redoStack.length = 0;
     this.cropImg = null;
-    this.fontList.length = 0;
     this._clipboard = null;
     this._backgroundImage = null;
     this._canvas = null;
     this.grid = null;
+    this.firstState = null;
   }
 	
 	_onKeydownEvent = (event) => {
@@ -361,21 +381,20 @@ class ImageEditor extends Component {
     }
   }
 
+  _displayCropCanvas = (event) => {
+    if(this.state.displayCropCanvasSize) {
+      if(event.target === null || event.target.type !== 'Cropzone') {
+        this.action['Crop'].removeCropzone();
+        this.setState({displayCropCanvasSize: false});
+      }
+    }
+  }
+
   /**
    * Attach canvas events
    * @private
    */
   _createCanvasEvent = () => {
-    this._canvas.on('mouse:down', (event) => {
-      // this.setState({absoluteX : event.absolutePointer.x, absoluteY : event.absolutePointer.y })
-      if(this.state.displayCropCanvasSize) {
-        if(event.target === null || event.target.type !== 'Cropzone') {
-          this.action['Crop'].removeCropzone();
-          this.setState({displayCropCanvasSize: false});
-        }
-      }
-    });
-
     this._canvas.on('mouse:down', this._canvasMoveStartEvent);
     this._canvas.on('mouse:move', this._canvasMovingEvent);
     this._canvas.on('mouse:up', this._canvasMoveEndEvent);
@@ -426,14 +445,14 @@ class ImageEditor extends Component {
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
-      this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0} });
+      this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0} });
 			if(!this._canvas.backgroundImage){
         this.switchTools('filter', 'text', true);
 			}
 			else{
         this.switchTools('text', true);
 				this._imageSelection(this._canvas.backgroundImage);
-      };
+      }
 		});
     
     this._canvas.on('object:added', (event) => {
@@ -544,32 +563,6 @@ class ImageEditor extends Component {
     document.removeEventListener('mouseup',this._onMouseUpEvent)
   }
 
-  _makeGrid = () => {
-    if(this.grid) { return; }
-
-    let grids = [];
-    let gridoption = {
-      stroke: "#000000",
-      strokeWidth: 1,
-      // strokeDashArray: [5, 5]
-    };
-    for (let x = 0; x < (this._canvas.width); x += 10) {
-      grids.push(new fabric.Line([x, 0, x, this._canvas.height], gridoption)); // vertical
-    }
-    for (let y = 0; y < (this._canvas.height); y += 10) {
-      grids.push(new fabric.Line([0, y, this._canvas.width, y], gridoption)); // horizon
-    }
-    this.grid = new fabric.Group(grids, {
-      selectable : false,
-      evented : false
-    })
-    this.grid.addWithUpdate();
-    // for (var i = 0; i < (1000 / 10); i++) {
-    //   this._canvas.add(new fabric.Line([ i * 10, 0, i * 10, 1000], { stroke: '#000000', selectable: false, evented: false })); // vertical
-    //   this._canvas.add(new fabric.Line([ 0, i * 10, 1000, i * 10], { stroke: '#000000', selectable: false, evented: false })); // horizon
-    // }
-  }
-
   resetCanvas = () => {
     this._canvas.setZoom (1); 
     this.setState({zoom : 1, canvasView : { x: 0, y: 0} });
@@ -583,16 +576,12 @@ class ImageEditor extends Component {
 
   onClickGrid = (event) => {
     if(event.target.checked){
-      // console.log(this.grid);
       this.gridOn = true;
-      this._canvas.add(this.grid);
-      this._canvas.sendToBack(this.grid);
-      this._canvas.renderAll();
+      this.action['Grid'].showGrid();
     }
     else{
       this.gridOn = false;
-      this._canvas.remove(this.grid);
-      this._canvas.renderAll();
+      this.action['Grid'].hideGrid();
     }
   }
 
@@ -616,7 +605,7 @@ class ImageEditor extends Component {
       this.currentState.width = this._canvas.width;
       this.currentState.height = this._canvas.height;
       this.currentState.action = action;
-      this.currentState.id = this.state_id++;
+      this.currentState.id = this.stateStack.length > 0 ? this.stateStack[this.stateStack.length -1].id + 1 : 1;
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
     }
@@ -660,26 +649,40 @@ class ImageEditor extends Component {
     this.forceUpdate(); // for showUndo/Redo Stack
   }
 
+  resetState = () => {
+    this.stateStack.length = 0;
+    this.redoStack.length = 0;
+    this.state_id = 1;
+    this.currentState = this.firstState;
+    this._canvas.loadFromJSON(this.firstState, () => {
+      this._canvas.setWidth(this.firstState.width);
+      this._canvas.setHeight(this.firstState.height);
+      this._canvas.calcOffset();
+      this.lock = false;
+    });
+    this.forceUpdate(); // for showUndo/Redo Stack
+  }
+
 	/**
    * action on selected image
 	 * @param {Object} image : selectedImage or backgroundImage
    * @private
    */
 	_imageSelection = (image) => {
-		this.switchTools('filter', false);
-		this.switchTools('text', true);
-    let list = document.getElementsByClassName('filter');
+		// this.switchTools('filter', false);
+		// this.switchTools('text', true);
+    // let list = document.getElementsByClassName('filter');
     let toggle = image.shadow ? true : false;
-    let change_filters = Array.from({length: this.filterList.length}, () => false);
-    image.filters.forEach(filter => {
-      change_filters[this.filterList.indexOf(filter.type)] = filter;
-    });
-    image.filters = change_filters;
-		for(let i=0; i<list.length; i++){
-			list[i].checked = image.filters[i];
-    }
+    // let change_filters = Array.from({length: this.filterList.length}, () => false);
+    // image.filters.forEach(filter => {
+    //   change_filters[this.filterList.indexOf(filter.type)] = filter;
+    // });
+    // image.filters = change_filters;
+		// for(let i=0; i<list.length; i++){
+		// 	list[i].checked = image.filters[i];
+    // }
 		this.setState({
-			activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0},
+      activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
       filters : {
         brightness: image.filters[15] ? image.filters[15].brightness : 0,
         contrast : image.filters[16] ? image.filters[16].contrast : 0,
@@ -688,7 +691,9 @@ class ImageEditor extends Component {
         noise : image.filters[19] ? image.filters[19].noise : 0,
         saturation : image.filters[20] ? image.filters[20].noise : 0,
         hue : image.filters[21] ? image.filters[21].noise : 0,
-        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0
+        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0,
+        vignette : image.filters[23] ? image.filters[23].vignette_matrix.amount : 0,
+        zoomblur : image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0,
       },
       shadow : {
         blur : toggle ? image.shadow.blur : 30,
@@ -717,6 +722,12 @@ class ImageEditor extends Component {
     if(text.textBackgroundColor) {
       toggle[1] = true;
     }
+    // if(text.fontStyle === "italic"){
+    //   document.getElementById('italic_checkbox').checked = true;
+    // }
+    // else{
+    //   document.getElementById('italic_checkbox').checked = false;
+    // }
 		this.setState({
       activeObject : this.getActiveObject(),
 			fontsize : text.fontSize,
@@ -735,7 +746,8 @@ class ImageEditor extends Component {
   switchTools = (...args) => {
     for(let i = 0; i< args.length-1; i++) {
       fabric.util.toArray(document.getElementsByClassName(args[i])).forEach(el => 
-        el.disabled = args[args.length-1]);
+        el.disabled = args[args.length-1]
+        );
     }
   }
 
@@ -746,15 +758,22 @@ class ImageEditor extends Component {
    */
   _createAction = () => {
     this._register(this.action, new Rotation(this));
+    this._register(this.action, new ObjectAction(this));
     this._register(this.action, new Draw(this));
     this._register(this.action, new Filter(this));
     this._register(this.action, new Delete(this));
     this._register(this.action, new Crop(this));
     this._register(this.action, new Text(this));
+    this._register(this.action, new Clip(this));
     this._register(this.action, new Flip(this));
     this._register(this.action, new Fill(this));
     this._register(this.action, new Icon(this));
     this._register(this.action, new Shape(this));
+    this._register(this.action, new Image(this));
+    this._register(this.action, new Grid(this));
+    this._register(this.action, new Line(this));
+    this._register(this.action, new Snap(this));
+    this._register(this.action, new Layers(this));
   }
 
   /**
@@ -792,189 +811,92 @@ class ImageEditor extends Component {
   }
 
   /**
-   * "object:moving" canvas event handler
-   * @param {{target: fabric.Object, e: MouseEvent, transform : object}} fEvent - Fabric event
-   * @public
+   * Get grid instance
+   * @returns {this.grid}
    */
-  snapMovingEvent = (event) => {
-    let direction = {
-      x : event.e.movementX <= 0 ? 'left' : 'right',
-      y : event.e.movementY <= 0 ? 'top' : 'bottom',
-    }
-    let left = Math.round(event.target.left / 10) * 10;
-    let top =  Math.round(event.target.top / 10) * 10;
-    event.target.set({
-      left : left,
-      top : top,
-    })
-    const pointer = event.target.getPointByOrigin(direction.x, direction.y);
-    // const pointer = event.target.getPointByOrigin('left', 'top');
-    event.target.set({
-      left : left - pointer.x%10,
-      top : top - pointer.y%10
-    })
-    event.target.setCoords();
-    this.setState({activeObject : this.getActiveObject()})
+  getGrid = () => {
+    return this.grid;
+  }
+
+  /**
+   * Get Canvas size
+   * @returns {{x:width, y:height}} 
+   */
+  getCanvasSize = () => {
+    return this._canvas ? {x : this._canvas.width, y: this._canvas.height} : {x : 0, y: 0}
+  }
+
+  /**
+   * Get grid instance
+   * @returns {this._clipboard}
+   */
+  getClipboard = () => {
+    return this._clipboard;
+  }
+
+  /**
+   * Get BackgroundImage instance
+   * @returns {this._backgroundImage}
+   */
+  getBackgroundImage = () => {
+    return this._backgroundImage;
+  }
+
+  addKeyDownEvent = () => {
+    document.addEventListener('keydown',this._onKeydownEvent);
+  }
+
+  removeKeyDownEvent = () => {
+    document.removeEventListener('keydown',this._onKeydownEvent);
+  }
+
+  setClipboard = (clip) => {
+    this._clipboard = clip;
+  }
+
+  setGrid = (grid) => {
+    this.grid = grid;
   }
 
   onClickSnap = (event) => {
-    if(event.target.checked){
-      this._canvas.on("object:moving", this.snapMovingEvent);
-    }
-    else{
-      this._canvas.off("object:moving", this.snapMovingEvent);
-    }
+    this.action['Snap'].onClickSnap(event);
   }
 
   onClickObjectSnap = (event) => {
-    if(event.target.checked){
-      this._canvas.on("object:moving", this.snapObjectMovingEvent);
-    }
-    else{
-      this._canvas.off("object:moving", this.snapObjectMovingEvent);
-    }
+    this.action['Snap'].onClickObjectSnap(event);
   }
   
-  /**
-   * "object:moving" canvas event handler
-   * @param {{target: fabric.Object, e: MouseEvent}} fEvent - Fabric event
-   * @public
-   */
-  snapObjectMovingEvent = (event) => {
-    event.target.setCoords();
-    let target_top = Math.min(event.target.aCoords.tl.y, event.target.aCoords.tr.y, event.target.aCoords.br.y, event.target.aCoords.bl.y) ;
-    let target_bottom =  Math.max(event.target.aCoords.tl.y, event.target.aCoords.tr.y, event.target.aCoords.br.y, event.target.aCoords.bl.y);
-    let target_left = Math.min(event.target.aCoords.tl.x, event.target.aCoords.tr.x, event.target.aCoords.br.x, event.target.aCoords.bl.x);
-    let target_right = Math.max(event.target.aCoords.tl.x, event.target.aCoords.tr.x, event.target.aCoords.br.x, event.target.aCoords.bl.x);
-    this._canvas.forEachObject((obj) => {
-      if(obj === event.target) {return;}
-      
-      obj.setCoords();
-      let obj_top = Math.min(obj.aCoords.tl.y, obj.aCoords.tr.y, obj.aCoords.br.y, obj.aCoords.bl.y) ;
-      let obj_bottom = Math.max(obj.aCoords.tl.y, obj.aCoords.tr.y, obj.aCoords.br.y, obj.aCoords.bl.y);
-      let obj_right = Math.max(obj.aCoords.tl.x, obj.aCoords.tr.x, obj.aCoords.br.x, obj.aCoords.bl.x);
-      let obj_left = Math.min(obj.aCoords.tl.x, obj.aCoords.tr.x, obj.aCoords.br.x, obj.aCoords.bl.x);
-
-      //right
-      if(Math.abs(obj_right - target_left) < 10){
-        event.target.set({
-          // left : obj.getPointByOrigin('right', 'bottom').x + (event.target.scaleX * event.target.width / 2) + (event.target.strokeWidth/2)
-          // left : obj_right + (event.target.scaleX * event.target.width / 2) + (event.target.strokeWidth/2) ,
-          // left : obj.getPointByOrigin('left', 'bottom').x + (obj.width * obj.scaleX) + (event.target.scaleX * event.target.width / 2)
-          left : event.target.left + obj_right - target_left
-        })
-        // obj.setCoords();
-        event.target.setCoords();
-      }
-      //left
-      // console.log(obj.aCoords.tl.x - event.target.aCoords.tr.x);
-      if(Math.abs(obj_left - target_right) < 10){
-        event.target.set({
-          // left : event.target.left - obj.left + 1,
-          // left : obj.getPointByOrigin('left', 'bottom').x - (event.target.scaleX * event.target.width / 2) - (event.target.strokeWidth/2)
-          // left : obj_left - (event.target.scaleX * event.target.width / 2) - (event.target.strokeWidth/2), 
-          left : event.target.left + obj_left - target_right
-        })
-        event.target.setCoords();
-      }
-      // top
-      if(Math.abs(obj_top - target_bottom) < 10){
-        event.target.set({
-          // top : obj.getPointByOrigin('right', 'top').y - (event.target.scaleY * event.target.height / 2) - (event.target.strokeWidth/2)
-          // top : obj_top - (event.target.scaleY * event.target.height / 2) - (event.target.strokeWidth/2),
-          top : event.target.top + obj_top - target_bottom
-        })
-        event.target.setCoords();
-      }
-      //bottom
-      if(Math.abs(obj_bottom - target_top) < 10){
-        event.target.set({
-          // top : obj.getPointByOrigin('left', 'bottom').y + (event.target.scaleY * event.target.height / 2) + (event.target.strokeWidth/2)
-          // top : obj_bottom + (event.target.scaleY * event.target.height / 2) + (event.target.strokeWidth/2)
-          top : event.target.top + obj_bottom - target_top
-        })
-        event.target.setCoords();
-      }
-    })
-  }
-
   copyObject = () => {
-    if(this.getActiveObject()){
-      this.getActiveObject().clone((cloned) => {
-        this._clipboard = cloned;
-      });
-    }
+    this.action['Clip'].copyObject(this.getActiveObject());
   }
 
   pasteObject = () => {
-    const canvas = this._canvas;
-    this._clipboard.clone((clonedObj) => {
-      canvas.discardActiveObject();
-      clonedObj.set({
-        left: clonedObj.left + 10,
-        top: clonedObj.top + 10,
-        evented: true,
-      });
-      if (clonedObj.type === 'activeSelection') {
-        clonedObj.canvas = canvas;
-        clonedObj.forEachObject(function(obj) {
-          canvas.add(obj);
-        });
-        // this should solve the unselectability
-        clonedObj.setCoords();
-      } else {
-        canvas.add(clonedObj);
-      }
-      this._clipboard.top += 10;
-      this._clipboard.left += 10;
-      canvas.setActiveObject(clonedObj);
-      canvas.requestRenderAll();
-    });
+    this.action['Clip'].pasteObject();
   }
 
 
   loadImage = (url, pointer, option) => {
-    return new Promise(resolve => {
-      fabric.Image.fromURL(url, img => {
-        img.set({
-          angle: 0,
-          originX: option.originX,
-          originY: option.originY,
-          left: pointer.x,
-          top: pointer.y,
-          
-          scaleX : option.scaleX,
-          scaleY : option.scaleY,
-
-          // max size 2048x2048 for Webgl
-          // width : img.width * option.scaleX,
-          // height : img.height * option.scaleY,
-          // scaleX : 1,
-          // scaleY : 1,
-
-          strokeWidth : 0
-        });
-        resolve(img);
-      }, { crossOrigin: 'anonymous' }
-      );
-    });
+    return this.action['Image'].loadImage(url, pointer, option);
   }
 
-  saveImage = () => {
-    let dataURL = this._canvas.toDataURL({
-      format: 'png'
-    });
-    var a = document.createElement("a");
-    a.href = dataURL;
-    a.setAttribute("download", 'image.png');
-    a.click();
+  saveImage = (title) => {
+    this.action['Image'].saveImage(title);
+  }
+
+  openSaveModal = () => {
+    this.setState({openSave : true})
+  }
+
+  closeSaveModal = () => {
+    this.setState({openSave : false})
   }
 
   exportCanvas = () => {
     let c = this._canvas.toJSON();
     c.width = this._canvas.width;
     c.height = this._canvas.height;
-    let data = JSON.stringify(c);
+    // let data = JSON.stringify(c);
+    let data = JSON.stringify(this.currentState);
     let file = new Blob([data], {type : 'octet/stream'});
     var a = document.createElement("a");
     a.href = URL.createObjectURL(file);
@@ -991,21 +913,34 @@ class ImageEditor extends Component {
       console.log(json);
 
       this._canvas.loadFromJSON(json, () => {
+        this.isDragging = false;
+        this.selection = true;
         this.cropImg = null;
-  
+        this.cropCanvasState = {
+          left : 0,
+          top : 0,
+          scaleX : 0,
+          scaleY : 0,
+          width : 0,
+          height : 0
+        };
         // redo undo
         this.lock = false;
-        this.currentState = { action : 'constructor' };
         this.stateStack = [];
         this.redoStack = [];
+        this.firstState = null;
         this.maxSize = 100;
         this.state_id = 1;
         this.undoCanvasSize = [];
         this.redoCanvasSize = [];
         this.currentCanvasSize = {width: null, height: null};
-  
+        this.dotoggle = true;
+
+        this.lastPosX = 0;
+        this.lastPosY = 0;
+        this.shift = false;
+
         //add function
-        this.shapeType = '';
     
         this.grid = null;
         this.gridOn = false;
@@ -1017,6 +952,7 @@ class ImageEditor extends Component {
         this.currentState.width = json.width ? json.width : 800;
         this.currentState.height = json.height ? json.height : 600;
         this.currentState.id = 0;
+        this.firstState = this.currentState;
         this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
 
         this._canvas.setWidth( json.width ? json.width : 800 );
@@ -1041,271 +977,41 @@ class ImageEditor extends Component {
       })
   }
 
-  addImageEvent = (event) => {
-    const pointer = this._canvas.getPointer(event, false)
-    if(event.target.tagName === 'CANVAS'){
-      this.loadImage(this.testUrl, pointer, {originX : "center", originY : "center", scaleX : 1, scaleY : 1})
-      .then((data) => {
-        this._canvas.add(data).setActiveObject(data);
-        this.saveState('image add');
-        // this.setState({ layers: this.state.layers.concat(data) });
-        // console.log(data.getSvgSrc());
-      })
-    }
-    document.removeEventListener('mousedown', this.addImageEvent);
-    this._canvas.defaultCursor = 'default';
-  }
-
-  addImage = () => {
-    this._canvas.defaultCursor = 'pointer';
-    document.addEventListener('mousedown',this.addImageEvent);
-  }
-
-  addTextEvent = (event) => {
-    const pointer = this._canvas.getPointer(event, false)
-    if(event.target.tagName === 'CANVAS'){
-      let text = new fabric.Textbox('Hello world', {
-        left: pointer.x,
-        top: pointer.y,
-        fontSize: this.state.fontsize,
-        lockScalingY: true,
-        strokeWidth : 0
-      });
-      text.setControlsVisibility({
-        mt: false,
-        mb: false,
-        bl: false,
-        br: false,
-        tl: false,
-        tr: false
-      });
-      this._canvas.add(text).setActiveObject(text);
-      this.saveState('text add');
-    }
-    document.removeEventListener('mousedown', this.addTextEvent);
-    this._canvas.defaultCursor = 'default';
+  addImage = (url) => {
+    this.action['Image'].addImage(url);
   }
 
   addText = () => {
-    this._canvas.defaultCursor = 'pointer';
-		document.addEventListener('mousedown',this.addTextEvent);    
+    this.action['Text'].addText();
   }
 
-  _bindShapeEvent = (shape) => {
-    const canvas = this._canvas;
-    shape.on({
-      scaling(event){
-        Resize.resize(canvas, event, this);
-      },
-    })
+  addShape = (type, color) => {
+    this.action['Shape'].addShape(type,`rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`);
   }
 
-  addShapeEvent = (event) => {
-    let myFigure;
-    if(event.target.tagName === 'CANVAS'){
-      document.removeEventListener('keydown',this._onKeydownEvent);
-
-      this.disableObj = this.getActiveObject();
-      if(this.disableObj){
-        // disableObj.evented = false;
-        this.disableObj.lockMovementY = true;
-        this.disableObj.lockMovementX = true;
-      }
-      const pointer = this._canvas.getPointer(event, false)
-      switch(this.shapeType) {
-        case 'triangle':
-          myFigure = new fabric.Triangle({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black",  originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false, });
-          this._canvas.add(myFigure).setActiveObject(myFigure);
-          this._bindShapeEvent(myFigure);
-          break;
-        case 'rectangle':
-          myFigure = new fabric.Rect({ width: 0, height: 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false,});
-          this._canvas.add(myFigure).setActiveObject(myFigure);
-          this._bindShapeEvent(myFigure);
-          break;
-        case 'ellipse':
-          myFigure = new fabric.Ellipse({ rx:0, ry:0, left: pointer.x, top: pointer.y, fill: "black", isRegular : this.shift, strokeWidth : 0 });
-          this._canvas.add(myFigure).setActiveObject(myFigure);
-          break;
-        case 'circle':
-          myFigure = new fabric.Circle({ radius : 0, left: pointer.x, top: pointer.y, fill: "black", originX : "left", originY:"top", isRegular : this.shift, strokeWidth : 0, noScaleCache: false,});
-          this._canvas.add(myFigure).setActiveObject(myFigure);
-          break;        
-        default:
-      }
-      
-      this._canvas.selection = false;
-      this._canvas.on('mouse:move', this.shapeCreateResizeEvent);
-      this._canvas.on('mouse:up', this.shapeEndResizeEvent);
-    }
-
-    this._canvas.defaultCursor = 'default';
-    document.removeEventListener('keydown',this._onShiftKeydownEvent);
-    document.removeEventListener('mousedown',this.addShapeEvent);    
+  setColor = (color) => {
+    this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
   }
 
-  addShape = (event) => {
-    // let body = document.body;
-    this._canvas.defaultCursor = 'pointer';
-    this._canvas.discardActiveObject();
-    this.shapeType = event.target.getAttribute('type');
-    document.addEventListener('mousedown',this.addShapeEvent);    
-    document.addEventListener('keydown',this._onShiftKeydownEvent);
+  setEndAngle = (value) => {
+    this.action['Shape'].setEndAngle(value);
+    this.setState({activeObject : this.getActiveObject()})
   }
 
-  shapeEndResizeEvent = (event) => {
-    this._canvas.off('mouse:move', this.shapeCreateResizeEvent);
-
-    let activeObject = this.getActiveObject();
-
-    this.adjustOriginToCenter(activeObject);
-
-    if(activeObject.width === 0 || activeObject.height === 0){
-      this._canvas.remove(activeObject);
-    }
-    else{
-      this.saveState(activeObject.type + ' add');
-    }
-
-    this._canvas.selection = true;
-    this._canvas.renderAll();
-    if(this.disableObj){
-      this.disableObj.lockMovementY = false;
-      this.disableObj.lockMovementX = false;
-      this.disableObj = null;
-    }
-    document.addEventListener('keydown',this._onKeydownEvent);
-    this.shift = false;
-    this._canvas.off('mouse:up', this.shapeEndResizeEvent);
-    // this._canvas.on('mouse:up', (event) => { console.log("fire", event)});
+  setShadow = (option) => {
+    this.action['Object'].setShadow(option);
   }
 
-  shapeCreateResizeEvent = (event) => {
-    // console.log(keyCode)
-    // let activeObject = event.target
-    let activeObject = this.getActiveObject();
-    // console.log(activeObject, event.target)
-
-    const pointer = this._canvas.getPointer(event, false)
-    let width = Math.abs(pointer.x - activeObject.left);
-    let height = Math.abs(pointer.y - activeObject.top);
-
-    
-    if (activeObject.isRegular) {
-      width = height =  Math.max(width, height);
-
-      if (activeObject.type === 'triangle') {
-          height = Math.sqrt(3) / 2 * width;
-      }
-    }
-
-    if(activeObject.type === 'ellipse'){
-      activeObject.set({
-        rx : width /2 ,
-        ry : height / 2,
-        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
-        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
-      })
-    }
-    else if(activeObject.type === 'circle'){
-      activeObject.set({
-        radius : Math.max(width, height) / 2,
-        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
-        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
-      })
-    }
-    else{
-      activeObject.set({
-        width : width,
-        height :height,
-        originX : pointer.x - activeObject.left < 0 ? 'right' : 'left',
-        originY : pointer.y - activeObject.top < 0 ? 'bottom' : 'top',
-      })
-    }
-    this._canvas.renderAll();
+  removeShadow = () => {
+    this.action['Object'].removeShadow();
   }
 
-
-
-
-  // clone from tui.image.editor
-  adjustOriginToCenter = (shape) => {
-    const centerPoint = shape.getPointByOrigin('center', 'center');
-    const {originX, originY} = shape;
-    const origin = shape.getPointByOrigin(originX, originY);
-    const left = shape.left + (centerPoint.x - origin.x);
-    const top = shape.top + (centerPoint.y - origin.y);
-
-    shape.set({
-        hasControls: true,
-        hasBorders: true,
-        originX: 'center',
-        originY: 'center',
-        left,
-        top
-    });
-    shape.setCoords(); // For left, top properties
-  }
-
-  addIcon = (event) => {
-    const options = {
-      type : event.target.getAttribute('type'),
-      color : this.state.color,
-    }
+  addIcon = (options) => {
     this.action['Icon'].addIcon(options);
   }
 
-  addLineResize = (event) => {
-    let line = this.getActiveObject();
-    const pointer = this._canvas.getPointer(event, false);
-    line.set({x2 : pointer.x, y2 : pointer.y});
-    this._canvas.renderAll();
-  }
-
-  addLineEvent = (event) => {
-    if(event.target.tagName === 'CANVAS'){
-      this.disableObj = this.getActiveObject();
-      if(this.disableObj){
-        // disableObj.evented = false;
-        this.disableObj.lockMovementY = true;
-        this.disableObj.lockMovementX = true;
-      }
-      const pointer = this._canvas.getPointer(event, false);
-      let line = new fabric.Line([ pointer.x, pointer.y, pointer.x, pointer.y ], {
-        left : pointer.x,
-        right :pointer.y,
-        strokeWidth : 5,
-        stroke : 'black',
-        fill : 'black'
-      })
-      this._canvas.add(line).setActiveObject(line);
-
-      this._canvas.selection = false;
-      this._canvas.on('mouse:move', this.addLineResize);
-      this._canvas.on('mouse:up', this.addLineEndEvent);
-    }
-    this._canvas.defaultCursor = 'default';
-    document.removeEventListener('mousedown', this.addLineEvent);
-  }
-
-  addLineEndEvent = () => {
-    this._canvas.off('mouse:move', this.addLineResize);
-    // console.log('off')
-    this._canvas.selection = true;
-    this._canvas.renderAll();
-    this.saveState('line add');
-    if(this.disableObj){
-      this.disableObj.lockMovementY = false;
-      this.disableObj.lockMovementX = false;
-      this.disableObj = null;
-    }
-    this._canvas.off('mouse:up', this.addLineEndEvent);
-  }
-
   addLine = () => {
-    this._canvas.defaultCursor = 'pointer';
-    this._canvas.discardActiveObject();
-		document.addEventListener('mousedown',this.addLineEvent);    
+    this.action['Line'].addLine();
   }
 
   makePolygonWithDrag = () => {
@@ -1325,23 +1031,13 @@ class ImageEditor extends Component {
       })
     }
     this.lockScale = !this.lockScale;
-    this.setState({ activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0} })
+    this.setState({ activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0} })
     this._canvas.renderAll();
   }
 
   handleAngleChange = (event) => {
-    if (this.getActiveObject()) {
-      this.action['Rotation'].setAngle(event.target.value);
-      this.setState({ activeObject : this.getActiveObject() });
-      this.saveState('angle change');
-      this._canvas.renderAll();
-    }
-    // else {
-    //   if(this._backgroundImage){
-    //     this._canvas.backgroundImage.angle = event.target.value;
-    //     this._canvas.renderAll();
-    //   }
-    // }
+    this.action['Rotation'].setAngle(this.getActiveObject(), event.target.value);
+    this.setState({ activeObject : this.getActiveObject() });
   }
 
   handleScaleXChange = (event) => {
@@ -1377,35 +1073,37 @@ class ImageEditor extends Component {
     }
   }
 
-  handleFilterChange = (event) => {
-    const value = event.target.value
-    let filterOption = event.target.getAttribute('filter');
-    let activeObject = this.getActiveObject();
-    if ( activeObject || this._backgroundImage ) {
-      let change_state = {
-        brightness : this.state.filters.brightness, 
-        contrast : this.state.filters.contrast, 
-        pixelate : this.state.filters.pixelate,
-        blur : this.state.filters.blur,
-        noise : this.state.filters.noise,
-        saturation : this.state.filters.saturation,
-        hue : this.state.filters.hue,
-        ink : this.state.filters.ink,
-      };
-      change_state[event.target.name] = event.target.value;
-      new Promise((resolve) => {
-        this.setState({filters : change_state});
-        resolve();
-      })
-        .then(() => {
-          this.action['Filter'].applyFilter(activeObject || this._backgroundImage , filterOption, true, value);
-          this.saveState('input filter change : ' + filterOption);
-        })
-    }
-    else {
-      alert('image is not activated');
-    } 
-  }
+  // handleFilterChange = (event) => {
+  //   const value = event.target.value
+  //   let filterOption = event.target.getAttribute('filter');
+  //   let activeObject = this.getActiveObject();
+  //   if ( activeObject || this._backgroundImage ) {
+  //     let change_state = {
+  //       brightness : this.state.filters.brightness, 
+  //       contrast : this.state.filters.contrast, 
+  //       pixelate : this.state.filters.pixelate,
+  //       blur : this.state.filters.blur,
+  //       noise : this.state.filters.noise,
+  //       saturation : this.state.filters.saturation,
+  //       hue : this.state.filters.hue,
+  //       ink : this.state.filters.ink,
+  //       vignette : this.state.filters.vignette,
+  //       zoomblur : this.state.filters.zoomblur,
+  //     };
+  //     change_state[event.target.name] = event.target.value;
+  //     new Promise((resolve) => {
+  //       this.setState({filters : change_state});
+  //       resolve();
+  //     })
+  //       .then(() => {
+  //         this.action['Filter'].applyFilter(activeObject || this._backgroundImage , filterOption, true, value);
+  //         this.saveState('input filter change : ' + filterOption);
+  //       })
+  //   }
+  //   else {
+  //     alert('image is not activated');
+  //   } 
+  // }
 
   handleOpacityChange = (event) => {
     let activeObject = this.getActiveObject();
@@ -1460,7 +1158,7 @@ class ImageEditor extends Component {
         strokeColor : '#ffffff',
         strokeWidth : Number(event.target.value)
       }
-      this.action['Shape'].setStroke(this.getActiveObject(), options);
+      this.action['Object'].setStroke(this.getActiveObject(), options);
       this.saveState('stroke change');
     }
     this.setState({ activeObject : this.getActiveObject() })
@@ -1472,7 +1170,7 @@ class ImageEditor extends Component {
     //     strokeColor : color.hex
     //   }
     //   this.setState({strokeColor : color.hex})
-    //   this.action['Shape'].setStroke(this.getActiveObject(), options);
+    //   this.action['Object'].setStroke(this.getActiveObject(), options);
     // }
   }
 
@@ -1549,19 +1247,15 @@ class ImageEditor extends Component {
   }
 
 
-  rotateObject = (event) => {
-    var changeAngle = event.target.getAttribute('angle');
-    var activeObject = this.getActiveObject();
-
-    if (activeObject) {
-      this.action['Rotation'].setAngle(activeObject.angle + Number(changeAngle));
-      this.setState({ activeObject : activeObject })
-      this.saveState('Object is rotated');
-    }
-    else {
-      alert('image is not activated')
-    }
+  setObjectAngle = (changeAngle) => {
+    this.action['Rotation'].setAngle(Number(changeAngle));
+    // this.setState({activeObject : this.getActiveObject()})
   }
+
+  rotateObjectAngle = (angle) => {
+    this.action['Rotation'].changeAngle(angle);
+  }
+  
 
   filterObject = (event) => {
     let filterOption = event.target.getAttribute('filter');
@@ -1569,43 +1263,28 @@ class ImageEditor extends Component {
 
     if (activeObject) {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
-      this.saveState('apply filter objImg');
+      
     }
     else if(this._canvas.backgroundImage){
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
       this.saveState('apply filter backgroundImg');
     }
-
   }
 
-  deleteObject = (event) => {
-    let obj = this.getActiveObject();
-    if(obj){
-      switch(obj.type){
-        case 'textbox' : 
-          if(!this.getActiveObject().isEditing){
-            this.action['Delete'].deleteObj();
-            this.saveState('delete Textbox');
-          }
-          break;
-        default :
-          this.action['Delete'].deleteObj();
-          this.saveState('delete '+ obj.type);
-      }
-    }
+  rangeFilterObject = (filterOption, value) => {
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._backgroundImage , filterOption, true, value);
   }
 
-  flipObject = (event) => {
-    let activeObject = this.getActiveObject();
-    let option = event.target.getAttribute('flip');
-    if (activeObject) {
-      this.action['Flip'].flip(activeObject, option);
-      this.saveState(activeObject.type + ' flip');
-    }
-    else if(this._backgroundImage) {
-      this.action['Flip'].flip(this._backgroundImage, option);
-      this.saveState('backgroundImg flip');
-    }
+  deleteObject = () => {
+    this.action['Delete'].deleteObject();
+  }
+
+  deleteAllObject = () => {
+    this.action['Delete'].deleteAllObject();
+  }
+
+  flipObject = (option) => {
+    this.action['Flip'].flip(option);
   }
 
   cropObjMouseDown = (event) => {
@@ -1616,8 +1295,7 @@ class ImageEditor extends Component {
     }
   }
 
-  cropObject = (event) => {
-    let cropOption = event.target.getAttribute('crop');
+  cropObject = (cropOption) => {
     let activeObject = this.getActiveObject();
     if(activeObject && activeObject.type === 'image'){
       this.cropImg = activeObject;
@@ -1626,11 +1304,10 @@ class ImageEditor extends Component {
     }
   }
 
-  cropEndObject = (event) => {
-    let cropOption = event.target.getAttribute('crop');
+  cropEndObject = () => {
     if(this.cropImg){
       this._canvas.off('mouse:down', this.cropObjMouseDown);
-      this.action['Crop'].cropObjend(this.cropImg, cropOption);
+      this.action['Crop'].cropObjend(this.cropImg);
       this.cropImg = null;
     }
   }
@@ -1644,6 +1321,7 @@ class ImageEditor extends Component {
       displayCropCanvasSize: true,
       cropCanvasSize: change_state
     });
+    this._canvas.on('mouse:down', this._displayCropCanvas);
     this.action['Crop'].cropCanvas();
   }
 
@@ -1653,22 +1331,13 @@ class ImageEditor extends Component {
       this.saveState('Crop Canvas');
     }
     // this._canvas.setZoom (1);  , zoom : 1
+    this._canvas.off('mouse:down', this._displayCropCanvas);
     this.setState({displayCropCanvasSize: false});
     // this._canvas.renderAll();
   }
 
-  textObject = (event) => {
-    let textOption = event.target.getAttribute('text');
-    let activeObject = this.getActiveObject();
-
-    if (activeObject) {
-      this.action['Text'].textObj(activeObject, textOption, event.target.checked, event.target.value);
-      this.saveState('Text modified ' + textOption);
-    }
-    else {
-      alert('text is not activated');
-      event.target.checked = false;
-    }
+  textObject = (textOption, checked, value) => {
+    this.action['Text'].textObj(this.getActiveObject(), textOption, checked, value);
   }
 
   toggletextbg = () => {
@@ -1709,17 +1378,9 @@ class ImageEditor extends Component {
     })
   }
 
-  layerThumb = () => {
-    var layer_list = null;
-    // if (this._canvas) {
-    //     layer_list = this._canvas._objects.map(obj => <li key={obj.cacheKey}><img src={obj.getSvgSrc()} alt="" height="10%" width="10%" /></li>)
-    // }
-    return layer_list
-  }
-
   onImgUrlChange = (url) => {
     this.testUrl = url;
-    this.addImage();
+    this.addImage(url);
   }
 
   objectInfo = () => {
@@ -1794,22 +1455,64 @@ class ImageEditor extends Component {
     }
   }
 
+  onclickUndoStack = (event) => {
+    let origin = this.currentState.id;
+    let dest = parseInt(event.target.getAttribute('number'), 10);
+
+    if(this.stateStack.length > 0){
+      this.redoStack.push(this.currentState);
+      for(let i = dest; i < origin - 1 ; i++ ){
+        this.redoStack.push( this.stateStack.pop() );
+      }
+
+      this.currentState = this.stateStack.pop();
+  
+      this._canvas.loadFromJSON(this.currentState, () => {
+        this._canvas.setWidth(this.currentState.width);
+        this._canvas.setHeight(this.currentState.height);
+        this._canvas.calcOffset();
+      });
+      this.forceUpdate();
+    }
+  
+  }
+  
+  onclickRedoStack = (event) => {
+    let origin = this.currentState.id;
+    let dest = parseInt(event.target.getAttribute('number'), 10);
+    console.log(dest, origin - 1);
+    if(this.redoStack.length > 0){
+      this.stateStack.push(this.currentState);
+      for(let i = origin; i < dest - 1 ; i++ ){
+        this.stateStack.push(this.redoStack.pop());
+      }
+      this.currentState = this.redoStack.pop();
+
+      this._canvas.loadFromJSON(this.currentState, () => {
+        this._canvas.setWidth(this.currentState.width);
+        this._canvas.setHeight(this.currentState.height);
+        this._canvas.calcOffset();
+      });
+      this.forceUpdate();
+    }
+  }
+
   showUndoStack = () => {
-    // console.log(this.stateStack);
     const listitem = this.stateStack.map((state) =>
-      <p style = {{color : '#5404fb'}} key= {state.id} className="undo_stack">{state.action}</p>
+      <p style = {{color : '#ffffff'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
     );
     return(
       <div>
-        {listitem}
+        <ol>
+          {listitem}
+        </ol>
       </div>
     )
   }
 
   showRedoStack = () => {
-    // console.log(this.redoStack);
     const listitem = this.redoStack.map((state) =>
-      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack">{state.action}</p>
+      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack" number = {state.id} onClick = {this.onclickRedoStack}>{state.id} : {state.action}</p>
     );
     return(
       <div>
@@ -1894,27 +1597,23 @@ class ImageEditor extends Component {
   }
 
   openDrawing = () => {
-    this.setState({ drawingMode: true });
-    this._canvas.isDrawingMode = true;
-    this._canvas.freeDrawingCursor = 'default';
+    this.action['Draw'].openDrawing();
   }
 
   closeDrawing = () => {
-    this.setState({ drawingMode: false });
-    this._canvas.isDrawingMode = false;
-    
-  }
-  
-  handleDrawingWidth = (event) => {
-      const value = event.target.value;
-      this.setState({lineWidth: value});
-      this._canvas.freeDrawingBrush.width = this.state.lineWidth;
+    this.action['Draw'].closeDrawing();
   }
 
-  handleDrawingColor = (color) => {
-    this.setState({ lineColorRgb: color.rgb})
-    let rgb = "rgb(" + this.state.lineColorRgb['r'] + ", " + this.state.lineColorRgb['g'] + ", " + this.state.lineColorRgb['b'] + ")"
-    this._canvas.freeDrawingBrush.color = rgb;
+  changeDrawingWidth = (width) => {
+    this.action['Draw'].changeDrawingWidth(width);
+  }
+
+  changeDrawingColor = (rgb) => {
+    this.action['Draw'].changeDrawingColor(rgb);
+  }
+
+  changeDrawingBrush = (type, color, width) => {
+    this.action['Draw'].changeDrawingBrush(type, color, width);
   }
 
   changeBackgroundColor = () => {
@@ -1955,23 +1654,161 @@ class ImageEditor extends Component {
       }
       console.log(objstack);
   }
+
+  updateObject = () => {
+    this.setState({activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0}})
+  }
+
+  loadingStart = () => {
+    this.setState({imgStatus : true})
+  }
+  loadingFinish = () => {
+    console.log('이 함수 실행 시 로딩화면 끝내야 하는데......')
+    this.setState({imgStatus : false});
+  }
+
+  displayRoot = () => {
+    this.setState({showRoot : !this.state.showRoot})
+  }
+
+  changeTab = (event) => {
+    this.setState({tab : parseInt(event.target.getAttribute('tab'), 10)});
+  }
+
+  getCheck = () => {
+    fetch('/auth/check', {
+      method: 'GET'
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.success) {
+        this.setState({user_name: data.info.user_id});
+      }
+    })
+    .catch(() => {
+      console.log('no login');
+      // alert('error');
+    });
+  }
+
+  getCheckSave = (idx) => {
+    if(!idx){ idx = -1 }
+    this.setState({isSaved : true, prj_idx : idx});
+  }
+
   render() {
 		const styles = {
 			color : {
 				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
       }
     };
-    let i = 0;
-    const fontList = this.fontList.map(font => (<option key={i++} value={font}>{font}</option>));
+
+    const tab = {
+      0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText}/>,
+      1: <ImageUI 
+          object={this.state.activeObject} 
+          cropObject={this.cropObject} 
+          cropEndObject={this.cropEndObject}
+          addImage = {this.addImage}
+          imgStatus = {this.state.imgStatus}
+          />,
+      2: <FilterUI object={this.state.activeObject} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
+      3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon} setColor={this.setColor}/>,
+      4: <ObjectUI 
+          object={this.state.activeObject} 
+          lockScaleRatio = {this.lockScaleRatio}
+          sendToBack = {this.sendToBack}
+          sendBackwards = {this.sendBackwards}
+          bringToFront = {this.bringToFront}
+          bringForward = {this.bringForward}
+          deleteObject = {this.deleteObject}
+          deleteAllObject = {this.deleteAllObject}
+          makeGroup = {this.makeGroup}
+          unGroup = {this.unGroup}
+          flipObject = {this.flipObject}
+          setShadow = {this.setShadow}
+          removeShadow = {this.removeShadow}
+          />,
+      5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
+      6: <ShapeUI 
+          object={this.state.activeObject} 
+          addShape={this.addShape} 
+          addLine={this.addLine} 
+          setEndAngle = {this.setEndAngle}
+          makePolygonWithDrag={this.makePolygonWithDrag} 
+          makePolygonWithClick={this.makePolygonWithClick}
+          setColor={this.setColor}
+          />,
+      7: <DrawUI 
+          object={this.state.activeObject} 
+          openDrawing={this.openDrawing} 
+          closeDrawing={this.closeDrawing} 
+          changeDrawingColor={this.changeDrawingColor} 
+          changeDrawingWidth={this.changeDrawingWidth} 
+          changeDrawingBrush={this.changeDrawingBrush} 
+          />,
+      8: <ToolsUI 
+          addImage={this.addImage} 
+          objectInfo = {this.objectInfo} 
+          openSaveModal = {this.openSaveModal} 
+          onClickSnap={this.onClickSnap}
+          onClickGrid={this.onClickGrid}
+          onClickObjectSnap={this.onClickObjectSnap}
+          exportCanvas = {this.exportCanvas}
+          importCanvas = {this.importCanvas}
+        />,
+    };
     return (
       <div className='App'>
-        <div id='editor'>
-          <div>
+        <SideNav 
+          changeTab = {this.changeTab} 
+          tab = {this.state.tab} 
+          UI = { tab }
+        >
+        </SideNav>
+
+        <div className="editor" id='editor'>
+          <div className="editor-nav">
+            <div className="do">
+                <button onClick = {this.undo}>Undo</button>
+                <button onClick = {this.redo}>Redo</button>
+            </div>
+            <div className="save">
+                <button onClick={this.openSaveModal} >Save</button>
+            </div>
+            <div className="more">
+                <button>more</button>
+            </div>
+          </div>
+          <div className="real">
             <canvas id='canvas' tabIndex='0'></canvas>
           </div>
+          <HistoryUI showUndoStack = {this.showUndoStack} currentState={this.currentState} />
+        </div>
+        <Save 
+          open = {this.state.openSave} 
+          close = {this.closeSaveModal} 
+          save = {this.saveImage} 
+          size = {this.getCanvasSize} 
+          user_name = {this.state.user_name} 
+          getCanvas = {this.getCanvas} 
+          canvas={this.currentState} 
+          isSaved = {this.state.isSaved}
+          prj_idx = {this.state.prj_idx}
+          getCheckSave = {this.getCheckSave}
+        />
 
+
+
+        <hr/>
+
+{/* 
+        <div >
+
+          <h5 onClick = {this.displayRoot}>개발자 기능</h5>
+
+          {this.state.showRoot ?
           <div>
-            <h5>개발자 기능</h5>
 
             {this.state.activeObject.type !== 'not active' ?
             <div>
@@ -1990,6 +1827,7 @@ class ImageEditor extends Component {
             <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
             <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
             <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
+            <button onClick={this.resetState}>state 초기화</button>
             <input type="checkbox" onClick = {this.getMousePointInfo} /> 캔버스 좌표 보기
             <p>캔버스 확대 값 = {this.state.zoom}</p>
             <p>캔버스 크기  {this._canvas? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</p>
@@ -2019,12 +1857,19 @@ class ImageEditor extends Component {
             <hr />
             <p>- Redo Stack  </p>
             {this.showRedoStack()}
-          </div>
+            
 
+          </div> : null }
+          <hr />
+          <h5>레이어</h5>
           <hr />
         </div>
         
         <div id='tool'>
+
+
+
+
           <div>
             <h5>오브젝트 기능</h5>
             <button onClick={this.sendToBack}>맨 뒤로 보내기</button>
@@ -2032,9 +1877,10 @@ class ImageEditor extends Component {
             <button onClick={this.bringToFront}>맨 앞으로 보내기</button>
             <button onClick={this.bringForward}>앞으로 보내기</button>
             <button onClick={this.deleteObject}>선택 개체 삭제</button>
+            <button onClick={this.deleteAllObject}>모든 객체 삭제</button>
             <button onClick={this.makeGroup}>그룹화</button>
             <button onClick={this.unGroup}>그룹해제</button>
-            <button onClick={this.rotateObject} angle='90' > 선택 개체 90도 회전</button>
+            <button onClick={this.setObjectAngle} angle='90' > 선택 개체 90도 회전</button>
             <p>회전</p>
             <input
               type='number'
@@ -2095,7 +1941,7 @@ class ImageEditor extends Component {
             <CompactPicker color={this.state.text.color} onChange={this.handletextBgChange}></CompactPicker> : null}
 				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
             <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
-            <input type='checkbox' className='text' onClick={this.textObject} text='italic' />italic
+            <input type='checkbox' className='text' onClick={this.textObject} text='italic' id='italic_checkbox' />italic
             <button type='checkbox' className='text' onClick={this.textObject} text='left-align'>좌측정렬</button>
             <button type='checkbox' className='text' onClick={this.textObject} text='center-align' >가운데정렬</button>
             <button type='checkbox' className='text' onClick={this.textObject} text='right-align' >우측정렬</button>
@@ -2126,8 +1972,7 @@ class ImageEditor extends Component {
             
             <br />
             <div>
-                <label>Filter grey</label>
-                <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' />
+                <input type='checkbox' className='filter' id='grey' onClick={this.filterObject} filter='grey' /><label>Filter grey</label>
             </div>
             <div>
                 <label>Filter invert</label>
@@ -2257,15 +2102,40 @@ class ImageEditor extends Component {
               onChange={this.handleFilterChange} filter='ink'
             />ink from glfx.js
 
+            <input
+              type='range'
+              className='filter'
+              id='vignette'
+              min='0'
+              max='1'
+              name='vignette'
+              step='0.01'
+              value={this.state.filters.vignette || 0}
+              onChange={this.handleFilterChange} filter='vignette'
+            />vignette from glfx.js
+
+            <input
+              type='range'
+              className='filter'
+              id='zoomblur'
+              min='0'
+              max='1'
+              name='zoomblur'
+              step='0.01'
+              value={this.state.filters.zoomblur || 0}
+              onChange={this.handleFilterChange} filter='zoomblur'
+            />zoomblur from glfx.js
+
             
             <input
               type='range'
+              className='filter'
               id='opacity'
               min='0'
               max='1'
               name='opacity'
               step='0.01'
-              value={this.state.activeObject.type === 'image' ? this.state.activeObject.opacity : 1}
+              value={this.state.filters.opacity || 1}
               onChange={this.handleFilterChange} filter='opacity'
               disabled = {this.state.activeObject.type === 'image' ? false : true}
             />opacity
@@ -2287,7 +2157,6 @@ class ImageEditor extends Component {
 
             { this.state.activeObject.type === "circle" ? 
             <div>
-              {/* <input type="number" name="startAngle"  value = {this.state.activeObject.startAngle} /> */}
               <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.state.activeObject.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
             </div> : <div></div>
             }
@@ -2338,12 +2207,13 @@ class ImageEditor extends Component {
                 />
               </div> : null
             }
-            <button onClick={this.saveImage}> 지금 캔버스 배경색 없이 다운 </button>
+            <button onClick={this.openSaveModal}> 지금 캔버스 배경색 없이 다운 </button>
             <button onClick={this.exportCanvas}> 캔버스 export </button>
             <button><input type='file' id='_file' onChange={this.importCanvas} accept="json"></input>캔버스 import</button>
             <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
             <button onClick={this.undo}>Undo</button>
             <button onClick={this.redo}>Redo</button>
+            <h5>{this.currentState.action}</h5>
             <input type="checkbox" onClick={this.onClickSnap}/>그리드 스냅 옵션
             <input type="checkbox" onClick={this.onClickGrid}/>그리드 on/off
             <input type="checkbox" onClick={this.onClickObjectSnap}/> 오브젝트 스냅 옵션
@@ -2355,7 +2225,7 @@ class ImageEditor extends Component {
             <h5>색깔 : 기본 색</h5>
             <button onClick={this.openColorPicker}>color</button>
           	{ this.state.displayColorPicker ? <div>
-          	  <div onClick={this.closeColorPicker}/>
+          	  <div onClick={this.closeColorPicker} role="button" tabIndex="0"/>
           	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           	</div> : null }
           </div>
@@ -2444,29 +2314,13 @@ class ImageEditor extends Component {
           </div>
             
           <div>
-            <h5>아이콘 기능</h5>
-            <button className="fas fa-times" onClick={this.addIcon} type = "cancel"></button>
-            <button className="fas fa-arrow-right" onClick={this.addIcon} type = "icon_arrow_2"></button>
-            <button className="fas fa-angle-right" onClick={this.addIcon} type = "icon_arrow_3"></button>
-            <button className="fas fa-star" onClick={this.addIcon} type = "icon_star"></button>
-            <button className="fas fa-certificate" onClick={this.addIcon} type = "icon_star_2"></button>
-            <button className="fas fa-times" onClick={this.addIcon} type = "icon_polygon"></button>
-            <button className="fas fa-map-marker-alt" onClick={this.addIcon} type = "icon_location"></button>
-            <button className="fas fa-heart" onClick={this.addIcon} type = "icon_heart"></button>
-            <button className="fas fa-comment-alt" onClick={this.addIcon} type = "icon_bubble"></button>
-            <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
-          </div>
-
-          <div>
             <h5>일단은 안 쓰는 기능</h5>
             <button onClick={this.newCanvas} disabled>배경이미지 캔버스로 변경</button>
             <button onClick={this.convertSvg}>svg로 변환하기</button>
           </div>
-        </div>
-
-
-
-        <hr />
+        </div> 
+         */}
+        
       </div>
     );
   }
