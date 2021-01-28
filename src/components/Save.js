@@ -31,8 +31,14 @@ class Save extends Component {
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
-      alert('save success');
-      this.props.getCheckSave(data.prj_idx);
+      if(data.prj_idx != -1){
+        alert('save success');
+        this.props.getCheckSave(data.prj_idx);
+      }
+      else{
+        alert('error on server');
+      }
+
     })
     .catch(() => {
       alert('error');
@@ -86,7 +92,7 @@ class Save extends Component {
 
   render(){
     const { open, close, size, user_name } = this.props;
-    if(this.props.prj_idx === -1){this.err = true;}
+    // if(this.props.user_name === ""){this.err = true;}
     let imageSize = <label className="canvas-size">{size().x} X {size().y}</label>
 		return(
 			<div>

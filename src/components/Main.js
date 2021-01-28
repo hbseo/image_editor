@@ -19,7 +19,8 @@ class Main extends Component {
     const tab = {
       0: <Newproject/>,
       1: <LoadImage tab = '1'/>,
-      2: <LoadImage tab = '2'/>
+      2: <LoadImage tab = '2'/>,
+      3: <Login/>,
     }
     return (
       <div className='Main'>
@@ -29,6 +30,7 @@ class Main extends Component {
           <div className='dropdown-container'>
             <button onClick={this.changeTab} tab='1'>Upload File</button>
             <button onClick={this.changeTab} tab='2'>More Image</button>
+            <button onClick={this.changeTab} tab='3'>test login</button>
           </div>
         </div>
         <div className='right' style={{float:'right'}}>

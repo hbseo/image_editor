@@ -1679,6 +1679,7 @@ class ImageEditor extends Component {
   }
 
   getCheckSave = (idx) => {
+    if(!idx){ idx = -1 }
     this.setState({isSaved : true, prj_idx : idx});
   }
 
