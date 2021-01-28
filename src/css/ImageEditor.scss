@@ -42,7 +42,7 @@ ul {
 }
 
 .menu {
-  background-color: #242424;
+  background-color: white;
   width: 6vmin;
   height: 100vh;
 }
@@ -144,6 +144,8 @@ ul {
   justify-content: center;
   align-items: center;
   height: 80vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .photo {
@@ -153,6 +155,8 @@ ul {
   width: 80%;
   height: 50%;
 }
+
+/* text submenu design */
 
 .sub-textmenu{
   display: flex;
@@ -269,4 +273,34 @@ ul {
 
 .bold, .italic{
   display: flex;
+}
+
+/* icon submenu design */
+
+.sub-iconmenu{
+  display: flex;
+  flex-direction: column;
+}
+
+.icon{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.icon button{
+  width: 7vmin;
+  height: 7vmin;
+}
+
+.icon button:hover{
+  background-color: #DFDFDF;
+}
+
+/* color picker */
+
+.color-picker label{
+  width: 100%;
+  padding: 5%;
 }

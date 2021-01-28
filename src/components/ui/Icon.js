@@ -45,11 +45,9 @@ export default class Icon extends Component {
         <div className="sub-title">
             Icon ( {this.props.object.type} )
         </div>
-        <div className="sub-filters">
-          <div>
-            <button className="fas fa-times fa-5x" onClick={this.addIcon} type = "cancel"></button>
-          </div>
-          <div>
+        <div className="sub-iconmenu">
+          <button className="fas fa-times fa-5x" onClick={this.addIcon} type = "cancel"></button>
+          <div className="icon">
             <button className="fas fa-arrow-right" onClick={this.addIcon} type = "icon_arrow_2"></button>
             <button className="fas fa-angle-right" onClick={this.addIcon} type = "icon_arrow_3"></button>
             <button className="fas fa-star" onClick={this.addIcon} type = "icon_star"></button>
@@ -61,7 +59,7 @@ export default class Icon extends Component {
             <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
           </div>
         </div>
-        <div>
+        <div className="color-picker">
           <label>color</label>
           <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
         </div>
