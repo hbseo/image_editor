@@ -30,6 +30,7 @@ import ObjectUI from './ui/Object';
 import RotationUI from './ui/Rotation';
 import ShapeUI from './ui/Shape';
 import DrawUI from './ui/Draw';
+import CanvasUI from './ui/Canvas';
 import HistoryUI from './ui/History';
 
 
@@ -1773,6 +1774,7 @@ class ImageEditor extends Component {
           exportCanvas = {this.exportCanvas}
           importCanvas = {this.importCanvas}
         />,
+      9: <CanvasUI object={this.state.activeObject} resetCanvas = {this.resetCanvas}/>
     };
     return (
       <div className='App'>
