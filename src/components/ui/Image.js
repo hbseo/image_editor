@@ -51,28 +51,34 @@ export default class Image extends Component {
 
   render(){
     return (
-      <div className="nav-sub-image">
+      <div className="sub">
         <div className="sub-title">
             Image ( { this.props.object.type })
         </div>
-        <div className="sub-images">
-          <div>
-            <button onClick={this.handleCropImage} className = "cropStart" crop="4:3">4:3자르기 시작</button>
-            <button onClick={this.handleCropImage} className = "cropStart" crop="16:9">16:9자르기 시작</button>
-            <button onClick={this.handleCropImage} className = "cropStart" crop="3:2">3:2자르기 시작</button>
-            <button onClick={this.handleCropImage} className = "cropStart" crop="1:1">사이즈 맞게 자르기 시작</button>
+        <div className="sub-imagesmenu">
+          <div className="crop-ratio">
+            <div>Crop Start</div>
+            <div className="crop-start-button">
+              <button onClick={this.handleCropImage} className = "cropStart" crop="4:3">4:3</button>
+              <button onClick={this.handleCropImage} className = "cropStart" crop="16:9">16:9</button>
+              <button onClick={this.handleCropImage} className = "cropStart" crop="3:2">3:2</button>
+              <button onClick={this.handleCropImage} className = "cropStart" crop="1:1">1:1</button>
+            </div>
+            <button id="end-button" onClick={this.props.cropEndObject} crop="left">Crop End</button>
           </div>
           <div>
-            <button onClick={this.props.cropEndObject} crop="left">자르기 완료</button>
           </div>
-          <div>
-            <button><input type='file' id='_file' onChange={this.importImage} accept="image/*"></input>로컬 이미지 불러오기</button>
-          </div>
-          <div>
-            <form id="imgload" onSubmit={this.handleSubmit}>
-              url : <input name="url" value={this.state.imgURL} onChange = {this.handleChange}/>
-					    <input type="submit" value="Submit" />
-					  </form>
+          <div className="why">
+            <div>이건 여기 왜 있는거야?</div>
+            <div>
+              <button><input type='file' id='_file' onChange={this.importImage} accept="image/*"></input>로컬 이미지 불러오기</button>
+            </div>
+            <div>
+              <form id="imgload" onSubmit={this.handleSubmit}>
+                url : <input name="url" value={this.state.imgURL} onChange = {this.handleChange}/>
+                <input type="submit" value="Submit" />
+              </form>
+            </div>
           </div>
         </div>
         {this.props.imgStatus ? <Loading open = {true} /> : null}
