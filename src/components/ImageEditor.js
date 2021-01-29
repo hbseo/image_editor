@@ -80,6 +80,7 @@ class ImageEditor extends Component {
           b: '0',
           a: '1',
       },
+      scale : 1.0,
       openSave : false, // save Modal 여는 용도
       tab : 0, // 사이드 NavBar 탭 번호
       user_name : '', // 로그인 되어있는 유저 id
@@ -1696,10 +1697,25 @@ class ImageEditor extends Component {
     this.setState({isSaved : true, prj_idx : idx});
   }
 
+  addScale = () => {
+    if(this.state.scale >= 1) { return; }
+    this.setState(({scale}) => ({
+      scale : scale + 0.1
+    }))
+    
+  }
+
+  reduceScale = () => {
+    if(this.state.scale <= 0.2) { return; }
+    this.setState(({scale}) => ({
+      scale : scale - 0.1
+    }))
+  }
+
   render() {
 		const styles = {
-			color : {
-				backgroundColor : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })` ,
+      size : {
+        transform : `scale(${ this.state.scale },${ this.state.scale })`
       }
     };
 
@@ -1772,6 +1788,9 @@ class ImageEditor extends Component {
             <div className="do">
                 <button onClick = {this.undo}>Undo</button>
                 <button onClick = {this.redo}>Redo</button>
+                <button onClick = {this.addScale} >확대</button>
+                <button onClick = {this.reduceScale} >축소</button>
+                <button >{this.state.scale.toFixed(2)}</button>
             </div>
             <div className="save">
                 <button onClick={this.openSaveModal} >Save</button>
@@ -1780,8 +1799,8 @@ class ImageEditor extends Component {
                 <button>more</button>
             </div>
           </div>
-          <div className="real">
-            <canvas id='canvas' tabIndex='0'></canvas>
+          <div className="real" >
+            <canvas id='canvas' tabIndex='0' style= {styles.size}></canvas>
           </div>
           <HistoryUI showUndoStack = {this.showUndoStack} currentState={this.currentState} />
         </div>
