@@ -83,9 +83,11 @@ ul {
 }
 
 .editor {
-  margin-left: 25vmin;
   width: 100vw;
   height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 31vmin;
 }
 
 .editor-nav {
@@ -143,6 +145,7 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100vw;
   height: 80vh;
   overflow-x: scroll;
   overflow-y: scroll;
