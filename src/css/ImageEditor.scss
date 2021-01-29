@@ -31,6 +31,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 nav {
   display: flex;
+  width: 6vmin;
 }
 
 ul {
@@ -42,27 +43,27 @@ ul {
 }
 
 .menu {
-  background-color: white;
+  background-color: #D4D4D4;
   width: 6vmin;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.1rem;
 }
+
 
 .menu li {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.5s;
   border-radius: 10px;
+  width: 6vmin;
+  height: 6vmin;
 }
 
 .menu li:hover {
-  background-color: #353535;
-  transition: 0.5s;
-}
-
-.menu img {
-  width: 5vmin;
-  height: 5vmin;
+  background-color: #C9C9C9;
 }
 
 .sub {
