@@ -51,7 +51,7 @@ export default class Image extends Component {
 
   render(){
     return (
-      <div className="nav-sub-image">
+      <div className="sub">
         <div className="sub-title">
             Image ( { this.props.object.type })
         </div>
