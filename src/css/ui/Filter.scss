@@ -1,8 +1,16 @@
 .nav-sub-filter {
-  width: 20vmin;
+  width: 25vmin;
   height: 100vh;
-  background-color: #161616;
-  color: #a0a0a0;
+  background-color:#EEEEEE;
+  color: black;
+  position: absolute;
+  top: 0;  
+  left: 6vmin;
+
+  text-align: center;
+  border-bottom: solid 1px darkgrey;
+  padding: 1.2em;
+  font-size: 1.1em;
 
   .sub-title {
     text-align: center;
