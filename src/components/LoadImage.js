@@ -38,6 +38,7 @@ class LoadImage extends Component {
     console.log(this.url); 
     this.setState({ url: "", submit: false, width: 0, height: 0, imgRatio: 100 });
     this.image = new Image();
+    this.image.crossOrigin = "";
     this.image.onload = this.imageFound;
     this.image.onerror = this.imageNotFound;
     this.image.src = this.url;
