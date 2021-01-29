@@ -1,33 +1,40 @@
 .nav-sub-image {
-    width: 20vmin;
-    height: 100vh;
-    background-color: #161616;
-    color: #a0a0a0;
+  width: 25vmin;
+  height: 100vh;
+  background-color:#EEEEEE;
+  color: black;
+  position: absolute;
+  top: 0;  
+  left: 6vmin;
+
+  text-align: center;
+  border-bottom: solid 1px darkgrey;
+  padding: 1.2em;
+  font-size: 1.1em;
   
-    .sub-title {
-      text-align: center;
-      border-bottom: solid 1px darkgrey;
-      padding: 1.2em;
-      font-size: 1.1em;
-    }
+  .sub-title {
+    text-align: center;
+    border-bottom: solid 1px darkgrey;
+    padding: 1.2em;
+    font-size: 1.1em;
+  }
   
-    .sub-images{
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-items: center;
-      height: 100%;
-      border-radius: 5px;
+  .sub-images{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+    border-radius: 5px;
     
-      div {
-        margin: 10px;
-        text-align: center;
-        width: 18vmin;
-        height: 10vmin;
-        justify-content: center;
-        align-items: flex-end;
-        color: white;
-      
+    div {
+      margin: 10px;
+      text-align: center;
+      width: 18vmin;
+      height: 10vmin;
+      justify-content: center;
+      align-items: flex-end;
+      color: white;
     }
   }
 }
