@@ -1,83 +1,44 @@
-.nav-sub-filter {
-  width: 25vmin;
-  height: 100vh;
-  background-color:#EEEEEE;
-  color: black;
-  position: absolute;
-  top: 0;  
-  left: 6vmin;
+.sub-filtersmenu{
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
 
-  text-align: center;
-  border-bottom: solid 1px darkgrey;
-  padding: 1.2em;
-  font-size: 1.1em;
+.filter-box{
+  width: 100%;
+  padding: 5%;
+}
 
-  .sub-title {
-    text-align: center;
-    border-bottom: solid 1px darkgrey;
-    padding: 1.2em;
-    font-size: 1.1em;
+.filter-options{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  
+  input[type="checkbox"]{
+    display: none;
   }
 
-  .sub-filters{
+  input[type="checkbox"] + label{
+    width: 10vmin;
+    height: 10vmin;
+    background-color: #E6E6E6;
+    cursor: pointer;
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
-    height: 100%;
     border-radius: 5px;
+  }
   
-    div {
-      margin: 10px;
-      text-align: center;
-      width: 18vmin;
-      height: 10vmin;
-      justify-content: center;
-      align-items: flex-end;
-      color: white;
-    }
+  input[type="checkbox"] + label:hover{
+      background-color: #D9D9D9;
+  }
   
-    .filter[type=checkbox]{
-        display: none;
-    }
-    .filter[type=checkbox] + label{
-      display: inline-block;
-      background-color: #07849a;
-      padding : 8px 19px;
-      border : 1px solid black;
-      cursor: pointer;
-      color : white;
-      border-radius : 5px;
-      border : 0px;
-      margin : 1px;
-    }
-    
-    .filter[type=checkbox]:disabled+ label{
-      background-color: #a79e98;
-      border : 1px solid #a79e98;
-      color : grey;
-    }
-  
-    .filter[type=checkbox]:disabled:checked+ label{
-      background-color: #a79e98;
-      border : 1px solid #a79e98;
-      color : grey;
-    }
-  
-    .filter[type=checkbox]:disabled:hover+ label{
-      background-color: #a79e98;
-      color : grey;
-    }
-    
-    .filter[type=checkbox]:hover+ label{
-      background-color: #034683;
-      color : white;
-    }
-    
-    .filter[type=checkbox]:checked + label{
-      background-color: #022b4f;
-      border : 1px solid #a79e98;
-      color : white;
-    }
+  input[type="checkbox"]:disabled + label:hover{
+    background-color: #E6E6E6;
+  }
+
+  input[type="checkbox"]:checked + label{
+    background-color: #365AFC;
+    color: white;
   }
 }
