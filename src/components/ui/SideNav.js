@@ -5,44 +5,34 @@ export default function SideNav(props) {
     <nav>
       <ul className="menu">
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/text.svg" alt="text" tab="0"/></button>
-          <span className="tooltip">Text</span>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="text" tab="0">Text</button>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/image-edit.svg" alt="imageEdit" tab="1"/></button>
-          <span className="tooltip">Image</span>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="imageEdit" tab="1">Image</button>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/filter.svg" alt="filter" tab="2" /></button>
-          <span className="tooltip">Filters</span>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="filter" tab="2">Filter</button>
         </li>
         <li>
-        <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-icons fa-4x" tab="3"></i></span></button>
-          <span className="tooltip">Icon</span>
+        <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="icon" tab="3">Icon</button>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-vector-square fa-4x" tab="4"></i></span></button>
-          <span className="tooltip">Object</span>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="object" tab="4">Object</button>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-sync-alt fa-4x" tab="5"></i></span></button>
-          <span className="tooltip">Rotation</span>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="rotate" tab="5">Rotate</button>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/shape.svg" alt="Shape" tab="6" /></button>
-          <span className="tooltip">Shape</span>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="shape" tab="6">Shape</button>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><img src="image/drawing.svg" alt="draw" tab="7" /></button>
-          <span className="tooltip">Drawing</span>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="draw" tab="7">Draw</button>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-tools fa-4x" tab="8"></i></span></button>
-          <span className="tooltip">Tools</span>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="others" tab="8">Others</button>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab}><span style={{color : '#a79e98'}} ><i className="fas fa-times fa-4x" tab="99"></i></span></button>
-          <span className="tooltip">Close</span>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="close" tab="99">Close</button>
         </li>
       </ul>
       {props.UI[props.tab]}
