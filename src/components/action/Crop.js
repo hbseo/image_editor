@@ -136,6 +136,7 @@ class Crop extends Action {
       canvas.remove(activeObject);
       canvas.remove(this._cropzone);
       this.deleteEvent();
+      this.saveState("image crop")
       data.applyFilters();
       canvas.add(data);
     })
@@ -205,6 +206,7 @@ class Crop extends Action {
       canvas.backgroundImage.left = canvas.backgroundImage.left - cropRect.left;
     }
     this.deleteEvent();
+    this.saveState('canvas crop');
     canvas.setHeight(cropRect.height);
     canvas.setWidth(cropRect.width);
     canvas.calcOffset();

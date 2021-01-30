@@ -466,10 +466,10 @@ class ImageEditor extends Component {
     })
     this._canvas.on('object:modified', (event) => {
       // console.log('object:modified');
-      let type = event.target.type;
-      if(type !== 'Cropzone') {
-        this.saveState(event.target.type + ':modified');
-      }
+      // let type = event.target.type;
+      // if(type !== 'Cropzone') {
+      //   this.saveState(event.target.type + ':modified');
+      // }
     })
 
     this._canvas.on('object:rotated', (event) => {

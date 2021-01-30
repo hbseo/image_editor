@@ -35,6 +35,7 @@ class Clip extends Action {
       }
       clipboard.top += 10;
       clipboard.left += 10;
+      this.saveState('paste object')
       canvas.setActiveObject(clonedObj);
       canvas.requestRenderAll();
     });
