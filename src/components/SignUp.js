@@ -51,7 +51,7 @@ class SignUp extends Component {
         .then((data) => {
           if (data.msg === 'success') {
             alert('회원가입 성공');
-            this.props.history.push('/');
+            window.location.replace('/'); 
           }
           else {
             alert('회원가입 실패');
