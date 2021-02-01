@@ -162,7 +162,17 @@ class Crop extends Action {
     canvas.renderAll();
   }
 
+  cropCanvasEvent = (event) => {
+    if(event.target === null || event.target.type !== 'Cropzone') {
+      this.removeCropzone();
+    }
+  }
+
   cropCanvas = () => {
+    let obj = this.getActiveObject();
+    if(obj && obj.type === 'Cropzone') {
+      return;
+    }
     let canvas = this.getCanvas();
     let vpt = canvas.viewportTransform;
     
@@ -184,9 +194,13 @@ class Crop extends Action {
     this.addEvent();
     canvas.setActiveObject(this._cropzone);
     canvas.requestRenderAll();
+    canvas.on('mouse:down', this.cropCanvasEvent);
   }
 
   cropEndCanvas = () => {
+    if(this._cropzone === null) {
+      return;
+    }
     let canvas = this.getCanvas();
     canvas.remove(this._cropzone);
     let cropRect = {
@@ -211,6 +225,7 @@ class Crop extends Action {
     canvas.setWidth(cropRect.width);
     canvas.calcOffset();
     canvas.renderAll();
+    canvas.on('mouse:down', this.cropCanvasEvent);
   }
 
   fillOuterBox = () => {

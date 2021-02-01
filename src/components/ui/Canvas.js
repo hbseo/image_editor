@@ -23,6 +23,8 @@ export default class Canvas extends Component{
         <div className = "sub-iconmenu">
           <div>
             <button onClick = {this.props.resetCanvas}> 리셋 캔버스</button>
+            <button onClick={this.props.cropCanvas}>cropCanvas</button>
+            <button onClick={this.props.cropEndCanvas}>cropEndCanvas</button>
           </div>
         </div>
       </div>
