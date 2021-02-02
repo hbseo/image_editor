@@ -1757,6 +1757,7 @@ class ImageEditor extends Component {
           onClickObjectSnap={this.onClickObjectSnap}
           exportCanvas = {this.exportCanvas}
           importCanvas = {this.importCanvas}
+          buttonLayer = {this.action['Layers'].buttonLayer}
         />,
       9: <CanvasUI 
           object={this.state.activeObject} 
