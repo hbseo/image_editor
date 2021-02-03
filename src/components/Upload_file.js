@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/UploadFile.scss';
-
+// import '../css/UploadFile.scss';
 
 class Upload_file extends Component {
   constructor(props) {
