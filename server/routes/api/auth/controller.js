@@ -106,11 +106,12 @@ exports.login = (req, res) => {
 
 exports.register = (req, res) => {
   const database = new Database();
-  const { id, password } = req.body
+  const { id, password, answer, question} = req.body
   let salt = crypto.randomBytes(64).toString('base64');
   let hashPassword = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('base64');
   let date = moment().format('YYYY-MM-DD HH:mm:ss');
-  let query = `INSERT INTO USERS (userid, password, salt, create_date) VALUES ("${id}", "${hashPassword}", "${salt}", "${date}")`;
+  let query = `INSERT INTO USERS (userid, password, salt, question, answer, create_date) VALUES
+               ("${id}", "${hashPassword}", "${salt}", "${question}", "${answer}" "${date}")`;
 
   const respond = (result) => {
     res.status(200).json({
