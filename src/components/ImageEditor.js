@@ -466,10 +466,10 @@ class ImageEditor extends Component {
     })
     this._canvas.on('object:modified', (event) => {
       // console.log('object:modified');
-      let type = event.target.type;
-      if(type !== 'Cropzone') {
-        this.saveState(event.target.type + ':modified');
-      }
+      // let type = event.target.type;
+      // if(type !== 'Cropzone') {
+      //   this.saveState(event.target.type + ':modified');
+      // }
     })
 
     this._canvas.on('object:rotated', (event) => {
@@ -1315,27 +1315,11 @@ class ImageEditor extends Component {
   }
 
   cropCanvas = () => {
-    if(this.getActiveObject() && this.getActiveObject().type === 'Cropzone') {
-      return;
-    }
-    let change_state = {width: this._canvas.width/2, height: this._canvas.height/2};
-    this.setState({
-      displayCropCanvasSize: true,
-      cropCanvasSize: change_state
-    });
-    this._canvas.on('mouse:down', this._displayCropCanvas);
     this.action['Crop'].cropCanvas();
   }
 
   cropEndCanvas = () => {
-    if(this.state.displayCropCanvasSize) {
-      this.action['Crop'].cropEndCanvas();
-      this.saveState('Crop Canvas');
-    }
-    // this._canvas.setZoom (1);  , zoom : 1
-    this._canvas.off('mouse:down', this._displayCropCanvas);
-    this.setState({displayCropCanvasSize: false});
-    // this._canvas.renderAll();
+    this.action['Crop'].cropEndCanvas();
   }
 
   textObject = (textOption, checked, value) => {
@@ -1773,8 +1757,14 @@ class ImageEditor extends Component {
           onClickObjectSnap={this.onClickObjectSnap}
           exportCanvas = {this.exportCanvas}
           importCanvas = {this.importCanvas}
+          buttonLayer = {this.action['Layers'].buttonLayer}
         />,
-      9: <CanvasUI object={this.state.activeObject} resetCanvas = {this.resetCanvas}/>
+      9: <CanvasUI 
+          object={this.state.activeObject} 
+          resetCanvas = {this.resetCanvas}
+          cropCanvas = {this.cropCanvas}
+          cropEndCanvas = {this.cropEndCanvas}
+        />
     };
     return (
       <div className='App'>

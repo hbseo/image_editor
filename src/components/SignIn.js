@@ -31,7 +31,12 @@ class SignIn extends Component {
     .then((data) => {
       if(data.msg === 'login success') {
         alert('로그인 성공!');
-        this.props.history.push('/');
+        try {
+          window.location.replace('/'); 
+        } catch (error) {
+          console.log('d');
+          console.log(error);
+        }
       }
       else {
         alert('아이디 또는 비밀번호 잘못 입력했습니다.');

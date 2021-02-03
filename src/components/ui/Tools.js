@@ -41,6 +41,10 @@ export default class Tools extends Component {
             <input id="grid-show" type="checkbox" onClick={this.props.onClickGrid}/><label  htmlFor = "grid-show">그리드 on/off</label>
             <input id="object-snap" type="checkbox" onClick={this.props.onClickObjectSnap}/><label  htmlFor ="object-snap"> 오브젝트 스냅 옵션</label>
           </div>
+          <div style={{ alignContent : 'center'}}>
+            <hr/>
+            {this.props.buttonLayer()}
+          </div>
         </div>
       </div>
     );

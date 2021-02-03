@@ -94,7 +94,7 @@ export default class Text extends Component{
               />
             </div>
             <div className="text-align">
-              <label for="align">정렬</label>
+              <label htmlFor="align">정렬</label>
               <div className="align-button">
                 <button type='checkbox' className='align' id="left-align" onClick={this.textAction} text='left-align'></button>
                 <button type='checkbox' className='align' id="center-align" onClick={this.textAction} text='center-align'></button>
@@ -103,15 +103,15 @@ export default class Text extends Component{
             </div>
           </div>
           <div className="font-weight">
-            <label for="text">Weight</label>
+            <label htmlFor="text">Weight</label>
             <div className="weight-button">
               <div className="bold">
                 <input type='checkbox' className='weight' onClick={this.textAction} text='bold' id='bold_checkbox' />
-                <label for="bold_checkbox">bold</label>
+                <label htmlFor="bold_checkbox">bold</label>
               </div>
               <div className="italic">
                 <input type='checkbox' className='weight' onClick={this.textAction} text='italic' id='italic_checkbox' />
-                <label for="italic_checkbox">italic</label>
+                <label htmlFor="italic_checkbox">italic</label>
               </div>
             </div>
           </div>

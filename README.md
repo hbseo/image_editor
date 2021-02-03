@@ -41,21 +41,31 @@ image_editor
 └───src
 │   │───index.js
 │   │
+│   └───css
+│   │   │───Error.scss
+│   │   │───ImageEditor.css
+│   │   │───Loading.css
+│   │   │───Main.scss
+│   │   │───New_project.scss
+│   │   │───Save.scss
+│   │   │
+│   │   └───Login
+│   │   │   
+│   │   └───ui
+│   │
 │   └───components
-│       │───Error.css
 │       │───Error.js
-│       │───ImageEditor.css
 │       │───ImageEditor.js
 │       │───ImageList.js
+│       │───LoadImage.js
 │       │───Login.js
 │       │───Main.js
-│       │───Main.scss
+│       │───New_project.js
+│       │───Project.js
 │       │───Save.js
-│       │───Save.scss
 │       │───SignIn.js
-│       │───SignIn.scss
 │       │───SignUp.js
-│       │───SignUp.scss
+│       │───Upload_file.js
 │       │    
 │       └─── action
 │       │     │───Action.js
@@ -71,6 +81,9 @@ image_editor
 │       │     │───Rotation.js
 │       │     │───Shape.js
 │       │     └───Text.js
+│       │
+│       └─── const
+│       │     └───consts.js
 │       │
 │       └─── extension
 │       │     │───Extension.js
@@ -89,11 +102,13 @@ image_editor
 │       │     └───SwithTools.js
 │       │
 │       └─── ui
+│             │───Canvas.js
 │             │───Draw.js
 │             │───Filter.js
-│             │───Filter.scss
+│             │───History.js
 │             │───Icon.js
 │             │───Image.js
+│             │───Loading.js
 │             │───Object.js
 │             │───Rotation.js
 │             │───Shape.js
