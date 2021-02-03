@@ -23,26 +23,28 @@ class Main extends Component {
       3: <Login tab = '3'/>,
     }
     return (
-      <div className='Main'>
-        <div className='sidenav'>
-          <button onClick={this.changeTab} tab='0'>New Project</button>
-          <button className='dropdown-btn'>Load Image</button>
-          <div className='dropdown-container'>
-            <button onClick={this.changeTab} tab='1'>Upload File</button>
-            <button onClick={this.changeTab} tab='2'>More Image</button>
-            <button onClick={this.changeTab} tab='3'>test login</button>
+      <div>
+        <div className='Main'>
+          <div className='sidenav'>
+            <button onClick={this.changeTab} tab='0'>New Project</button>
+            <button className='dropdown-btn'>Load Image</button>
+            <div className='dropdown-container'>
+              <button onClick={this.changeTab} tab='1'>Upload File</button>
+              <button onClick={this.changeTab} tab='2'>More Image</button>
+              <button onClick={this.changeTab} tab='3'>test login</button>
+            </div>
+          </div>
+          <div className='inner'>
+            {tab[this.state.tab]}
           </div>
         </div>
-        <div className='right' style={{float:'right'}}>
-          <button className='rightbtn'>More</button>
-          <div className='right-content'>
-            <button>Log In</button>
-            <button>Settings</button>
+        <div className='right'>
+            <button className='rightbtn'>More</button>
+            <div className='right-dropdown'>
+              <button>Log In</button>
+              <button>Settings</button>
+            </div>
           </div>
-        </div>
-        <div className='inner'>
-          {tab[this.state.tab]}
-        </div>
       </div>
     )
   }
