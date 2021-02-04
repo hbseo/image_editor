@@ -31,7 +31,7 @@ class Save extends Component {
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
-      if(data.prj_idx != -1){
+      if(data.prj_idx !== -1){
         alert('save success');
         this.props.getCheckSave(data.prj_idx);
       }

@@ -8,11 +8,45 @@ import '../css/Main.scss';
 class Main extends Component {
   constructor(props) {
     super(props);
-    this.state = {tab : 0}
+    this.state = {
+      tab : 0,
+      login_state: false,
+      id : ''
+    }
+  }
+
+  componentDidMount(){
+    this.getCheck();
   }
 
   changeTab = (event) => {
     this.setState({tab : parseInt(event.target.getAttribute('tab'), 10)});
+  }
+
+  loginSuccess = (id) => {
+    this.setState({id : id, login_state: true});
+  }
+
+  loginFail = () => {
+    this.setState({login_state: false});
+  }
+
+  getCheck = () => {
+    fetch('/auth/check', {
+      method: 'GET'
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.success) {
+        this.loginSuccess(data.info.user_id);
+      }
+      else {
+        this.loginFail();
+      }
+    })
+    .catch(() => {
+      this.loginFail();
+    })
   }
 
   render() {
@@ -20,7 +54,8 @@ class Main extends Component {
       0: <Newproject/>,
       1: <LoadImage tab = '1'/>,
       2: <LoadImage tab = '2'/>,
-      3: <Login tab = '3'/>,
+      3: <Login tab = '3' login_state = {this.state.login_state} loginSuccess = {this.loginSuccess} loginFail = {this.loginFail} id = {this.state.id} />,
+      4: <Project id ={this.state.id} login = {this.state.login_state}/>
     }
     return (
       <div>
@@ -33,6 +68,11 @@ class Main extends Component {
               <button onClick={this.changeTab} tab='2'>More Image</button>
               <button onClick={this.changeTab} tab='3'>test login</button>
             </div>
+            {this.state.login_state ? 
+            <div className='dropdown-btn'>
+              <button onClick={this.changeTab} tab='4'>Projoect</button>
+            </div> : null
+            }
           </div>
           <div className='inner'>
             {tab[this.state.tab]}
