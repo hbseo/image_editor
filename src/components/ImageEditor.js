@@ -495,13 +495,13 @@ class ImageEditor extends Component {
         this.setState({cropCanvasSize: change_state});
       }
     })
-    this._canvas.on('object:moving', this.movedObjectSave);
+    this._canvas.on('object:moved', this.movedObjectSave);
   }
 
 
   movedObjectSave = (event) => {
     if(event.target.type !== 'Cropzone'){
-      this.saveState(event.target.type, ' : move')
+      this.saveState(event.target.type + ' : move');
     }
   }
 
@@ -1479,10 +1479,10 @@ class ImageEditor extends Component {
 
   showUndoStack = () => {
     const listitem = this.stateStack.map((state) =>
-      <p style = {{color : '#ffffff'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
+      <p style = {{color : 'black'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
     );
     return(
-      <div>
+      <div style={{color : 'black'}}>
         <ol>
           {listitem}
         </ol>
