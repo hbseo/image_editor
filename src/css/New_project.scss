@@ -19,20 +19,20 @@
 
     .canvas-list{
       margin: 3%;
-
-      .link-container{
-        width: 15vmin;
-        height: 15vmin;
-        display: flex;
-        flex-direction: column;
-        background-image: url('../css/img/photo.svg');
-        background-size: contain;
-        background-position: center;
-        text-align: center;
-      }
     }
   }
   
+  .link-container{
+    width: 15vmin;
+    height: 15vmin;
+    display: flex;
+    flex-direction: column;
+    background-image: url('../css/img/photo.svg');
+    background-size: contain;
+    background-position: center;
+    text-align: center;
+  }
+
   .new-link{
     width: 15vmin;
     height: 15vmin;
@@ -48,6 +48,7 @@
     .direct-input-button{
       display: flex;
       flex-direction: column;
+      justify-content: center;
 
       input[type="number"]{
         height: auto;
