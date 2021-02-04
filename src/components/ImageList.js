@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../css/ImageList.scss';
 
 class ImageList extends Component {
   constructor(props) {
@@ -154,24 +155,21 @@ class ImageList extends Component {
       return (
         <div id="image-list-size">
           <ul>
-            <li style = {{ float : 'left'  }}>
-              full : {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}
-              <img src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}  />
+            <li>
+              <img src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg} />
+              <div>full: {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}</div>
             </li>
-            {/* <li>
-              <img src = {image.thumb} url={image.raw} alt="." onClick={this.onClickImg}  />
-            </li> */}
-            <li style = {{ float : 'left'  }}>
-              regular : {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}
-              <img src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg}  />
+            <li>
+              <img src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg} />
+              <div>regular: {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}</div>
             </li>
-            <li style = {{ float : 'left'  }}>
-              small : {this.state.imageSize.small.x} X {this.state.imageSize.small.y}
-              <img src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg}  />
+            <li>
+              <img src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg} />
+              <div>small: {this.state.imageSize.small.x} X {this.state.imageSize.small.y}</div>
             </li>
-            <li style = {{ float : 'left'  }}>
-              thumb : {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}
-              <img src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg}  />
+            <li>
+              <img src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg} />
+              <div>thumb: {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
             </li>
           </ul>
         </div>
@@ -187,23 +185,39 @@ class ImageList extends Component {
 
   render() {
     return (
-      <div className='main'>
-        <input type="number" name = "random_count" value={this.state.random_count} onChange = {this.randomCountChange}></input>
-        <button onClick={() => this.getRandomImage()}>get a random image 10 count</button>
-        <form onSubmit={this.handleSubmit}>
-
-          이미지 이름 : <input name="search" value={this.state.search} onChange={this.searchChange} />
-          숫자 : <input type="number" name="image_count" value={this.state.image_count} onChange={this.searchChange} />
-
-          <input type="submit" value="Submit" />
-
-        </form>
-        <p>검색어 : {this.state.search}</p>
-        <p>이미지 수 : {this.state.image_count}</p>
-
+      <div className="more-image-main">
+        <div className="random-image">
+          <div className="option-title">Get random image</div>
+          <div className="random-input-group">
+            <div>
+              <label htmlFor="random-count">Image count: </label>
+              <input className="random-image-input" type="number" name = "random_count" value={this.state.random_count} onChange = {this.randomCountChange}></input>
+            </div>
+            <button className="random-image-button" onClick={() => this.getRandomImage()}>Enter</button>
+          </div>
+        </div>
+        <div className="search-image">
+          <div className="option-title">Search random image</div>
+          <form className="search-form" onSubmit={this.handleSubmit}> 
+            <div>
+              <div className="search-group">
+                <label htmlFor="search">Image name: </label>
+                <input className="search-input" name="search" value={this.state.search} onChange={this.searchChange} />
+              </div>
+              <div className="search-group">
+                <label htmlFor="image_count">Image count: </label>
+                <input className="search-input" type="number" name="image_count" value={this.state.image_count} onChange={this.searchChange} />
+              </div>
+            </div>
+            <input className="search-image-button" type="submit" value="Enter" />
+          </form>
+          <div className="image-result">
+            <div>검색어: {this.state.search}</div>
+            <div>이미지 수: {this.state.image_count}</div>
+          </div>
+        </div>
         {this.showImage(this.state.images)}
-        <p>아래는 선택한 이미지 크기</p>
-        { this.imageSizeVersion() }
+        {this.imageSizeVersion()}
         {this.props.children}
 
       </div>
