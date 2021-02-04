@@ -65,10 +65,6 @@ class ImageEditor extends Component {
         color : '#FFFFFF'
       },
       colorHex : '#000000',
-      cropCanvasSize : {
-        width : 0,
-        height : 0
-      },
       shadow : {
         blur : 30,
         offsetX : 10,
@@ -1176,43 +1172,43 @@ class ImageEditor extends Component {
     // }
   }
 
-  handleCropCanvasSizeChange = (event) => {
-    let obj = this.getActiveObject();
-    let change_state = {
-      width : this.state.cropCanvasSize.width,
-      height : this.state.cropCanvasSize.height
-    };
-    if(event.target.name === 'width') {
-      if(obj.left - event.target.value/2 < 0 || obj.left + event.target.value/2 > this._canvas.width) {
-        if(obj.left < this._canvas.width - obj.left) {
-          obj.left = event.target.value/2;
-        }
-        else {
-          obj.left = this._canvas.width - event.target.value/2;
-        }
-        change_state.width = Math.min(obj.left*2, (this._canvas.width-obj.left)*2);
-      }
-    }
-    else {
-      if(obj.top - event.target.value/2 < 0 || obj.top + event.target.value/2 > this._canvas.height) {
-        if(obj.top < this._canvas.height - obj.top) {
-          obj.top = event.target.value/2;
-        }
-        else {
-          obj.top = this._canvas.height - event.target.value/2;
-        }
-        change_state.height = Math.min(obj.top*2, (this._canvas.height-obj.top)*2);
-      }
-    }
-    change_state[event.target.name] = event.target.value;
-    new Promise((resolve) => {
-      this.setState({cropCanvasSize : change_state});
-      resolve();
-    })
-    .then(() => {
-      this.action['Crop'].resizeCropzone(this.state.cropCanvasSize);
-    })
-  }
+  // handleCropCanvasSizeChange = (event) => {
+  //   let obj = this.getActiveObject();
+  //   let change_state = {
+  //     width : this.state.cropCanvasSize.width,
+  //     height : this.state.cropCanvasSize.height
+  //   };
+  //   if(event.target.name === 'width') {
+  //     if(obj.left - event.target.value/2 < 0 || obj.left + event.target.value/2 > this._canvas.width) {
+  //       if(obj.left < this._canvas.width - obj.left) {
+  //         obj.left = event.target.value/2;
+  //       }
+  //       else {
+  //         obj.left = this._canvas.width - event.target.value/2;
+  //       }
+  //       change_state.width = Math.min(obj.left*2, (this._canvas.width-obj.left)*2);
+  //     }
+  //   }
+  //   else {
+  //     if(obj.top - event.target.value/2 < 0 || obj.top + event.target.value/2 > this._canvas.height) {
+  //       if(obj.top < this._canvas.height - obj.top) {
+  //         obj.top = event.target.value/2;
+  //       }
+  //       else {
+  //         obj.top = this._canvas.height - event.target.value/2;
+  //       }
+  //       change_state.height = Math.min(obj.top*2, (this._canvas.height-obj.top)*2);
+  //     }
+  //   }
+  //   change_state[event.target.name] = event.target.value;
+  //   new Promise((resolve) => {
+  //     this.setState({cropCanvasSize : change_state});
+  //     resolve();
+  //   })
+  //   .then(() => {
+  //     this.action['Crop'].resizeCropzone(this.state.cropCanvasSize);
+  //   })
+  // }
 
   handletextBgChange = (event) => {
     if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {

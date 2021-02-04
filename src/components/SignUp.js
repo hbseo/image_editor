@@ -13,14 +13,20 @@ class SignUp extends Component {
       id: '',
       password: '',
       passwordConfirm: '',
+      answer: '',
       idDupCheck: null
     }
     this.id_style = null;
+    this.choose = null;
   }
   registerHandler = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
-
+    if(name === 'choose') {
+      this.choose = value;
+    }
+    else {
+      this.setState({ [name]: value });
+    }
     if(name === 'id') {
       this.registerDupHandler(value);
     }
@@ -38,14 +44,23 @@ class SignUp extends Component {
       alert('아이디 중복 또는 옮바르지 않은 비밀번호');
       return;
     }
+    if(this.choose === null) {
+      alert('질문을 선택해 주세요.');
+      return;
+    }
+    if(this.state.answer === '') {
+      alert('답변을 작성해 주세요.');
+      return;
+    }
     if (this.state.idDupCheck) {
-      const { id, password } = this.state;
+      const { id, password, answer } = this.state;
+      const question = this.choose;
       fetch('/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id, password })
+        body: JSON.stringify({ id, password, answer, question })
       })
         .then((res) => res.json())
         .then((data) => {
@@ -128,6 +143,60 @@ class SignUp extends Component {
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-lock" aria-hidden="true" />
+                  </span>
+                </div>
+                <div id="app-cover">
+                  <div id="select-box">
+                    <input type="checkbox" id="options-view-button" />
+                    <div id="select-button" className="brd">
+                      <div id="selected-value">
+                        <span>원하는 질문을 선택하세요.</span>
+                      </div>
+                      <div id="chevrons">
+                        <i className="fa fa-chevron-up" />
+                        <i className="fa fa-chevron-down" />
+                      </div>
+                    </div>
+                    <div id="options">
+                      <div className="option">
+                        <input className="s-c top" type="radio" name="choose" defaultValue="1" onChange={this.registerHandler} />
+                        <input className="s-c bottom" type="radio" name="choose" defaultValue="1"  onChange={this.registerHandler}/>
+                        <span className="label">가장 기억에 남는 추억의 장소</span>
+                        <span className="opt-val">가장 기억에 남는 추억의 장소</span>
+                      </div>
+                      <div className="option">
+                        <input className="s-c top" type="radio" name="choose" defaultValue="2"  onChange={this.registerHandler}/>
+                        <input className="s-c bottom" type="radio" name="choose" defaultValue="2"  onChange={this.registerHandler}/>
+                        <span className="label">다시 태어나면 되고 싶은 것</span>
+                        <span className="opt-val">다시 태어나면 되고 싶은 것</span>
+                      </div>
+                      <div className="option">
+                        <input className="s-c top" type="radio" name="choose" defaultValue="3" onChange={this.registerHandler} />
+                        <input className="s-c bottom" type="radio" name="choose" defaultValue="3"  onChange={this.registerHandler}/>
+                        <span className="label">나의 보물 제1호</span>
+                        <span className="opt-val">나의 보물 제1호</span>
+                      </div>
+                      <div className="option">
+                        <input className="s-c top" type="radio" name="choose" defaultValue="4"  onChange={this.registerHandler}/>
+                        <input className="s-c bottom" type="radio" name="choose" defaultValue="4"  onChange={this.registerHandler}/>
+                        <span className="label">나의 좌우명</span>
+                        <span className="opt-val">나의 좌우명</span>
+                      </div>
+                      <div className="option">
+                        <input className="s-c top" type="radio" name="choose" defaultValue="5" onChange={this.registerHandler} />
+                        <input className="s-c bottom" type="radio" name="choose" defaultValue="5"  onChange={this.registerHandler}/>
+                        <span className="label">내가 존경하는 인물</span>
+                        <span className="opt-val">내가 존경하는 인물</span>
+                      </div>
+                      <div id="option-bg" />
+                    </div>
+                  </div>
+                </div>
+                <div className="wrap-input100 validate-input">
+                  <input className="input100" type="text" name="answer" placeholder="Answer" value={this.state.answer} onChange={this.registerHandler}></input>
+                  <span className="focus-input100" />
+                  <span className="symbol-input100">
+                    <i className="fa fa-sticky-note" aria-hidden="true" />
                   </span>
                 </div>
                 {duptag}

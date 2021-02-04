@@ -50,6 +50,9 @@ class Login extends Component {
         <div>
           <h5>{this.state.user_name}님 환영합니다</h5>
           <button onClick={this.logoutClickHandler}>로그아웃</button>
+          <Link to={{
+            pathname: `/ChangePassword/${this.state.user_name}`,
+          }}><button>비밀번호 변경</button></Link>
         </div> : 
         <div>
           <Link to={{
