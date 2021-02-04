@@ -44,12 +44,25 @@ class Layers extends Extension {
         }
     }
 
-    clickLayer = (event) => {
-        const canvas = this.getCanvas();
-        let idx = event.target.getAttribute("index");
-        canvas.setActiveObject(canvas.item(idx));
-        canvas.renderAll();
+    buttonLayer = () => {
+      const canvas = this.getCanvas();
+      const listitem = canvas._objects.map((obj, index) =>
+        <p key = {index}>
+          <button onClick = {this.clickLayer} index = {index}>{obj.type}</button>
+        </p>
+      );
+      return(
+        <div>
+          {listitem}
+        </div>
+      )
+    }
 
+    clickLayer = (event) => {
+      const canvas = this.getCanvas();
+      let idx = event.target.getAttribute("index");
+      canvas.setActiveObject(canvas.item(idx));
+      canvas.renderAll();
     }
 
 }

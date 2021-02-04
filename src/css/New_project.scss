@@ -1,34 +1,87 @@
-.canvas-list-ul {
-  margin-left: 200px;
-  font-size: 20px;
-  padding: 0px 10px;
+.New_project{
   display: flex;
-  flex-wrap: wrap;
-  width: 50%;
-  justify-content: space-around;
-}
+  flex-direction: column;
+  width: 70%;
 
-.canvas-list {
-  width: 200px;
-  height: 200px;
-  margin: 1%;
-  cursor: pointer;
-  // background-image: url(/image/filter.svg);
-  background-position: center;
-  border: 1px solid white;
-  transition: border-color 0.3s;
-}
+  .option-title{
+    display: inline;
+    margin: 1% 1% 0% 1%;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
 
-.canvas-list:hover {
-  border: 1px solid black;
-}
+  .canvas-list-ul{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5%;
 
-.canvas-list img {
-  width: 200px;
-  height: 80%;
-}
+    .canvas-list{
+      margin: 3%;
 
-.description {
-  text-align: center;
-  width: 100%;
+      .link-container{
+        width: 15vmin;
+        height: 15vmin;
+        display: flex;
+        flex-direction: column;
+        background-image: url('../css/img/photo.svg');
+        background-size: contain;
+        background-position: center;
+        text-align: center;
+      }
+    }
+  }
+  
+  .new-link{
+    width: 15vmin;
+    height: 15vmin;
+    padding: 0;
+  }
+
+  .new-project-input{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .direct-input-button{
+      display: flex;
+      flex-direction: column;
+
+      input[type="number"]{
+        height: auto;
+        line-height: normal;
+        width: 200px;
+        height: auto;
+        padding: .3em .3em;
+        outline-style: none;
+        border: 2px solid #a0a0a0;
+        border-radius: 5px;
+        transition: .3s;
+      }
+  
+      input[type="number"]:hover {
+        border: 2px solid #0b0b0b;
+      }
+    
+      input[type="number"]:focus {
+        border: 2px solid #1A58D3 !important;
+        outline: none;
+      }
+
+      .input-group{
+        display: flex;
+        flex-direction: column-reverse;
+
+        label{
+          font-weight: bold;
+        }
+      }
+
+      input[type="number"]:focus + label{
+        color: #1A58D3;
+      }
+    }
+  }
 }
