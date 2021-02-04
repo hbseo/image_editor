@@ -1,15 +1,40 @@
 const jwt = require("jsonwebtoken");
-const Database = require('../../../database/index');
+const {Database, pool} = require('../../../database/index');
 const secretObj = require('../../../config/jwt');
 const crypto = require('crypto');
 const moment = require('moment');
 
 exports.dupCheck = (req, res) => {
-  const database = new Database();
+  // const database = new Database();
   const {id} = req.body;
   let query = `SELECT EXISTS (SELECT * FROM USERS WHERE userid = "${id}") as success`;
 
-  const respond = (result) => {
+  // const respond = (result) => {
+  //   if(result[0].success) {
+  //     res.status(200).json({
+  //       msg: 'exist'
+  //     })
+  //   }
+  //   else {
+  //     res.status(200).json({
+  //       msg: 'not exist'
+  //     })
+  //   }
+  // }
+
+  const onError = (error) => {
+    res.status(400).json({
+      msg: error.message
+    })
+  }
+
+  // database.query(query)
+  // .then(respond)
+  // .then(database.end())
+  // .catch(onError)
+
+
+  const respond = ({connection, result}) => {
     if(result[0].success) {
       res.status(200).json({
         msg: 'exist'
@@ -20,18 +45,26 @@ exports.dupCheck = (req, res) => {
         msg: 'not exist'
       })
     }
-  }
 
-  const onError = (error) => {
-    res.status(400).json({
-      msg: error.message
+    new Promise((resolve) => {
+      connection.release();
+      resolve();
+    })
+    .then(() => {
+      console.log("MySQL pool released: threadId " + connection.threadId);
     })
   }
 
-  database.query(query)
-  .then(respond)
-  .then(database.end())
+  const check = (conn) => {
+    pool.query(conn, query)
+    .then(respond)
+    .catch(onError)
+  }
+
+  pool.connect()
+  .then(check)
   .catch(onError)
+
 }
 
 exports.login = (req, res) => {
