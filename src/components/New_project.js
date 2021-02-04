@@ -74,7 +74,7 @@ class New_project extends Component {
               <label htmlFor="height">Height:</label>
             </div>
           </div>
-          <span>{this.renderLink(this.state.width, this.state.height)}</span>
+          {this.renderLink(this.state.width, this.state.height)}
         </div>
       </div>
     )
