@@ -19,7 +19,7 @@ class Flip extends Action {
         default:
       }
     }
-    this.getImageEditor().saveState('flip');
+    this.saveState('flip');
     canvas.renderAll();
   }
 }

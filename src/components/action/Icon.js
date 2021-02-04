@@ -88,7 +88,7 @@ class Icon extends Action {
       canvas.remove(activeObject);
     }
     else{
-      this.getImageEditor().saveState('icon add');
+      this.saveState('icon add');
     }
     this.addKeyDownEvent();
     canvas.off('mouse:up', this._iconCreateEndEvent);

@@ -61,7 +61,7 @@ export default class Rotation extends Component{
             </div>
           </div>
           <div className="rotate-input">
-            <label for="angle">직접 입력</label>
+            <label htmlFor="angle">직접 입력</label>
             <input
               type='number'
               name='angle'

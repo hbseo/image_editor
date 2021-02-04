@@ -97,7 +97,7 @@ class Shape extends Action {
       canvas.remove(activeObject);
     }
     else{
-      this.getImageEditor().saveState(activeObject.type + ' add');
+      this.saveState(activeObject.type + ' add');
     }
 
     canvas.selection = true;

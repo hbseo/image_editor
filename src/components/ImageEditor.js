@@ -270,7 +270,7 @@ class ImageEditor extends Component {
   _onMouseUpEvent = (event) => {
     if(event.target.type === 'range') {
       this.dotoggle = true;
-      this.saveState(event.target.name + 'change');
+      this.saveState(event.target.name + ' change');
     }
   }
 
@@ -383,6 +383,7 @@ class ImageEditor extends Component {
     if(this.state.displayCropCanvasSize) {
       if(event.target === null || event.target.type !== 'Cropzone') {
         this.action['Crop'].removeCropzone();
+        this._canvas.off('object:moving', this.canvasCropzoneMoving);
         this.setState({displayCropCanvasSize: false});
       }
     }
@@ -454,18 +455,10 @@ class ImageEditor extends Component {
 		});
     
     this._canvas.on('object:added', (event) => {
-      // console.log('object:added', event.target);
-      // let type = event.target.type;
-      // if(type !== 'Cropzone'){
-      //   this.saveState(event.target.type +' :added event');
-      // }
+
     })
     this._canvas.on('object:modified', (event) => {
-      // console.log('object:modified');
-      // let type = event.target.type;
-      // if(type !== 'Cropzone') {
-      //   this.saveState(event.target.type + ':modified');
-      // }
+
     })
 
     this._canvas.on('object:rotated', (event) => {
@@ -502,37 +495,43 @@ class ImageEditor extends Component {
         this.setState({cropCanvasSize: change_state});
       }
     })
-    this._canvas.on('object:moving', (event) => {
-      if(this.state.displayCropCanvasSize) {
-        let obj = event.target;
-        obj.setCoords();
-        // 만약 cropzone이 회전이 불가능 하다면, max, min 하지 않아도 괜찮
-        let obj_top = Math.min(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y) ;
-        let obj_bottom = Math.max(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y);
-        let obj_right = Math.max(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x);
-        let obj_left = Math.min(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x);
+    this._canvas.on('object:moved', this.movedObjectSave);
+  }
 
-        if(obj_top  < 0){ 
-          obj.set({
-            top : (-this.state.canvasView.y / this.state.zoom) + (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2)
-          })}
-        if(obj_left < 0){
-          obj.set({
-            left :  (-this.state.canvasView.x / this.state.zoom) + (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2)
-          })}
-        if(obj_bottom > this._canvas.height ){
-          obj.set({
-            top : ( (-this.state.canvasView.y / this.state.zoom)  + (this._canvas.height / this.state.zoom) - (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2))
-          })
-        }
-        if(obj_right > this._canvas.width ) {
-          obj.set({
-            left: ( (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) - (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2))
-          })
-        }
-        obj.setCoords();
-      }
-    })
+
+  movedObjectSave = (event) => {
+    if(event.target.type !== 'Cropzone'){
+      this.saveState(event.target.type + ' : move');
+    }
+  }
+
+  canvasCropzoneMoving = (event) => {
+    let obj = event.target;
+    obj.setCoords();
+    // 만약 cropzone이 회전이 불가능 하다면, max, min 하지 않아도 괜찮
+    let obj_top = Math.min(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y) ;
+    let obj_bottom = Math.max(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y);
+    let obj_right = Math.max(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x);
+    let obj_left = Math.min(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x)
+    if(obj_top  < 0){ 
+      obj.set({
+        top : (-this.state.canvasView.y / this.state.zoom) + (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2)
+      })}
+    if(obj_left < 0){
+      obj.set({
+        left :  (-this.state.canvasView.x / this.state.zoom) + (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2)
+      })}
+    if(obj_bottom > this._canvas.height ){
+      obj.set({
+        top : ( (-this.state.canvasView.y / this.state.zoom)  + (this._canvas.height / this.state.zoom) - (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2))
+      })
+    }
+    if(obj_right > this._canvas.width ) {
+      obj.set({
+        left: ( (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) - (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2))
+      })
+    }
+    obj.setCoords();
   }
 
   /**
@@ -1103,66 +1102,66 @@ class ImageEditor extends Component {
   //   } 
   // }
 
-  handleOpacityChange = (event) => {
-    let activeObject = this.getActiveObject();
-    if(activeObject || this._backgroundImage){
-      this.action['Filter'].applyFilter(activeObject || this._backgroundImage , 'opacity', true, event.target.value);
-      if(activeObject){
-        this.setState({ activeObject : activeObject})
-      }
-      this._canvas.renderAll();
-    }
-  }
+  // handleOpacityChange = (event) => {
+  //   let activeObject = this.getActiveObject();
+  //   if(activeObject || this._backgroundImage){
+  //     this.action['Filter'].applyFilter(activeObject || this._backgroundImage , 'opacity', true, event.target.value);
+  //     if(activeObject){
+  //       this.setState({ activeObject : activeObject})
+  //     }
+  //     this._canvas.renderAll();
+  //   }
+  // }
 
-  handlefontSizeChange = (event) => {
-    const fontSize = event.target.value;
-    let activeObject = this.getActiveObject();
-    let textOption = event.target.getAttribute('text');
-    if(this.getActiveObject()) {
-      new Promise((resolve) => {
-        this.setState({fontsize: fontSize});
-        resolve();
-      })
-      .then(() => {
-        this.action['Text'].textObj(activeObject, textOption, true, fontSize);
-        this.saveState('font size change');
-      })
-    }
-    else{
-      this.setState({fontsize: fontSize});
-    }
-	}
+  // handlefontSizeChange = (event) => {
+  //   const fontSize = event.target.value;
+  //   let activeObject = this.getActiveObject();
+  //   let textOption = event.target.getAttribute('text');
+  //   if(this.getActiveObject()) {
+  //     new Promise((resolve) => {
+  //       this.setState({fontsize: fontSize});
+  //       resolve();
+  //     })
+  //     .then(() => {
+  //       this.action['Text'].textObj(activeObject, textOption, true, fontSize);
+  //       this.saveState('font size change');
+  //     })
+  //   }
+  //   else{
+  //     this.setState({fontsize: fontSize});
+  //   }
+	// }
 	
-	handleColorChange = (color) => {
-    // console.log((Math.round(color.rgb.a * 255)).toString(16))
-    this.setState({ color: color.rgb, colorHex : color.hex })
-  }
+	// handleColorChange = (color) => {
+  //   console.log((Math.round(color.rgb.a * 255)).toString(16))
+  //   this.setState({ color: color.rgb, colorHex : color.hex })
+  // }
 
-  handleColorChangeComplete = (color) => {
-    // console.log("mouse up")
-    const activeObject = this.getActiveObject();
-    if(activeObject) {
-      // this.action['Fill'].fill(color.hex);
-      this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
-      this.setState({ activeObject : this.getActiveObject() });
-      this.saveState('Fill : colorChangeComplete');
-    }
-  }
+  // handleColorChangeComplete = (color) => {
+  //   // console.log("mouse up")
+  //   const activeObject = this.getActiveObject();
+  //   if(activeObject) {
+  //     // this.action['Fill'].fill(color.hex);
+  //     this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
+  //     this.setState({ activeObject : this.getActiveObject() });
+  //     this.saveState('Fill : colorChangeComplete');
+  //   }
+  // }
   
   
-  handleStrokeWidthChange = (event) => {
-    if(this.getActiveObject()){
-      let options = {
-        strokeColor : '#ffffff',
-        strokeWidth : Number(event.target.value)
-      }
-      this.action['Object'].setStroke(this.getActiveObject(), options);
-      this.saveState('stroke change');
-    }
-    this.setState({ activeObject : this.getActiveObject() })
-  }
+  // handleStrokeWidthChange = (event) => {
+  //   if(this.getActiveObject()){
+  //     let options = {
+  //       strokeColor : '#ffffff',
+  //       strokeWidth : Number(event.target.value)
+  //     }
+  //     this.action['Object'].setStroke(this.getActiveObject(), options);
+  //     this.saveState('stroke change');
+  //   }
+  //   this.setState({ activeObject : this.getActiveObject() })
+  // }
 
-  handleStrokeColorChange = (color) => {
+  // handleStrokeColorChange = (color) => {
     // if(this.getActiveObject()){
     //   let options = {
     //     strokeColor : color.hex
@@ -1170,7 +1169,7 @@ class ImageEditor extends Component {
     //   this.setState({strokeColor : color.hex})
     //   this.action['Object'].setStroke(this.getActiveObject(), options);
     // }
-  }
+  // }
 
   // handleCropCanvasSizeChange = (event) => {
   //   let obj = this.getActiveObject();
@@ -1219,30 +1218,30 @@ class ImageEditor extends Component {
     }
   }
 
-  handleShadowChange = (event) => {
-    let object = this.getActiveObject();
-    let change_state = {
-      blur : this.state.shadow.blur,
-      offsetX : this.state.shadow.offsetX,
-      offsetY : this.state.shadow.offsetY,
-      color : this.state.shadow.color
-    }
-    if(event.hex) {
-      change_state['color'] = event.hex;
-    }
-    else {
-      change_state[event.target.name] = event.target.value;
-    }
-    new Promise((resolve) => {
-      this.setState({shadow: change_state});
-      resolve();
-    })
-    .then(() => {
-      object.set('shadow', new fabric.Shadow(this.state.shadow));
-      this.saveState('shadow changed');
-      this._canvas.renderAll();
-    })
-  }
+  // handleShadowChange = (event) => {
+  //   let object = this.getActiveObject();
+  //   let change_state = {
+  //     blur : this.state.shadow.blur,
+  //     offsetX : this.state.shadow.offsetX,
+  //     offsetY : this.state.shadow.offsetY,
+  //     color : this.state.shadow.color
+  //   }
+  //   if(event.hex) {
+  //     change_state['color'] = event.hex;
+  //   }
+  //   else {
+  //     change_state[event.target.name] = event.target.value;
+  //   }
+  //   new Promise((resolve) => {
+  //     this.setState({shadow: change_state});
+  //     resolve();
+  //   })
+  //   .then(() => {
+  //     object.set('shadow', new fabric.Shadow(this.state.shadow));
+  //     this.saveState('shadow changed');
+  //     this._canvas.renderAll();
+  //   })
+  // }
 
 
   setObjectAngle = (changeAngle) => {
@@ -1265,7 +1264,6 @@ class ImageEditor extends Component {
     }
     else if(this._canvas.backgroundImage){
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
-      this.saveState('apply filter backgroundImg');
     }
   }
 
@@ -1340,25 +1338,25 @@ class ImageEditor extends Component {
     })
   }
 
-  toggleshadow = () => {
-    new Promise((resolve) => {
-      this.setState({displayshadow: !this.state.displayshadow});
-      resolve();
-    })
-    .then(() => {
-      let object = this.getActiveObject();
-      if(object) {
-        if(this.state.displayshadow) {
-          object.set('shadow', new fabric.Shadow({color:'black', blur:30, offsetX:10, offsetY:10, opacity:0}));
-        }
-        else {
-          object.set('shadow', null);
-        }
-        this.saveState('shadow');
-        this._canvas.renderAll();
-      }
-    })
-  }
+  // toggleshadow = () => {
+  //   new Promise((resolve) => {
+  //     this.setState({displayshadow: !this.state.displayshadow});
+  //     resolve();
+  //   })
+  //   .then(() => {
+  //     let object = this.getActiveObject();
+  //     if(object) {
+  //       if(this.state.displayshadow) {
+  //         object.set('shadow', new fabric.Shadow({color:'black', blur:30, offsetX:10, offsetY:10, opacity:0}));
+  //       }
+  //       else {
+  //         object.set('shadow', null);
+  //       }
+  //       this.saveState('shadow');
+  //       this._canvas.renderAll();
+  //     }
+  //   })
+  // }
 
   onImgUrlChange = (url) => {
     this.testUrl = url;
@@ -1481,10 +1479,10 @@ class ImageEditor extends Component {
 
   showUndoStack = () => {
     const listitem = this.stateStack.map((state) =>
-      <p style = {{color : '#ffffff'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
+      <p style = {{color : 'black'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
     );
     return(
-      <div>
+      <div style={{color : 'black'}}>
         <ol>
           {listitem}
         </ol>

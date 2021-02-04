@@ -1,6 +1,6 @@
 // const { data } = require('jquery');
 const moment = require('moment');
-const Database = require('../../../database/index');
+const {Database} = require('../../../database/index');
 
 exports.save = (req, res) => {
   const database = new Database();

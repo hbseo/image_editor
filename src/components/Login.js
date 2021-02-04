@@ -5,7 +5,6 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      login_state: false,
       user_name: ''
     };
   }
@@ -20,14 +19,14 @@ class Login extends Component {
     .then((res) => res.json())
     .then((data) => {
       if(data.success) {
-        this.setState({login_state: true, user_name: data.info.user_id});
+        this.props.loginSuccess(data.info.user_id);
       }
       else {
-        this.setState({login_state: false});
+        this.props.loginFail();
       }
     })
     .catch(() => {
-      this.setState({login_state: false});
+      this.props.loginFail();
     })
   }
   logoutClickHandler = () => {
@@ -46,7 +45,7 @@ class Login extends Component {
   render() {
     return (
       <div className='login'>
-        {this.state.login_state ? 
+        {this.props.login_state ? 
         <div>
           <h5>{this.state.user_name}님 환영합니다</h5>
           <button onClick={this.logoutClickHandler}>로그아웃</button>

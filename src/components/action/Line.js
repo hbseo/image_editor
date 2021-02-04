@@ -58,7 +58,7 @@ class Line extends Action {
 		// console.log('off')
 		canvas.selection = true;
 		canvas.renderAll();
-		this.getImageEditor().saveState('line add');
+		this.saveState('line add');
 		if(this.disableObj){
 			this.disableObj.lockMovementY = false;
 			this.disableObj.lockMovementX = false;

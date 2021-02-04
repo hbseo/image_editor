@@ -19,8 +19,8 @@ export default class History extends Component {
       <div className="tooltip">
         History
         <div className="left">
-          <p style = {{color : 'black'}}>{this.props.currentState.action}</p>
-          
+          <p style = {{color : 'black'}}>현재 state : {this.props.currentState.action}</p>
+          <hr/>
           {this.props.showUndoStack()}
         </div>
       </div>
