@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import { Link } from 'react-router-dom';
-// import '../css/UploadFile.scss';
+import '../css/UploadFile.scss';
 
 class Upload_file extends Component {
   constructor(props) {
@@ -9,23 +9,28 @@ class Upload_file extends Component {
 
   render() {
     return (
-      <div className='Upload_file'>
-        <div className='main'>
+      <div className='Upload-file'>
+        <div className='upload-file-input'>
           <div className='local'>
             <label className='input-file-button' htmlFor='input-file'>Load local image</label>
             <input type='file' id='input-file' onChange={this.props.fileChange} accept='image/*' style={{ display: 'none' }}></input>
           </div>
           <div className='url'>
-            <label>Load image with URL</label>
             <form id='imgload' onSubmit={this.props.handleUrlSubmit}>
-            url : <input name='url' value={this.props.url} onChange={this.props.handleChange} placeholder='https://example.com/example.jpg'></input>
-              <input type='submit' value='Submit'></input>
+              <div className="input-group">
+                <input className="input-url" name='url' value={this.props.url} onChange={this.props.handleChange} placeholder='https://example.com/example.jpg'></input>
+                <label htmlFor="url">URL:</label>
+              </div>
+              <input className="url-submit-button" type='submit' value='Submit'></input>
             </form>
           </div>
-          <div className='preview'>
-            <img id="preview" src={this.props.imgUrl} alt="preview"></img>
-              {this.props.children}
+        </div>
+        <div className='preview'>
+          <div className="preview-title">preview</div>
+          <div className="preview-inner">
+            <img id="preview" src={this.props.imgUrl}></img>
           </div>
+          {this.props.children}
         </div>
       </div>
     )

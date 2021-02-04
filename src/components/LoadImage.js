@@ -155,9 +155,7 @@ class LoadImage extends Component {
          </ImageList>
     }
     return (
-      <div>
-        {tab[ parseInt(this.props.tab, 10) ]}
-      </div>
+        tab[ parseInt(this.props.tab, 10) ]
     );
   }
 }

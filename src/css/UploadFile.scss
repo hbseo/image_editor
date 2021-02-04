@@ -1,0 +1,130 @@
+.Upload-file{
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .upload-file-input{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 40%;
+
+        .local{
+            width: 100%;
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .input-file-button {
+                display: inline-block;
+                padding: 5%;
+                width: 15vmin;
+                border: 1px solid black;
+                border-radius: 3px;
+                cursor: pointer;
+                transition: 0.3s;
+                text-align: center;
+                font-size: 1.1em;
+            }
+            
+            .input-file-button:hover {
+                background-color: #1A58D3;
+                color: white;
+                border: 1px white solid;
+            }
+        }
+
+        .url{
+            width: 100%;
+            height: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .input-url {
+                height: auto;
+                line-height: normal;
+                width: 25vmin;
+                padding: .3em .3em;
+                outline-style: none;
+                border: 2px solid #a0a0a0;
+                border-radius: 3px;
+                transition: .3s;
+            }
+            
+            .input-url:hover {
+                border: 2px solid #0b0b0b;
+            }
+
+            .input-url::placeholder {
+                color: #a0a0a0;
+                text-align: center;
+            }
+            
+            .input-url:focus {
+                border: 2px solid #1A58D3;
+            }
+
+            .input-group{
+                display: flex;
+                flex-direction: column-reverse;
+            }
+
+            label{
+                font-weight: bold;
+            }
+
+           .input-url:focus + label{
+                color: #1A58D3 !important;
+            }
+
+            .url-submit-button{
+                background-color: white;
+                width: 10vmin;
+                height: 5vmin;
+                padding: 1%;
+                border: 1px solid black;
+                border-radius: 3px;
+                cursor: pointer;
+                transition: 0.3s;
+                text-align: center;
+                margin-top: 1%;
+            }
+
+            .url-submit-button:hover{
+                background-color: #1A58D3;
+                color: white;
+                border: 1px white solid;
+            }
+        }
+    }
+
+    .preview{
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+
+        .preview-title{
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+    
+        .preview-inner{
+            width: 80%;
+            height: 80%;
+            overflow: scroll;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            img{
+                min-width: 100%;
+                min-height: 100%;
+            }
+        }
+    }
+}
