@@ -26,7 +26,7 @@ class Text extends Action {
         tr: false
       });
       canvas.add(text).setActiveObject(text);
-      this.getImageEditor().saveState('text add');
+      this.saveState('text add');
     }
     document.removeEventListener('mousedown', this.addTextEvent);
     canvas.defaultCursor = 'default';
@@ -86,7 +86,7 @@ class Text extends Action {
           break;
         default:
       }
-      this.saveState('Text modified ' + option);
+      this.saveState('Text modified : ' + option);
       canvas.renderAll();
     }
   }

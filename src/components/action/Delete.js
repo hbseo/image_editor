@@ -13,7 +13,7 @@ class Delete extends Action {
         case 'textbox' : 
           if(!this.getActiveObject().isEditing){
             canvas.remove(obj);
-            this.getImageEditor().saveState('delete Textbox');
+            this.saveState('delete Textbox');
           }
           break;
         case 'activeSelection':
@@ -21,11 +21,11 @@ class Delete extends Action {
             canvas.remove(obj._objects[i]);
           }
           canvas.discardActiveObject();
-          this.getImageEditor().saveState('delete activeSelection');
+          this.saveState('delete activeSelection');
           break;
         default :
           canvas.remove(obj);
-          this.getImageEditor().saveState('delete '+ obj.type);
+          this.saveState('delete '+ obj.type);
       }
       canvas.renderAll();
     }
@@ -34,7 +34,7 @@ class Delete extends Action {
   deleteAllObject = () => {
     const canvas = this.getCanvas();
     canvas.remove(...canvas.getObjects());
-    this.getImageEditor().saveState('clear canvas');
+    this.saveState('clear canvas');
     canvas.renderAll();
   }
 

@@ -13,7 +13,7 @@ class Rotation extends Action {
       obj.set({
         angle: (angle + obj.angle)% 360,
       });
-      this.getImageEditor().saveState('angle change');
+      this.saveState('angle change');
       canvas.renderAll();
     }
   }
@@ -26,7 +26,7 @@ class Rotation extends Action {
       obj.set({
         angle: angle % 360,
       });
-      this.getImageEditor().saveState('angle set');
+      this.saveState('angle set');
       canvas.renderAll();
     }
   }
