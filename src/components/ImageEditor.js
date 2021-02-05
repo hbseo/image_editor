@@ -610,6 +610,9 @@ class ImageEditor extends Component {
       this.currentState.width = this._canvas.width;
       this.currentState.height = this._canvas.height;
       this.currentState.action = action;
+      if(this._canvas.backgroundImage){
+        this.currentState.backFilter = this._canvas.backgroundImage.filters;
+      }
       this.currentState.id = this.stateStack.length > 0 ? this.stateStack[this.stateStack.length -1].id + 1 : 1;
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
@@ -637,6 +640,11 @@ class ImageEditor extends Component {
       this._canvas.setHeight(newState.height);
       this._canvas.calcOffset();
       this.lock = false;
+
+      if(this._canvas.backgroundImage){
+        // console.log(newState.filters)
+        this._canvas.backgroundImage.filters = newState.backFilter;
+      }
     });
     // this._canvas._objects.forEach(object => {
     //   if(object.type === 'image') {
@@ -1441,6 +1449,10 @@ class ImageEditor extends Component {
         this._canvas.setWidth(this.currentState.width);
         this._canvas.setHeight(this.currentState.height);
         this._canvas.calcOffset();
+
+        if(this._canvas.backgroundImage){
+          this._canvas.backgroundImage.filters = this.currentState.backFilter;
+        }
       });
       this.forceUpdate();
     }
@@ -1721,6 +1733,7 @@ class ImageEditor extends Component {
           exportCanvas = {this.exportCanvas}
           importCanvas = {this.importCanvas}
           buttonLayer = {this.action['Layers'].buttonLayer}
+          getCanvasInfo = {this.getCanvasInfo}
         />,
       9: <CanvasUI 
           object={this.state.activeObject} 
