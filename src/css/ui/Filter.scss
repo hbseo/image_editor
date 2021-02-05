@@ -18,7 +18,10 @@
 .filter-options{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+
+  div{
+    margin: 1%;
+  }
   
   input[type="checkbox"]{
     display: none;
