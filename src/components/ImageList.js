@@ -78,13 +78,13 @@ class ImageList extends Component {
   }
 
   showImage = (imagelist) => {
+    if(imagelist['errors']){ alert('showimage errors'); return null;}
     const listitem = imagelist.map((image) =>
 
       <img key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small}/>
 
       // ursl뒤에 raw, small, regular, full 등의 따라 사이즈 조절
     );
-
     return (
       <div id="image-list">{listitem}</div>
     )

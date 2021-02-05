@@ -12,7 +12,7 @@ class Loading extends Component {
 				{open === true ?
 				  <div className = "modal">
 						<div className = "loadingModal">
-              <h1>롱ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ오오오오딩</h1>
+              				<h1>로딩</h1>
 						</div>
 					</div> : null }
 			</div>
