@@ -18,10 +18,11 @@ async function isLogin() {
 
 // 접근 권한이 없을 때 메인 페이지로 Redirect
 export const PublicRoute = ({ component: Component, restricted, ...rest }) => {
+  console.log(isLogin());
   return(
     <Route
       {...rest}
-      render={(props) => (isLogin() && restricted ? <Redirect to="/" /> : <Component {...props} />)}
+      render={(props) => (!isLogin() && restricted ? <Redirect to="/" /> : <Component {...props} />)}
     />
   )
 }
@@ -31,7 +32,7 @@ export const PrivateRoute = ({ component: Component, ...rest }) => {
   return(
     <Route
       {...rest}
-      render={(props) => (isLogin() ? <Component {...props} /> : <Redirect to="/login" />)}
+      render={(props) => (!isLogin() ? <Component {...props} /> : <Redirect to="/login" />)}
     />
   )
 }
