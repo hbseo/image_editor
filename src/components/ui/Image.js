@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Loading from './Loading';
 import '../../css/ui/Image.scss'
+
 export default class Image extends Component {
   constructor(props){
     super(props);
@@ -57,7 +58,7 @@ export default class Image extends Component {
         </div>
         <div className="sub-imagesmenu">
           <div className="crop-ratio">
-            <div>Crop Start</div>
+            <div className="option-title">Crop start</div>
             <div className="crop-start-button">
               <button onClick={this.handleCropImage} className = "cropStart" crop="4:3">4:3</button>
               <button onClick={this.handleCropImage} className = "cropStart" crop="16:9">16:9</button>
@@ -66,17 +67,21 @@ export default class Image extends Component {
             </div>
             <button id="end-button" onClick={this.props.cropEndObject} crop="left">Crop End</button>
           </div>
-          <div>
-          </div>
-          <div className="why">
-            <div>이건 여기 왜 있는거야?</div>
-            <div>
-              <button><input type='file' id='_file' onChange={this.importImage} accept="image/*"></input>로컬 이미지 불러오기</button>
-            </div>
-            <div>
+          <div className="upload-file">
+              <div className="option-title">Upload image</div>
+              <div className="image-local">
+                <div className="file-input-group">
+                  <label className="input-file-button" htmlFor="_file">Upload local image</label>
+                  <input name="file" type='file' id='_file' onChange={this.importImage} accept="image/*" style={{ display: 'none' }}></input>
+                </div>
+              </div>
+            <div className="image-url">
               <form id="imgload" onSubmit={this.handleSubmit}>
-                url : <input name="url" value={this.state.imgURL} onChange = {this.handleChange}/>
-                <input type="submit" value="Submit" />
+                <div className="image-url-group">
+                  <input name="url" id="_url" value={this.state.imgURL} onChange = {this.handleChange} autoComplete="off"/>
+                  <label htmlFor="_url">URL: </label>
+                </div>
+                <input className="url-submit" type="submit" value="Submit" />
               </form>
             </div>
           </div>
