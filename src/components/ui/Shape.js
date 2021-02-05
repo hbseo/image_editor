@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { ChromePicker } from 'react-color';
-// import './Text.scss'
+import '../../css/ui/Shape.scss'
+
 export default class Shape extends Component {
   constructor(props){
     super(props);
@@ -45,37 +46,32 @@ export default class Shape extends Component {
         <div className="sub-title">
             Shape ( {this.props.object.type} )
         </div>
-        <div className="sub-filters">
-          <div>
+        <div className="sub-shape">
+          <div className="option-title">Shape</div>
+          <div className="shape-list">
             <button onClick={this.addShape} type="triangle">삼각형</button>
-          </div>
-          <div>
             <button onClick={this.addShape} type="rectangle">직사각형</button>
-          </div>
-          <div>
             <button onClick={this.addShape} type="ellipse">타원</button>
-          </div>
-          <div>
             <button onClick={this.addShape} type="circle">원</button>
           </div>
-          <div>
+          <div className="option-title">Line</div>
+          <div className="line-list">
             <button onClick={this.props.addLine} type="line">직선</button>
           </div>
-          <div>
-            <button onClick={this.props.makePolygonWithClick} type="line">클릭으로 만들기</button>
-          </div>
-          <div>
-            <button onClick={this.props.makePolygonWithDrag} type="line">드래그로 만들기</button>
+          <div className="option-title">Free making</div>
+          <div className="free-making">
+            <button onClick={this.props.makePolygonWithClick} type="line">Click</button>
+            <button onClick={this.props.makePolygonWithDrag} type="line">Drag</button>
           </div>
           { this.props.object.type === "circle" ? 
             <div>
               <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.props.object.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
             </div> : <div></div>
           }
-        </div>
-        <div>
-          <label>color</label>
-          <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          <div className="option-title">Color</div>
+          <div className="color-picker">
+            <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          </div>
         </div>
       </div>
     );
