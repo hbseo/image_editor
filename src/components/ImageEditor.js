@@ -1772,6 +1772,11 @@ class ImageEditor extends Component {
           <div className="real" >
             <canvas id='canvas' tabIndex='0'></canvas>
           </div>
+          <div>
+            <p>zoom : {this.state.zoom}</p>
+            <p>{this._canvas ? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</p>
+
+          </div>
           <HistoryUI showUndoStack = {this.showUndoStack} currentState={this.currentState} />
         </div>
         <Save 
