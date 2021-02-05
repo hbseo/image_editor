@@ -61,23 +61,12 @@ class ImageEditor extends Component {
         b: '255',
         a: '1',
       },
-      text : {
-        color : '#FFFFFF'
-      },
-      colorHex : '#000000',
-      shadow : {
-        blur : 30,
-        offsetX : 10,
-        offsetY: 10,
-        color : '#000000'
-      },
       pipetteRGB:{
           r: '0',
           g: '0',
           b: '0',
           a: '1',
       },
-      scale : 1.0,
       openSave : false, // save Modal 여는 용도
       tab : 0, // 사이드 NavBar 탭 번호
       user_name : '', // 로그인 되어있는 유저 id
@@ -389,17 +378,36 @@ class ImageEditor extends Component {
     }
   }
 
+  onCanvasMove = () => {
+    this._canvas.on('mouse:down', this._canvasMoveStartEvent);
+    this._canvas.on('mouse:move', this._canvasMovingEvent);
+    this._canvas.on('mouse:up', this._canvasMoveEndEvent);
+
+  }
+
+  offCanvasMove = () => {
+    this._canvas.off('mouse:down', this._canvasMoveStartEvent);
+    this._canvas.off('mouse:move', this._canvasMovingEvent);
+    this._canvas.off('mouse:up', this._canvasMoveEndEvent);
+  }
+
+  onCanvasZoom = () => {
+    this._canvas.on('mouse:wheel', this._canvasZoomEvent);    
+  }
+
+  offCanvasZoom = () => {
+    this._canvas.off('mouse:wheel', this._canvasZoomEvent);    
+  }
+
+
   /**
    * Attach canvas events
    * @private
    */
   _createCanvasEvent = () => {
-    this._canvas.on('mouse:down', this._canvasMoveStartEvent);
-    this._canvas.on('mouse:move', this._canvasMovingEvent);
-    this._canvas.on('mouse:up', this._canvasMoveEndEvent);
-    this._canvas.on('mouse:wheel', this._canvasZoomEvent);    
-
-		
+    this.onCanvasMove();
+    this.onCanvasZoom();
+    
 		this._canvas.on('selection:created', (event) => {
 			// 객체 선택됐을시
       let type = this._canvas.getActiveObject().type;
@@ -1676,28 +1684,7 @@ class ImageEditor extends Component {
     this.setState({isSaved : true, prj_idx : idx});
   }
 
-  addScale = () => {
-    if(this.state.scale >= 1) { return; }
-    this.setState(({scale}) => ({
-      scale : scale + 0.1
-    }))
-    
-  }
-
-  reduceScale = () => {
-    if(this.state.scale <= 0.2) { return; }
-    this.setState(({scale}) => ({
-      scale : scale - 0.1
-    }))
-  }
-
   render() {
-		const styles = {
-      size : {
-        transform : `scale(${ this.state.scale },${ this.state.scale })`
-      }
-    };
-
     const tab = {
       0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText}/>,
       1: <ImageUI 
@@ -1774,9 +1761,6 @@ class ImageEditor extends Component {
             <div className="do">
                 <button onClick = {this.undo}>Undo</button>
                 <button onClick = {this.redo}>Redo</button>
-                <button onClick = {this.addScale} >확대</button>
-                <button onClick = {this.reduceScale} >축소</button>
-                <button >{this.state.scale.toFixed(2)}</button>
             </div>
             <div className="save">
                 <button onClick={this.openSaveModal} >Save</button>
@@ -1786,7 +1770,7 @@ class ImageEditor extends Component {
             </div>
           </div>
           <div className="real" >
-            <canvas id='canvas' tabIndex='0' style= {styles.size}></canvas>
+            <canvas id='canvas' tabIndex='0'></canvas>
           </div>
           <HistoryUI showUndoStack = {this.showUndoStack} currentState={this.currentState} />
         </div>

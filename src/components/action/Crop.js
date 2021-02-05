@@ -158,6 +158,8 @@ class Crop extends Action {
   removeCropzone = () => {
     let canvas = this.getCanvas();
     canvas.remove(this._cropzone);
+    this.offCanvasMove();
+    this.offCanvasZoom();
     this.deleteEvent();
     canvas.renderAll();
   }
@@ -190,6 +192,10 @@ class Crop extends Action {
     this._cropzone.setControlsVisibility({
       mtr:false
     });
+    this.resetCanvas();
+    this.offCanvasMove();
+    this.offCanvasZoom();
+
     canvas.add(this._cropzone);
     this.addEvent();
     canvas.setActiveObject(this._cropzone);
