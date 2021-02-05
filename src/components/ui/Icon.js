@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { ChromePicker } from 'react-color';
-// import './Text.scss'
+
 export default class Icon extends Component {
   constructor(props){
     super(props);
@@ -46,8 +46,9 @@ export default class Icon extends Component {
             Icon ( {this.props.object.type} )
         </div>
         <div className="sub-iconmenu">
-          <button className="fas fa-times fa-5x" onClick={this.addIcon} type = "cancel"></button>
+          <div className="option-title">Pick icon</div>
           <div className="icon">
+            <button className="fas fa-times" onClick={this.addIcon} type = "cancel"></button>
             <button className="fas fa-arrow-right" onClick={this.addIcon} type = "icon_arrow_2"></button>
             <button className="fas fa-angle-right" onClick={this.addIcon} type = "icon_arrow_3"></button>
             <button className="fas fa-star" onClick={this.addIcon} type = "icon_star"></button>
@@ -58,10 +59,10 @@ export default class Icon extends Component {
             <button className="fas fa-comment-alt" onClick={this.addIcon} type = "icon_bubble"></button>
             <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
           </div>
-        </div>
-        <div className="color-picker">
-          <label>color</label>
-          <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          <div className="option-title">Color</div>
+          <div className="color-picker">
+            <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          </div>
         </div>
       </div>
     );

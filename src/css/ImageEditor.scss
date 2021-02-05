@@ -289,29 +289,35 @@ ul {
 .sub-iconmenu{
   display: flex;
   flex-direction: column;
-}
 
-.icon{
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
+  .option-title{
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 1%;
+  }
 
-.icon button{
-  width: 7vmin;
-  height: 7vmin;
-}
+  .icon{
+    width: 100%;
+    margin-top: 3%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
 
-.icon button:hover{
-  background-color: #DFDFDF;
-}
+  .icon button{
+    width: 7vmin;
+    height: 7vmin;
+  }
+  
+  .icon button:hover{
+    background-color: #DFDFDF;
+  }
 
-/* color picker */
-
-.color-picker label{
-  width: 100%;
-  padding: 5%;
+  .color-picker{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 /* rotate css */
