@@ -2,6 +2,7 @@ import Action from './Action';
 import { Ink } from '../filters/glfx/ink.js'
 import { Vignette } from '../filters/glfx/vignette.js'
 import { ZoomBlur } from '../filters/glfx/zoomblur.js'
+import { Vibrance } from '../filters/glfx/vibrance.js'
 import { fabric } from 'fabric';
 
 class Filter extends Action {
@@ -109,6 +110,11 @@ class Filter extends Action {
               width : obj.width,
               height : obj.height
             }
+          }));
+          break;
+        case 'vibrance':
+          obj.filters[25] = (new Vibrance({
+            amount : value
           }));
           break;
         case 'opacity':

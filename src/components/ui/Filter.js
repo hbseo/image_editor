@@ -6,7 +6,7 @@ export default class Filter extends Component{
   constructor(props){
     super(props);
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur' ];
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur', 'Vibrance' ];
 
     this.state = {
       brightness: 0,
@@ -19,6 +19,7 @@ export default class Filter extends Component{
       ink : 0,
       vignette : 0,
       zoomblur : 0,
+      vibrance : 0,
       opacity : 1,
     }
   }
@@ -293,6 +294,21 @@ export default class Filter extends Component{
                   onChange={this.handleFilterChange} filter='zoomblur'
                 />zoomblur from glfx.js
                 <label id="zoomblur-value">{this.state.zoomblur}</label>
+                {/* {this.props.object.type === 'image' && this.props.object.filters[24] ? this.props.object.filters[24].zoomblur_matrix.strength : 0 } */}
+              </div>
+              <div>
+                <input
+                  type='range'
+                  className='filter'
+                  id='vibrance'
+                  min='-1'
+                  max='1'
+                  name='vibrance'
+                  step='0.1'
+                  value={this.state.vibrance || 0}
+                  onChange={this.handleFilterChange} filter='vibrance'
+                />vibrance from glfx.js
+                <label id="vibrance-value">{this.state.vibrance}</label>
                 {/* {this.props.object.type === 'image' && this.props.object.filters[24] ? this.props.object.filters[24].zoomblur_matrix.strength : 0 } */}
               </div>
               <div>

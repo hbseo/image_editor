@@ -113,7 +113,7 @@ class ImageEditor extends Component {
 
     // filterList
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur' ];
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur', 'Vibrance' ];
 
     //add function
     this.startPoint = { x : 0, y : 0 };
@@ -688,25 +688,7 @@ class ImageEditor extends Component {
     // }
 		this.setState({
       activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
-      filters : {
-        brightness: image.filters[15] ? image.filters[15].brightness : 0,
-        contrast : image.filters[16] ? image.filters[16].contrast : 0,
-        pixelate : image.filters[17] ? image.filters[17].blocksize : 1,
-        blur : image.filters[18] ? image.filters[18].blur : 0,
-        noise : image.filters[19] ? image.filters[19].noise : 0,
-        saturation : image.filters[20] ? image.filters[20].noise : 0,
-        hue : image.filters[21] ? image.filters[21].noise : 0,
-        ink : image.filters[22] ? image.filters[22].ink_matrix.ink : 0,
-        vignette : image.filters[23] ? image.filters[23].vignette_matrix.amount : 0,
-        zoomblur : image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0,
-      },
-      shadow : {
-        blur : toggle ? image.shadow.blur : 30,
-        offsetX : toggle ? image.shadow.offsetX : 10,
-        offsetY : toggle ? image.shadow.offsetY : 10,
-        color : toggle ? image.shadow.color : '#000000'
-      },
-      displayshadow : toggle
+
 		});
 	}
 
