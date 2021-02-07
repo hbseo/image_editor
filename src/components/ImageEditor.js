@@ -1017,17 +1017,12 @@ class ImageEditor extends Component {
     this.action['Draw'].drawPolygonWithClick();
   }
 
-  lockScaleRatio = (event) => {
-    if(this.getActiveObject()){
-      let obj = this.getActiveObject();
-      obj.set({
-        scaleY : Math.max(obj.scaleX, obj.scaleY),
-        scaleX : Math.max(obj.scaleX, obj.scaleY)
-      })
-    }
+  lockScaleRatio = () => {
+    this.action['Object'].lockScaleRatio();
+  }
+
+  updateLockScale = () => {
     this.lockScale = !this.lockScale;
-    this.setState({ activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0} })
-    this._canvas.renderAll();
   }
 
   handleAngleChange = (event) => {

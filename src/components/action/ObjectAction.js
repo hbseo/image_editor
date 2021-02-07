@@ -44,6 +44,19 @@ class ObjectAction extends Action {
     }
 
   }
+
+  lockScaleRatio = () => {
+    let obj = this.getActiveObject();
+    if(obj){
+      obj.set({
+        scaleY : Math.max(obj.scaleX, obj.scaleY),
+        scaleX : Math.max(obj.scaleX, obj.scaleY)
+      })
+    }
+    this.updateLockScale();
+    this.updateObject();
+    this.getCanvas().renderAll();
+  }
 }
 
 export default ObjectAction;

@@ -91,6 +91,9 @@ export default class Action {
     return this.app.offCanvasZoom();
   }
 
+  updateLockScale(){
+    return this.app.updateLockScale();
+  }
 
 }
 
