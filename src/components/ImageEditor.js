@@ -928,7 +928,6 @@ class ImageEditor extends Component {
 
   setEndAngle = (value) => {
     this.action['Shape'].setEndAngle(value);
-    this.setState({activeObject : this.getActiveObject()})
   }
 
   setShadow = (option) => {
@@ -961,11 +960,6 @@ class ImageEditor extends Component {
 
   updateLockScale = () => {
     this.lockScale = !this.lockScale;
-  }
-
-  handleAngleChange = (event) => {
-    this.action['Rotation'].setAngle(this.getActiveObject(), event.target.value);
-    this.setState({ activeObject : this.getActiveObject() });
   }
 
   handleScaleXChange = (event) => {
@@ -1143,7 +1137,6 @@ class ImageEditor extends Component {
 
   setObjectAngle = (changeAngle) => {
     this.action['Rotation'].setAngle(Number(changeAngle));
-    // this.setState({activeObject : this.getActiveObject()})
   }
 
   rotateObjectAngle = (angle) => {
