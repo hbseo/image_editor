@@ -43,7 +43,6 @@ class ImageEditor extends Component {
       canvasView : { x: 0, y: 0},
       layers: [],
       displayColorPicker: false,
-      displayCropCanvasSize: false,
       displayTextbgColorPicker: false,
       displayshadow: false,
       lineWidth: 10,
@@ -368,16 +367,6 @@ class ImageEditor extends Component {
     }
   }
 
-  _displayCropCanvas = (event) => {
-    if(this.state.displayCropCanvasSize) {
-      if(event.target === null || event.target.type !== 'Cropzone') {
-        this.action['Crop'].removeCropzone();
-        this._canvas.off('object:moving', this.canvasCropzoneMoving);
-        this.setState({displayCropCanvasSize: false});
-      }
-    }
-  }
-
   onCanvasMove = () => {
     this._canvas.on('mouse:down', this._canvasMoveStartEvent);
     this._canvas.on('mouse:move', this._canvasMovingEvent);
@@ -480,28 +469,6 @@ class ImageEditor extends Component {
     // })
     this._canvas.on('object:scaling', (event) => {
       // console.log('object:scaling');
-      if(this.state.displayCropCanvasSize) {
-        let obj = event.target;
-      //   obj.setCoords();
-      //   if(event.pointer.y < 0 || event.pointer.x < 0 ||
-      //      event.pointer.y > event.target.canvas.height ||
-      //      event.pointer.x > event.target.canvas.width) {
-      //     obj.top = this.cropCanvasState.top;
-      //     obj.left = this.cropCanvasState.left;
-      //     obj.scaleX = this.cropCanvasState.scaleX;
-      //     obj.scaleY = this.cropCanvasState.scaleY;
-      //   }
-      //   else {
-      //     this.cropCanvasState = {
-      //       top: obj.top,
-      //       left: obj.left,
-      //       scaleX: obj.scaleX,
-      //       scaleY: obj.scaleY,
-      //     }
-      //   }
-        let change_state = {width: obj.width*obj.scaleX, height: obj.height*obj.scaleY};
-        this.setState({cropCanvasSize: change_state});
-      }
     })
     this._canvas.on('object:moved', this.movedObjectSave);
   }
@@ -511,35 +478,6 @@ class ImageEditor extends Component {
     if(event.target.type !== 'Cropzone'){
       this.saveState(event.target.type + ' : move');
     }
-  }
-
-  canvasCropzoneMoving = (event) => {
-    let obj = event.target;
-    obj.setCoords();
-    // 만약 cropzone이 회전이 불가능 하다면, max, min 하지 않아도 괜찮
-    let obj_top = Math.min(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y) ;
-    let obj_bottom = Math.max(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y);
-    let obj_right = Math.max(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x);
-    let obj_left = Math.min(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x)
-    if(obj_top  < 0){ 
-      obj.set({
-        top : (-this.state.canvasView.y / this.state.zoom) + (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2)
-      })}
-    if(obj_left < 0){
-      obj.set({
-        left :  (-this.state.canvasView.x / this.state.zoom) + (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2)
-      })}
-    if(obj_bottom > this._canvas.height ){
-      obj.set({
-        top : ( (-this.state.canvasView.y / this.state.zoom)  + (this._canvas.height / this.state.zoom) - (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2))
-      })
-    }
-    if(obj_right > this._canvas.width ) {
-      obj.set({
-        left: ( (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) - (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2))
-      })
-    }
-    obj.setCoords();
   }
 
   /**
@@ -1164,43 +1102,9 @@ class ImageEditor extends Component {
     // }
   // }
 
-  // handleCropCanvasSizeChange = (event) => {
-  //   let obj = this.getActiveObject();
-  //   let change_state = {
-  //     width : this.state.cropCanvasSize.width,
-  //     height : this.state.cropCanvasSize.height
-  //   };
-  //   if(event.target.name === 'width') {
-  //     if(obj.left - event.target.value/2 < 0 || obj.left + event.target.value/2 > this._canvas.width) {
-  //       if(obj.left < this._canvas.width - obj.left) {
-  //         obj.left = event.target.value/2;
-  //       }
-  //       else {
-  //         obj.left = this._canvas.width - event.target.value/2;
-  //       }
-  //       change_state.width = Math.min(obj.left*2, (this._canvas.width-obj.left)*2);
-  //     }
-  //   }
-  //   else {
-  //     if(obj.top - event.target.value/2 < 0 || obj.top + event.target.value/2 > this._canvas.height) {
-  //       if(obj.top < this._canvas.height - obj.top) {
-  //         obj.top = event.target.value/2;
-  //       }
-  //       else {
-  //         obj.top = this._canvas.height - event.target.value/2;
-  //       }
-  //       change_state.height = Math.min(obj.top*2, (this._canvas.height-obj.top)*2);
-  //     }
-  //   }
-  //   change_state[event.target.name] = event.target.value;
-  //   new Promise((resolve) => {
-  //     this.setState({cropCanvasSize : change_state});
-  //     resolve();
-  //   })
-  //   .then(() => {
-  //     this.action['Crop'].resizeCropzone(this.state.cropCanvasSize);
-  //   })
-  // }
+  handleCropCanvasSizeChange = (value) => {
+    this.action['Crop'].resizeCropzone(value);
+  }
 
   handletextBgChange = (event) => {
     if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {
@@ -1301,8 +1205,8 @@ class ImageEditor extends Component {
     }
   }
 
-  cropCanvas = () => {
-    this.action['Crop'].cropCanvas();
+  cropCanvas = (off) => {
+    this.action['Crop'].cropCanvas(off);
   }
 
   cropEndCanvas = () => {
@@ -1732,9 +1636,11 @@ class ImageEditor extends Component {
         />,
       9: <CanvasUI 
           object={this.state.activeObject} 
+          canvas={this._canvas}
           resetCanvas = {this.resetCanvas}
           cropCanvas = {this.cropCanvas}
           cropEndCanvas = {this.cropEndCanvas}
+          handleCropCanvasSizeChange = {this.handleCropCanvasSizeChange}
         />
     };
     return (
