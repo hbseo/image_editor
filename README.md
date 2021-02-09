@@ -40,6 +40,7 @@ image_editor
 │
 └───src
 │   │───index.js
+│   │───Route.js
 │   │
 │   └───css
 │   │   │───Error.scss
@@ -54,6 +55,7 @@ image_editor
 │   │   └───ui
 │   │
 │   └───components
+│       │───Change_password.js
 │       │───Error.js
 │       │───ImageEditor.js
 │       │───ImageList.js
@@ -69,6 +71,7 @@ image_editor
 │       │    
 │       └─── action
 │       │     │───Action.js
+│       │     │───Clip.js
 │       │     │───Crop.js
 │       │     │───Delete.js
 │       │     │───Draw.js
@@ -78,6 +81,7 @@ image_editor
 │       │     │───Icon.js
 │       │     │───Image.js
 │       │     │───Line.js
+│       │     │───ObjectAction.js
 │       │     │───Rotation.js
 │       │     │───Shape.js
 │       │     └───Text.js
@@ -94,10 +98,13 @@ image_editor
 │       └─── filters
 |       │    └─── glfx
 │       │          │───ink.js
+│       │          │───vibrance.js
 │       │          │───vignette.js
 │       │          └───zoomblur.js
 │       │
 │       └─── helper
+│       │     │───Brush.js
+│       │     │───originImage.js
 │       │     │───Resize.js
 │       │     └───SwithTools.js
 │       │
