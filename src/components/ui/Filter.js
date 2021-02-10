@@ -6,7 +6,7 @@ export default class Filter extends Component{
   constructor(props){
     super(props);
     this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur', 'Vibrance' ];
+    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur', 'Vibrance', 'Denoise' ];
 
     this.state = {
       brightness: 0,
@@ -20,21 +20,22 @@ export default class Filter extends Component{
       vignette : 0,
       zoomblur : 0,
       vibrance : 0,
+      denoise : 50,
       opacity : 1,
     }
   }
 
   componentDidMount(){
-    console.log('Filter UI Mount');
+    // console.log('Filter UI Mount');
     this.documentUpdate();
   }
   componentDidUpdate(){
-    console.log('Filter UI Update');
+    // console.log('Filter UI Update');
     this.documentUpdate();
   }
   
   componentWillUnmount(){
-    console.log('Filter UI Unmount');
+    // console.log('Filter UI Unmount');
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -309,6 +310,21 @@ export default class Filter extends Component{
                   onChange={this.handleFilterChange} filter='vibrance'
                 />vibrance from glfx.js
                 <label id="vibrance-value">{this.state.vibrance}</label>
+                {/* {this.props.object.type === 'image' && this.props.object.filters[24] ? this.props.object.filters[24].zoomblur_matrix.strength : 0 } */}
+              </div>
+              <div>
+                <input
+                  type='range'
+                  className='filter'
+                  id='denoise'
+                  min='0'
+                  max='50'
+                  name='denoise'
+                  step='1'
+                  value={this.state.denoise || 50}
+                  onChange={this.handleFilterChange} filter='denoise'
+                />denoise from glfx.js
+                <label id="denoise-value">{this.state.denoise}</label>
                 {/* {this.props.object.type === 'image' && this.props.object.filters[24] ? this.props.object.filters[24].zoomblur_matrix.strength : 0 } */}
               </div>
               <div>
