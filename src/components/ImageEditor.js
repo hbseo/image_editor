@@ -102,7 +102,7 @@ class ImageEditor extends Component {
 
     // redo undo
     this.lock = false;
-    this.currentState = { width: null, height: null, action : 'constructor' };
+    this.currentState = { width: null, height: null, action : 'constructor', backFilter : [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false] };
     this.stateStack = [];
     this.redoStack = [];
     this.firstState = null;
@@ -162,6 +162,7 @@ class ImageEditor extends Component {
         this.currentState = this._canvas.toDatalessJSON();
         this.currentState.width = this._canvas.width;
         this.currentState.height = this._canvas.height;
+        this.currentState.backFilter = [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
         this.currentState.action = "initilize";
         this.currentState.id = 0;
         this.firstState = this.currentState;
@@ -188,6 +189,7 @@ class ImageEditor extends Component {
       this.currentState = this._canvas.toDatalessJSON();
       this.currentState.width = this._canvas.width;
       this.currentState.height = this._canvas.height;
+      this.currentState.backFilter = [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
       this.currentState.action = "initilize";
       this.currentState.id = 0;
       this.firstState = this.currentState;
@@ -551,6 +553,7 @@ class ImageEditor extends Component {
       if(this._canvas.backgroundImage){
         this.currentState.backFilter = this._canvas.backgroundImage.filters;
       }
+      console.log("save ", this.currentState)
       this.currentState.id = this.stateStack.length > 0 ? this.stateStack[this.stateStack.length -1].id + 1 : 1;
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
@@ -578,11 +581,12 @@ class ImageEditor extends Component {
       this._canvas.setHeight(newState.height);
       this._canvas.calcOffset();
       this.lock = false;
-
-      if(this._canvas.backgroundImage){
+      if(this.currentState.backgroundImage){
         // console.log(newState.filters)
-        this._canvas.backgroundImage.filters = newState.backFilter;
+        this._canvas.backgroundImage.filters = this.currentState.backFilter || [];
+        console.log(this.currentState)
       }
+
     });
     // this._canvas._objects.forEach(object => {
     //   if(object.type === 'image') {
@@ -1147,18 +1151,19 @@ class ImageEditor extends Component {
   filterObject = (event) => {
     let filterOption = event.target.getAttribute('filter');
     let activeObject = this.getActiveObject();
-
     if (activeObject) {
       this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
       
     }
     else if(this._canvas.backgroundImage){
+      console.log("@@@@@backimage : ", filterOption)
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
     }
   }
 
   rangeFilterObject = (filterOption, value) => {
-    this.action['Filter'].applyFilter(this.getActiveObject() || this._backgroundImage , filterOption, true, value);
+    console.log("@@@@@backimage : ", filterOption)
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, true, value);
   }
 
   deleteObject = () => {
