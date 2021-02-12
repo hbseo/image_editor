@@ -38,7 +38,6 @@ class ImageEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showRoot : false,
       fontsize: 50, //active object's fontSize
       canvasView : { x: 0, y: 0},
       layers: [],
@@ -155,8 +154,6 @@ class ImageEditor extends Component {
         });
       })
       .then(() => {
-        this.switchTools('text', true);
-        this.switchTools('filter', false);
         this._createDomEvent();
         this._createCanvasEvent();
         this.currentState = this._canvas.toDatalessJSON();
@@ -183,7 +180,6 @@ class ImageEditor extends Component {
         imageSmoothingEnabled : false,
         fireRightClick: true,
       });
-      this.switchTools('filter', 'text', true);
       this._createDomEvent();
       this._createCanvasEvent();
       this.currentState = this._canvas.toDatalessJSON();
@@ -411,13 +407,10 @@ class ImageEditor extends Component {
 					this._textboxSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection': //group using drag
-					this.switchTools('filter', 'text', true);
           break;
         case 'group': //group using drag
-				  this.switchTools('filter', 'text', true);
 				  break;
 				default:
-          this.switchTools('filter', 'text', true);
 			}
 		});
 
@@ -432,23 +425,23 @@ class ImageEditor extends Component {
 					this._textboxSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection': //group using drag
-					this.switchTools('filter', 'text', true);
+					// this.switchTools('filter', 'text', true);
           break;
         case 'group': //group using drag
-				  this.switchTools('filter', 'text', true);
+				  // this.switchTools('filter', 'text', true);
 				  break;
 				default:
-          this.switchTools('filter', 'text', true);
+          // this.switchTools('filter', 'text', true);
 			}
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
       this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0} });
 			if(!this._canvas.backgroundImage){
-        this.switchTools('filter', 'text', true);
+        // this.switchTools('filter', 'text', true);
 			}
 			else{
-        this.switchTools('text', true);
+        // this.switchTools('text', true);
 				this._imageSelection(this._canvas.backgroundImage);
       }
 		});
@@ -461,17 +454,19 @@ class ImageEditor extends Component {
     })
 
     this._canvas.on('object:rotated', (event) => {
-      this.setState({ activeObject : this.getActiveObject() })
+      this.updateObject();
     });
-    // this._canvas.on('object:removed', (event) => {
-    //   console.log('object:removed');
-    // })
-    // this._canvas.on('object:skewing', (event) => {
-    //   console.log('object:skewing');
-    // })
-    this._canvas.on('object:scaling', (event) => {
-      // console.log('object:scaling');
+
+    this._canvas.on('object:removed', (event) => {
+
     })
+    this._canvas.on('object:skewing', (event) => {
+
+    })
+    this._canvas.on('object:scaling', (event) => {
+
+    })
+
     this._canvas.on('object:moved', this.movedObjectSave);
   }
 
@@ -624,22 +619,7 @@ class ImageEditor extends Component {
    * @private
    */
 	_imageSelection = (image) => {
-		// this.switchTools('filter', false);
-		// this.switchTools('text', true);
-    // let list = document.getElementsByClassName('filter');
-    let toggle = image.shadow ? true : false;
-    // let change_filters = Array.from({length: this.filterList.length}, () => false);
-    // image.filters.forEach(filter => {
-    //   change_filters[this.filterList.indexOf(filter.type)] = filter;
-    // });
-    // image.filters = change_filters;
-		// for(let i=0; i<list.length; i++){
-		// 	list[i].checked = image.filters[i];
-    // }
-		this.setState({
-      activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
 
-		});
 	}
 
 
@@ -649,8 +629,6 @@ class ImageEditor extends Component {
    * @private
    */
 	_textboxSelection = (text) => {
-    this.switchTools('text', false);
-    this.switchTools('filter', true);
     // toggle shadow, backgroundColor
     let toggle = [false, false];
     if(text.shadow) {
@@ -680,15 +658,6 @@ class ImageEditor extends Component {
 		});
   }
   
-  switchTools = (...args) => {
-    for(let i = 0; i< args.length-1; i++) {
-      fabric.util.toArray(document.getElementsByClassName(args[i])).forEach(el => 
-        el.disabled = args[args.length-1]
-        );
-    }
-  }
-
-
   /**
    * create Action List
    * @private
@@ -1156,13 +1125,11 @@ class ImageEditor extends Component {
       
     }
     else if(this._canvas.backgroundImage){
-      console.log("@@@@@backimage : ", filterOption)
       this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
     }
   }
 
   rangeFilterObject = (filterOption, value) => {
-    console.log("@@@@@backimage : ", filterOption)
     this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, true, value);
   }
 
@@ -1252,11 +1219,6 @@ class ImageEditor extends Component {
   //     }
   //   })
   // }
-
-  onImgUrlChange = (url) => {
-    this.testUrl = url;
-    this.addImage(url);
-  }
 
   objectInfo = () => {
     if(this.getActiveObject()){
@@ -1542,12 +1504,8 @@ class ImageEditor extends Component {
     this.setState({imgStatus : true})
   }
   loadingFinish = () => {
-    console.log('이 함수 실행 시 로딩화면 끝내야 하는데......')
+    console.log('loading finish')
     this.setState({imgStatus : false});
-  }
-
-  displayRoot = () => {
-    this.setState({showRoot : !this.state.showRoot})
   }
 
   changeTab = (event) => {
