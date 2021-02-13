@@ -44,11 +44,13 @@ image_editor
 │   │
 │   └───css
 │   │   │───Error.scss
-│   │   │───ImageEditor.css
-│   │   │───Loading.css
+│   │   │───ImageEditor.scss
+│   │   │───ImageList.scss
+│   │   │───Loading.scss
 │   │   │───Main.scss
 │   │   │───New_project.scss
 │   │   │───Save.scss
+│   │   │───UploadFIle.scss
 │   │   │
 │   │   └───Login
 │   │   │   
@@ -97,6 +99,7 @@ image_editor
 │       │   
 │       └─── filters
 |       │    └─── glfx
+│       │          │───denoise.js
 │       │          │───ink.js
 │       │          │───vibrance.js
 │       │          │───vignette.js
