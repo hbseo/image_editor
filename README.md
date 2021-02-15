@@ -59,6 +59,7 @@ image_editor
 │   └───components
 │       │───Change_password.js
 │       │───Error.js
+|       |───Find_password.js
 │       │───ImageEditor.js
 │       │───ImageList.js
 │       │───LoadImage.js

@@ -229,3 +229,42 @@ exports.changeUserPassword = (req, res) => {
   .then(check)
   .catch(onError)
 }
+
+exports.findPassword = (req, res) => {
+  const database = new Database();
+  const {id, question, answer} = req.body;
+  let query = `SELECT EXISTS (SELECT * FROM USERS WHERE userid="${id}" and question="${question}" and answer="${answer}") as success;`;
+  let new_password = Math.random().toString(36).substr(2,11);
+  const change = (result) => {
+    if(result[0].success) {
+      let salt = crypto.randomBytes(64).toString('base64');
+      let hashPassword = crypto.pbkdf2Sync(new_password, salt, 100000, 64, 'sha512').toString('base64');
+      let update_query = `UPDATE USERS SET password = "${hashPassword}", salt="${salt}" WHERE userid="${id}";`;
+      database.query(update_query)
+      .then(respond)
+      .catch(onError)
+    }
+    else {
+      res.status(200).json({
+        msg: 'not match'
+      })
+    }
+  }
+
+  const respond = () => {
+    res.status(200).json({
+      msg: 'success',
+      password: new_password
+    })
+  }
+  
+  const onError = (error) => {
+    res.status(400).json({
+      msg: error.message
+    })
+  }
+
+  database.query(query)
+  .then(change)
+  .catch(onError)
+}

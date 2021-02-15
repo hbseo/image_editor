@@ -6,6 +6,7 @@ router.post('/login', controller.login);
 router.post('/register', controller.register);
 router.post('/changeUserPassword', controller.changeUserPassword);
 router.post('/dupCheck', controller.dupCheck);
+router.post('/findPassword', controller.findPassword);
 
 router.use('/check', authMiddleware);
 router.use('/logout', authMiddleware);

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/Login/bootstrap.min.scss';
 import '../css/Login/font-awesome.min.scss';
 import '../css/Login/main.scss';
 import '../css/Login/util.scss';
