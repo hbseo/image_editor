@@ -95,6 +95,7 @@ image_editor
 │       │     │───Extension.js
 │       │     │───Grid.js
 │       │     │───Layers.js
+│       │     │───Pipette.js
 │       │     └───Snap.js
 │       │   
 │       └─── filters
