@@ -13,6 +13,7 @@ export default class Shape extends Component {
         a: '1'
       },
     }
+    this.spoid = {r :0, g:0, b:0, a:1};
   }
   componentDidMount(){
     // console.log('Shape UI Mount');
@@ -38,6 +39,14 @@ export default class Shape extends Component {
 
   handleColorChangeComplete = (color) => {
     this.props.setColor(color);
+  }
+
+  setColor = (color) => {
+    this.setState({ color: color })
+  }
+
+  handlePipette = () => {
+    this.props.pipette.enablePipette(this.setColor); 
   }
 
   render(){
@@ -71,6 +80,9 @@ export default class Shape extends Component {
           <div className="option-title">Color</div>
           <div className="color-picker">
             <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          </div>
+          <div>
+            <button onClick = { this.handlePipette }>pipette</button>
           </div>
         </div>
       </div>

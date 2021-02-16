@@ -17,6 +17,7 @@ import Clip from './action/Clip';
 import Draw from './action/Draw';
 import Grid from './extension/Grid';
 import Snap from './extension/Snap';
+import Pipette from './extension/Pipette';
 import Layers from './extension/Layers';
 import Save from './Save';
 import SideNav from './ui/SideNav'
@@ -680,6 +681,7 @@ class ImageEditor extends Component {
     this._register(this.action, new Line(this));
     this._register(this.action, new Snap(this));
     this._register(this.action, new Layers(this));
+    this._register(this.action, new Pipette(this));
   }
 
   /**
@@ -1569,6 +1571,7 @@ class ImageEditor extends Component {
           makePolygonWithDrag={this.makePolygonWithDrag} 
           makePolygonWithClick={this.makePolygonWithClick}
           setColor={this.setColor}
+          pipette = {this.action['Pipette']}
           />,
       7: <DrawUI 
           object={this.state.activeObject} 
