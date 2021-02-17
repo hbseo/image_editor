@@ -1546,7 +1546,12 @@ class ImageEditor extends Component {
           imgStatus = {this.state.imgStatus}
           />,
       2: <FilterUI object={this.state.activeObject} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
-      3: <IconUI object={this.state.activeObject} addIcon = {this.addIcon} setColor={this.setColor}/>,
+      3: <IconUI 
+          object={this.state.activeObject} 
+          addIcon = {this.addIcon} 
+          setColor={this.setColor}
+          pipette = {this.action['Pipette']}
+          />,
       4: <ObjectUI 
           object={this.state.activeObject} 
           lockScaleRatio = {this.lockScaleRatio}
