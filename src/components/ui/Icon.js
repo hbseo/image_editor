@@ -39,6 +39,14 @@ export default class Icon extends Component {
     this.props.setColor(color);
   }
 
+  setColor = (color) => {
+    this.setState({ color: color })
+  }
+
+  handlePipette = () => {
+    this.props.pipette.enablePipette(this.setColor); 
+  }
+
   render(){
     return (
       <div className="sub">
@@ -62,6 +70,9 @@ export default class Icon extends Component {
           <div className="option-title">Color</div>
           <div className="color-picker">
             <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          </div>
+          <div>
+            <button onClick = { this.handlePipette }>pipette</button>
           </div>
         </div>
       </div>
