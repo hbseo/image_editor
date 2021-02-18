@@ -56,7 +56,7 @@ export default class Icon extends Component {
         <div className="sub-iconmenu">
           <div className="option-title">Pick icon</div>
           <div className="icon">
-            <button className="fas fa-times" onClick={this.addIcon} type = "cancel"></button>
+            <button className="fas fa-times" onClick={this.addIcon} type = "icon_cancel"></button>
             <button className="fas fa-arrow-right" onClick={this.addIcon} type = "icon_arrow_2"></button>
             <button className="fas fa-angle-right" onClick={this.addIcon} type = "icon_arrow_3"></button>
             <button className="fas fa-star" onClick={this.addIcon} type = "icon_star"></button>
@@ -66,6 +66,12 @@ export default class Icon extends Component {
             <button className="fas fa-heart" onClick={this.addIcon} type = "icon_heart"></button>
             <button className="fas fa-comment-alt" onClick={this.addIcon} type = "icon_bubble"></button>
             <button className="fas fa-cloud" onClick={this.addIcon} type = "icon_cloud"></button>
+            <button className="fas fa-camera" onClick={this.addIcon} type = "icon_camera"></button>
+            <button className="fab fa-instagram" onClick={this.addIcon} type = "icon_instagram"></button>
+            <button className="far fa-user" onClick={this.addIcon} type = "icon_man"></button>
+            <button className="fab fa-facebook-f" onClick={this.addIcon} type = "icon_facebook"></button>
+            <button className="fab fa-apple" onClick={this.addIcon} type = "icon_apple"></button>
+            
           </div>
           <div className="option-title">Color</div>
           <div className="color-picker">
