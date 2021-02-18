@@ -17,13 +17,14 @@ ReactDOM.render(
     <Switch>
       <Route exact path="/" component={Main} />
 			<Route exact path="/edit" component={ImageEditor} />
-      <Route exact path="/login" component={SignIn} />
-      <Route exact path="/register" component={SignUp} />
-      <Route exact path="/ChangePassword/:id" component={ChangePassword} />
-      <Route exact path="/find" component={FindPassword} />
-      {/* <PublicRoute exact path="/login" restricted component={SignIn}/>
+      {/* <Route exact path="/login" component={SignIn} /> */}
+      {/* <Route exact path="/register" component={SignUp} /> */}
+      {/* <Route exact path="/ChangePassword/:id" component={ChangePassword} /> */}
+      {/* <Route exact path="/find" component={FindPassword} /> */}
+      <PublicRoute exact path="/login" restricted component={SignIn}/>
       <PublicRoute exact path="/register" restricted component={SignUp}/>
-      <PrivateRoute exact path="/ChangePassword/:id" component={ChangePassword} /> */}
+      <PublicRoute exact path="/find" restricted component={FindPassword} />
+      <PrivateRoute exact path="/ChangePassword/:id" component={ChangePassword} />
       <Route component={Error} />
     </Switch>
   </Router>,

@@ -1,38 +1,36 @@
 import React from  'react';
 import {Redirect, Route} from 'react-router';
+import { useAsync } from 'react-async';
 
-async function isLogin() {
-  await fetch('/auth/check', {
-    method: 'GET'
-  })
-  .then((res) => res.json())
-  .then((data) => {
-    return data.success;
-  })
-  .catch((error) => {
-    console.log(error);
-    return false;
-  })
-  return false;
+const isLogin = async() => {
+  const response = await fetch('/auth/check', { method: 'GET'});
+  return response.json();
 }
 
 // 접근 권한이 없을 때 메인 페이지로 Redirect
 export const PublicRoute = ({ component: Component, restricted, ...rest }) => {
-  console.log(isLogin());
-  return(
-    <Route
-      {...rest}
-      render={(props) => (!isLogin() && restricted ? <Redirect to="/" /> : <Component {...props} />)}
-    />
-  )
+  const { data, error, isLoading } = useAsync({ promiseFn: isLogin })
+  if(isLoading) return "Loading..."
+  if(error) return error
+  if(data)
+    return(
+      <Route
+        {...rest}
+        render={(props) => (data.success && restricted ? <Redirect to="/" /> : <Component {...props} />)}
+      />
+    )
 }
 
 // 접근 권한이 없을 때 로그인 페이지로 Redirect
 export const PrivateRoute = ({ component: Component, ...rest }) => {
-  return(
-    <Route
-      {...rest}
-      render={(props) => (!isLogin() ? <Component {...props} /> : <Redirect to="/login" />)}
-    />
-  )
+  const { data, error, isLoading } = useAsync({ promiseFn: isLogin })
+  if(isLoading) return "Loading..."
+  if(error) return error
+  if(data)
+    return(
+      <Route
+        {...rest}
+        render={(props) => (data.success ? <Component {...props} /> : <Redirect to="/login" />)}
+      />
+    )
 }
