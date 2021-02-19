@@ -57,6 +57,65 @@ class ObjectAction extends Action {
     this.updateObject();
     this.getCanvas().renderAll();
   }
+
+  makeGroup = () => {
+    const canvas = this.getCanvas();
+    if(this.getActiveObject() && this.getActiveObject().type === 'activeSelection' && canvas){
+      canvas.getActiveObject().toGroup();
+      this.updateObject();
+      canvas.renderAll();
+      this.saveState('makeGroup')
+    }
+  }
+
+  unGroup = () => {
+    const canvas = this.getCanvas();
+    if(this.getActiveObject() && this.getActiveObject().type === 'group' && canvas){
+      canvas.getActiveObject().toActiveSelection();
+      this.updateObject();
+      canvas.renderAll();
+      this.saveState('unGroup')
+    }
+  }
+
+  sendBackwards = () => {
+    const canvas = this.getCanvas();
+    if(this.getActiveObject() && canvas){
+      canvas.sendBackwards(this.getActiveObject())
+      if(this.getGridOn()){ canvas.sendToBack(this.getGrid()) }
+      canvas.renderAll();
+      this.saveState('sendBackwards');
+    }
+  }
+
+  sendToBack = () => {
+    const canvas = this.getCanvas();
+    if(this.getActiveObject() && canvas){
+      canvas.sendToBack(this.getActiveObject() )
+      if(this.getGridOn()){ canvas.sendToBack(this.getGrid()) }
+      canvas.renderAll();
+      this.saveState('sendToBack');
+    }
+  }
+
+  bringForward = () => {
+    const canvas = this.getCanvas();
+    if(this.getActiveObject() && canvas){
+      canvas.bringForward(this.getActiveObject())
+      canvas.renderAll();
+      this.saveState('bringForward');
+    }
+  }
+
+  bringToFront = () => {
+    const canvas = this.getCanvas();
+    if(this.getActiveObject() && canvas){
+      canvas.bringToFront(this.getActiveObject())
+      canvas.renderAll();
+      this.saveState('bringToFront');
+    }
+  }
+
 }
 
 export default ObjectAction;

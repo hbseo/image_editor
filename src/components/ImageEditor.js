@@ -727,6 +727,14 @@ class ImageEditor extends Component {
   }
 
   /**
+   * Get grid On/Off
+   * @returns {this.gridOn}
+   */
+  getGridOn = () => {
+    return this.gridOn;
+  }
+
+  /**
    * Get Canvas size
    * @returns {{x:width, y:height}} 
    */
@@ -1391,52 +1399,27 @@ class ImageEditor extends Component {
   }
 
   makeGroup = () => {
-    if(this.getActiveObject() && this.getActiveObject().type === 'activeSelection'){
-      this._canvas.getActiveObject().toGroup();
-      this.setState({ activeObject : this._canvas.getActiveObject()});
-      this._canvas.renderAll();
-      this.saveState('makeGroup')
-    }
+    this.action['Object'].makeGroup();
   }
 
   unGroup = () => {
-    if(this.getActiveObject() && this.getActiveObject().type === 'group'){
-      this._canvas.getActiveObject().toActiveSelection();
-      this.setState({ activeObject : this._canvas.getActiveObject()});
-      this._canvas.renderAll();
-      this.saveState('unGroup')
-    }
+    this.action['Object'].unGroup();
   }
 
   sendBackwards = () => {
-    if(this.getActiveObject()){
-      this._canvas.sendBackwards(this.getActiveObject())
-      if(this.gridOn){ this._canvas.sendToBack(this.grid) }
-      this._canvas.renderAll();
-      this.saveState('sendBackwards');
-    }
+    this.action['Object'].sendBackwards();
   }
+
   sendToBack = () => {
-    if(this.getActiveObject()){
-      this._canvas.sendToBack(this.getActiveObject())
-      if(this.gridOn){ this._canvas.sendToBack(this.grid) }
-      this._canvas.renderAll();
-      this.saveState('sendToBack');
-    }
+    this.action['Object'].sendToBack();
   }
+
   bringForward = () => {
-    if(this.getActiveObject()){
-      this._canvas.bringForward(this.getActiveObject())
-      this._canvas.renderAll();
-      this.saveState('bringForward');
-    }
+    this.action['Object'].bringForward();
   }
+
   bringToFront = () => {
-    if(this.getActiveObject()){
-      this._canvas.bringToFront(this.getActiveObject())
-      this._canvas.renderAll();
-      this.saveState('bringToFront');
-    }
+    this.action['Object'].bringToFront();
   }
 
   openDrawing = () => {
