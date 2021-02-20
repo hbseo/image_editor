@@ -549,7 +549,7 @@ class ImageEditor extends Component {
       if(this._canvas.backgroundImage){
         this.currentState.backFilter = this._canvas.backgroundImage.filters;
       }
-      console.log("save ", this.currentState)
+      // console.log("save ", this.currentState)
       this.currentState.id = this.stateStack.length > 0 ? this.stateStack[this.stateStack.length -1].id + 1 : 1;
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
@@ -1520,7 +1520,7 @@ class ImageEditor extends Component {
 
   render() {
     const tab = {
-      0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText}/>,
+      0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText} pipette = {this.action['Pipette']}/>,
       1: <ImageUI 
           object={this.state.activeObject} 
           cropObject={this.cropObject} 
