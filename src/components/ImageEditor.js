@@ -925,8 +925,8 @@ class ImageEditor extends Component {
     this.action['Icon'].addIcon(options);
   }
 
-  addLine = () => {
-    this.action['Line'].addLine();
+  addLine = (options) => {
+    this.action['Line'].addLine(options);
   }
 
   makePolygonWithDrag = () => {

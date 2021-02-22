@@ -29,6 +29,10 @@ export default class Shape extends Component {
     this.props.addShape(event.target.getAttribute('type'), this.state.color);
   }
 
+  addLine = (event) => {
+    this.props.addLine({ color : this.state.color});
+  }
+
   handleEndAngleChange = (event) => {
     this.props.setEndAngle(event.target.value)
   }
@@ -65,7 +69,7 @@ export default class Shape extends Component {
           </div>
           <div className="option-title">Line</div>
           <div className="line-list">
-            <button onClick={this.props.addLine} type="line">직선</button>
+            <button onClick={this.addLine} type="line">직선</button>
           </div>
           <div className="option-title">Free making</div>
           <div className="free-making">

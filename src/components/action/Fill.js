@@ -8,9 +8,17 @@ class Fill extends Action {
     const activeObject = this.getActiveObject();
     const canvas = this.getCanvas();
     if(activeObject){
-      activeObject.set({
-        fill : color
-      })
+      if(activeObject.type === 'line'){
+        activeObject.set({
+          stroke : color
+        })
+      }
+      else {
+        activeObject.set({
+          fill : color
+        })
+      }
+
       this.saveState('Fill ', activeObject.type);
       canvas.renderAll();
     }
