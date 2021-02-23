@@ -1083,15 +1083,6 @@ class ImageEditor extends Component {
     this.action['Crop'].resizeCropzone(value);
   }
 
-  handletextBgChange = (event) => {
-    if(this.getActiveObject() && this.getActiveObject().type === 'textbox') {
-      let change_state = {color : event.hex};
-      this.setState({text : change_state});
-      this.action['Text'].textObj(this.getActiveObject(), 'background-color', true, event.hex);
-      this.saveState('text bg change');
-    }
-  }
-
   // handleShadowChange = (event) => {
   //   let object = this.getActiveObject();
   //   let change_state = {
@@ -1192,24 +1183,6 @@ class ImageEditor extends Component {
     this.action['Text'].textObj(this.getActiveObject(), textOption, checked, value);
   }
 
-  toggletextbg = () => {
-    new Promise((resolve) => {
-      this.setState({displayTextbgColorPicker: !this.state.displayTextbgColorPicker});
-      resolve();
-    })
-    .then(() => {
-      let object = this.getActiveObject();
-      if(this.state.displayTextbgColorPicker) {
-        object.set({textBackgroundColor: '#FFFFFF'});
-      }
-      else {
-        object.set({textBackgroundColor: null});
-      }
-      this.saveState('textbox backgroundColor');
-      this._canvas.renderAll();
-    })
-  }
-
   // toggleshadow = () => {
   //   new Promise((resolve) => {
   //     this.setState({displayshadow: !this.state.displayshadow});
@@ -1272,7 +1245,6 @@ class ImageEditor extends Component {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
   }
   closeColorPicker = () => {
-		console.log('close')
     this.setState({ displayColorPicker: false });
   }
 

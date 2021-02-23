@@ -156,7 +156,7 @@ export default class Objects extends Component{
             />% */}
           </div>
           <div>
-            <input type='checkbox' onClick={this.props.lockScaleRatio} /> 비율 고정
+            <button onClick={this.props.lockScaleRatio}>초기 비율 유지</button>
           </div>
         </div>
       </div>
