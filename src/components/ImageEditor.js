@@ -1119,15 +1119,7 @@ class ImageEditor extends Component {
   
 
   filterObject = (event) => {
-    let filterOption = event.target.getAttribute('filter');
-    let activeObject = this.getActiveObject();
-    if (activeObject) {
-      this.action['Filter'].applyFilter(activeObject, filterOption, event.target.checked, event.target.value);
-      
-    }
-    else if(this._canvas.backgroundImage){
-      this.action['Filter'].applyFilter(this._canvas.backgroundImage, filterOption, event.target.checked, event.target.value);
-    }
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , event.target.getAttribute('filter'), event.target.checked, event.target.value);
   }
 
   rangeFilterObject = (filterOption, value) => {
@@ -1182,26 +1174,6 @@ class ImageEditor extends Component {
   textObject = (textOption, checked, value) => {
     this.action['Text'].textObj(this.getActiveObject(), textOption, checked, value);
   }
-
-  // toggleshadow = () => {
-  //   new Promise((resolve) => {
-  //     this.setState({displayshadow: !this.state.displayshadow});
-  //     resolve();
-  //   })
-  //   .then(() => {
-  //     let object = this.getActiveObject();
-  //     if(object) {
-  //       if(this.state.displayshadow) {
-  //         object.set('shadow', new fabric.Shadow({color:'black', blur:30, offsetX:10, offsetY:10, opacity:0}));
-  //       }
-  //       else {
-  //         object.set('shadow', null);
-  //       }
-  //       this.saveState('shadow');
-  //       this._canvas.renderAll();
-  //     }
-  //   })
-  // }
 
   objectInfo = () => {
     if(this.getActiveObject()){
@@ -1720,53 +1692,6 @@ class ImageEditor extends Component {
               onChange={this.handleScaleYChange}
             />%
             <input type='checkbox' onClick={this.lockScaleRatio} /> 비율 고정
-          </div>
-
-          <hr />
-
-          <div>
-            <h5>텍스트 기능</h5>
-            <button onClick={this.addText}>텍스트 추가</button>
-            <label htmlFor='material-switch'>
-              <span>배경색</span>
-              <Switch 
-              checked={this.state.displayTextbgColorPicker} 
-              onChange={this.toggletextbg}
-              onColor="#86d3ff"
-              onHandleColor="#2693e6"
-              handleDiameter={30}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-              height={20}
-              width={48}
-              className="react-switch"
-              id="material-switch"
-              disabled = {this.state.activeObject.type === 'textbox' ? false : true}
-              ></Switch>
-            </label>
-            {this.state.displayTextbgColorPicker ? 
-            <CompactPicker color={this.state.text.color} onChange={this.handletextBgChange}></CompactPicker> : null}
-				  	<p>선택 텍스트 폰트크기 = {this.state.fontsize}</p>
-            <input type='checkbox' className='text' onClick={this.textObject} text='bold' />bold
-            <input type='checkbox' className='text' onClick={this.textObject} text='italic' id='italic_checkbox' />italic
-            <button type='checkbox' className='text' onClick={this.textObject} text='left-align'>좌측정렬</button>
-            <button type='checkbox' className='text' onClick={this.textObject} text='center-align' >가운데정렬</button>
-            <button type='checkbox' className='text' onClick={this.textObject} text='right-align' >우측정렬</button>
-            <label htmlFor='fontSize'> 글자 크기: </label>
-            <input 
-              type='number' 
-              onChange={this.handlefontSizeChange} 
-              text='fontSize'
-              name='fontSize'
-              min='1'
-              value={this.state.fontsize} 
-            />
-            <label htmlFor='fontfamily'>글꼴: </label>
-            <select className='text' name='fontfamily' text='fontfamily' onChange={this.textObject}>
-              {fontList}
-            </select>
           </div>
 
           <hr />
