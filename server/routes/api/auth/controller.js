@@ -268,3 +268,53 @@ exports.findPassword = (req, res) => {
   .then(change)
   .catch(onError)
 }
+
+exports.delete = (req, res) => {
+  const database = new Database();
+  const {id, password, } = req.body;
+  let query1 = `SELECT password, salt FROM USERS WHERE userid = "${id}";`;
+
+  const getData = (result) => {
+    if(result.length === 1) {
+      let dbPassword = result[0].password;
+      let salt = result[0].salt;
+      return {dbPassword, salt};
+    }
+    else {
+      throw new Error();
+    }
+  }
+
+  const check = (data) => {
+    let hashPassword = crypto.pbkdf2Sync(password, data.salt, 100000, 64, 'sha512').toString('base64');
+    if(data.dbPassword === hashPassword) {
+      let query2 = `DELETE FROM USERS WHERE userid="${id}";`;
+      database.query(query2)
+      .then(respond)
+      .catch(onError)
+    }
+    else {
+      res.status(200).json({
+        msg: 'fail'
+      })
+    }
+    database.end();
+  }
+
+  const respond = () => {
+    res.status(200).json({
+      msg: 'success'
+    })
+  }
+
+  const onError = (error) => {
+    res.status(400).json({
+      msg: error.message
+    })
+  }
+
+  database.query(query1)
+  .then(getData)
+  .then(check)
+  .catch(onError)
+}
