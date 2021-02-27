@@ -58,6 +58,28 @@ class ObjectAction extends Action {
     this.getCanvas().renderAll();
   }
 
+  scaleXChange = (value) => {
+    if(this.getActiveObject()){
+      this.getActiveObject().scaleX = value / 100 ;
+      if(this.getLockScale()){
+        this.getActiveObject().scaleY = value / 100 ;
+      }
+      this.updateObject();
+      this.getCanvas().renderAll();
+    }
+  }
+
+  scaleYChange = (value) => {
+    if(this.getActiveObject()){
+      this.getActiveObject().scaleY = value / 100;
+      if(this.getLockScale()){
+        this.getActiveObject().scaleX = value / 100 ;
+      }
+      this.updateObject();
+      this.getCanvas().renderAll();
+    }
+  }
+
   makeGroup = () => {
     const canvas = this.getCanvas();
     if(this.getActiveObject() && this.getActiveObject().type === 'activeSelection' && canvas){

@@ -127,7 +127,7 @@ class ImageEditor extends Component {
     this.lastPosX = 0;
     this.lastPosY = 0;
 
-    this.lockScale = false;
+    this.lockScale = false; // true이면 비율 고정.
 
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     this._createAction();
@@ -941,41 +941,20 @@ class ImageEditor extends Component {
     this.action['Object'].lockScaleRatio();
   }
 
+  getLockScale = () => {
+    return this.lockScale;
+  }
+
   updateLockScale = () => {
     this.lockScale = !this.lockScale;
   }
 
-  handleScaleXChange = (event) => {
-    if(this.getActiveObject()){
-      this.getActiveObject().scaleX = event.target.value / 100 ;
-      if(this.lockScale){
-        this.getActiveObject().scaleY = event.target.value / 100 ;
-      }
-      this.setState({activeObject : this.getActiveObject()});
-      this._canvas.renderAll();
-    }
+  scaleXChange = () => {
+    this.action['Object'].scaleXChange();
   }
 
-  handleScaleYChange = (event) => {
-    if(this.getActiveObject()){
-      this.getActiveObject().scaleY = event.target.value / 100;
-      if(this.lockScale){
-        this.getActiveObject().scaleX = event.target.value / 100 ;
-      }
-      this.setState({activeObject : this.getActiveObject()});
-      this._canvas.renderAll();
-    }
-  }
-
-  handleEndAngleChange = (event) => {
-    if(this.getActiveObject()){
-      let shape = this.getActiveObject();
-      shape.set({
-        endAngle : event.target.value * Math.PI / 180,
-      })
-      this.setState({activeObject : this.getActiveObject()});
-      this._canvas.renderAll();
-    }
+  scaleYChange = (event) => {
+    this.action['Object'].scaleYChange();
   }
 
   // handleFilterChange = (event) => {

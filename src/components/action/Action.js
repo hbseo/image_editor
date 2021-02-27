@@ -99,6 +99,10 @@ export default class Action {
     return this.app.updateLockScale();
   }
 
+  getLockScale(){
+    return this.app.getLockScale();
+  }
+
 }
 
 
