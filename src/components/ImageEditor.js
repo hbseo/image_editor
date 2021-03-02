@@ -956,85 +956,6 @@ class ImageEditor extends Component {
   scaleYChange = (event) => {
     this.action['Object'].scaleYChange();
   }
-
-  // handleFilterChange = (event) => {
-  //   const value = event.target.value
-  //   let filterOption = event.target.getAttribute('filter');
-  //   let activeObject = this.getActiveObject();
-  //   if ( activeObject || this._backgroundImage ) {
-  //     let change_state = {
-  //       brightness : this.state.filters.brightness, 
-  //       contrast : this.state.filters.contrast, 
-  //       pixelate : this.state.filters.pixelate,
-  //       blur : this.state.filters.blur,
-  //       noise : this.state.filters.noise,
-  //       saturation : this.state.filters.saturation,
-  //       hue : this.state.filters.hue,
-  //       ink : this.state.filters.ink,
-  //       vignette : this.state.filters.vignette,
-  //       zoomblur : this.state.filters.zoomblur,
-  //     };
-  //     change_state[event.target.name] = event.target.value;
-  //     new Promise((resolve) => {
-  //       this.setState({filters : change_state});
-  //       resolve();
-  //     })
-  //       .then(() => {
-  //         this.action['Filter'].applyFilter(activeObject || this._backgroundImage , filterOption, true, value);
-  //         this.saveState('input filter change : ' + filterOption);
-  //       })
-  //   }
-  //   else {
-  //     alert('image is not activated');
-  //   } 
-  // }
-
-  // handleOpacityChange = (event) => {
-  //   let activeObject = this.getActiveObject();
-  //   if(activeObject || this._backgroundImage){
-  //     this.action['Filter'].applyFilter(activeObject || this._backgroundImage , 'opacity', true, event.target.value);
-  //     if(activeObject){
-  //       this.setState({ activeObject : activeObject})
-  //     }
-  //     this._canvas.renderAll();
-  //   }
-  // }
-
-  // handlefontSizeChange = (event) => {
-  //   const fontSize = event.target.value;
-  //   let activeObject = this.getActiveObject();
-  //   let textOption = event.target.getAttribute('text');
-  //   if(this.getActiveObject()) {
-  //     new Promise((resolve) => {
-  //       this.setState({fontsize: fontSize});
-  //       resolve();
-  //     })
-  //     .then(() => {
-  //       this.action['Text'].textObj(activeObject, textOption, true, fontSize);
-  //       this.saveState('font size change');
-  //     })
-  //   }
-  //   else{
-  //     this.setState({fontsize: fontSize});
-  //   }
-	// }
-	
-	// handleColorChange = (color) => {
-  //   console.log((Math.round(color.rgb.a * 255)).toString(16))
-  //   this.setState({ color: color.rgb, colorHex : color.hex })
-  // }
-
-  // handleColorChangeComplete = (color) => {
-  //   // console.log("mouse up")
-  //   const activeObject = this.getActiveObject();
-  //   if(activeObject) {
-  //     // this.action['Fill'].fill(color.hex);
-  //     this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
-  //     this.setState({ activeObject : this.getActiveObject() });
-  //     this.saveState('Fill : colorChangeComplete');
-  //   }
-  // }
-  
   
   // handleStrokeWidthChange = (event) => {
   //   if(this.getActiveObject()){
@@ -1061,32 +982,6 @@ class ImageEditor extends Component {
   handleCropCanvasSizeChange = (value) => {
     this.action['Crop'].resizeCropzone(value);
   }
-
-  // handleShadowChange = (event) => {
-  //   let object = this.getActiveObject();
-  //   let change_state = {
-  //     blur : this.state.shadow.blur,
-  //     offsetX : this.state.shadow.offsetX,
-  //     offsetY : this.state.shadow.offsetY,
-  //     color : this.state.shadow.color
-  //   }
-  //   if(event.hex) {
-  //     change_state['color'] = event.hex;
-  //   }
-  //   else {
-  //     change_state[event.target.name] = event.target.value;
-  //   }
-  //   new Promise((resolve) => {
-  //     this.setState({shadow: change_state});
-  //     resolve();
-  //   })
-  //   .then(() => {
-  //     object.set('shadow', new fabric.Shadow(this.state.shadow));
-  //     this.saveState('shadow changed');
-  //     this._canvas.renderAll();
-  //   })
-  // }
-
 
   setObjectAngle = (changeAngle) => {
     this.action['Rotation'].setAngle(Number(changeAngle));
@@ -1773,65 +1668,6 @@ class ImageEditor extends Component {
           <hr />
 
           <div>
-            <h5>그림자</h5>
-            <Switch 
-              checked={this.state.displayshadow} 
-              onChange={this.toggleshadow}
-              onColor="#86d3ff"
-              onHandleColor="#2693e6"
-              handleDiameter={30}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-              height={20}
-              width={48}
-              className="react-switch"
-              id="material-switch"
-              ></Switch>
-              {this.state.displayshadow ?
-                <div>
-                  <br/>
-                  <label htmlFor='shadow'>
-                    <span>블러</span>
-                    <input
-                      type='range'
-                      className='shadow'
-                      id='shadow'
-                      min='1'
-                      max='100'
-                      name='blur'
-                      step='1'
-                      value={this.state.shadow.blur}
-                      onChange={this.handleShadowChange}/>
-
-                    <span>세로 위치</span>
-                    <input
-                      type='range'
-                      className='shadow'
-                      id='shadow'
-                      min='-100'
-                      max='100'
-                      name='offsetY'
-                      step='1'
-                      value={this.state.shadow.offsetY}
-                      onChange={this.handleShadowChange}/>
-
-                    <span>가로 위치</span>
-                    <input
-                      type='range'
-                      className='shadow'
-                      id='shadow'
-                      min='-100'
-                      max='100'
-                      name='offsetX'
-                      step='1'
-                      value={this.state.shadow.offsetX}
-                      onChange={this.handleShadowChange}/>
-                    </label>
-                    <CompactPicker color={this.state.shadow.color} onChange={this.handleShadowChange}></CompactPicker>
-                  </div>
-              :null}
             <h5>테두리 두깨</h5>
             <input
               type='number'
