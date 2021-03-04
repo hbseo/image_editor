@@ -39,6 +39,10 @@ export default class Action {
     return this.app.setGrid(grid);
   }
 
+  getGridOn() {
+    return this.app.getGridOn();
+  }
+
   getClipboard() {
     return this.app.getClipboard();
   }
@@ -69,6 +73,34 @@ export default class Action {
 
   loadingStart(){
     return this.app.loadingStart();
+  }
+
+  resetCanvas(){
+    return this.app.resetCanvas();
+  }
+
+  onCanvasMove(){
+    return this.app.onCanvasMove();
+  }
+
+  offCanvasMove(){
+    return this.app.offCanvasMove();
+  }
+
+  onCanvasZoom(){
+    return this.app.onCanvasZoom();
+  }
+
+  offCanvasZoom(){
+    return this.app.offCanvasZoom();
+  }
+
+  updateLockScale(){
+    return this.app.updateLockScale();
+  }
+
+  getLockScale(){
+    return this.app.getLockScale();
   }
 
 }

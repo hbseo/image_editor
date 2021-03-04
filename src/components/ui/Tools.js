@@ -28,6 +28,7 @@ export default class Tools extends Component {
           </div>
           <div>
               <button onClick={this.props.objectInfo}><h2>오브젝트 정보 출력</h2></button>
+              <button onClick={this.props.getCanvasInfo}><h2>캔버스 출력</h2></button>
           </div>
           <div>
               <button onClick={this.props.openSaveModal}><h2>save</h2></button>

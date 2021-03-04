@@ -1,24 +1,32 @@
 import switchTools from '../helper/SwitchTools'
 import React, {Component} from 'react';
 import {fontList} from '../const/consts';
+import { ChromePicker } from 'react-color';
 
 export default class Text extends Component{
   constructor(props){
     super(props);
-    this.state = { fontSize : 20 };
-
+    this.state = { 
+      fontSize : 20 ,
+      color: {
+        r: '0',
+        g: '0',
+        b: '0',
+        a: '1'
+      },
+    };
   }
 
   componentDidMount(){
-    console.log('Text UI Mount');
+    // console.log('Text UI Mount');
     this.documentUpdate();
   }
   componentDidUpdate(){
-    console.log('Text UI Update');
+    // console.log('Text UI Update');
     this.documentUpdate();
   }
   componentWillUnmount(){
-    console.log('Text UI Unmount');
+    // console.log('Text UI Unmount');
   }
 
   documentUpdate = () => {
@@ -44,6 +52,12 @@ export default class Text extends Component{
     else{
       document.getElementById('bold_checkbox').checked = false;
     }
+    if(text.textBackgroundColor){
+      document.getElementById('textbg').checked = true;
+    }
+    else{
+      document.getElementById('textbg').checked = false;
+    }
     document.getElementById('fontSize').value = text.fontSize;
   }
 
@@ -62,6 +76,28 @@ export default class Text extends Component{
   textAction = (event) => {
     let textOption = event.target.getAttribute('text');
     this.props.textObject(textOption, event.target.checked, event.target.value);
+  }
+
+  textActionColor = (event) => {
+    let textOption = event.target.getAttribute('text');
+    this.props.textObject(textOption, event.target.checked, `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`);
+  }
+
+  handlePipette = () => {
+    this.props.pipette.enablePipette(this.setColor); 
+  }
+
+  handleColorChange = (color) => {
+    this.setState({ color: color.rgb })
+  }
+
+  handleColorChangeComplete = (color) => {
+    if(document.getElementById('textbg').checked){
+      this.props.textObject("background-color", true, `rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
+    } 
+    else {
+      this.setState({ color: color.rgb })
+    }
   }
 
   render(){
@@ -114,6 +150,18 @@ export default class Text extends Component{
                 <label htmlFor="italic_checkbox">italic</label>
               </div>
             </div>
+          </div>
+
+          <div>
+            <input type='checkbox' className='textbg' onClick={this.textActionColor} id="textbg" text="background-color" />
+            <label htmlFor="textbg">textbg</label>
+          </div>
+
+          <div className="color-picker">
+            <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          </div>
+          <div>
+            <button onClick = { this.handlePipette }>pipette</button>
           </div>
         </div>
       </div>

@@ -77,7 +77,8 @@ class LoadImage extends Component {
       submit: true,
       width: this.image.width,
       height: this.image.height,
-      imgRatio: ratio * 100,
+      // imgRatio: ratio * 100,
+      imgRatio: 100,
       imgWidth: this.image.width,
       imgHeight: this.image.height
     })
@@ -96,9 +97,9 @@ class LoadImage extends Component {
 
   handleImageSizeChange = (event) => {
     new Promise((resolve) => {
-      if (this.state.imgWidth === 2048 || this.state.imgHeight === 2048) {
-        return;
-      }
+      // if (this.state.imgWidth === 2048 || this.state.imgHeight === 2048) {
+      //   return;
+      // }
       let ratio = event.target.value;
       let width = Math.round(this.state.imgWidth * (event.target.value / 100));
       let height = Math.round(this.state.imgHeight * (event.target.value / 100));

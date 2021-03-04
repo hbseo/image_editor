@@ -2,6 +2,8 @@ import Action from './Action';
 import { Ink } from '../filters/glfx/ink.js'
 import { Vignette } from '../filters/glfx/vignette.js'
 import { ZoomBlur } from '../filters/glfx/zoomblur.js'
+import { Vibrance } from '../filters/glfx/vibrance.js'
+import { Denoise } from '../filters/glfx/denoise.js'
 import { fabric } from 'fabric';
 
 class Filter extends Action {
@@ -103,9 +105,23 @@ class Filter extends Action {
         case 'zoomblur':
           obj.filters[24] = (new ZoomBlur({
             zoomblur_matrix : {
-              center_x : obj.width/2,
-              center_y : obj.height/2,
+              center_x : obj.width/2, // Controllable
+              center_y : obj.height/2, // Controllable
               strength : value,
+              width : obj.width,
+              height : obj.height
+            }
+          }));
+          break;
+        case 'vibrance':
+          obj.filters[25] = (new Vibrance({
+            amount : value
+          }));
+          break;
+        case 'denoise':
+          obj.filters[26] = (new Denoise({
+            denoise_matrix : {
+              exponent : value,
               width : obj.width,
               height : obj.height
             }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import debounce from 'lodash/debounce';
 import { Link } from 'react-router-dom';
-import '../css/Login/bootstrap.min.scss';
 import '../css/Login/font-awesome.min.scss';
 import '../css/Login/main.scss';
 import '../css/Login/util.scss';
@@ -23,6 +22,7 @@ class SignUp extends Component {
     const { name, value } = e.target;
     if(name === 'choose') {
       this.choose = value;
+      document.getElementById("options-view-button").checked = false;
     }
     else {
       this.setState({ [name]: value });

@@ -40,21 +40,26 @@ image_editor
 │
 └───src
 │   │───index.js
+│   │───Route.js
 │   │
 │   └───css
 │   │   │───Error.scss
-│   │   │───ImageEditor.css
-│   │   │───Loading.css
+│   │   │───ImageEditor.scss
+│   │   │───ImageList.scss
+│   │   │───Loading.scss
 │   │   │───Main.scss
 │   │   │───New_project.scss
 │   │   │───Save.scss
+│   │   │───UploadFIle.scss
 │   │   │
 │   │   └───Login
 │   │   │   
 │   │   └───ui
 │   │
 │   └───components
+│       │───Change_password.js
 │       │───Error.js
+|       |───Find_password.js
 │       │───ImageEditor.js
 │       │───ImageList.js
 │       │───LoadImage.js
@@ -69,6 +74,7 @@ image_editor
 │       │    
 │       └─── action
 │       │     │───Action.js
+│       │     │───Clip.js
 │       │     │───Crop.js
 │       │     │───Delete.js
 │       │     │───Draw.js
@@ -78,6 +84,7 @@ image_editor
 │       │     │───Icon.js
 │       │     │───Image.js
 │       │     │───Line.js
+│       │     │───ObjectAction.js
 │       │     │───Rotation.js
 │       │     │───Shape.js
 │       │     └───Text.js
@@ -89,15 +96,20 @@ image_editor
 │       │     │───Extension.js
 │       │     │───Grid.js
 │       │     │───Layers.js
+│       │     │───Pipette.js
 │       │     └───Snap.js
 │       │   
 │       └─── filters
 |       │    └─── glfx
+│       │          │───denoise.js
 │       │          │───ink.js
+│       │          │───vibrance.js
 │       │          │───vignette.js
 │       │          └───zoomblur.js
 │       │
 │       └─── helper
+│       │     │───Brush.js
+│       │     │───originImage.js
 │       │     │───Resize.js
 │       │     └───SwithTools.js
 │       │

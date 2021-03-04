@@ -1,4 +1,4 @@
-.SignIn, .SignUp, .Change_password {
+.SignIn, .SignUp, .Change_password, .Find_password {
     /*//////////////////////////////////////////////////////////////////
   [ FONT ]*/
 
@@ -866,7 +866,7 @@
   }
 }
 
-.Change_password {
+.Change_password, .Find_password {
   .wrap-login100 {
     width: 480px;
     padding: 107px 112.5px 53px 112.5px

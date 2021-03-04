@@ -15,7 +15,8 @@ class Text extends Action {
         top: pointer.y,
         fontSize: this.getImageEditor().state.fontsize,
         lockScalingY: true,
-        strokeWidth : 0
+        strokeWidth : 0,
+        textBackgroundColor : null
       });
       text.setControlsVisibility({
         mt: false,
@@ -81,7 +82,7 @@ class Text extends Action {
           break;
         case 'background-color':
           activeObject.set({
-            textBackgroundColor : value
+            textBackgroundColor : checked ? value : null
           }).setCoords();
           break;
         default:

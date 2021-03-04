@@ -4,6 +4,7 @@ import { fabric } from 'fabric';
 class Crop extends Action {
   constructor(App) {
     super('Crop', App);
+    this.state={width: 0, height: 0};
     this._cropzone = null;
 
     fabric.Cropzone = fabric.util.createClass(fabric.Rect, {
@@ -143,7 +144,6 @@ class Crop extends Action {
     .then(() => {
       canvas.renderAll();
     })
-
   }
 
   resizeCropzone = (value) => {
@@ -158,17 +158,51 @@ class Crop extends Action {
   removeCropzone = () => {
     let canvas = this.getCanvas();
     canvas.remove(this._cropzone);
+    this._cropzone = null;
+    this.offCanvasMove();
+    this.offCanvasZoom();
     this.deleteEvent();
     canvas.renderAll();
   }
 
-  cropCanvasEvent = (event) => {
+  cropCanvasEvent = (off, event) => {
     if(event.target === null || event.target.type !== 'Cropzone') {
       this.removeCropzone();
+      off();
     }
   }
 
-  cropCanvas = () => {
+  movingCropzone = (event) => {
+    let obj = event.target;
+    // 나중에
+    // obj.setCoords();
+    // // 만약 cropzone이 회전이 불가능 하다면, max, min 하지 않아도 괜찮
+    // let obj_top = Math.min(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y) ;
+    // let obj_bottom = Math.max(obj.oCoords.tl.y, obj.oCoords.tr.y, obj.oCoords.br.y, obj.oCoords.bl.y);
+    // let obj_right = Math.max(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x);
+    // let obj_left = Math.min(obj.oCoords.tl.x, obj.oCoords.tr.x, obj.oCoords.br.x, obj.oCoords.bl.x)
+    // if(obj_top  < 0){ 
+    //   obj.set({
+    //     top : (-this.state.canvasView.y / this.state.zoom) + (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2)
+    //   })}
+    // if(obj_left < 0){
+    //   obj.set({
+    //     left :  (-this.state.canvasView.x / this.state.zoom) + (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2)
+    //   })}
+    // if(obj_bottom > this._canvas.height ){
+    //   obj.set({
+    //     top : ( (-this.state.canvasView.y / this.state.zoom)  + (this._canvas.height / this.state.zoom) - (Math.abs(obj.aCoords.tl.y - obj.aCoords.bl.y)/2))
+    //   })
+    // }
+    // if(obj_right > this._canvas.width ) {
+    //   obj.set({
+    //     left: ( (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) - (Math.abs(obj.aCoords.br.x - obj.aCoords.bl.x)/2))
+    //   })
+    // }
+    // obj.setCoords();
+  }
+
+  cropCanvas = (off) => {
     let obj = this.getActiveObject();
     if(obj && obj.type === 'Cropzone') {
       return;
@@ -190,11 +224,16 @@ class Crop extends Action {
     this._cropzone.setControlsVisibility({
       mtr:false
     });
+    this.resetCanvas();
+    this.offCanvasMove();
+    this.offCanvasZoom();
+
     canvas.add(this._cropzone);
     this.addEvent();
     canvas.setActiveObject(this._cropzone);
     canvas.requestRenderAll();
-    canvas.on('mouse:down', this.cropCanvasEvent);
+    canvas.on('object:moving', this.movingCropzone);
+    canvas.on('mouse:down', (event) => {this.cropCanvasEvent(off, event)})
   }
 
   cropEndCanvas = () => {
@@ -225,7 +264,6 @@ class Crop extends Action {
     canvas.setWidth(cropRect.width);
     canvas.calcOffset();
     canvas.renderAll();
-    canvas.on('mouse:down', this.cropCanvasEvent);
   }
 
   fillOuterBox = () => {
@@ -275,6 +313,8 @@ class Crop extends Action {
   deleteEvent = () => {
     const canvas = this.getCanvas();
     canvas.off('after:render');
+    canvas.off('mouse:down', this.cropCanvasEvent);
+    canvas.off('object:moving', this.movingCropzone);
   }
 }
 

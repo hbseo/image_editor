@@ -4,6 +4,7 @@ class Line extends Action {
   constructor(App) {
 		super('Line', App);
 		this.disableObj = null;
+    this.color = null;
   }
 
 	addLineResize = (event) => {
@@ -28,7 +29,7 @@ class Line extends Action {
 				left : pointer.x,
 				right :pointer.y,
 				strokeWidth : 5,
-				stroke : 'black',
+				stroke : this.color,
         fill : 'black',
         noScaleCache: false,
         strokeUniform: true,
@@ -67,8 +68,9 @@ class Line extends Action {
 		this.addKeyDownEvent();
 		canvas.off('mouse:up', this.addLineEndEvent);
 	}
-	addLine = () => {
+	addLine = (options) => {
 		const canvas = this.getCanvas();
+    this.color = `rgba(${ options.color.r }, ${ options.color.g }, ${ options.color.b }, ${ options.color.a })`
 		canvas.defaultCursor = 'pointer';
 		canvas.discardActiveObject();
 		document.addEventListener('mousedown',this.addLineEvent);    

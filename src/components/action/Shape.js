@@ -15,6 +15,7 @@ class Shape extends Action {
       shape.set({
         endAngle : value * Math.PI / 180,
       })
+      this.updateObject();
       this.getCanvas().renderAll();
     }
   }
