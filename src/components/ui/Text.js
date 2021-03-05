@@ -39,6 +39,10 @@ export default class Text extends Component{
     }
   }
 
+  setColor = (color) => {
+    this.setState({ color: color })
+  }
+
   textSelection = (text) => {
     if(text.fontStyle === "italic"){
       document.getElementById('italic_checkbox').checked = true;
