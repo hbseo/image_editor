@@ -54,6 +54,7 @@ class Icon extends Action {
         originY : 'top',
         scaleX : 0,
         scaleY : 0,
+        isRegular : false,
     }))
     canvas.add(icon).setActiveObject(icon);
     canvas.selection = false;
@@ -105,6 +106,10 @@ class Icon extends Action {
     let activeObject = this.getActiveObject();
     let width = Math.abs(pointer.x - activeObject.left);
     let height = Math.abs(pointer.y - activeObject.top);
+
+    if (activeObject.isRegular) {
+      width = height =  Math.max(width, height);
+    }
 
     activeObject.set({
       scaleX : width / activeObject.width,
