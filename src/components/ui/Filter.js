@@ -22,7 +22,8 @@ export default class Filter extends Component{
       vibrance : 0,
       denoise : 50,
       opacity : 1,
-    }
+    };
+    this.inputRef = React.createRef();
   }
 
   componentDidMount(){
@@ -52,17 +53,23 @@ export default class Filter extends Component{
     return null;
   }
 
-  documentUpdate = () => {
-    if(this.props.object.type === 'image'){
+  documentUpdate = (backgroundImage) => {
+    if(backgroundImage !== undefined) {
       switchTools('filter', false);
-      this.imageSelection(this.props.object);
+        this.imageSelection(backgroundImage);
     }
-    else if(this.props.getBackgroundImage()){
-      switchTools('filter', false);
-      this.imageSelection(this.props.getBackgroundImage());
-    }
-    else{
-      switchTools('filter', true)
+    else {
+      if(this.props.object.type === 'image'){
+        switchTools('filter', false);
+        this.imageSelection(this.props.object);
+      }
+      else if(this.props.getBackgroundImage()){
+        switchTools('filter', false);
+        this.imageSelection(this.props.getBackgroundImage());
+      }
+      else{
+        switchTools('filter', true)
+      }
     }
   }
 
