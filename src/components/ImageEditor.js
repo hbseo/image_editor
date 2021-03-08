@@ -234,12 +234,22 @@ class ImageEditor extends Component {
 
   _onShiftKeydownEvent = (event) => {
     const {keyCode} = event;
-    if(keyCode === 16){ this.shift = true; }
+    if(keyCode === 16){ 
+      this.shift = true; 
+      if(this.getActiveObject()){
+        this.getActiveObject().isRegular = true;
+      }
+    }
   }
 
   _onShiftKeyUpEvent = (event) => {
     const {keyCode} = event;
-    if(keyCode === 16) { this.shift = false;}
+    if(keyCode === 16) { 
+      this.shift = false;
+      if(this.getActiveObject()){
+        this.getActiveObject().isRegular = false;
+      }
+    }
   }
   
   _onMouseDownEvent = (event) => {
@@ -265,6 +275,7 @@ class ImageEditor extends Component {
     // document.getElementById('canvas').addEventListener('keydown',this._onKeydownEvent)
     document.addEventListener('mouseup',this._onMouseUpEvent);
     document.addEventListener('mousedown',this._onMouseDownEvent)
+    document.addEventListener('keydown',this._onShiftKeydownEvent)
     document.addEventListener('keyup',this._onShiftKeyUpEvent)
   }
 
