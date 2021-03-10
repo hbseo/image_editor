@@ -5,6 +5,17 @@ class Loading extends Component {
   constructor(props) {
     super(props);
   }
+  componentDidMount(){
+    console.log('loading........................', new Date().getTime());
+  }
+
+  componentDidUpdate(){
+    console.log('loading update?........................', new Date().getTime());
+  }
+
+  componentWillUnmount(){
+    console.log('finish.........................', new Date().getTime());
+  }
   render(){
     const { open } = this.props;
 		return(
