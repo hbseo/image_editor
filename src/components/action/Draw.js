@@ -28,6 +28,7 @@ class Draw extends Action {
     if(canvas){
       canvas.isDrawingMode = true;
       canvas.freeDrawingCursor = 'crosshair';
+      canvas.freeDrawingBrush.width = 10;
     }
   }
 

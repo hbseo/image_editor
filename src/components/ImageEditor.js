@@ -131,7 +131,7 @@ class ImageEditor extends Component {
 
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     this._createAction();
-
+    this.filterRef = React.createRef()
   }
 
   componentDidMount() {
@@ -234,12 +234,22 @@ class ImageEditor extends Component {
 
   _onShiftKeydownEvent = (event) => {
     const {keyCode} = event;
-    if(keyCode === 16){ this.shift = true; }
+    if(keyCode === 16){ 
+      this.shift = true; 
+      if(this.getActiveObject()){
+        this.getActiveObject().isRegular = true;
+      }
+    }
   }
 
   _onShiftKeyUpEvent = (event) => {
     const {keyCode} = event;
-    if(keyCode === 16) { this.shift = false;}
+    if(keyCode === 16) { 
+      this.shift = false;
+      if(this.getActiveObject()){
+        this.getActiveObject().isRegular = false;
+      }
+    }
   }
   
   _onMouseDownEvent = (event) => {
@@ -265,6 +275,7 @@ class ImageEditor extends Component {
     // document.getElementById('canvas').addEventListener('keydown',this._onKeydownEvent)
     document.addEventListener('mouseup',this._onMouseUpEvent);
     document.addEventListener('mousedown',this._onMouseDownEvent)
+    document.addEventListener('keydown',this._onShiftKeydownEvent)
     document.addEventListener('keyup',this._onShiftKeyUpEvent)
   }
 
@@ -548,6 +559,7 @@ class ImageEditor extends Component {
       this.currentState.action = action;
       if(this._canvas.backgroundImage){
         this.currentState.backFilter = this._canvas.backgroundImage.filters;
+        this._backgroundImage = this._canvas.backgroundImage;
       }
       // console.log("save ", this.currentState)
       this.currentState.id = this.stateStack.length > 0 ? this.stateStack[this.stateStack.length -1].id + 1 : 1;
@@ -578,11 +590,9 @@ class ImageEditor extends Component {
       this._canvas.calcOffset();
       this.lock = false;
       if(this.currentState.backgroundImage){
-        // console.log(newState.filters)
+        this.filterRef.current.documentUpdate(this.currentState.backgroundImage);
         this._canvas.backgroundImage.filters = this.currentState.backFilter || [];
-        console.log(this.currentState)
       }
-
     });
     // this._canvas._objects.forEach(object => {
     //   if(object.type === 'image') {
@@ -1346,7 +1356,11 @@ class ImageEditor extends Component {
           addImage = {this.addImage}
           imgStatus = {this.state.imgStatus}
           />,
-      2: <FilterUI object={this.state.activeObject} filterObject={this.filterObject} getBackgroundImage = {this.getBackgroundImage} rangeFilterObject={this.rangeFilterObject}/>,
+      2: <FilterUI object={this.state.activeObject} 
+          filterObject={this.filterObject} 
+          getBackgroundImage = {this.getBackgroundImage} 
+          rangeFilterObject={this.rangeFilterObject}
+          ref={this.filterRef}/>,
       3: <IconUI 
           object={this.state.activeObject} 
           addIcon = {this.addIcon} 
