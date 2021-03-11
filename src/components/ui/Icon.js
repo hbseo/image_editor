@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { ChromePicker } from 'react-color';
+import '../../css/ui/Icon.scss'
 
 export default class Icon extends Component {
   constructor(props){

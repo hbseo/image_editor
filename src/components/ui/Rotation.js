@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import '../../css/ui/Rotation.scss';
+
 export default class Rotation extends Component{
   constructor(props){
     super(props);
@@ -37,7 +39,7 @@ export default class Rotation extends Component{
         </div>
         <div className="sub-rotatemenu">
           <div className="rotate-degree">
-            <div>
+            <div className="option-title">
               각도 설정
             </div>
             <div className="degree-button">
@@ -48,7 +50,7 @@ export default class Rotation extends Component{
             </div>
           </div>
           <div className="rotate-clock">
-            <div>
+            <div className="option-title">
               30도 회전
             </div>
             <div className="clock-button">
@@ -61,7 +63,7 @@ export default class Rotation extends Component{
             </div>
           </div>
           <div className="rotate-input">
-            <label htmlFor="angle">직접 입력</label>
+            <label htmlFor="angle" className="option-title">직접 입력</label>
             <input
               type='number'
               name='angle'
