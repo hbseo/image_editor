@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import '../../css/ui/History.scss'
 export default class History extends Component {
   constructor(props){
     super(props);
@@ -16,11 +17,9 @@ export default class History extends Component {
 
   render(){
     return (
-      <div className="tooltip">
-        History
-        <div className="left">
-          <p style = {{color : 'black'}}>현재 state : {this.props.currentState.action}</p>
-          <hr/>
+      <div className="history">
+        <div className="history-inner">
+          <div>Current state : {this.props.currentState.action}</div>
           {this.props.showUndoStack()}
         </div>
       </div>
