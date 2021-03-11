@@ -197,13 +197,13 @@ ul {
   padding: 5%;
 }
 
-.text{
+.text, .text-font{
   background-color: #EEEEEE;
   border: none;
   border-bottom: 1px solid #D9D9D9;
 }
 
-.text:hover{
+.text:hover, .text-font:hover{
   border-bottom: 1px solid black;
   transition: .5s;
 }
