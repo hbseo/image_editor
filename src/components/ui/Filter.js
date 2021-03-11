@@ -118,7 +118,7 @@ export default class Filter extends Component{
         </div>
         <div className="sub-filtersmenu">
           <div className="filter-box">
-            <div className="box-title">Filters</div>
+            <div className="option-title">Filters</div>
             <div className="filter-options">
               <div>
                 <input type='checkbox' id="filter-grey" className='filter' onClick={this.props.filterObject} filter='grey'/><label htmlFor="filter-grey">Grey</label>
@@ -153,7 +153,7 @@ export default class Filter extends Component{
             </div>
           </div>
           <div className="adjust-box">
-            <div className="box-title">Adjust</div>
+            <div className="option-title">Adjust</div>
             <div className="adjust-options">
               <div>
                 <input

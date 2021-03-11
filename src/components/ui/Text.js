@@ -2,6 +2,7 @@ import switchTools from '../helper/SwitchTools'
 import React, {Component} from 'react';
 import {fontList} from '../const/consts';
 import { ChromePicker } from 'react-color';
+import '../../css/ui/Text.scss'
 
 export default class Text extends Component{
   constructor(props){
@@ -147,70 +148,71 @@ export default class Text extends Component{
             Text ( {this.props.object.type} )
         </div>
         <div className="sub-textmenu">
-          <div>
-            <button onClick={this.addText} className="add-text">텍스트 추가</button>
+          <div className="add-text">
+            <button onClick={this.addText}>New Text</button>
           </div>
+
+          <label htmlFor='fontfamily' className="option-title">Font</label>
           <div className="font-style">
-            <label htmlFor='fontfamily'>글꼴 </label>
             <select className='text-font' name='fontfamily' text='fontfamily' onChange={this.textAction}>
               {this.fontListUp()}
             </select>
           </div>
-          <div className="size-align">
-            <div className="font-size">
-              <label htmlFor='fontSize'> 글자 크기 </label>
-              <div>
-                <input 
-                  type='number' 
-                  onChange={this.handlefontSizeChange} 
-                  text='fontSize'
-                  name='fontSize'
-                  id='fontSize'
-                  min='1'
-                  value={this.state.fontSize} 
-                />
-                <button onClick={this.handlefontSizeButton} text='fontSize' name='fontSize' id='fontSize' updown="t">UP</button>
-                <button onClick={this.handlefontSizeButton} text='fontSize' name='fontSize' id='fontSize' updown="f">Down </button>
-              </div>
 
-            </div>
-            <div className="text-align">
-              <label htmlFor="align">정렬</label>
-              <div className="align-button">
-                <button type='checkbox' className='align' id="left-align" onClick={this.textAction} text='left-align'></button>
-                <button type='checkbox' className='align' id="center-align" onClick={this.textAction} text='center-align'></button>
-                <button type='checkbox' className='align' id="right-align" onClick={this.textAction} text='right-align' ></button>
-              </div>
+          <label htmlFor='fontSize' className="option-title">Font size</label>
+          <div className="font-size">
+            <input 
+              type='number' 
+              onChange={this.handlefontSizeChange} 
+              text='fontSize'
+              name='fontSize'
+              id='fontSize'
+              min='1'
+              value={this.state.fontSize} 
+            />
+            <div className="u-d">
+              <button onClick={this.handlefontSizeButton} text='fontSize' name='fontSize' id='fontSize' updown="t">UP</button>
+              <button onClick={this.handlefontSizeButton} text='fontSize' name='fontSize' id='fontSize' updown="f">Down </button>
             </div>
           </div>
+
+          <label htmlFor="align" className="option-title">Align</label>
+          <div className="text-align">
+            <div className="align-button">
+              <button type='checkbox' className='align' id="left-align" onClick={this.textAction} text='left-align'></button>
+              <button type='checkbox' className='align' id="center-align" onClick={this.textAction} text='center-align'></button>
+              <button type='checkbox' className='align' id="right-align" onClick={this.textAction} text='right-align' ></button>
+            </div>
+          </div>
+
+          <label htmlFor="text" className="option-title">Weight</label>
           <div className="font-weight">
-            <label htmlFor="text">Weight</label>
-            <div className="weight-button">
-              <div className="bold">
-                <input type='checkbox' className='weight text' onClick={this.textAction} text='bold' id='bold_checkbox' />
-                <label htmlFor="bold_checkbox">bold</label>
-              </div>
-              <div className="italic">
-                <input type='checkbox' className='weight text' onClick={this.textAction} text='italic' id='italic_checkbox' />
-                <label htmlFor="italic_checkbox">italic</label>
-              </div>
+            <div className="bold">
+              <input type='checkbox' onClick={this.textAction} text='bold' id='bold_checkbox' />
+              <label htmlFor="bold_checkbox">bold</label>
+            </div>
+            <div className="italic">
+              <input type='checkbox' onClick={this.textAction} text='italic' id='italic_checkbox' />
+              <label htmlFor="italic_checkbox">italic</label>
             </div>
           </div>
 
-          <div>
-            <input type='checkbox' className='textbg text' onClick={this.textActionColor} id="textbg" text="background-color" />
-            <label htmlFor="textbg">textbg</label>
+          <div className="option-title">Text background</div>
+          <div className="text-bg">
+            <input type='checkbox' onClick={this.textActionColor} id="textbg" text="background-color" />
+            <label htmlFor="textbg">Active</label>
           </div>
 
+          <label className="option-title">Text color</label>
           <div className="color-picker">
-            <label>텍스트 색</label>
             <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           </div>
 
+          <label className="option-title">Text bg color</label>
           <div className="color-picker">
-            <label>텍스트 배경색</label>
             <ChromePicker color={ this.state.bgcolor } onChange={ this.handleBGColorChange } onChangeComplete = { this.handleBGColorChangeComplete }/>
           </div>
+
           <div>
             <button onClick = { this.handlePipette }>pipette</button>
           </div>
