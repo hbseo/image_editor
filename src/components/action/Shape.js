@@ -20,6 +20,34 @@ class Shape extends Action {
     }
   }
 
+  setStroke = (value) => {
+    console.log(value);
+    if(this.getActiveObject()) {
+      let shape = this.getActiveObject();
+      shape.set({
+        stroke: shape.stroke || 'black',
+        strokeWidth: value,
+        noScaleCache: false,
+        strokeUniform: true,
+      })
+      this.updateObject();
+      this.getCanvas().renderAll();
+      this.saveState('Stroke set', this.getActiveObject().type);
+    }
+  }
+
+  setStrokeColor = (color) => {
+    const activeObject = this.getActiveObject();
+    const canvas = this.getCanvas();
+    if(activeObject) {
+      activeObject.set({
+        stroke:color
+      })
+      this.saveState('Stroke color change', activeObject.type);
+      canvas.renderAll();
+    }
+  }
+
   _bindShapeEvent = (shape) => {
       const canvas = this.getCanvas();
       shape.on({

@@ -39,7 +39,6 @@ class ImageEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fontsize: 50, //active object's fontSize
       canvasView : { x: 0, y: 0},
       layers: [],
       displayColorPicker: false,
@@ -907,8 +906,8 @@ class ImageEditor extends Component {
     this.action['Image'].addImage(url);
   }
 
-  addText = () => {
-    this.action['Text'].addText();
+  addText = (option) => {
+    this.action['Text'].addText(option);
   }
 
   addShape = (type, color) => {
@@ -919,8 +918,16 @@ class ImageEditor extends Component {
     this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
   }
 
+  setStrokeColor = (color) => {
+    this.action['Shape'].setStrokeColor(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
+  }
+
   setEndAngle = (value) => {
     this.action['Shape'].setEndAngle(value);
+  }
+
+  setStroke = (value) => {
+    this.action['Shape'].setStroke(value);
   }
 
   setShadow = (option) => {
@@ -1348,7 +1355,13 @@ class ImageEditor extends Component {
 
   render() {
     const tab = {
-      0: <TextUI object={this.state.activeObject} textObject={this.textObject} addText = {this.addText} pipette = {this.action['Pipette']}/>,
+      0: <TextUI 
+          object={this.state.activeObject} 
+          textObject={this.textObject} 
+          addText = {this.addText} 
+          setColor={this.setColor} 
+          pipette = {this.action['Pipette']}
+          />,
       1: <ImageUI 
           object={this.state.activeObject} 
           cropObject={this.cropObject} 
@@ -1356,11 +1369,13 @@ class ImageEditor extends Component {
           addImage = {this.addImage}
           imgStatus = {this.state.imgStatus}
           />,
-      2: <FilterUI object={this.state.activeObject} 
+      2: <FilterUI 
+          object={this.state.activeObject} 
           filterObject={this.filterObject} 
           getBackgroundImage = {this.getBackgroundImage} 
           rangeFilterObject={this.rangeFilterObject}
-          ref={this.filterRef}/>,
+          ref={this.filterRef}
+          />,
       3: <IconUI 
           object={this.state.activeObject} 
           addIcon = {this.addIcon} 
@@ -1390,6 +1405,8 @@ class ImageEditor extends Component {
           setEndAngle = {this.setEndAngle}
           makePolygonWithDrag={this.makePolygonWithDrag} 
           makePolygonWithClick={this.makePolygonWithClick}
+          setStroke={this.setStroke}
+          setStrokeColor={this.setStrokeColor}
           setColor={this.setColor}
           pipette = {this.action['Pipette']}
           />,
