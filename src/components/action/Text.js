@@ -4,6 +4,7 @@ import { fabric } from 'fabric';
 class Text extends Action {
   constructor(App) {
     super('Text', App);
+    this.addTextOpt = null;
   }
 
   addTextEvent = (event) => {
@@ -13,10 +14,12 @@ class Text extends Action {
       let text = new fabric.Textbox('Test', {
         left: pointer.x,
         top: pointer.y,
-        fontSize: this.getImageEditor().state.fontsize,
+        fontSize: this.addTextOpt.size,
+        fontFamily : this.addTextOpt.font,
+        fill : this.addTextOpt.color,
         lockScalingY: true,
         strokeWidth : 0,
-        textBackgroundColor : null
+        textBackgroundColor : null,
       });
       text.setControlsVisibility({
         mt: false,
@@ -33,7 +36,8 @@ class Text extends Action {
     canvas.defaultCursor = 'default';
   }
 
-  addText = () => {
+  addText = (option) => {
+    this.addTextOpt = option;
     this.getCanvas().defaultCursor = 'pointer';
 		document.addEventListener('mousedown',this.addTextEvent);    
   }

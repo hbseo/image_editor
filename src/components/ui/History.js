@@ -5,13 +5,13 @@ export default class History extends Component {
   }
 
   componentDidMount(){
-    console.log('History UI Mount');
+    // console.log('History UI Mount');
   }
   componentDidUpdate(){
-    console.log('History UI Update');
+    // console.log('History UI Update');
   }
   componentWillUnmount(){
-    console.log('History UI Unmount');
+    // console.log('History UI Unmount');
   }
 
   render(){
