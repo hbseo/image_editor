@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { SketchPicker } from 'react-color';
+import '../../css/ui/Draw.scss';
 
 export default class Draw extends Component{
   constructor(props){
@@ -61,20 +62,20 @@ export default class Draw extends Component{
             Draw ( {this.props.object.type} )
         </div>
         <div className="sub-filters">
+          <div className="option-title">Brush type</div> 
           <div className="select-brush">
-            <div className="option-title">Brush type</div>
             <div>
               <select className='text' name='brush' text='brush' onChange={this.handleDrawingBrush}>
                 {this.brushListUp()}
               </select>
             </div>
           </div>
-          <div className="select-width"> 
-            <div className="option-title">Width</div>
+          <div className="option-title">Width</div>
+          <div className="select-width">
             <input type='range' className='drawing' id='width' min='0' max='60' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth}/>
           </div>
+          <div className="option-title">Line Color</div>
           <div className="color-picker">
-            <div className="option-title">Line Color</div>
             <div>
               <SketchPicker color={ this.state.color } onChange = {this.handleColorChange} onChangeComplete={this.handleColorChangeComplete} />
             </div>

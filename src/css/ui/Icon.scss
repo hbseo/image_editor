@@ -1,0 +1,33 @@
+.sub-iconmenu{
+    display: flex;
+    flex-direction: column;
+  
+    .option-title{
+        font-size: 1.1em;
+        font-weight: bold;
+        margin: 3%;
+    }
+  
+    .icon{
+      width: 100%;
+      margin-top: 3%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+  
+    .icon button{
+      width: 7vmin;
+      height: 7vmin;
+    }
+    
+    .icon button:hover{
+      background-color: #DFDFDF;
+    }
+  
+    .color-picker{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }

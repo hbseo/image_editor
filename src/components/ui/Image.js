@@ -57,8 +57,8 @@ export default class Image extends Component {
             Image ( { this.props.object.type })
         </div>
         <div className="sub-imagesmenu">
+          <div className="option-title">Crop start</div>
           <div className="crop-ratio">
-            <div className="option-title">Crop start</div>
             <div className="crop-start-button">
               <button onClick={this.handleCropImage} className = "cropStart" crop="4:3">4:3</button>
               <button onClick={this.handleCropImage} className = "cropStart" crop="16:9">16:9</button>
@@ -67,8 +67,8 @@ export default class Image extends Component {
             </div>
             <button id="end-button" onClick={this.props.cropEndObject} crop="left">Crop End</button>
           </div>
+          <div className="option-title">Upload image</div>
           <div className="upload-file">
-              <div className="option-title">Upload image</div>
               <div className="image-local">
                 <div className="file-input-group">
                   <label className="input-file-button" htmlFor="_file">Upload local image</label>

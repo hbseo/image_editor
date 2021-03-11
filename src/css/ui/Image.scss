@@ -5,12 +5,13 @@
   .option-title{
     font-size: 1.1em;
     font-weight: bold;
-    margin-bottom: 3%;
+    margin: 3%;
   }
 
   .crop-ratio{
     display: flex;
     flex-direction: column;
+    align-items: center;
     margin: 3%;
 
     .crop-start-button{
@@ -31,6 +32,7 @@
     #end-button{
       border: 1px solid black;
       border-radius: 5px;
+      width: 150px;
       height: 4vmin;
       background: #E6E6E6;
       margin-top: 5%;
