@@ -919,8 +919,16 @@ class ImageEditor extends Component {
     this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
   }
 
+  setStrokeColor = (color) => {
+    this.action['Shape'].setStrokeColor(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
+  }
+
   setEndAngle = (value) => {
     this.action['Shape'].setEndAngle(value);
+  }
+
+  setStroke = (value) => {
+    this.action['Shape'].setStroke(value);
   }
 
   setShadow = (option) => {
@@ -1390,6 +1398,8 @@ class ImageEditor extends Component {
           setEndAngle = {this.setEndAngle}
           makePolygonWithDrag={this.makePolygonWithDrag} 
           makePolygonWithClick={this.makePolygonWithClick}
+          setStroke={this.setStroke}
+          setStrokeColor={this.setStrokeColor}
           setColor={this.setColor}
           pipette = {this.action['Pipette']}
           />,

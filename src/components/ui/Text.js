@@ -146,18 +146,18 @@ export default class Text extends Component{
             <label htmlFor="text">Weight</label>
             <div className="weight-button">
               <div className="bold">
-                <input type='checkbox' className='weight' onClick={this.textAction} text='bold' id='bold_checkbox' />
+                <input type='checkbox' className='weight text' onClick={this.textAction} text='bold' id='bold_checkbox' />
                 <label htmlFor="bold_checkbox">bold</label>
               </div>
               <div className="italic">
-                <input type='checkbox' className='weight' onClick={this.textAction} text='italic' id='italic_checkbox' />
+                <input type='checkbox' className='weight text' onClick={this.textAction} text='italic' id='italic_checkbox' />
                 <label htmlFor="italic_checkbox">italic</label>
               </div>
             </div>
           </div>
 
           <div>
-            <input type='checkbox' className='textbg' onClick={this.textActionColor} id="textbg" text="background-color" />
+            <input type='checkbox' className='textbg text' onClick={this.textActionColor} id="textbg" text="background-color" />
             <label htmlFor="textbg">textbg</label>
           </div>
 
