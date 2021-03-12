@@ -146,7 +146,7 @@ class ImageEditor extends Component {
           preserveObjectStacking: true,
           height: this._canvasSize.height,
           width: this._canvasSize.width,
-          backgroundColor: '#d8d8d8',
+          backgroundColor: 'grey',
           backgroundImage : this._backgroundImage,
           uniformScaling: false, // When true, objects can be transformed by one side
           imageSmoothingEnabled : false,
@@ -160,7 +160,7 @@ class ImageEditor extends Component {
         this.currentState.width = this._canvas.width;
         this.currentState.height = this._canvas.height;
         this.currentState.backFilter = [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
-        this.currentState.action = "initilize";
+        this.currentState.action = "grey";
         this.currentState.id = 0;
         this.firstState = this.currentState;
         this.action['Grid'].makeGrid();
@@ -174,7 +174,7 @@ class ImageEditor extends Component {
         preserveObjectStacking: true,
         height: this._canvasSize.height,
         width: this._canvasSize.width,
-        backgroundColor: '#d8d8d8',
+        backgroundColor: 'white',
         backgroundImage : this._backgroundImage,
         uniformScaling: false,
         imageSmoothingEnabled : false,
@@ -305,22 +305,30 @@ class ImageEditor extends Component {
       let vpt = this._canvas.viewportTransform;
       vpt[4] += e.clientX - this.lastPosX;
       vpt[5] += e.clientY - this.lastPosY;
-      // var zoom = this._canvas.getZoom (); 
-      // if (zoom < 400 / 1000) {
-      //   vpt[4] = 200 - 1000 * zoom / 2;
-      //   vpt[5] = 200 - 1000 * zoom / 2;
-      // } else {
-      //   if (vpt[4] >= 0) {
-      //     vpt[4] = 0;
-      //   } else if (vpt[4] < this._canvas.getWidth() - 1000 * zoom) {
+      var zoom = this._canvas.getZoom (); 
+
+      if (zoom < 400 / 1000) {
+        vpt[4] = 200 - 1000 * zoom / 2;
+        vpt[5] = 200 - 1000 * zoom / 2;
+      } 
+      else {
+        if (vpt[4] >= 0) {
+          vpt[4] = 0;
+        } 
+        // else if(vpt[4] < -this._canvas.getWidth()){
+        //   vpt[4] =  -this._canvas.getWidth();
+        // }
+      //   else if (vpt[4] < this._canvas.getWidth() - 1000 * zoom) {
       //     vpt[4] = this._canvas.getWidth() - 1000 * zoom;
       //   }
-      //   if (vpt[5] >= 0) {
-      //     vpt[5] = 0;
-      //   } else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
+        if (vpt[5] >= 0) {
+          vpt[5] = 0;
+        } 
+      //   else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
       //     vpt[5] = this._canvas.getHeight() - 1000 * zoom;
       //   }
-      // }
+      }
+      console.log(vpt[4], vpt[5])
 
       this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
       this._canvas.renderAll();
@@ -351,8 +359,8 @@ class ImageEditor extends Component {
       var delta = event.e.deltaY; 
       var zoom = this._canvas.getZoom (); 
       zoom *= 0.999 ** delta; 
-      if (zoom> 20) zoom = 20 ; 
-      if (zoom < 0.5) zoom = 0.5; 
+      if (zoom> 5) zoom = 5 ; 
+      if (zoom < 1) zoom = 1; 
       this._canvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
       let vpt = this._canvas.viewportTransform;
       event.e.preventDefault (); 
@@ -1032,7 +1040,7 @@ class ImageEditor extends Component {
   cropObjMouseDown = (event) => {
     if(event.target == null || !(event.target === this.cropImg || event.target.type === "Cropzone")){
       this._canvas.off('mouse:down', this.cropObjMouseDown);
-      this.action['Crop'].cropObjend(this.cropImg, null);
+      this.action['Crop'].cropObjend(this.cropImg);
       this.cropImg = null;
     }
   }
@@ -1281,20 +1289,6 @@ class ImageEditor extends Component {
     this._canvas.backgroundColor = `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`;
     this.saveState('change backgroundColor');
     this._canvas.renderAll();
-  }
-
-  pipetteEvent = (event) => {
-    if(event.target.tagName === 'CANVAS') { 
-      const pointer = this._canvas.getPointer(event, true);
-      let context = document.getElementById('canvas').getContext('2d');
-      let data = context.getImageData(pointer.x * fabric.devicePixelRatio , pointer.y * fabric.devicePixelRatio, 1, 1).data; 
-      this.setState({pipette : false, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}, color : {r:data[0],g:data[1],b:data[2], a:1}});
-    }
-    document.removeEventListener('mousedown', this.pipetteEvent);
-  }
-
-  enablePipette = () => {
-    document.addEventListener('mousedown', this.pipetteEvent);
   }
 
   printObject = () => {
