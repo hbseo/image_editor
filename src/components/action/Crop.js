@@ -6,6 +6,7 @@ class Crop extends Action {
     super('Crop', App);
     this.state={width: 0, height: 0};
     this._cropzone = null;
+    this.off = null;
 
     fabric.Cropzone = fabric.util.createClass(fabric.Rect, {
       type: 'Cropzone',
@@ -165,10 +166,10 @@ class Crop extends Action {
     canvas.renderAll();
   }
 
-  cropCanvasEvent = (off, event) => {
+  cropCanvasEvent = (event) => {
     if(event.target === null || event.target.type !== 'Cropzone') {
       this.removeCropzone();
-      off();
+      this.off();
     }
   }
 
@@ -232,8 +233,10 @@ class Crop extends Action {
     this.addEvent();
     canvas.setActiveObject(this._cropzone);
     canvas.requestRenderAll();
+
+    this.off = off;
     canvas.on('object:moving', this.movingCropzone);
-    canvas.on('mouse:down', (event) => {this.cropCanvasEvent(off, event)})
+    canvas.on('mouse:down', this.cropCanvasEvent);
   }
 
   cropEndCanvas = () => {
