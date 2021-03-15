@@ -60,6 +60,7 @@ class ImageEditor extends Component {
     }
 
 
+
     this._canvas = null;
     if(!props.location.state) { props.history.push('/'); }
     this._canvasImageUrl = props.location.state ? props.location.state.url : '';
@@ -777,10 +778,16 @@ class ImageEditor extends Component {
     this.action['Clip'].pasteObject();
   }
 
+  /**
+   * Delete actived Object
+   */
   deleteObject = () => {
     this.action['Delete'].deleteObject();
   }
 
+  /**
+   * Delete All Objects on Canvas
+   */
   deleteAllObject = () => {
     this.action['Delete'].deleteAllObject();
   }
@@ -1486,57 +1493,7 @@ class ImageEditor extends Component {
         
         <div id='tool'>
 
-
-
-
-          <div>
-            <h5>오브젝트 기능</h5>
-            <button onClick={this.sendToBack}>맨 뒤로 보내기</button>
-            <button onClick={this.sendBackwards}>뒤로 보내기</button>
-            <button onClick={this.bringToFront}>맨 앞으로 보내기</button>
-            <button onClick={this.bringForward}>앞으로 보내기</button>
-            <button onClick={this.deleteObject}>선택 개체 삭제</button>
-            <button onClick={this.deleteAllObject}>모든 객체 삭제</button>
-            <button onClick={this.makeGroup}>그룹화</button>
-            <button onClick={this.unGroup}>그룹해제</button>
-            <button onClick={this.setObjectAngle} angle='90' > 선택 개체 90도 회전</button>
-            <p>회전</p>
-            <input
-              type='number'
-              name='angle'
-              min='-360'
-              max='360'
-              step='1'
-              value={this.state.activeObject.type !== 'not active' ? this.state.activeObject.angle : 0}
-              onChange={this.handleAngleChange}
-            />
-            <p>확대 및 축소</p>
-            <input
-              type='number'
-              name='scaleX'
-              min='1'
-              max='200'
-              step='1'
-              value={this.state.activeObject.scaleX * 100}
-              onChange={this.handleScaleXChange}
-            />%
-            <input
-              type='number'
-              name='scaleY'
-              min='1'
-              max='200'
-              step='1'
-              value={this.state.activeObject.scaleY * 100}
-              onChange={this.handleScaleYChange}
-            />%
-            <input type='checkbox' onClick={this.lockScaleRatio} /> 비율 고정
-          </div>
-
-          <hr />
-
-
-
-          <div>
+         <div>
             <h5>캔버스 기능</h5>
             <button onClick={this.changeBackgroundColor}>캔버스 배경색 현재 색깔로 변경</button>
             <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>

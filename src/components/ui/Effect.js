@@ -82,6 +82,10 @@ export default class Effect extends Component {
     this.props.pipette.enablePipette(this.setColor); 
   }
 
+  setColor = (color) => {
+    this.setState({ color: color })
+  }
+
   handleStrokeWidthChange = (event) => {
     this.setState({ strokeWidth : Number(event.target.value)});
     this.props.setStroke({ color : `rgba(${ this.state.strokeColor.r }, ${ this.state.strokeColor.g }, ${ this.state.strokeColor.b }, ${ this.state.strokeColor.a })`, width : Number(event.target.value)});
