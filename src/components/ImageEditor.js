@@ -33,6 +33,8 @@ import ShapeUI from './ui/Shape';
 import DrawUI from './ui/Draw';
 import CanvasUI from './ui/Canvas';
 import HistoryUI from './ui/History';
+import EffectUI from './ui/Effect';
+
 
 
 class ImageEditor extends Component {
@@ -851,12 +853,20 @@ class ImageEditor extends Component {
     this.action['Object'].removeShadow();
   }
 
-  scaleXChange = () => {
-    this.action['Object'].scaleXChange();
+  /**
+   * Set ScaleX
+   * @param {float} value : scaleX 
+   */
+  scaleXChange = (value) => {
+    this.action['Object'].scaleXChange(value);
   }
 
-  scaleYChange = (event) => {
-    this.action['Object'].scaleYChange();
+  /**
+   * Set ScaleY
+   * @param {float} value : scaleY
+   */
+  scaleYChange = (value) => {
+    this.action['Object'].scaleYChange(value);
   }
   
   lockScaleRatio = () => {
@@ -899,16 +909,16 @@ class ImageEditor extends Component {
     this.action['Shape'].addShape(type,`rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`);
   }
 
-  setStrokeColor = (color) => {
-    this.action['Shape'].setStrokeColor(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
-  }
-
   setEndAngle = (value) => {
     this.action['Shape'].setEndAngle(value);
   }
 
-  setStroke = (value) => {
-    this.action['Shape'].setStroke(value);
+  setStroke = (option) => {
+    this.action['Shape'].setStroke(option);
+  }
+
+  setStrokeColor = (color) => {
+    this.action['Shape'].setStrokeColor(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
   }
 
   addText = (option) => {
@@ -971,28 +981,6 @@ class ImageEditor extends Component {
       
     }
   }
-    
-  // handleStrokeWidthChange = (event) => {
-  //   if(this.getActiveObject()){
-  //     let options = {
-  //       strokeColor : '#ffffff',
-  //       strokeWidth : Number(event.target.value)
-  //     }
-  //     this.action['Object'].setStroke(this.getActiveObject(), options);
-  //     this.saveState('stroke change');
-  //   }
-  //   this.setState({ activeObject : this.getActiveObject() })
-  // }
-
-  // handleStrokeColorChange = (color) => {
-    // if(this.getActiveObject()){
-    //   let options = {
-    //     strokeColor : color.hex
-    //   }
-    //   this.setState({strokeColor : color.hex})
-    //   this.action['Object'].setStroke(this.getActiveObject(), options);
-    // }
-  // }
 
   loadImage = (url, pointer, option) => {
     return this.action['Image'].loadImage(url, pointer, option);
@@ -1322,6 +1310,7 @@ class ImageEditor extends Component {
       4: <ObjectUI 
           object={this.state.activeObject} 
           lockScaleRatio = {this.lockScaleRatio}
+          getLockScale = {this.getLockScale}
           sendToBack = {this.sendToBack}
           sendBackwards = {this.sendBackwards}
           bringToFront = {this.bringToFront}
@@ -1331,8 +1320,8 @@ class ImageEditor extends Component {
           makeGroup = {this.makeGroup}
           unGroup = {this.unGroup}
           flipObject = {this.flipObject}
-          setShadow = {this.setShadow}
-          removeShadow = {this.removeShadow}
+          scaleXChange = {this.scaleXChange}
+          scaleYChange = {this.scaleYChange}
           />,
       5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
       6: <ShapeUI 
@@ -1342,8 +1331,6 @@ class ImageEditor extends Component {
           setEndAngle = {this.setEndAngle}
           makePolygonWithDrag={this.makePolygonWithDrag} 
           makePolygonWithClick={this.makePolygonWithClick}
-          setStroke={this.setStroke}
-          setStrokeColor={this.setStrokeColor}
           setColor={this.setColor}
           pipette = {this.action['Pipette']}
           />,
@@ -1374,6 +1361,14 @@ class ImageEditor extends Component {
           cropCanvas = {this.cropCanvas}
           cropEndCanvas = {this.cropEndCanvas}
           handleCropCanvasSizeChange = {this.handleCropCanvasSizeChange}
+        />,
+      10: <EffectUI 
+          object={this.state.activeObject} 
+          setShadow = {this.setShadow} 
+          removeShadow = {this.removeShadow}
+          setStroke={this.setStroke}
+          setStrokeColor={this.setStrokeColor} 
+          pipette = {this.action['Pipette']}
         />
     };
     return (
@@ -1539,42 +1534,7 @@ class ImageEditor extends Component {
 
           <hr />
 
-          <div>
-            <h5>도형 기능</h5>
-            
-            <button onClick={this.addShape} type="triangle">삼각형</button>
-            <button onClick={this.addShape} type="rectangle">직사각형</button>
-            <button onClick={this.addShape} type="ellipse">타원</button>
-            <button onClick={this.addShape} type="circle">원</button>
-            <button onClick={this.addLine} type="line">직선</button>
 
-            <button onClick={this.makePolygonWithClick} type="line">클릭으로 만들기</button>
-            <button onClick={this.makePolygonWithDrag} type="line">드래그로 만들기</button>
-
-            { this.state.activeObject.type === "circle" ? 
-            <div>
-              <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.state.activeObject.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
-            </div> : <div></div>
-            }
-          </div>
-
-          <hr />
-
-          <div>
-              <h5>그리기 기능</h5>
-              {this.state.drawingMode
-                ? <div> 
-                    <button onClick={this.closeDrawing}>Cancel Drawing</button>
-                    <br/>
-                    <label>Width</label><input type='range' className='drawing' id='width' min='0' max='30' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth.bind(this)}/>
-                    <br/>
-                    <label>Line Color</label><SketchPicker color={ this.state.lineColorRgb } onChange={ this.handleDrawingColor } />
-                  </div>
-                : <button onClick={this.openDrawing}>Free Drawing</button>
-                }
-          </div>
-
-          <hr />
 
           <div>
             <h5>캔버스 기능</h5>
@@ -1606,33 +1566,6 @@ class ImageEditor extends Component {
           </div>
 
           <hr />
-
-          <div>
-            <h5>색깔 : 기본 색</h5>
-            <button onClick={this.openColorPicker}>color</button>
-          	{ this.state.displayColorPicker ? <div>
-          	  <div onClick={this.closeColorPicker} role="button" tabIndex="0"/>
-          	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
-          	</div> : null }
-          </div>
-
-          <hr/>
-
-          <hr />
-
-          <div>
-            <h5>테두리 두깨</h5>
-            <input
-              type='number'
-              name='stroke'
-              min='0'
-              max='100'
-              step='1'
-              value={ this.state.activeObject.strokeWidth ? this.state.activeObject.strokeWidth : 0}
-              disabled = { (this.state.activeObject.type === 'group' || this.state.activeObject.type === 'activeSelection' || this.state.activeObject.type === 'not active') ? true : false }
-              onChange={this.handleStrokeWidthChange}
-            />
-          </div>
             
           <div>
             <h5>일단은 안 쓰는 기능</h5>

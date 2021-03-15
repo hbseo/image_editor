@@ -20,14 +20,13 @@ class Shape extends Action {
     }
   }
 
-  setStroke = (value) => {
-    console.log(value);
+  setStroke = (option) => {
     if(this.getActiveObject()) {
       let shape = this.getActiveObject();
       shape.set({
-        stroke: shape.stroke || 'black',
-        strokeWidth: value,
-        noScaleCache: false,
+        stroke: option.width == 0 ? null : shape.stroke || option.color,
+        strokeWidth: option.width,
+        noScaleCache: true,
         strokeUniform: true,
       })
       this.updateObject();

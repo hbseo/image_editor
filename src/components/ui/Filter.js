@@ -124,7 +124,7 @@ export default class Filter extends Component{
         <div className="sub-filtersmenu">
           <div className="filter-box">
             <div className="option-title" onClick = {this.changeMenu}>Filters</div>
-            <CSSTransition in = {this.state.menu} timeout={200} classNames="my-node" unmountOnExit  transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
+            <CSSTransition in = {this.state.menu} timeout={200} classNames="my-node" unmountOnExit >
               <div className="filter-options">
                 <div>
                   <input type='checkbox' id="filter-grey" className='filter' onClick={this.props.filterObject} filter='grey'/><label htmlFor="filter-grey">Grey</label>
@@ -161,7 +161,7 @@ export default class Filter extends Component{
           </div>
           <div className="adjust-box">
             <div className="option-title" onClick = {this.changeMenu}>Adjust</div>
-            <CSSTransition in = {!this.state.menu} timeout={200} classNames="my-node" unmountOnExit  transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
+            <CSSTransition in = {!this.state.menu} timeout={200} classNames="my-node" unmountOnExit >
               <div className="adjust-options">
                 <div>
                   <input
