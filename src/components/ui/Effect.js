@@ -82,21 +82,6 @@ export default class Effect extends Component {
     this.props.pipette.enablePipette(this.setColor); 
   }
 
-  handleStrokeClick = () => {
-    new Promise((resolve) => {
-      this.setState({isStrokeChecked: !this.state.isStrokeChecked});
-      resolve();
-    })
-    .then(() => {
-      if(this.state.isStrokeChecked) {
-        this.props.setStroke(Number(this.state.strokeWidth));
-      }
-      else {
-        this.props.setStroke(0);
-      }
-    })
-  }
-
   handleStrokeWidthChange = (event) => {
     this.setState({ strokeWidth : Number(event.target.value)});
     this.props.setStroke({ color : `rgba(${ this.state.strokeColor.r }, ${ this.state.strokeColor.g }, ${ this.state.strokeColor.b }, ${ this.state.strokeColor.a })`, width : Number(event.target.value)});
@@ -162,7 +147,6 @@ export default class Effect extends Component {
             
             <div className="stroke">
               <label htmlFor="stroke">stroke</label>
-
               <input
                 type='range'
                 className='stroke'

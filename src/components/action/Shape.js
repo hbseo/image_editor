@@ -24,7 +24,7 @@ class Shape extends Action {
     if(this.getActiveObject()) {
       let shape = this.getActiveObject();
       shape.set({
-        stroke: option.width == 0 ? null : shape.stroke || option.color,
+        stroke: option.width === 0 ? null : shape.stroke || option.color,
         strokeWidth: option.width,
         noScaleCache: true,
         strokeUniform: true,
