@@ -829,7 +829,7 @@ class ImageEditor extends Component {
   }
 
   setColor = (color) => {
-    this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
+    this.action['Fill'].fill(color);
   }
   
   flipObject = (option) => {
@@ -913,7 +913,7 @@ class ImageEditor extends Component {
   }
 
   addShape = (type, color) => {
-    this.action['Shape'].addShape(type,`rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`);
+    this.action['Shape'].addShape(type, color);
   }
 
   setEndAngle = (value) => {
@@ -925,7 +925,7 @@ class ImageEditor extends Component {
   }
 
   setStrokeColor = (color) => {
-    this.action['Shape'].setStrokeColor(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
+    this.action['Shape'].setStrokeColor(color);
   }
 
   addText = (option) => {

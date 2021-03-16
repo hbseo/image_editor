@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { SketchPicker } from 'react-color';
+import convertRGB from '../helper/ConverRGB';
 import '../../css/ui/Draw.scss';
 
 export default class Draw extends Component{
@@ -35,8 +36,7 @@ export default class Draw extends Component{
 
   handleColorChangeComplete = (color) => {
     this.setState({ color: color.rgb})
-    let rgb = "rgb(" + this.state.color['r'] + ", " + this.state.color['g'] + ", " + this.state.color['b'] + ", " + this.state.color['a'] +")"
-    this.props.changeDrawingColor(rgb);
+    this.props.changeDrawingColor(convertRGB(this.state.color));
   }
 
   handleDrawingWidth = (event) => {
@@ -46,8 +46,7 @@ export default class Draw extends Component{
   }
 
   handleDrawingBrush = (event) => {
-    let rgb = "rgb(" + this.state.color['r'] + ", " + this.state.color['g'] + ", " + this.state.color['b'] + ", " + this.state.color['a'] +")"
-    this.props.changeDrawingBrush(event.target.value, rgb, this.state.lineWidth);
+    this.props.changeDrawingBrush(event.target.value, convertRGB(this.state.color) , this.state.lineWidth);
   }
 
   brushListUp = () => {

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { ChromePicker, CompactPicker } from 'react-color';
-import switchTools from '../helper/SwitchTools';
+import convertRGB from '../helper/ConverRGB';
 export default class Effect extends Component {
   constructor(props){
     super(props);
@@ -56,12 +56,12 @@ export default class Effect extends Component {
     let change_state = {};
     change_state[event.target.name] = event.target.value
     this.setState(change_state);
-    this.props.setShadow({color : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`, blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
+    this.props.setShadow({color : convertRGB(this.state.color), blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
   }
 
   toggleShadow = (event) => {
     if(event.target.checked){
-      this.props.setShadow({color : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`, blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
+      this.props.setShadow({color : convertRGB(this.state.color) , blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
     }
     else{
       this.props.removeShadow();
@@ -104,7 +104,7 @@ export default class Effect extends Component {
     return (
       <div className="sub">
         <div className="sub-title">
-            Shape ( {this.props.object.type} )
+            Effect ( {this.props.object.type} )
         </div>
         <div className="sub-effect">
           <div>

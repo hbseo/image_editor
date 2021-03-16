@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { ChromePicker } from 'react-color';
 import '../../css/ui/Shape.scss'
 
 export default class Shape extends Component {
@@ -91,6 +92,10 @@ export default class Shape extends Component {
               <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.props.object.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
             </div> : <div></div>
           }
+
+          <div className="color-picker">
+            <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          </div>
           <div>
             <button onClick = { this.handlePipette }>pipette</button>
           </div>

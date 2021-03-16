@@ -1,5 +1,6 @@
 import Action from './Action';
 import ResizeHelper from '../helper/Resize';
+import convertRGB from '../helper/ConverRGB';
 import { fabric } from 'fabric';
 class Shape extends Action {
   constructor(App) {
@@ -40,7 +41,7 @@ class Shape extends Action {
     const canvas = this.getCanvas();
     if(activeObject) {
       activeObject.set({
-        stroke:color
+        stroke: convertRGB(color.rgb)
       })
       this.saveState('Stroke color change', activeObject.type);
       canvas.renderAll();
@@ -61,7 +62,7 @@ class Shape extends Action {
     canvas.defaultCursor = 'pointer';
     canvas.discardActiveObject();
     this.shapeType = shapeType;
-    this.color = color;
+    this.color = convertRGB(color);
     document.addEventListener('mousedown',this.addShapeEvent);    
     // document.addEventListener('keydown',this._onShiftKeydownEvent);
   }

@@ -1,5 +1,6 @@
 import Action from './Action';
 import ResizeHelper from '../helper/Resize';
+import convertRGB from '../helper/ConverRGB';
 import { fabric } from 'fabric';
 import {iconList} from '../const/consts';
 class Icon extends Action {
@@ -44,7 +45,7 @@ class Icon extends Action {
     }
 
     icon.set(({
-        fill : `rgba(${ options.color.r }, ${ options.color.g }, ${ options.color.b }, ${ options.color.a })`,
+        fill : convertRGB(options.color),
         // type : 'icon', // if type is modified, Cannot read property 'fromObject' of undefined
         // left : event.pointer.x, // canvas 이벤트용
         // top : event.pointer.y, // canvas 이벤트용
