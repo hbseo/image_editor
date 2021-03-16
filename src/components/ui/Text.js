@@ -82,7 +82,7 @@ export default class Text extends Component{
   
   fontListUp = () => {
     let i = 0;
-    return fontList.map(font => (<option key={i++} value={font}>{font}</option>));
+    return fontList.map(font => (<li key={i++} value={font}>{font}</li>));
   }
 
   handlefontSizeButton = (event) => {
@@ -141,6 +141,10 @@ export default class Text extends Component{
     }
   }
 
+  handlefontfamilyClicked = () => {
+    
+  }
+
   render(){
     return (
       <div className="sub">
@@ -153,11 +157,42 @@ export default class Text extends Component{
           </div>
 
           <label htmlFor='fontfamily' className="option-title">Font</label>
-          <div className="font-style">
+
+
+
+
+
+
+
+
+
+
+
+          {/* <div className="font-style">
             <select className='text-font' name='fontfamily' text='fontfamily' onChange={this.textAction}>
               {this.fontListUp()}
             </select>
+          </div> */}
+
+
+
+
+          <div className="font-style">
+            <div id="select" className="text-font">choose</div>
+            <ul id="font-ul" className="select-ul">
+              {this.fontListUp()}
+            </ul>
           </div>
+
+
+
+
+
+
+
+
+
+
 
           <label htmlFor='fontSize' className="option-title">Font size</label>
           <div className="font-size">

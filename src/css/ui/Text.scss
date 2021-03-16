@@ -202,3 +202,31 @@
     justify-content: center;
     align-items: center;
 }
+
+#select {
+    width: fit-content;
+    border: 1px solid #b8b8b8;
+    overflow: hidden;
+    font-size: 18px;
+    color: #666666;
+    padding: 10px 0 10px 18px;
+    width: 155px;
+}
+
+.select-ul {
+    list-style-type: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 18px;
+    color: #666666;
+    border: 1px solid #b8b8b8;
+    display: none;
+    position: absolute;
+    background: #FFFFFF;
+    border-top: none;
+}
+
+.select-ul li {
+    padding: 10px 0 10px 18px;
+    width: 155px;
+}
