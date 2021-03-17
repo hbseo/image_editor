@@ -35,6 +35,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 nav {
   display: flex;
+  height: 100vh;
 }
 
 ul {
@@ -76,9 +77,13 @@ ul {
 
 .sub {
   width: 25vmin;
-  height: 100vh;
+  height: 100%;
   background-color:#EEEEEE;
   color: black;
+}
+
+.sub-title{
+  height: 2vh;
 }
 
 .sub .sub-title {
@@ -157,8 +162,8 @@ ul {
 .canvas-footer{
   width: 100%;
   border-top: 1px solid black;
-  height: 15vmin;
   display: flex;
+  height: 150px;
   margin-top: auto;
 
   .canvas-info{
