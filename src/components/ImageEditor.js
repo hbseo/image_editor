@@ -16,6 +16,7 @@ import Line from './action/Line';
 import Clip from './action/Clip';
 import Draw from './action/Draw';
 import Grid from './extension/Grid';
+import Util from './extension/Util';
 import Snap from './extension/Snap';
 import Pipette from './extension/Pipette';
 import Layers from './extension/Layers';
@@ -42,15 +43,8 @@ class ImageEditor extends Component {
     super(props);
     this.state = {
       canvasView : { x: 0, y: 0},
-      layers: [],
       activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
       zoom : 1,
-      color: {
-        r: '255',
-        g: '255',
-        b: '255',
-        a: '1',
-      },
       openSave : false, // save Modal 여는 용도
       tab : 0, // 사이드 NavBar 탭 번호
       user_name : '', // 로그인 되어있는 유저 id
@@ -58,8 +52,6 @@ class ImageEditor extends Component {
       prj_idx : -1, // 현재 열려있는 저장된 프로젝트 idx,
       imgStatus : false // false : idle 상태. true 로딩 중
     }
-
-
 
     this._canvas = null;
     if(!props.location.state) { props.history.push('/'); }
@@ -69,8 +61,6 @@ class ImageEditor extends Component {
 
     this._clipboard = null;
     this._backgroundImage = null;
-    // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
-    this.testUrl = 'https://source.unsplash.com/random/500x400';
     this.action = {};
 
     this.isDragging = false;
@@ -257,6 +247,14 @@ class ImageEditor extends Component {
     }
   }
 
+  /**
+  * create a DomEvent
+  * @mouseup used on input[range]
+  * @mousedown used on input[range] and keyDownEvent
+  * @keydown shiftKey
+  * @keyup shkfyKey
+  * @private
+  */
 	_createDomEvent = () => {
     // document.getElementById('canvas').addEventListener('keydown',this._onKeydownEvent)
     document.addEventListener('mouseup',this._onMouseUpEvent);
@@ -371,24 +369,24 @@ class ImageEditor extends Component {
     }
   }
 
-  onCanvasMove = () => {
+  _onCanvasMove = () => {
     this._canvas.on('mouse:down', this._canvasMoveStartEvent);
     this._canvas.on('mouse:move', this._canvasMovingEvent);
     this._canvas.on('mouse:up', this._canvasMoveEndEvent);
 
   }
 
-  offCanvasMove = () => {
+  _offCanvasMove = () => {
     this._canvas.off('mouse:down', this._canvasMoveStartEvent);
     this._canvas.off('mouse:move', this._canvasMovingEvent);
     this._canvas.off('mouse:up', this._canvasMoveEndEvent);
   }
 
-  onCanvasZoom = () => {
+  _onCanvasZoom = () => {
     this._canvas.on('mouse:wheel', this._canvasZoomEvent);    
   }
 
-  offCanvasZoom = () => {
+  _offCanvasZoom = () => {
     this._canvas.off('mouse:wheel', this._canvasZoomEvent);    
   }
 
@@ -398,8 +396,8 @@ class ImageEditor extends Component {
    * @private
    */
   _createCanvasEvent = () => {
-    this.onCanvasMove();
-    this.onCanvasZoom();
+    this._onCanvasMove();
+    this._onCanvasZoom();
     
 		this._canvas.on('selection:created', (event) => {
       this.setState({activeObject : this.getActiveObject() });
@@ -456,11 +454,15 @@ class ImageEditor extends Component {
 
     })
 
-    this._canvas.on('object:moved', this.movedObjectSave);
+    this._canvas.on('object:moved', this._movedObjectSave);
   }
 
-
-  movedObjectSave = (event) => {
+  /**
+  * 'fabric.object moved Event' event handler : if object is moved, save a state
+  * @objectMoved
+  * @private
+  */
+  _movedObjectSave = (event) => {
     if(event.target.type !== 'Cropzone'){
       this.saveState(event.target.type + ' : move');
     }
@@ -648,6 +650,7 @@ class ImageEditor extends Component {
     this._register(this.action, new Image(this));
     this._register(this.action, new Grid(this));
     this._register(this.action, new Line(this));
+    this._register(this.action, new Util(this));
     this._register(this.action, new Snap(this));
     this._register(this.action, new Layers(this));
     this._register(this.action, new Pipette(this));
@@ -1068,36 +1071,7 @@ class ImageEditor extends Component {
     reader.readAsText(file);
   }
 
-  newCanvas = (url) => {
-    // let url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
-    // console.log(url);
-    // this._canvas.clear();
-    // this._canvas.dispose();
-    new Promise(resolve => {
-      fabric.Image.fromURL(url, img => {
-        img.set({
-          originX : "left",
-          originY : "top"
-				});
-				img.on('scaling', () => {
 
-        })
-        resolve(img);
-      }, { crossOrigin: 'Anonymous' }
-      );
-    })
-      .then((img) => {
-        console.log(img);
-        return new fabric.Canvas('canvas', {
-          preserveObjectStacking: true,
-          height: img.height,
-          width: img.width,
-          backgroundImage: img,
-          backgroundColor: 'grey'
-        });
-        
-      })
-  }
 
   getCanvasInfo = () => {
     console.log(this._canvas);
@@ -1195,59 +1169,6 @@ class ImageEditor extends Component {
     )
   }
 
-  convertSvg = () => {
-    let img = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Font_Awesome_5_solid_cloud.svg/512px-Font_Awesome_5_solid_cloud.svg.png";
-    fabric.loadSVGFromURL(img, (objects, options) => {
-      var shape = fabric.util.groupSVGElements(objects, options);
-      console.log(shape.toSVG());
-    })
-  }
-
-  convertObjSvg = () => {
-    if(this.getActiveObject()){
-      console.log(this.getActiveObject().toSVG());
-    }
-  }
-
-  convertObjScale = () => {
-    if(this.getActiveObject()){
-      let obj = this.getActiveObject();
-      obj.set({
-        width : obj.width * obj.scaleX,
-        height : obj.height * obj.scaleY,
-        scaleY : 1,
-        scaleX : 1,
-      })
-    }
-  }
-
-
-
-  changeBackgroundColor = () => {
-    this._canvas.backgroundColor = `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`;
-    this.saveState('change backgroundColor');
-    this._canvas.renderAll();
-  }
-
-  printObject = () => {
-      let first = this._canvas._objects.map(
-          x => Object.entries(x)
-      );
-      let objstack = [];
-      for (let i = 0; i < this._canvas._objects.length; i++) {
-          if(first[i][0][0] === "filters"){
-            objstack[i] = 'img';
-          }
-          else if(first[i][0][0] === "styles"){
-              objstack[i] = 'text';
-          }
-          else if(first[i][0][0] === "width"){
-              objstack[i] = 'shape';
-          }
-      }
-      console.log(objstack);
-  }
-
   updateObject = () => {
     this.setState({activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0}})
   }
@@ -1255,6 +1176,7 @@ class ImageEditor extends Component {
   loadingStart = () => {
     this.setState({imgStatus : true})
   }
+
   loadingFinish = () => {
     console.log('loading finish')
     this.setState({imgStatus : false});
@@ -1444,7 +1366,6 @@ class ImageEditor extends Component {
               <p> bottom : {this.state.activeObject.aCoords.br.y} </p>
             </div> : <div></div> }
 
-            <button onClick={this.printObject}>현재 캔버스에 있는 오브젝트 확인하기</button>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
