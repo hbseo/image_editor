@@ -1330,7 +1330,7 @@ class ImageEditor extends Component {
                 <div>{this._canvas ? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</div>
               </div>
               <HistoryUI showUndoStack = {this.showUndoStack} currentState={this.currentState} />
-            </div>
+          </div>
           </div>
         </div>
         <Save 
