@@ -15,6 +15,7 @@ export default class Canvas extends Component {
     console.log('Canvas UI Update');
   }
   componentWillUnmount() {
+    this.props.cropEndCanvas();
     console.log('Canvas UI Unmount');
   }
 

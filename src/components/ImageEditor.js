@@ -16,6 +16,7 @@ import Line from './action/Line';
 import Clip from './action/Clip';
 import Draw from './action/Draw';
 import Grid from './extension/Grid';
+import Util from './extension/Util';
 import Snap from './extension/Snap';
 import Pipette from './extension/Pipette';
 import Layers from './extension/Layers';
@@ -33,6 +34,8 @@ import ShapeUI from './ui/Shape';
 import DrawUI from './ui/Draw';
 import CanvasUI from './ui/Canvas';
 import HistoryUI from './ui/History';
+import EffectUI from './ui/Effect';
+
 
 
 class ImageEditor extends Component {
@@ -40,31 +43,8 @@ class ImageEditor extends Component {
     super(props);
     this.state = {
       canvasView : { x: 0, y: 0},
-      layers: [],
-      displayColorPicker: false,
-      displayTextbgColorPicker: false,
-      displayshadow: false,
-      lineWidth: 10,
-      lineColorRgb:{
-          r: '255',
-          g: '255',
-          b: '255',
-          a: '1',
-        },
       activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
       zoom : 1,
-      color: {
-        r: '255',
-        g: '255',
-        b: '255',
-        a: '1',
-      },
-      pipetteRGB:{
-          r: '0',
-          g: '0',
-          b: '0',
-          a: '1',
-      },
       openSave : false, // save Modal 여는 용도
       tab : 0, // 사이드 NavBar 탭 번호
       user_name : '', // 로그인 되어있는 유저 id
@@ -72,7 +52,6 @@ class ImageEditor extends Component {
       prj_idx : -1, // 현재 열려있는 저장된 프로젝트 idx,
       imgStatus : false // false : idle 상태. true 로딩 중
     }
-
 
     this._canvas = null;
     if(!props.location.state) { props.history.push('/'); }
@@ -82,8 +61,6 @@ class ImageEditor extends Component {
 
     this._clipboard = null;
     this._backgroundImage = null;
-    // this.testUrl = 'http://fabricjs.com/assets/pug_small.jpg';
-    this.testUrl = 'https://source.unsplash.com/random/500x400';
     this.action = {};
 
     this.isDragging = false;
@@ -146,7 +123,7 @@ class ImageEditor extends Component {
           preserveObjectStacking: true,
           height: this._canvasSize.height,
           width: this._canvasSize.width,
-          backgroundColor: '#d8d8d8',
+          backgroundColor: 'grey',
           backgroundImage : this._backgroundImage,
           uniformScaling: false, // When true, objects can be transformed by one side
           imageSmoothingEnabled : false,
@@ -174,7 +151,7 @@ class ImageEditor extends Component {
         preserveObjectStacking: true,
         height: this._canvasSize.height,
         width: this._canvasSize.width,
-        backgroundColor: '#d8d8d8',
+        backgroundColor: 'grey',
         backgroundImage : this._backgroundImage,
         uniformScaling: false,
         imageSmoothingEnabled : false,
@@ -192,7 +169,7 @@ class ImageEditor extends Component {
       this.action['Grid'].makeGrid();
     }
     
-    this.action['Draw'].setBrush();
+    this.action['Draw'].setBrush(); // Canvas Required
     this.getCheck();
     this.forceUpdate(); // for showUndo/Redo Stack
   }
@@ -270,6 +247,14 @@ class ImageEditor extends Component {
     }
   }
 
+  /**
+  * create a DomEvent
+  * @mouseup used on input[range]
+  * @mousedown used on input[range] and keyDownEvent
+  * @keydown shiftKey
+  * @keyup shkfyKey
+  * @private
+  */
 	_createDomEvent = () => {
     // document.getElementById('canvas').addEventListener('keydown',this._onKeydownEvent)
     document.addEventListener('mouseup',this._onMouseUpEvent);
@@ -305,22 +290,30 @@ class ImageEditor extends Component {
       let vpt = this._canvas.viewportTransform;
       vpt[4] += e.clientX - this.lastPosX;
       vpt[5] += e.clientY - this.lastPosY;
-      // var zoom = this._canvas.getZoom (); 
-      // if (zoom < 400 / 1000) {
-      //   vpt[4] = 200 - 1000 * zoom / 2;
-      //   vpt[5] = 200 - 1000 * zoom / 2;
-      // } else {
-      //   if (vpt[4] >= 0) {
-      //     vpt[4] = 0;
-      //   } else if (vpt[4] < this._canvas.getWidth() - 1000 * zoom) {
+      var zoom = this._canvas.getZoom (); 
+
+      if (zoom < 400 / 1000) {
+        vpt[4] = 200 - 1000 * zoom / 2;
+        vpt[5] = 200 - 1000 * zoom / 2;
+      } 
+      else {
+        if (vpt[4] >= 0) {
+          vpt[4] = 0;
+        } 
+        // else if(vpt[4] < -this._canvas.getWidth()){
+        //   vpt[4] =  -this._canvas.getWidth();
+        // }
+      //   else if (vpt[4] < this._canvas.getWidth() - 1000 * zoom) {
       //     vpt[4] = this._canvas.getWidth() - 1000 * zoom;
       //   }
-      //   if (vpt[5] >= 0) {
-      //     vpt[5] = 0;
-      //   } else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
+        if (vpt[5] >= 0) {
+          vpt[5] = 0;
+        } 
+      //   else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
       //     vpt[5] = this._canvas.getHeight() - 1000 * zoom;
       //   }
-      // }
+      }
+      console.log(vpt[4], vpt[5])
 
       this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
       this._canvas.renderAll();
@@ -351,8 +344,8 @@ class ImageEditor extends Component {
       var delta = event.e.deltaY; 
       var zoom = this._canvas.getZoom (); 
       zoom *= 0.999 ** delta; 
-      if (zoom> 20) zoom = 20 ; 
-      if (zoom < 0.5) zoom = 0.5; 
+      if (zoom> 5) zoom = 5 ; 
+      if (zoom < 1) zoom = 1; 
       this._canvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
       let vpt = this._canvas.viewportTransform;
       event.e.preventDefault (); 
@@ -376,24 +369,24 @@ class ImageEditor extends Component {
     }
   }
 
-  onCanvasMove = () => {
+  _onCanvasMove = () => {
     this._canvas.on('mouse:down', this._canvasMoveStartEvent);
     this._canvas.on('mouse:move', this._canvasMovingEvent);
     this._canvas.on('mouse:up', this._canvasMoveEndEvent);
 
   }
 
-  offCanvasMove = () => {
+  _offCanvasMove = () => {
     this._canvas.off('mouse:down', this._canvasMoveStartEvent);
     this._canvas.off('mouse:move', this._canvasMovingEvent);
     this._canvas.off('mouse:up', this._canvasMoveEndEvent);
   }
 
-  onCanvasZoom = () => {
+  _onCanvasZoom = () => {
     this._canvas.on('mouse:wheel', this._canvasZoomEvent);    
   }
 
-  offCanvasZoom = () => {
+  _offCanvasZoom = () => {
     this._canvas.off('mouse:wheel', this._canvasZoomEvent);    
   }
 
@@ -403,58 +396,41 @@ class ImageEditor extends Component {
    * @private
    */
   _createCanvasEvent = () => {
-    this.onCanvasMove();
-    this.onCanvasZoom();
+    this._onCanvasMove();
+    this._onCanvasZoom();
     
 		this._canvas.on('selection:created', (event) => {
-			// 객체 선택됐을시
-      let type = this._canvas.getActiveObject().type;
       this.setState({activeObject : this.getActiveObject() });
-			switch(type) {
+			/* switch(type) {
 				case 'image':
-					this._imageSelection(this._canvas.getActiveObject());
 					break;
 				case 'textbox':
-					this._textboxSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection': //group using drag
           break;
         case 'group': //group using drag
 				  break;
 				default:
-			}
+			} */
 		});
 
 		this._canvas.on('selection:updated', (event) => {
-      let type = this._canvas.getActiveObject().type;
       this.setState({ activeObject : this.getActiveObject() });
-			switch(type) {
+			/* switch(type) {
 				case 'image':
-					this._imageSelection(this._canvas.getActiveObject());
 					break;
 				case 'textbox':
-					this._textboxSelection(this._canvas.getActiveObject());
 					break;
 				case 'activeSelection': //group using drag
-					// this.switchTools('filter', 'text', true);
           break;
         case 'group': //group using drag
-				  // this.switchTools('filter', 'text', true);
 				  break;
 				default:
-          // this.switchTools('filter', 'text', true);
-			}
+			} */
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
       this.setState({activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0} });
-			if(!this._canvas.backgroundImage){
-        // this.switchTools('filter', 'text', true);
-			}
-			else{
-        // this.switchTools('text', true);
-				this._imageSelection(this._canvas.backgroundImage);
-      }
 		});
     
     this._canvas.on('object:added', (event) => {
@@ -478,11 +454,15 @@ class ImageEditor extends Component {
 
     })
 
-    this._canvas.on('object:moved', this.movedObjectSave);
+    this._canvas.on('object:moved', this._movedObjectSave);
   }
 
-
-  movedObjectSave = (event) => {
+  /**
+  * 'fabric.object moved Event' event handler : if object is moved, save a state
+  * @objectMoved
+  * @private
+  */
+  _movedObjectSave = (event) => {
     if(event.target.type !== 'Cropzone'){
       this.saveState(event.target.type + ' : move');
     }
@@ -512,6 +492,14 @@ class ImageEditor extends Component {
     document.removeEventListener('mousedown',this._onMouseDownEvent)
     document.removeEventListener('keyup',this._onShiftKeyUpEvent)
     document.removeEventListener('mouseup',this._onMouseUpEvent)
+  }
+
+  addKeyDownEvent = () => {
+    document.addEventListener('keydown',this._onKeydownEvent);
+  }
+
+  removeKeyDownEvent = () => {
+    document.removeEventListener('keydown',this._onKeydownEvent);
   }
 
   resetCanvas = () => {
@@ -639,33 +627,7 @@ class ImageEditor extends Component {
    * @private
    */
 	_textboxSelection = (text) => {
-    // toggle shadow, backgroundColor
-    let toggle = [false, false];
-    if(text.shadow) {
-      toggle[0] = true;
-    }
-    if(text.textBackgroundColor) {
-      toggle[1] = true;
-    }
-    // if(text.fontStyle === "italic"){
-    //   document.getElementById('italic_checkbox').checked = true;
-    // }
-    // else{
-    //   document.getElementById('italic_checkbox').checked = false;
-    // }
-		this.setState({
-      activeObject : this.getActiveObject(),
-			fontsize : text.fontSize,
-      displayshadow : toggle[0],
-      displayTextbgColorPicker : toggle[1],
-      shadow : {
-        blur : toggle[0] ? text.shadow.blur : 30,
-        offsetX : toggle[0] ? text.shadow.offsetX : 10,
-        offsetY : toggle[0] ? text.shadow.offsetY : 10,
-        color : toggle[0] ? text.shadow.color : '#000000'
-      },
-      text : { color : toggle[1] ? text.textBackgroundColor : '#FFFFFF'}
-		});
+
   }
   
   /**
@@ -688,6 +650,7 @@ class ImageEditor extends Component {
     this._register(this.action, new Image(this));
     this._register(this.action, new Grid(this));
     this._register(this.action, new Line(this));
+    this._register(this.action, new Util(this));
     this._register(this.action, new Snap(this));
     this._register(this.action, new Layers(this));
     this._register(this.action, new Pipette(this));
@@ -705,7 +668,7 @@ class ImageEditor extends Component {
 
   /**
    * Get ActiveObject instance
-   * @returns {fabric.Canvas._activeObject}
+   * @returns {fabric.Canvas._activeObject} 
    */
   getActiveObject = () => {
     return this._canvas._activeObject;
@@ -721,7 +684,7 @@ class ImageEditor extends Component {
 
   /**
    * Get ImageEditor instance
-   * @returns {ImageEditor}
+   * @returns {ImageEditor} this
    */
   getImageEditor = () => {
     return this;
@@ -729,7 +692,7 @@ class ImageEditor extends Component {
 
   /**
    * Get grid instance
-   * @returns {this.grid}
+   * @returns {Object} this.grid
    */
   getGrid = () => {
     return this.grid;
@@ -767,20 +730,213 @@ class ImageEditor extends Component {
     return this._backgroundImage;
   }
 
-  addKeyDownEvent = () => {
-    document.addEventListener('keydown',this._onKeydownEvent);
+  /**
+   * Get LockScale instance
+   * @returns {this.lockScale}
+   */
+  getLockScale = () => {
+    return this.lockScale;
   }
 
-  removeKeyDownEvent = () => {
-    document.removeEventListener('keydown',this._onKeydownEvent);
-  }
-
+  /**
+   * Set Clipboard
+   * @param {Object} clip: cloned objects
+   */
   setClipboard = (clip) => {
     this._clipboard = clip;
   }
 
+  /**
+   * Set Grid
+   * @param {fabric.Object} grid : Array of Lines
+   */
   setGrid = (grid) => {
     this.grid = grid;
+  }
+
+  updateLockScale = () => {
+    this.lockScale = !this.lockScale;
+  }
+  
+
+  openSaveModal = () => {
+    this.setState({openSave : true})
+  }
+
+  closeSaveModal = () => {
+    this.setState({openSave : false})
+  }
+
+  /**
+   * Copy Selected Objects
+   */
+  copyObject = () => {
+    this.action['Clip'].copyObject(this.getActiveObject());
+  }
+
+  /**
+   * Paste Clipboard
+   */
+  pasteObject = () => {
+    this.action['Clip'].pasteObject();
+  }
+
+  /**
+   * Delete actived Object
+   */
+  deleteObject = () => {
+    this.action['Delete'].deleteObject();
+  }
+
+  /**
+   * Delete All Objects on Canvas
+   */
+  deleteAllObject = () => {
+    this.action['Delete'].deleteAllObject();
+  }
+
+  makePolygonWithDrag = () => {
+    this.action['Draw'].drawPolygonWithDrag();
+  }
+
+  makePolygonWithClick = () => {
+    this.action['Draw'].drawPolygonWithClick();
+  }
+
+  openDrawing = () => {
+    this.action['Draw'].openDrawing();
+  }
+
+  closeDrawing = () => {
+    this.action['Draw'].closeDrawing();
+  }
+
+  changeDrawingWidth = (width) => {
+    this.action['Draw'].changeDrawingWidth(width);
+  }
+
+  changeDrawingColor = (rgb) => {
+    this.action['Draw'].changeDrawingColor(rgb);
+  }
+
+  changeDrawingBrush = (type, color, width) => {
+    this.action['Draw'].changeDrawingBrush(type, color, width);
+  }
+
+  filterObject = (event) => {
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , event.target.getAttribute('filter'), event.target.checked, event.target.value);
+  }
+
+  rangeFilterObject = (filterOption, value) => {
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, true, value);
+  }
+
+  setColor = (color) => {
+    this.action['Fill'].fill(color);
+  }
+  
+  flipObject = (option) => {
+    this.action['Flip'].flip(option);
+  }
+
+  addIcon = (options) => {
+    this.action['Icon'].addIcon(options);
+  }
+
+  saveImage = (title) => {
+    this.action['Image'].saveImage(title);
+  }
+
+  addImage = (url) => {
+    this.action['Image'].addImage(url);
+  }
+
+  addLine = (options) => {
+    this.action['Line'].addLine(options);
+  }
+
+  setShadow = (option) => {
+    this.action['Object'].setShadow(option);
+  }
+
+  removeShadow = () => {
+    this.action['Object'].removeShadow();
+  }
+
+  /**
+   * Set ScaleX
+   * @param {float} value : scaleX 
+   */
+  scaleXChange = (value) => {
+    this.action['Object'].scaleXChange(value);
+  }
+
+  /**
+   * Set ScaleY
+   * @param {float} value : scaleY
+   */
+  scaleYChange = (value) => {
+    this.action['Object'].scaleYChange(value);
+  }
+  
+  lockScaleRatio = () => {
+    this.action['Object'].lockScaleRatio();
+  }
+
+  makeGroup = () => {
+    this.action['Object'].makeGroup();
+  }
+
+  unGroup = () => {
+    this.action['Object'].unGroup();
+  }
+
+  sendBackwards = () => {
+    this.action['Object'].sendBackwards();
+  }
+
+  sendToBack = () => {
+    this.action['Object'].sendToBack();
+  }
+
+  bringForward = () => {
+    this.action['Object'].bringForward();
+  }
+
+  bringToFront = () => {
+    this.action['Object'].bringToFront();
+  }
+
+  setObjectAngle = (changeAngle) => {
+    this.action['Rotation'].setAngle(Number(changeAngle));
+  }
+
+  rotateObjectAngle = (angle) => {
+    this.action['Rotation'].changeAngle(angle);
+  }
+
+  addShape = (type, color) => {
+    this.action['Shape'].addShape(type, color);
+  }
+
+  setEndAngle = (value) => {
+    this.action['Shape'].setEndAngle(value);
+  }
+
+  setStroke = (option) => {
+    this.action['Shape'].setStroke(option);
+  }
+
+  setStrokeColor = (color) => {
+    this.action['Shape'].setStrokeColor(color);
+  }
+
+  addText = (option) => {
+    this.action['Text'].addText(option);
+  }
+
+  textObject = (textOption, checked, value) => {
+    this.action['Text'].textObj(this.getActiveObject(), textOption, checked, value);
   }
 
   onClickSnap = (event) => {
@@ -790,30 +946,54 @@ class ImageEditor extends Component {
   onClickObjectSnap = (event) => {
     this.action['Snap'].onClickObjectSnap(event);
   }
-  
-  copyObject = () => {
-    this.action['Clip'].copyObject(this.getActiveObject());
+
+  cropCanvas = (off) => {
+    this.action['Crop'].cropCanvas(off);
   }
 
-  pasteObject = () => {
-    this.action['Clip'].pasteObject();
+  cropEndCanvas = () => {
+    this.action['Crop'].cropEndCanvas();
   }
 
+  handleCropCanvasSizeChange = (value) => {
+    this.action['Crop'].resizeCropzone(value);
+  }
+
+  cropObjMouseDown = (event) => {
+    if(event.target == null || !(event.target === this.cropImg || event.target.type === "Cropzone")){
+      this._canvas.off('mouse:down', this.cropObjMouseDown);
+      this.action['Crop'].cropObjend(this.cropImg);
+      this.cropImg = null;
+    }
+  }
+
+  cropObject = (cropOption) => {
+    let activeObject = this.getActiveObject();
+    if(activeObject && activeObject.type === 'image'){
+      this.cropImg = activeObject;
+      this.action['Crop'].cropObj(activeObject, cropOption);
+      this._canvas.on('mouse:down', this.cropObjMouseDown);
+    }
+  }
+
+  cropEndObject = () => {
+    if(this.cropImg){
+      this._canvas.off('mouse:down', this.cropObjMouseDown);
+      this.action['Crop'].cropObjend(this.cropImg);
+      this.cropImg = null;
+    }
+  }
+
+  objectInfo = () => {
+    if(this.getActiveObject()){
+      let obj = this.getActiveObject();
+      console.log(obj);
+      
+    }
+  }
 
   loadImage = (url, pointer, option) => {
     return this.action['Image'].loadImage(url, pointer, option);
-  }
-
-  saveImage = (title) => {
-    this.action['Image'].saveImage(title);
-  }
-
-  openSaveModal = () => {
-    this.setState({openSave : true})
-  }
-
-  closeSaveModal = () => {
-    this.setState({openSave : false})
   }
 
   exportCanvas = () => {
@@ -891,225 +1071,7 @@ class ImageEditor extends Component {
     reader.readAsText(file);
   }
 
-  fileChange = (event) => {
-    new Promise((resolve) => {
-      let file = event.target.files[0];
-      this.testUrl = URL.createObjectURL(file)
-      resolve();
-    })
-      .then(() => {
-        this.addImage();
-      })
-  }
 
-  addImage = (url) => {
-    this.action['Image'].addImage(url);
-  }
-
-  addText = (option) => {
-    this.action['Text'].addText(option);
-  }
-
-  addShape = (type, color) => {
-    this.action['Shape'].addShape(type,`rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`);
-  }
-
-  setColor = (color) => {
-    this.action['Fill'].fill(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
-  }
-
-  setStrokeColor = (color) => {
-    this.action['Shape'].setStrokeColor(`rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
-  }
-
-  setEndAngle = (value) => {
-    this.action['Shape'].setEndAngle(value);
-  }
-
-  setStroke = (value) => {
-    this.action['Shape'].setStroke(value);
-  }
-
-  setShadow = (option) => {
-    this.action['Object'].setShadow(option);
-  }
-
-  removeShadow = () => {
-    this.action['Object'].removeShadow();
-  }
-
-  addIcon = (options) => {
-    this.action['Icon'].addIcon(options);
-  }
-
-  addLine = (options) => {
-    this.action['Line'].addLine(options);
-  }
-
-  makePolygonWithDrag = () => {
-    this.action['Draw'].drawPolygonWithDrag();
-  }
-
-  makePolygonWithClick = () => {
-    this.action['Draw'].drawPolygonWithClick();
-  }
-
-  lockScaleRatio = () => {
-    this.action['Object'].lockScaleRatio();
-  }
-
-  getLockScale = () => {
-    return this.lockScale;
-  }
-
-  updateLockScale = () => {
-    this.lockScale = !this.lockScale;
-  }
-
-  scaleXChange = () => {
-    this.action['Object'].scaleXChange();
-  }
-
-  scaleYChange = (event) => {
-    this.action['Object'].scaleYChange();
-  }
-  
-  // handleStrokeWidthChange = (event) => {
-  //   if(this.getActiveObject()){
-  //     let options = {
-  //       strokeColor : '#ffffff',
-  //       strokeWidth : Number(event.target.value)
-  //     }
-  //     this.action['Object'].setStroke(this.getActiveObject(), options);
-  //     this.saveState('stroke change');
-  //   }
-  //   this.setState({ activeObject : this.getActiveObject() })
-  // }
-
-  // handleStrokeColorChange = (color) => {
-    // if(this.getActiveObject()){
-    //   let options = {
-    //     strokeColor : color.hex
-    //   }
-    //   this.setState({strokeColor : color.hex})
-    //   this.action['Object'].setStroke(this.getActiveObject(), options);
-    // }
-  // }
-
-  handleCropCanvasSizeChange = (value) => {
-    this.action['Crop'].resizeCropzone(value);
-  }
-
-  setObjectAngle = (changeAngle) => {
-    this.action['Rotation'].setAngle(Number(changeAngle));
-  }
-
-  rotateObjectAngle = (angle) => {
-    this.action['Rotation'].changeAngle(angle);
-  }
-  
-
-  filterObject = (event) => {
-    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , event.target.getAttribute('filter'), event.target.checked, event.target.value);
-  }
-
-  rangeFilterObject = (filterOption, value) => {
-    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, true, value);
-  }
-
-  deleteObject = () => {
-    this.action['Delete'].deleteObject();
-  }
-
-  deleteAllObject = () => {
-    this.action['Delete'].deleteAllObject();
-  }
-
-  flipObject = (option) => {
-    this.action['Flip'].flip(option);
-  }
-
-  cropObjMouseDown = (event) => {
-    if(event.target == null || !(event.target === this.cropImg || event.target.type === "Cropzone")){
-      this._canvas.off('mouse:down', this.cropObjMouseDown);
-      this.action['Crop'].cropObjend(this.cropImg, null);
-      this.cropImg = null;
-    }
-  }
-
-  cropObject = (cropOption) => {
-    let activeObject = this.getActiveObject();
-    if(activeObject && activeObject.type === 'image'){
-      this.cropImg = activeObject;
-      this.action['Crop'].cropObj(activeObject, cropOption);
-      this._canvas.on('mouse:down', this.cropObjMouseDown);
-    }
-  }
-
-  cropEndObject = () => {
-    if(this.cropImg){
-      this._canvas.off('mouse:down', this.cropObjMouseDown);
-      this.action['Crop'].cropObjend(this.cropImg);
-      this.cropImg = null;
-    }
-  }
-
-  cropCanvas = (off) => {
-    this.action['Crop'].cropCanvas(off);
-  }
-
-  cropEndCanvas = () => {
-    this.action['Crop'].cropEndCanvas();
-  }
-
-  textObject = (textOption, checked, value) => {
-    this.action['Text'].textObj(this.getActiveObject(), textOption, checked, value);
-  }
-
-  objectInfo = () => {
-    if(this.getActiveObject()){
-      let obj = this.getActiveObject();
-      console.log(obj);
-      
-    }
-  }
-
-  newCanvas = (url) => {
-    // let url = "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=100"
-    // console.log(url);
-    // this._canvas.clear();
-    // this._canvas.dispose();
-    new Promise(resolve => {
-      fabric.Image.fromURL(url, img => {
-        img.set({
-          originX : "left",
-          originY : "top"
-				});
-				img.on('scaling', () => {
-
-        })
-        resolve(img);
-      }, { crossOrigin: 'Anonymous' }
-      );
-    })
-      .then((img) => {
-        console.log(img);
-        return new fabric.Canvas('canvas', {
-          preserveObjectStacking: true,
-          height: img.height,
-          width: img.width,
-          backgroundImage: img,
-          backgroundColor: 'grey'
-        });
-        
-      })
-  }
-  openColorPicker = () => {
-    this.setState({ displayColorPicker: !this.state.displayColorPicker });
-  }
-  closeColorPicker = () => {
-    this.setState({ displayColorPicker: false });
-  }
 
   getCanvasInfo = () => {
     console.log(this._canvas);
@@ -1207,115 +1169,6 @@ class ImageEditor extends Component {
     )
   }
 
-  convertSvg = () => {
-    let img = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Font_Awesome_5_solid_cloud.svg/512px-Font_Awesome_5_solid_cloud.svg.png";
-    fabric.loadSVGFromURL(img, (objects, options) => {
-      var shape = fabric.util.groupSVGElements(objects, options);
-      console.log(shape.toSVG());
-    })
-  }
-
-  convertObjSvg = () => {
-    if(this.getActiveObject()){
-      console.log(this.getActiveObject().toSVG());
-    }
-  }
-
-  convertObjScale = () => {
-    if(this.getActiveObject()){
-      let obj = this.getActiveObject();
-      obj.set({
-        width : obj.width * obj.scaleX,
-        height : obj.height * obj.scaleY,
-        scaleY : 1,
-        scaleX : 1,
-      })
-    }
-  }
-
-  makeGroup = () => {
-    this.action['Object'].makeGroup();
-  }
-
-  unGroup = () => {
-    this.action['Object'].unGroup();
-  }
-
-  sendBackwards = () => {
-    this.action['Object'].sendBackwards();
-  }
-
-  sendToBack = () => {
-    this.action['Object'].sendToBack();
-  }
-
-  bringForward = () => {
-    this.action['Object'].bringForward();
-  }
-
-  bringToFront = () => {
-    this.action['Object'].bringToFront();
-  }
-
-  openDrawing = () => {
-    this.action['Draw'].openDrawing();
-  }
-
-  closeDrawing = () => {
-    this.action['Draw'].closeDrawing();
-  }
-
-  changeDrawingWidth = (width) => {
-    this.action['Draw'].changeDrawingWidth(width);
-  }
-
-  changeDrawingColor = (rgb) => {
-    this.action['Draw'].changeDrawingColor(rgb);
-  }
-
-  changeDrawingBrush = (type, color, width) => {
-    this.action['Draw'].changeDrawingBrush(type, color, width);
-  }
-
-  changeBackgroundColor = () => {
-    this._canvas.backgroundColor = `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`;
-    this.saveState('change backgroundColor');
-    this._canvas.renderAll();
-  }
-
-  pipetteEvent = (event) => {
-    if(event.target.tagName === 'CANVAS') { 
-      const pointer = this._canvas.getPointer(event, true);
-      let context = document.getElementById('canvas').getContext('2d');
-      let data = context.getImageData(pointer.x * fabric.devicePixelRatio , pointer.y * fabric.devicePixelRatio, 1, 1).data; 
-      this.setState({pipette : false, pipetteRGB:{ r:data[0],g:data[1],b:data[2]}, color : {r:data[0],g:data[1],b:data[2], a:1}});
-    }
-    document.removeEventListener('mousedown', this.pipetteEvent);
-  }
-
-  enablePipette = () => {
-    document.addEventListener('mousedown', this.pipetteEvent);
-  }
-
-  printObject = () => {
-      let first = this._canvas._objects.map(
-          x => Object.entries(x)
-      );
-      let objstack = [];
-      for (let i = 0; i < this._canvas._objects.length; i++) {
-          if(first[i][0][0] === "filters"){
-            objstack[i] = 'img';
-          }
-          else if(first[i][0][0] === "styles"){
-              objstack[i] = 'text';
-          }
-          else if(first[i][0][0] === "width"){
-              objstack[i] = 'shape';
-          }
-      }
-      console.log(objstack);
-  }
-
   updateObject = () => {
     this.setState({activeObject : this.getActiveObject() ? this.getActiveObject() : {type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0}})
   }
@@ -1323,6 +1176,7 @@ class ImageEditor extends Component {
   loadingStart = () => {
     this.setState({imgStatus : true})
   }
+
   loadingFinish = () => {
     console.log('loading finish')
     this.setState({imgStatus : false});
@@ -1385,6 +1239,7 @@ class ImageEditor extends Component {
       4: <ObjectUI 
           object={this.state.activeObject} 
           lockScaleRatio = {this.lockScaleRatio}
+          getLockScale = {this.getLockScale}
           sendToBack = {this.sendToBack}
           sendBackwards = {this.sendBackwards}
           bringToFront = {this.bringToFront}
@@ -1394,8 +1249,8 @@ class ImageEditor extends Component {
           makeGroup = {this.makeGroup}
           unGroup = {this.unGroup}
           flipObject = {this.flipObject}
-          setShadow = {this.setShadow}
-          removeShadow = {this.removeShadow}
+          scaleXChange = {this.scaleXChange}
+          scaleYChange = {this.scaleYChange}
           />,
       5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
       6: <ShapeUI 
@@ -1405,8 +1260,6 @@ class ImageEditor extends Component {
           setEndAngle = {this.setEndAngle}
           makePolygonWithDrag={this.makePolygonWithDrag} 
           makePolygonWithClick={this.makePolygonWithClick}
-          setStroke={this.setStroke}
-          setStrokeColor={this.setStrokeColor}
           setColor={this.setColor}
           pipette = {this.action['Pipette']}
           />,
@@ -1437,6 +1290,14 @@ class ImageEditor extends Component {
           cropCanvas = {this.cropCanvas}
           cropEndCanvas = {this.cropEndCanvas}
           handleCropCanvasSizeChange = {this.handleCropCanvasSizeChange}
+        />,
+      10: <EffectUI 
+          object={this.state.activeObject} 
+          setShadow = {this.setShadow} 
+          removeShadow = {this.removeShadow}
+          setStroke={this.setStroke}
+          setStrokeColor={this.setStrokeColor} 
+          pipette = {this.action['Pipette']}
         />
     };
     return (
@@ -1505,7 +1366,6 @@ class ImageEditor extends Component {
               <p> bottom : {this.state.activeObject.aCoords.br.y} </p>
             </div> : <div></div> }
 
-            <button onClick={this.printObject}>현재 캔버스에 있는 오브젝트 확인하기</button>
             <button onClick={this.addImage}>테스트용 이미지 추가</button>
             <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
             <button onClick={this.getCanvasInfo}>캔버스정보</button>
@@ -1554,92 +1414,7 @@ class ImageEditor extends Component {
         
         <div id='tool'>
 
-
-
-
-          <div>
-            <h5>오브젝트 기능</h5>
-            <button onClick={this.sendToBack}>맨 뒤로 보내기</button>
-            <button onClick={this.sendBackwards}>뒤로 보내기</button>
-            <button onClick={this.bringToFront}>맨 앞으로 보내기</button>
-            <button onClick={this.bringForward}>앞으로 보내기</button>
-            <button onClick={this.deleteObject}>선택 개체 삭제</button>
-            <button onClick={this.deleteAllObject}>모든 객체 삭제</button>
-            <button onClick={this.makeGroup}>그룹화</button>
-            <button onClick={this.unGroup}>그룹해제</button>
-            <button onClick={this.setObjectAngle} angle='90' > 선택 개체 90도 회전</button>
-            <p>회전</p>
-            <input
-              type='number'
-              name='angle'
-              min='-360'
-              max='360'
-              step='1'
-              value={this.state.activeObject.type !== 'not active' ? this.state.activeObject.angle : 0}
-              onChange={this.handleAngleChange}
-            />
-            <p>확대 및 축소</p>
-            <input
-              type='number'
-              name='scaleX'
-              min='1'
-              max='200'
-              step='1'
-              value={this.state.activeObject.scaleX * 100}
-              onChange={this.handleScaleXChange}
-            />%
-            <input
-              type='number'
-              name='scaleY'
-              min='1'
-              max='200'
-              step='1'
-              value={this.state.activeObject.scaleY * 100}
-              onChange={this.handleScaleYChange}
-            />%
-            <input type='checkbox' onClick={this.lockScaleRatio} /> 비율 고정
-          </div>
-
-          <hr />
-
-          <div>
-            <h5>도형 기능</h5>
-            
-            <button onClick={this.addShape} type="triangle">삼각형</button>
-            <button onClick={this.addShape} type="rectangle">직사각형</button>
-            <button onClick={this.addShape} type="ellipse">타원</button>
-            <button onClick={this.addShape} type="circle">원</button>
-            <button onClick={this.addLine} type="line">직선</button>
-
-            <button onClick={this.makePolygonWithClick} type="line">클릭으로 만들기</button>
-            <button onClick={this.makePolygonWithDrag} type="line">드래그로 만들기</button>
-
-            { this.state.activeObject.type === "circle" ? 
-            <div>
-              <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.state.activeObject.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
-            </div> : <div></div>
-            }
-          </div>
-
-          <hr />
-
-          <div>
-              <h5>그리기 기능</h5>
-              {this.state.drawingMode
-                ? <div> 
-                    <button onClick={this.closeDrawing}>Cancel Drawing</button>
-                    <br/>
-                    <label>Width</label><input type='range' className='drawing' id='width' min='0' max='30' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth.bind(this)}/>
-                    <br/>
-                    <label>Line Color</label><SketchPicker color={ this.state.lineColorRgb } onChange={ this.handleDrawingColor } />
-                  </div>
-                : <button onClick={this.openDrawing}>Free Drawing</button>
-                }
-          </div>
-
-          <hr />
-
-          <div>
+         <div>
             <h5>캔버스 기능</h5>
             <button onClick={this.changeBackgroundColor}>캔버스 배경색 현재 색깔로 변경</button>
             <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
@@ -1666,52 +1441,9 @@ class ImageEditor extends Component {
                 />
               </div> : null
             }
-            <button onClick={this.openSaveModal}> 지금 캔버스 배경색 없이 다운 </button>
-            <button onClick={this.exportCanvas}> 캔버스 export </button>
-            <button><input type='file' id='_file' onChange={this.importCanvas} accept="json"></input>캔버스 import</button>
-            <button><input type='file' id='_file' onChange={this.fileChange} accept="image/*"></input>파일 불러오기</button>
-            <button onClick={this.undo}>Undo</button>
-            <button onClick={this.redo}>Redo</button>
-            <h5>{this.currentState.action}</h5>
-            <input type="checkbox" onClick={this.onClickSnap}/>그리드 스냅 옵션
-            <input type="checkbox" onClick={this.onClickGrid}/>그리드 on/off
-            <input type="checkbox" onClick={this.onClickObjectSnap}/> 오브젝트 스냅 옵션
           </div>
 
           <hr />
-
-          <div>
-            <h5>색깔 : 기본 색</h5>
-            <button onClick={this.openColorPicker}>color</button>
-          	{ this.state.displayColorPicker ? <div>
-          	  <div onClick={this.closeColorPicker} role="button" tabIndex="0"/>
-          	  <SketchPicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
-          	</div> : null }
-          </div>
-
-          <hr/>
-
-          <div>
-            <h5>스포이드</h5>
-            <button onClick={this.enablePipette}>Pipette</button>
-            <p>{this.state.pipetteRGB.r}|{this.state.pipetteRGB.g}|{this.state.pipetteRGB.b}</p>
-          </div>
-
-          <hr />
-
-          <div>
-            <h5>테두리 두깨</h5>
-            <input
-              type='number'
-              name='stroke'
-              min='0'
-              max='100'
-              step='1'
-              value={ this.state.activeObject.strokeWidth ? this.state.activeObject.strokeWidth : 0}
-              disabled = { (this.state.activeObject.type === 'group' || this.state.activeObject.type === 'activeSelection' || this.state.activeObject.type === 'not active') ? true : false }
-              onChange={this.handleStrokeWidthChange}
-            />
-          </div>
             
           <div>
             <h5>일단은 안 쓰는 기능</h5>

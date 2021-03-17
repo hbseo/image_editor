@@ -27,6 +27,10 @@ export default class Extension {
   setGrid(grid) {
     return this.app.setGrid(grid);
   }
+
+  saveState(action) {
+    return this.app.saveState(action);
+  }
 }
   
   

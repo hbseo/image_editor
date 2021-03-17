@@ -5,6 +5,10 @@ class Clip extends Action {
     super('Clip', App);
   }
 
+  /**
+   * Copy Objects
+   * @param {Object} obj 
+   */
   copyObject = (obj) => {
     if(obj){
       obj.clone((cloned) => {
@@ -13,6 +17,9 @@ class Clip extends Action {
     }
   }
 
+  /**
+   * Paset Object on Canvas
+   */
   pasteObject = () => {
     const canvas = this.getCanvas();
     let clipboard = this.getClipboard();
