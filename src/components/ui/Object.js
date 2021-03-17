@@ -3,16 +3,10 @@ import React, {Component} from 'react';
 export default class Objects extends Component{
   constructor(props){
     super(props);
-    this.state = {
-      blur : 30, //shadow
-      offsetX : 10, //shadow
-      offsetY: 10, //shadow
-      color : '#000000'//shadow
-    }
   }
 
   componentDidMount(){
-    console.log('Object UI Mount');
+    // console.log('Object UI Mount');
     this.documentUpdate();
   }
   componentDidUpdate(){
@@ -20,43 +14,24 @@ export default class Objects extends Component{
     this.documentUpdate();
   }
   componentWillUnmount(){
-    console.log('Object UI Unmount');
+    // console.log('Object UI Unmount');
   }
 
   documentUpdate = () => {
-    if(this.props.object.shadow){
-      document.getElementById('shadow_toggle').disabled = false;
-      document.getElementById('shadow_toggle').checked = true;
-
-    }
-    else{
-      document.getElementById('shadow_toggle').disabled = true;
-    }
+    document.getElementById("lockScale").checked = this.props.getLockScale();
   }
 
-  // ObjectSelection = (object) => {
+  handleScaleXChange = (event) => {
+    this.props.scaleXChange(event.target.value);
+  }
 
-  // }
+  handleScaleYChange = (event) => {
+    this.props.scaleYChange(event.target.value);
+  }
 
   flipObject = (event) => {
     let option = event.target.getAttribute('flip');
     this.props.flipObject(option);
-  }
-
-  handleShadowChange = (event) => {
-    let change_state = {};
-    change_state[event.target.name] = event.target.value
-    this.setState(change_state);
-    this.props.setShadow({color : 'black', blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
-  }
-
-  toggleShadow = (event) => {
-    if(event.target.checked){
-      this.props.setShadow({color : 'black', blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
-    }
-    else{
-      this.props.removeShadow();
-    }
   }
 
   render(){
@@ -66,44 +41,6 @@ export default class Objects extends Component{
             Object ( {this.props.object.type} )
         </div>
         <div className="sub-textmenu">
-        <div>
-            <input id = "shadow_toggle" type="checkbox" onClick = {this.toggleShadow}></input>
-            <label htmlFor='shadow'>
-            <span>블러</span>
-            <input
-              type='range'
-              className='shadow'
-              id='shadow'
-              min='1'
-              max='100'
-              name='blur'
-              step='1'
-              value={this.state.blur}
-              onChange={this.handleShadowChange}/>
-            <span>세로 위치</span>
-            <input
-              type='range'
-              className='shadow'
-              id='shadow'
-              min='-100'
-              max='100'
-              name='offsetY'
-              step='1'
-              value={this.state.offsetY}
-              onChange={this.handleShadowChange}/>
-            <span>가로 위치</span>
-            <input
-              type='range'
-              className='shadow'
-              id='shadow'
-              min='-100'
-              max='100'
-              name='offsetX'
-              step='1'
-              value={this.state.offsetX}
-              onChange={this.handleShadowChange}/>
-            </label>
-          </div>
           <div>
             <button onClick={this.props.sendToBack}>맨 뒤로 보내기</button>
           </div>
@@ -134,29 +71,33 @@ export default class Objects extends Component{
           </div>
           <div>
             <p>확대 및 축소</p>
-            {/* <input
-              type='number'
+            <input
+              type='range'
               name='scaleX'
               min='1'
               max='200'
               step='1'
-              value={this.state.activeObject.scaleX * 100}
+              disabled = {this.props.object.type === 'not active' || this.props.object.type === 'path' ? true : false}
+              value={this.props.object.scaleX * 100}
               onChange={this.handleScaleXChange}
-            />% */}
+            />
+            <label>{this.props.object.scaleX * 100}%</label>
           </div>
           <div>     
-            {/* <input
-              type='number'
+            <input
+              type='range'
               name='scaleY'
               min='1'
               max='200'
               step='1'
-              value={this.state.activeObject.scaleY * 100}
+              disabled = {this.props.object.type === 'not active' || this.props.object.type === 'path' ? true : false}
+              value={this.props.object.scaleY * 100}
               onChange={this.handleScaleYChange}
-            />% */}
+            />
+            <label>{this.props.object.scaleY * 100}%</label>
           </div>
           <div>
-            <button onClick={this.props.lockScaleRatio}>초기 비율 유지</button>
+            <input type="checkbox" id="lockScale" onClick={this.props.lockScaleRatio} /> 비율 유지?
           </div>
         </div>
       </div>

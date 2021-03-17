@@ -32,7 +32,10 @@ export default function SideNav(props) {
           <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="others" tab="8">Others</button>
         </li>
         <li>
-          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="others" tab="9">Canvas</button>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="canvas" tab="9">Canvas</button>
+        </li>
+        <li>
+          <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="effect" tab="10">Effect</button>
         </li>
         <li>
           <button className="nav-bar-button" type="button" onClick={props.changeTab} alt="close" tab="99">Close</button>

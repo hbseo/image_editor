@@ -7,7 +7,7 @@
 .sub-filtersmenu{
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  overflow-y: none;
   height: 100%;
 }
 
@@ -19,6 +19,7 @@
 .filter-options{
   display: flex;
   flex-wrap: wrap;
+  transition: background-color 0.5s;
 
   div{
     margin: 1%;
@@ -67,4 +68,23 @@
     display: flex;
     flex-direction: column;
   }
+}
+
+.my-node-enter {
+  max-height: 0px;
+  -webkit-transition : max-height 0.5s ease;
+  overflow: hidden;
+}
+.my-node-enter-active {
+  height : auto;
+  max-height: 100px;
+}
+
+.my-node-exit {
+  max-height: 100px;
+  -webkit-transition : max-height 0.5s ease;
+}
+.my-node-exit-active {
+  max-height: 0px;
+  overflow: hidden;
 }

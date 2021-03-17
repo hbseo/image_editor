@@ -32,6 +32,10 @@ class Snap extends Extension {
 
   }
 
+  /**
+   * On/off a SnapMovingEvent
+   * @param {{target : input[type=checkbox]}} event 
+   */
   onClickSnap = (event) => {
     const canvas = this.getCanvas();
     if(event.target.checked){
@@ -106,6 +110,10 @@ class Snap extends Extension {
     })
   }
 
+  /**
+   * On/Off snapObjectMovingEvent
+   * @param {{target : input[type=checkbox]}} event 
+   */
   onClickObjectSnap = (event) => {
     const canvas = this.getCanvas();
     if(event.target.checked){

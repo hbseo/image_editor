@@ -1,4 +1,5 @@
 import switchTools from '../helper/SwitchTools'
+import convertRGB from '../helper/ConverRGB'
 import React, {Component} from 'react';
 import {fontList} from '../const/consts';
 import { ChromePicker } from 'react-color';
@@ -98,7 +99,8 @@ export default class Text extends Component{
   }
 
   addText = () => {
-    this.props.addText({size : this.state.fontSize, color : `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`, font : this.state.font});
+
+    this.props.addText({size : this.state.fontSize, color : convertRGB(this.state.color), font : this.state.font});
   }
 
   textAction = (event) => {
@@ -109,7 +111,7 @@ export default class Text extends Component{
 
   textActionColor = (event) => {
     let textOption = event.target.getAttribute('text');
-    this.props.textObject(textOption, event.target.checked, `rgba(${ this.state.bgcolor.r }, ${ this.state.bgcolor.g }, ${ this.state.bgcolor.b }, ${ this.state.bgcolor.a })`);
+    this.props.textObject(textOption, event.target.checked, convertRGB(this.state.color));
   }
 
   setColor = (color) => {
@@ -134,7 +136,7 @@ export default class Text extends Component{
 
   handleBGColorChangeComplete = (color) => {
     if(document.getElementById('textbg').checked){
-      this.props.textObject("background-color", true, `rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`);
+      this.props.textObject("background-color", true, convertRGB(this.state.color));
     } 
     else {
       this.setState({ bgcolor: color.rgb })
