@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import switchTools from '../helper/SwitchTools'
-import '../../css/ui/Filter.scss'
+import switchTools from '../helper/SwitchTools';
+import '../../css/ui/Filter.scss';
+import {filterList} from '../const/consts';
 import { CSSTransition } from 'react-transition-group';
 export default class Filter extends Component{
   constructor(props){
     super(props);
-    this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur', 'Vibrance', 'Denoise' ];
-
+    this.filterList = filterList;
     this.state = {
       brightness: 0,
       contrast : 0,

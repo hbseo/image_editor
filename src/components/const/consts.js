@@ -29,3 +29,6 @@ export const fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New',
 'Vendana', 'Courier', 'Arial Narrow', 'Candara', 'Geneva', 'Calibri', 'Optima', 
 'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
 'Copperplate'];
+
+export const filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
+'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur', 'Vibrance', 'Denoise' ];
