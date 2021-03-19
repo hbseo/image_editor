@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import '../../css/Loading.scss'
 
 class Loading extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
   componentDidMount(){
     console.log('loading........................', new Date().getTime());
   }

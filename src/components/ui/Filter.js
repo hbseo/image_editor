@@ -23,7 +23,7 @@ export default class Filter extends Component{
       opacity : 1,
       menu : true, // true = filter, false = adjust
     };
-    this.inputRef = React.createRef();
+    // this.inputRef = React.createRef();
   }
 
   componentDidMount(){

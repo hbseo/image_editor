@@ -577,7 +577,7 @@ class ImageEditor extends Component {
       this._canvas.calcOffset();
       this.lock = false;
       if(this.currentState.backgroundImage){
-        this.filterRef.current.documentUpdate(this.currentState.backgroundImage);
+        // this.filterRef.current.documentUpdate(this.currentState.backgroundImage);
         this._canvas.backgroundImage.filters = this.currentState.backFilter || [];
       }
     });
