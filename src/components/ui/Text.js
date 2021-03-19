@@ -83,7 +83,7 @@ export default class Text extends Component{
   
   fontListUp = () => {
     let i = 0;
-    return fontList.map(font => (<li key={i++} className="font-li" value={font} style={{'font-family':font, 'cursor':'pointer'}} onClick={(e) => this.handlefontlistClicked(font, e)}>{font}</li>));
+    return fontList.map(font => (<li key={i++} className="font-li" value={font} style={{'fontFamily':font, 'cursor':'pointer'}} onClick={(e) => this.handlefontlistClicked(font, e)}>{font}</li>));
   }
 
   handlefontlistClicked = (value) => {
@@ -159,6 +159,7 @@ export default class Text extends Component{
         {this.fontListUp()}
       </ul>
     }
+    let choose = this.props.object.fontFamily || "fontFamily";
     return (
       <div className="sub">
         <div className="sub-title">
@@ -170,7 +171,7 @@ export default class Text extends Component{
           </div>
           <label htmlFor='fontfamily' className="option-title">Font</label>
           <div className="font-style">
-            <button onClick={this.handlefontfamilybutton}>choose</button>
+            <button onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}}>{choose}</button>
             <ul className="font-ul">
               {fontlist}
             </ul>
