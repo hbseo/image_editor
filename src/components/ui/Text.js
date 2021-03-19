@@ -2,7 +2,7 @@ import switchTools from '../helper/SwitchTools'
 import React, {Component} from 'react';
 import {fontList} from '../const/consts';
 import { ChromePicker } from 'react-color';
-import '../../css/ui/Text.scss'
+import '../../css/ui/Text.scss';
 
 export default class Text extends Component{
   constructor(props){
@@ -22,6 +22,7 @@ export default class Text extends Component{
         b: '255',
         a: '1'
       },
+      showfont: false
     };
   }
 
@@ -82,7 +83,12 @@ export default class Text extends Component{
   
   fontListUp = () => {
     let i = 0;
-    return fontList.map(font => (<li key={i++} value={font}>{font}</li>));
+    return fontList.map(font => (<li key={i++} className="font-li" value={font} style={{'font-family':font, 'cursor':'pointer'}} onClick={(e) => this.handlefontlistClicked(font, e)}>{font}</li>));
+  }
+
+  handlefontlistClicked = (value) => {
+    this.setState({font: value, showfont: false});
+    this.props.textObject('fontfamily', true, value);
   }
 
   handlefontSizeButton = (event) => {
@@ -141,11 +147,18 @@ export default class Text extends Component{
     }
   }
 
-  handlefontfamilyClicked = () => {
-    
+  handlefontfamilybutton = () => {
+    this.setState({showfont: !this.state.showfont});
   }
 
   render(){
+    let fontlist = null;
+    if(this.state.showfont) {
+      fontlist =
+      <ul id="font-ul" className="select-ul">
+        {this.fontListUp()}
+      </ul>
+    }
     return (
       <div className="sub">
         <div className="sub-title">
@@ -155,45 +168,13 @@ export default class Text extends Component{
           <div className="add-text">
             <button onClick={this.addText}>New Text</button>
           </div>
-
           <label htmlFor='fontfamily' className="option-title">Font</label>
-
-
-
-
-
-
-
-
-
-
-
-          {/* <div className="font-style">
-            <select className='text-font' name='fontfamily' text='fontfamily' onChange={this.textAction}>
-              {this.fontListUp()}
-            </select>
-          </div> */}
-
-
-
-
           <div className="font-style">
-            <div id="select" className="text-font">choose</div>
-            <ul id="font-ul" className="select-ul">
-              {this.fontListUp()}
+            <button onClick={this.handlefontfamilybutton}>choose</button>
+            <ul className="font-ul">
+              {fontlist}
             </ul>
           </div>
-
-
-
-
-
-
-
-
-
-
-
           <label htmlFor='fontSize' className="option-title">Font size</label>
           <div className="font-size">
             <input 
