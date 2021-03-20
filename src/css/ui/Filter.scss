@@ -7,8 +7,9 @@
 .sub-filtersmenu{
   display: flex;
   flex-direction: column;
-  overflow-y: none;
-  height: 100%;
+  height: 93vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .filter-box{
