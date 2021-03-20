@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import switchTools from '../helper/SwitchTools'
-import '../../css/ui/Filter.scss'
+import switchTools from '../helper/SwitchTools';
+import '../../css/ui/Filter.scss';
+import {filterList} from '../const/consts';
 import { CSSTransition } from 'react-transition-group';
 export default class Filter extends Component{
   constructor(props){
     super(props);
-    this.filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-    'Convolute', '', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur', 'Vibrance', 'Denoise' ];
-
+    this.filterList = filterList;
     this.state = {
       brightness: 0,
       contrast : 0,
@@ -24,7 +23,7 @@ export default class Filter extends Component{
       opacity : 1,
       menu : true, // true = filter, false = adjust
     };
-    this.inputRef = React.createRef();
+    // this.inputRef = React.createRef();
   }
 
   componentDidMount(){
@@ -41,10 +40,13 @@ export default class Filter extends Component{
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if(nextProps.object.type === 'image') {
-      if(nextProps.object.filters[15]) {
-        if(nextProps.object.filters[15].brightness !== prevState.brightness) {
-          return { brightness: nextProps.object.filters[15].brightness };
+    let image = nextProps.object;
+    if((nextProps.object.type === 'image') || ( nextProps.object.type === 'not active' && nextProps.getBackgroundImage())) {
+      if(nextProps.object.type === 'not active') { image = nextProps.getBackgroundImage(); }
+      
+      if(image.filters[15]) {
+        if(image.filters[15].brightness !== prevState.brightness) {
+          return { brightness: image.filters[15].brightness };
         }
       }
       else {  // object의 filters[15] (brightness) 가 false 일 때
@@ -54,23 +56,17 @@ export default class Filter extends Component{
     return null;
   }
 
-  documentUpdate = (backgroundImage) => {
-    if(backgroundImage !== undefined) {
+  documentUpdate = () => {
+    if(this.props.object.type === 'image'){
       switchTools('filter', false);
-      this.imageSelection(backgroundImage);
+      this.imageSelection(this.props.object);
     }
-    else {
-      if(this.props.object.type === 'image'){
-        switchTools('filter', false);
-        this.imageSelection(this.props.object);
-      }
-      else if(this.props.getBackgroundImage()){
-        switchTools('filter', false);
-        this.imageSelection(this.props.getBackgroundImage());
-      }
-      else{
-        switchTools('filter', true)
-      }
+    else if(this.props.getBackgroundImage()){
+      switchTools('filter', false);
+      this.imageSelection(this.props.getBackgroundImage());
+    }
+    else{
+      switchTools('filter', true)
     }
   }
 
@@ -84,19 +80,21 @@ export default class Filter extends Component{
     for(let i=0; i<list.length; i++){
       list[i].checked = image.filters[i];
     }
-
-    // document.getElementById('brightness').value = image.filters[15] ? image.filters[15].brightness : 0;
-    // document.getElementById('contrast').value = image.filters[16] ? image.filters[16].contrast : 0;
-    // document.getElementById('pixelate').value = image.filters[17] ? image.filters[17].blocksize : 1;
-    // document.getElementById('blur').value = image.filters[18] ? image.filters[18].blur : 0;
-    // document.getElementById('noise').value = image.filters[19] ? image.filters[19].noise : 0;
-    // document.getElementById('saturation').value = image.filters[20] ? image.filters[20].saturation : 0;
-    // document.getElementById('hue').value = image.filters[21] ? image.filters[21].rotation : 0;
-    // document.getElementById('ink').value = image.filters[22] ? image.filters[22].ink_matrix.ink : 0;
-    // document.getElementById('vignette').value = image.filters[23] ? image.filters[23].vignette_matrix.amount : 0;
-    // document.getElementById('zoomblur').value = image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0;
-    // document.getElementById('opacity').value = image.opacity
-    // document.getElementById('brightness-value').innerHTML = image.filters[15] ? image.filters[15].brightness : 0;
+    //for test
+    if(!this.state.menu){
+      document.getElementById('brightness').value = image.filters[15] ? image.filters[15].brightness : 0;
+      // document.getElementById('contrast').value = image.filters[16] ? image.filters[16].contrast : 0;
+      // document.getElementById('pixelate').value = image.filters[17] ? image.filters[17].blocksize : 1;
+      // document.getElementById('blur').value = image.filters[18] ? image.filters[18].blur : 0;
+      // document.getElementById('noise').value = image.filters[19] ? image.filters[19].noise : 0;
+      // document.getElementById('saturation').value = image.filters[20] ? image.filters[20].saturation : 0;
+      // document.getElementById('hue').value = image.filters[21] ? image.filters[21].rotation : 0;
+      // document.getElementById('ink').value = image.filters[22] ? image.filters[22].ink_matrix.ink : 0;
+      // document.getElementById('vignette').value = image.filters[23] ? image.filters[23].vignette_matrix.amount : 0;
+      // document.getElementById('zoomblur').value = image.filters[24] ? image.filters[24].zoomblur_matrix.strength : 0;
+      // document.getElementById('opacity').value = image.opacity
+      // document.getElementById('brightness-value').innerHTML = image.filters[15] ? image.filters[15].brightness : 0;
+    }
   }
 
   handleFilterChange = (event) => {

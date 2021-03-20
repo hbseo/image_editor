@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import '../../css/ui/History.scss'
 export default class History extends Component {
-  constructor(props){
-    super(props);
-  }
+  // constructor(props){
+  //   super(props);
+  // }
 
   componentDidMount(){
     // console.log('History UI Mount');

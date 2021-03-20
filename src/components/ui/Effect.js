@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ChromePicker, CompactPicker } from 'react-color';
+import { ChromePicker } from 'react-color';
 import convertRGB from '../helper/ConverRGB';
 export default class Effect extends Component {
   constructor(props){

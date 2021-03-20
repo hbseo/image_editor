@@ -174,7 +174,7 @@ class Crop extends Action {
   }
 
   movingCropzone = (event) => {
-    let obj = event.target;
+    // let obj = event.target;
     // 나중에
     // obj.setCoords();
     // // 만약 cropzone이 회전이 불가능 하다면, max, min 하지 않아도 괜찮
