@@ -133,7 +133,7 @@ class Filter extends Action {
 
         default:
       }
-      this.saveState('apply filter ' + option);
+      this.saveState(checked ? 'apply filter ' : 'off filter ' + option);
       this.updateObject();
       obj.applyFilters();
     }

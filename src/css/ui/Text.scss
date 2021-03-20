@@ -7,7 +7,8 @@
 .sub-textmenu{
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 93vh;
+    overflow-x: hidden;
     overflow-y: scroll;
 }
 
@@ -30,13 +31,6 @@
     button:hover{
         background-color: #D9D9D9;
     }
-}
-
-.font-style{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin: 5%;
 }
 
 .text-font{
@@ -201,4 +195,32 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.font-style {
+    width: fit-content;
+    border: 1px solid #b8b8b8;
+    font-size: 18px;
+    color: #666666;
+    padding: 10px 10px 10px 10px;
+    margin: auto;
+    width: 155px;
+}
+
+.font-ul {
+    list-style-type: none;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    font-size: 18px;
+    color: #666666;
+    position: absolute;
+    background: #FFFFFF;
+    z-index: 3;
+    margin-top:11px;
+    height:400px;
+}
+
+.font-ul li {
+    padding: 10px 0 10px 18px;
+    width: 135px;
 }

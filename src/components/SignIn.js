@@ -82,7 +82,7 @@ class SignIn extends Component {
                   <span className="txt1">
                     Forgot
                 </span>
-                  <a className="txt2" href="#">
+                  <a className="txt2" href="/find">
                     Username / Password?
                 </a>
                 </div>

@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import '../css/UploadFile.scss';
 
 class Upload_file extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   render() {
     return (
@@ -28,7 +28,7 @@ class Upload_file extends Component {
         <div className='preview'>
           <div className="preview-title">preview</div>
           <div className="preview-inner">
-            <img id="preview" src={this.props.imgUrl}></img>
+            <img id="preview" src={this.props.imgUrl} alt="preview"></img>
           </div>
           {this.props.children}
         </div>

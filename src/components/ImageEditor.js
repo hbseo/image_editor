@@ -577,9 +577,9 @@ class ImageEditor extends Component {
       this._canvas.calcOffset();
       this.lock = false;
       if(this.currentState.backgroundImage){
-        this.filterRef.current.documentUpdate(this.currentState.backgroundImage);
         this._canvas.backgroundImage.filters = this.currentState.backFilter || [];
       }
+      this.forceUpdate(); // for showUndo/Redo Stack
     });
     // this._canvas._objects.forEach(object => {
     //   if(object.type === 'image') {
@@ -594,7 +594,6 @@ class ImageEditor extends Component {
     //     object.filters = change_filters;
     //   }
     // });
-    this.forceUpdate(); // for showUndo/Redo Stack
   }
 
   resetState = () => {
@@ -727,7 +726,7 @@ class ImageEditor extends Component {
    * @returns {this._backgroundImage}
    */
   getBackgroundImage = () => {
-    return this._backgroundImage;
+    return this._canvas.backgroundImage;
   }
 
   /**
@@ -1077,6 +1076,10 @@ class ImageEditor extends Component {
     console.log(this._canvas);
   }
 
+  getCanvasBackgroundInfo = () => {
+    console.log(this._canvas.backgroundImage)
+  }
+
   getMousePointInfo = (event) => {
     if(event.target.checked){
       this._canvas.on('mouse:down', this.showPointer);
@@ -1119,8 +1122,8 @@ class ImageEditor extends Component {
         if(this._canvas.backgroundImage){
           this._canvas.backgroundImage.filters = this.currentState.backFilter;
         }
+        this.forceUpdate();
       });
-      this.forceUpdate();
     }
   
   }
@@ -1140,8 +1143,8 @@ class ImageEditor extends Component {
         this._canvas.setWidth(this.currentState.width);
         this._canvas.setHeight(this.currentState.height);
         this._canvas.calcOffset();
+        this.forceUpdate();
       });
-      this.forceUpdate();
     }
   }
 
@@ -1228,7 +1231,6 @@ class ImageEditor extends Component {
           filterObject={this.filterObject} 
           getBackgroundImage = {this.getBackgroundImage} 
           rangeFilterObject={this.rangeFilterObject}
-          ref={this.filterRef}
           />,
       3: <IconUI 
           object={this.state.activeObject} 
@@ -1330,7 +1332,7 @@ class ImageEditor extends Component {
                 <div>{this._canvas ? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</div>
               </div>
               <HistoryUI showUndoStack = {this.showUndoStack} currentState={this.currentState} />
-            </div>
+          </div>
           </div>
         </div>
         <Save 
