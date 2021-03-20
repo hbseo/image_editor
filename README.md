@@ -53,8 +53,29 @@ image_editor
 │   │   │───UploadFIle.scss
 │   │   │
 │   │   └───Login
+│   │   │   │───font-awesome.min.scss
+│   │   │   │───main.scss
+│   │   │   │───util.scss
+│   │   │   └───fonts
 │   │   │   
 │   │   └───ui
+│   │       │───Draw.scss
+│   │       │───Filter.scss
+│   │       │───History.scss
+│   │       │───Icon.scss
+│   │       │───Image.scss
+│   │       │───Rotation.scss
+│   │       │───Shape.scss
+│   │       └───Text.scss
+│   │
+│   └───locale
+│   │   │───i18n.js
+│   │   │
+│   │   │───ko
+│   │   │   └───korean.json
+│   │   │
+│   │   └───en
+│   │       └───english.json
 │   │
 │   └───components
 │       │───Change_password.js
@@ -97,11 +118,13 @@ image_editor
 │       │     │───Grid.js
 │       │     │───Layers.js
 │       │     │───Pipette.js
-│       │     └───Snap.js
+│       │     │───Snap.js
+│       │     └───Util.js
 │       │   
 │       └─── filters
 |       │    └─── glfx
 │       │          │───denoise.js
+│       │          │───hexagonalPixelate.js
 │       │          │───ink.js
 │       │          │───vibrance.js
 │       │          │───vignette.js
@@ -109,6 +132,7 @@ image_editor
 │       │
 │       └─── helper
 │       │     │───Brush.js
+│       │     │───ConverRGB.js
 │       │     │───originImage.js
 │       │     │───Resize.js
 │       │     └───SwithTools.js
@@ -116,6 +140,7 @@ image_editor
 │       └─── ui
 │             │───Canvas.js
 │             │───Draw.js
+│             │───Effect.js
 │             │───Filter.js
 │             │───History.js
 │             │───Icon.js
