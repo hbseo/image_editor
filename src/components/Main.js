@@ -68,21 +68,21 @@ class Main extends Component {
       4: <Project id ={this.state.id} login = {this.state.login_state}/>
     }
     const {t} = this.props;
-    // const {t} = useTranslation();
+    // const { t } = useTranslation(['translation', 'common']);
     return (
       <div>
         <div className='Main'>
           <div className='sidenav'>
-            <button onClick={this.changeTab} tab='0'>{t('New Project')}</button>
-            <button className='dropdown-btn'>{t('Load Image')}</button>
+            <button onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
+            <button className='dropdown-btn'>{t('Main.Load Image')}</button>
             <div className='dropdown-container'>
-              <button onClick={this.changeTab} tab='1'>{t('Upload File')}</button>
-              <button onClick={this.changeTab} tab='2'>{t('More Image')}</button>
-              <button onClick={this.changeTab} tab='3'>{t('SignIn')}</button>
+              <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button>
+              <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
+              <button onClick={this.changeTab} tab='3'>{t('Main.SignIn')}</button>
             </div>
             {this.state.login_state ? 
             <div className='dropdown-btn'>
-              <button onClick={this.changeTab} tab='4'>{t('Project')}</button>
+              <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
             </div> : null
             }
           </div>
@@ -91,10 +91,10 @@ class Main extends Component {
           </div>
         </div>
         <div className='right'>
-            <button className='rightbtn'>{t('More')}</button>
+            <button className='rightbtn'>{t('Main.More')}</button>
             <div className='right-dropdown'>
-              <button>{t('SignIn')}</button>
-              <button>{t('Setting')}</button>
+              <button>{t('Main.SignIn')}</button>
+              <button>{t('Main.Setting')}</button>
               <button onClick = {this.changeToEnglish}>English</button>
               <button onClick = {this.changeToKorean}>한글</button>
             </div>
