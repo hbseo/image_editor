@@ -4,7 +4,7 @@ import Login from './Login';
 import Newproject from './New_project';
 import LoadImage from './LoadImage';
 import '../css/Main.scss';
-import {withTranslation, useTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import i18next from "../locale/i18n";
 
 class Main extends Component {
@@ -93,7 +93,7 @@ class Main extends Component {
         <div className='right'>
             <button className='rightbtn'>{t('Main.More')}</button>
             <div className='right-dropdown'>
-              <button>{t('Main.SignIn')}</button>
+              <button>{t('Main.Signin')}</button>
               <button>{t('Main.Setting')}</button>
               <button onClick = {this.changeToEnglish}>English</button>
               <button onClick = {this.changeToKorean}>한글</button>

@@ -1,5 +1,6 @@
 {
     "hello": "hello",
+    "icon add" : "아이콘 추가",
 
     "Change Password" : {
         "Change Password" : "비밀번호 변경",
@@ -24,16 +25,27 @@
         "test10" : "나의 보물 제1호",
         "test11" : "나의 좌우명",
         "test12" : "내가 존경하는 인물",
-        "test13" : "확인",
-        "test14" : "취소"
+        "Confirm" : "확인",
+        "Cancel" : "취소"
     },
 
     "ImageEditor" : {
-        
+        "Undo" : "실행 취소",
+        "Redo" : "다시 실행",
+        "Save" : "저장",
+        "More" : "더 보기",
+        "Zoom" : "확대"
     },
 
     "ImageList" : {
-        
+        "Get random image" : "랜덤 이미지 불러오기",
+        "Image count" : "이미지 수",
+        "Search random image" : "랜덤 이미지 검색",
+        "Image name" : "이미지 이름",
+        "Search" : "검색어",
+        "Showimage errors" : "이미지 불러오기 에러",
+        "Fail" : "실패",
+        "Error" : "에러"
     },
 
     "LoadImage" : {
@@ -41,7 +53,15 @@
     },
 
     "Login" : {
-        
+        "Welcome" : "님 환영합니다",
+        "Signout" : "로그아웃",
+        "ChangePW" : "비밀번호 변경",
+        "Signin" : "로그인",
+        "Signup" : "회원가입",
+        "FindPW" : "비밀번호 찾기",
+        "Success" : "성공",
+        "Fail" : "실패",
+        "Error" : "에러"
     },
 
     "Main" : {
@@ -51,32 +71,68 @@
         "New Project" : "새로 만들기",
         "Project" : "프로젝트",
         "More" : "더보기",
-        "SignIn" : "로그인",
+        "Signin" : "로그인",
         "Setting" : "설정"
     },
 
     "New_Project" : {
-        
+        "Direct Input" : "직접 입력",
+        "Width" : "가로",
+        "Height" : "세로"
     },
 
     "Project" : {
-        
+        "Title" : "제목",
+        "Search" : "검색어",
+        "Project" : "프로젝트",
+        "User" : "유저" 
     },
 
     "Save" : {
-        
+        "Saveimage" : "이미지로 저장",
+        "test1" : "다른이름으로 저장",
+        "test2" : "서버 저장",
+        "Error on server" : "서버 에러",
+        "Save" : "저장",
+        "Success" : "성공",
+        "Error" : "오류",
+        "Update" : "업데이트"
     },
 
     "SignIn" : {
-        
+        "test1" : "아이디 또는 비밀번호 잘못 입력했습니다.",
+        "Member Login" : "회원 로그인",
+        "Signin" : "로그인",
+        "Forgot" : "이거 뭐냐",
+        "Username / Password?" : "아이디 / 비밀번호 찾기",
+        "Create your Account" : "계정 생성",
+        "Success" : "성공",
+        "Error" : "에러"
     },
 
     "SignUp" : {
-        
+        "test1" : "아이디 중복 또는 옮바르지 않은 비밀번호",
+        "test2" : "질문을 선택해 주세요",
+        "test3" : "답변을 작성해 주세요",
+        "test4" : "원하는 질문을 선택하세요",
+        "test8" : "가장 기억에 남는 추억의 장소",
+        "test9" : "다시 태어나면 되고 싶은 것",
+        "test10" : "나의 보물 제1호",
+        "test11" : "나의 좌우명",
+        "test12" : "내가 존경하는 인물",
+        "DupID" : "아이디 중복",
+        "Signup" : "회원가입",
+        "Success" : "성공",
+        "Fail" : "실패",
+        "Error" : "에러",
+        "Member Register" : "회원 등록",
+        "Register" : "등록",
+        "Login your Account" : "로그인 하세요"
     },
 
     "Upload_file" : {
-        
+        "Preview" : "미리보기",
+        "Load local image" : "내 컴퓨터에서 이미지 불러오기"
     },
 
     "ui/canvas" : {
