@@ -1,12 +1,139 @@
 {
-    "hello": "안녕",
+    "hello": "hello",
 
-    "More Image" : "이미지 추가",
-    "Upload File" : "파일 업로드",
-    "Load Image" : "이미지 불러오기",
-    "New Project" : "새로 만들기",
-    "Project" : "프로젝트",
-    "More" : "더보기",
-    "SignIn" : "로그인",
-    "Setting" : "설정"
+    "Change Password" : {
+        "Change Password" : "비밀번호 변경",
+        "Confirm" : "확인",
+        "Cancel" : "취소",
+        "notMatchPW" : "두 비밀번호가 서로 다름",
+        "PWsuccess" : "변경 성공",
+        "PWfail" : "변경 실패"
+    },
+
+
+    "Find_Password" : {
+        "test1" : "아이디를 입력해 주세요",
+        "test2" : "답변을 입력해 주세요",
+        "test3" : "질문을 선택해 주세요.",
+        "test4" : "임시 비밀번호: ",
+        "test5" : "잘못된 입력",
+        "test6" : "비밀번호 찾기",
+        "test7" : "원하는 질문을 선택하세요.",
+        "test8" : "가장 기억에 남는 추억의 장소",
+        "test9" : "다시 태어나면 되고 싶은 것",
+        "test10" : "나의 보물 제1호",
+        "test11" : "나의 좌우명",
+        "test12" : "내가 존경하는 인물",
+        "test13" : "확인",
+        "test14" : "취소"
+    },
+
+    "ImageEditor" : {
+        
+    },
+
+    "ImageList" : {
+        
+    },
+
+    "LoadImage" : {
+        
+    },
+
+    "Login" : {
+        
+    },
+
+    "Main" : {
+        "More Image" : "이미지 추가",
+        "Upload File" : "파일 업로드",
+        "Load Image" : "이미지 불러오기",
+        "New Project" : "새로 만들기",
+        "Project" : "프로젝트",
+        "More" : "더보기",
+        "SignIn" : "로그인",
+        "Setting" : "설정"
+    },
+
+    "New_Project" : {
+        
+    },
+
+    "Project" : {
+        
+    },
+
+    "Save" : {
+        
+    },
+
+    "SignIn" : {
+        
+    },
+
+    "SignUp" : {
+        
+    },
+
+    "Upload_file" : {
+        
+    },
+
+    "ui/canvas" : {
+
+    },
+
+    "ui/draw" : {
+
+    },
+
+    "ui/effect" : {
+
+    },
+
+    "ui/filter" : {
+
+    },
+
+    "ui/history" : {
+
+    },
+
+    "ui/icon" : {
+
+    },
+
+    "ui/image" : {
+
+    },
+
+    "ui/loading" : {
+
+    },
+
+    "ui/object" : {
+
+    },
+
+    "ui/rotation" : {
+
+    },
+
+    "ui/shape" : {
+
+    },
+
+    "ui/sidenav" : {
+
+    },
+
+    "ui/text" : {
+
+    },
+
+    "ui/tools" : {
+
+    }
+
+
 }
