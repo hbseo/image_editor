@@ -4,6 +4,8 @@ import Login from './Login';
 import Newproject from './New_project';
 import LoadImage from './LoadImage';
 import '../css/Main.scss';
+import {withTranslation, useTranslation } from "react-i18next";
+import i18next from "../locale/i18n";
 
 class Main extends Component {
   constructor(props) {
@@ -49,6 +51,14 @@ class Main extends Component {
     })
   }
 
+  changeToKorean = () => {
+    i18next.changeLanguage('ko')
+  }
+
+  changeToEnglish = () => {
+    i18next.changeLanguage('en')
+  }
+
   render() {
     const tab = {
       0: <Newproject/>,
@@ -57,20 +67,22 @@ class Main extends Component {
       3: <Login tab = '3' login_state = {this.state.login_state} loginSuccess = {this.loginSuccess} loginFail = {this.loginFail} id = {this.state.id} />,
       4: <Project id ={this.state.id} login = {this.state.login_state}/>
     }
+    const {t} = this.props;
+    // const {t} = useTranslation();
     return (
       <div>
         <div className='Main'>
           <div className='sidenav'>
-            <button onClick={this.changeTab} tab='0'>New Project</button>
-            <button className='dropdown-btn'>Load Image</button>
+            <button onClick={this.changeTab} tab='0'>{t('New Project')}</button>
+            <button className='dropdown-btn'>{t('Load Image')}</button>
             <div className='dropdown-container'>
-              <button onClick={this.changeTab} tab='1'>Upload File</button>
-              <button onClick={this.changeTab} tab='2'>More Image</button>
-              <button onClick={this.changeTab} tab='3'>test login</button>
+              <button onClick={this.changeTab} tab='1'>{t('Upload File')}</button>
+              <button onClick={this.changeTab} tab='2'>{t('More Image')}</button>
+              <button onClick={this.changeTab} tab='3'>{t('SignIn')}</button>
             </div>
             {this.state.login_state ? 
             <div className='dropdown-btn'>
-              <button onClick={this.changeTab} tab='4'>Projoect</button>
+              <button onClick={this.changeTab} tab='4'>{t('Project')}</button>
             </div> : null
             }
           </div>
@@ -79,15 +91,17 @@ class Main extends Component {
           </div>
         </div>
         <div className='right'>
-            <button className='rightbtn'>More</button>
+            <button className='rightbtn'>{t('More')}</button>
             <div className='right-dropdown'>
-              <button>Log In</button>
-              <button>Settings</button>
+              <button>{t('SignIn')}</button>
+              <button>{t('Setting')}</button>
+              <button onClick = {this.changeToEnglish}>English</button>
+              <button onClick = {this.changeToKorean}>한글</button>
             </div>
           </div>
       </div>
     )
   }
 }
-export default Main;
+export default withTranslation()(Main);
 
