@@ -136,19 +136,56 @@
     },
 
     "ui/canvas" : {
-
+        "Canvas" : "캔버스",
+        "ResetCavnas" : "리셋 캔버스",
+        "CropCanvas" : "캔버스 자르기 시작",
+        "CropEndCanvas" : "자르기 완료"
     },
 
     "ui/draw" : {
-
+        "Draw" : "그리기",
+        "Brush type" : "붓 종류",
+        "Width" : "붓 두께",
+        "Line Color" : "붓 색깔"
     },
 
     "ui/effect" : {
-
+        "Effect" : "효과",
+        "Blur" : "블러",
+        "OffsetY" : "세로 위치",
+        "OffsetX" : "가로 위치",
+        "Stroke" : "외곽선",
+        "StrokeColor" : "외곽선 색상",
+        "Pipette" : "스포이드"
     },
 
     "ui/filter" : {
-
+        "Filters" : "필터", 
+        "Grey" : "번역필요",
+        "Invert" : "번역필요",
+        "Brownie" : "번역필요",
+        "Technicolor" : "번역필요",
+        "Polaroid" : "번역필요",
+        "Blackwhite" : "번역필요",
+        "Vintage" : "번역필요",
+        "Sepia" : "번역필요",
+        "Kodachrome" : "번역필요",
+        "Emboss" : "번역필요",
+        "Adjust" : "번역필요",
+        "Brightness" : "번역필요",
+        "Contrast" : "번역필요",
+        "Pixelate" : "번역필요",
+        "Blur" : "번역필요",
+        "Noise" : "번역필요",
+        "Saturation" : "번역필요",
+        "Hue" : "번역필요",
+        "Ink" : "번역필요",
+        "Vignette" : "번역필요",
+        "Zoomblur" : "번역필요",
+        "Vibrance" : "번역필요",
+        "Denoise" : "번역필요",
+        "Opacity" : "번역필요",
+        "Glfx" : "glfx"
     },
 
     "ui/history" : {
@@ -156,11 +193,18 @@
     },
 
     "ui/icon" : {
-
+        "Icon" : "아이콘",
+        "Pick icon" : "아이콘 선택",
+        "Color" : "아이콘 색",
+        "Pipette" : "스포이드"
     },
 
     "ui/image" : {
-
+        "Image" : "이미지",
+        "Crop start" : "이미지 자르기 시작",
+        "Crop End" : "이미지 자르기 완료",
+        "Upload image" : "이미지 업로드",
+        "Upload local image" : "내 컴퓨터에서 불러오기"
     },
 
     "ui/loading" : {
@@ -168,28 +212,75 @@
     },
 
     "ui/object" : {
-
+        "Object" : "오브젝트",
+        "test1" : "맨 뒤로 보내기",
+        "test2" : "뒤로 보내기",
+        "test3" : "맨 앞으로 보내기",
+        "test4" : "앞으로 보내기",
+        "test5" : "선택 개체 삭제",
+        "test6" : "모든 객체 삭제",
+        "test7" : "그룹화",
+        "test8" : "그룹해제",
+        "Flip x" : "번역필요",
+        "Flip y" : "번역필요",
+        "test9" : "확대 및 축소",
+        "test10" : "비율 유지"
     },
 
     "ui/rotation" : {
-
+        "Rotation" : "회전",
+        "test1" : "각도 설정",
+        "test2" : "30도 회전",
+        "Direct Input" : "직접 입력"
     },
 
     "ui/shape" : {
-
+        "Shape" : "도형",
+        "Triangle" : "삼각형",
+        "Rectangle" : "직사각형",
+        "Ellipse" : "타원",
+        "Circle" : "원",
+        "Line" : "직선",
+        "Free making" : "자유롭게 만들기",
+        "Click" : "클릭",
+        "Drag" : "드래그",
+        "Degree" : "도",
+        "Pipette" : "스포이드"
     },
 
     "ui/sidenav" : {
-
+        "Text" : "텍스트",
+        "Image" : "이미지",
+        "Filter" : "필터",
+        "Icon" : "아이콘",
+        "Object" : "오브젝트",
+        "Rotate" : "회전",
+        "Shape" : "도형",
+        "Draw" : "그리기",
+        "Others" : "기타",
+        "Canvas" : "캔버스",
+        "Effect" : "효과",
+        "Close" : "닫기"
     },
 
     "ui/text" : {
-
+        "Text" : "텍스트",
+        "New Text" : "새 텍스트",
+        "Font" : "폰트",
+        "Font size" : "글자 크기",
+        "Align" : "정렬",
+        "Weight" : "번역필요",
+        "Bold" : "번역필요",
+        "Italic" : "번역필요",
+        "Text background" : "글자 배경색",
+        "Active" : "번역필요",
+        "Text color" : "글자색",
+        "Text bg color" : "글자 배경색",
+        "Pipette" : "스포이드"
     },
 
     "ui/tools" : {
 
     }
-
 
 }
