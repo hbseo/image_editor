@@ -157,7 +157,7 @@ export default class Text extends Component{
     let fontlist = null;
     if(this.state.showfont) {
       fontlist =
-      <ul id="font-ul" className="select-ul">
+      <ul className="font-ul">
         {this.fontListUp()}
       </ul>
     }
@@ -174,9 +174,7 @@ export default class Text extends Component{
           <label htmlFor='fontfamily' className="option-title">Font</label>
           <div className="font-style">
             <button onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}}>{choose}</button>
-            <ul className="font-ul">
-              {fontlist}
-            </ul>
+            {fontlist}
           </div>
           <label htmlFor='fontSize' className="option-title">Font size</label>
           <div className="font-size">

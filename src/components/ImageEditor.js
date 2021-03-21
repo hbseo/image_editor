@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
+import { withTranslation } from "react-i18next";
+import i18next from "../locale/i18n";
+
 import '../css/ImageEditor.scss'
+import Save from './Save';
+
 import Rotation from './action/Rotation';
 import Filter from './action/Filter';
 import ObjectAction from './action/ObjectAction';
@@ -20,9 +25,8 @@ import Util from './extension/Util';
 import Snap from './extension/Snap';
 import Pipette from './extension/Pipette';
 import Layers from './extension/Layers';
-import Save from './Save';
-import SideNav from './ui/SideNav'
 
+import SideNav from './ui/SideNav'
 import FilterUI from './ui/Filter';
 import ImageUI from './ui/Image';
 import ToolsUI from './ui/Tools';
@@ -1149,8 +1153,9 @@ class ImageEditor extends Component {
   }
 
   showUndoStack = () => {
+    // const { t } = useTranslation();
     const listitem = this.stateStack.map((state) =>
-      <p style = {{color : 'black'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {state.action}</p>
+      <p style = {{color : 'black'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {i18next.t(state.action)}</p>
     );
     return(
       <div style={{color : 'black'}}>
@@ -1163,13 +1168,23 @@ class ImageEditor extends Component {
 
   showRedoStack = () => {
     const listitem = this.redoStack.map((state) =>
-      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack" number = {state.id} onClick = {this.onclickRedoStack}>{state.id} : {state.action}</p>
+      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack" number = {state.id} onClick = {this.onclickRedoStack}>{state.id} : {i18next.t(state.action)}</p>
     );
     return(
       <div>
         {listitem}
       </div>
     )
+  }
+
+  showCurrentState = () => {
+    if(this._canvas){
+      return(
+        <div>
+          Current state : {i18next.t(this.currentState.action)}
+        </div>
+      )
+    }
   }
 
   updateObject = () => {
@@ -1314,14 +1329,14 @@ class ImageEditor extends Component {
         <div className="editor" id='editor'>
           <div className="editor-nav">
             <div className="do">
-                <button onClick = {this.undo}>Undo</button>
-                <button onClick = {this.redo}>Redo</button>
+                <button onClick = {this.undo}>{i18next.t('ImageEditor.Undo')}</button>
+                <button onClick = {this.redo}>{i18next.t('ImageEditor.Redo')}</button>
             </div>
             <div className="save">
-                <button onClick={this.openSaveModal} >Save</button>
+                <button onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
             </div>
             <div className="more">
-                <button>more</button>
+                <button>{i18next.t('ImageEditor.More')}</button>
             </div>
           </div>
           <div className="real" >
@@ -1329,10 +1344,10 @@ class ImageEditor extends Component {
           </div>
           <div className="canvas-footer">
               <div className="canvas-info">
-                <div>zoom : {this.state.zoom}</div>
+                <div>{i18next.t('ImageEditor.Zoom')} : {this.state.zoom}</div>
                 <div>{this._canvas ? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</div>
               </div>
-              <HistoryUI showUndoStack = {this.showUndoStack} currentState={this.currentState} />
+              <HistoryUI showUndoStack = {this.showUndoStack} showCurrentState={this.showCurrentState}/>
           </div>
         </div>
         <Save 
@@ -1460,4 +1475,4 @@ class ImageEditor extends Component {
   }
 }
 
-export default ImageEditor;
+export default withTranslation()(ImageEditor);

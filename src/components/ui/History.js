@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import '../../css/ui/History.scss'
-export default class History extends Component {
+import { withTranslation } from "react-i18next";
+class History extends Component {
   // constructor(props){
   //   super(props);
   // }
-
   componentDidMount(){
     // console.log('History UI Mount');
   }
@@ -19,11 +19,11 @@ export default class History extends Component {
     return (
       <div className="history">
         <div className="history-inner">
-          <div>Current state : {this.props.currentState.action}</div>
+          {this.props.showCurrentState()}
           {this.props.showUndoStack()}
         </div>
       </div>
     );
   }
-
 }
+export default withTranslation()(History);

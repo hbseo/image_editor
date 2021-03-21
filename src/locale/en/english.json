@@ -1,5 +1,6 @@
 {
     "hello": "hello",
+    "icon add" : "Icon Add",
 
     "Change Password" : {
         "Change Password" : "Change Password",
@@ -24,16 +25,27 @@
         "test10" : "나의 보물 제1호",
         "test11" : "나의 좌우명",
         "test12" : "내가 존경하는 인물",
-        "test13" : "확인",
-        "test14" : "취소"
+        "Confirm" : "Confirm",
+        "Cancel" : "Cancel"
     },
 
     "ImageEditor" : {
-        
+        "Undo" : "Undo",
+        "Redo" : "Redo",
+        "Save" : "Save",
+        "More" : "more",
+        "Zoom" : "zoom"
     },
 
     "ImageList" : {
-        
+        "Get random image" : "Get random image",
+        "Image count" : "Image count",
+        "Search random image" : "Search random image",
+        "Image name" : "Image name",
+        "Search" : "Search",
+        "Showimage errors" : "Fail to load images",
+        "Fail" : "Fail",
+        "Error" : "Error"
     },
 
     "LoadImage" : {
@@ -41,7 +53,15 @@
     },
 
     "Login" : {
-        
+        "Welcome" : "Welcome",
+        "Signout" : "Sign out",
+        "ChangePW" : "Change Password",
+        "Signin" : "Sign in",
+        "Signup" : "Sign up",
+        "FindPW" : "Forgot Password?",
+        "Success" : "Success",
+        "Fail" : "Fail",
+        "Error" : "Error"
     },
 
     "Main" : {
@@ -51,32 +71,68 @@
         "New Project" : "New Project",
         "Project" : "Project",
         "More" : "More",
-        "SignIn" : "SignIn",
+        "Signin" : "SignIn",
         "Setting" : "Setting"
     },
 
     "New_Project" : {
-        
+        "Direct Input" : "Direct Input",
+        "Width" : "Width",
+        "Height" : "Height"
     },
 
     "Project" : {
-        
+        "Title" : "Title",
+        "Search" : "Search",
+        "Project" : "Project",
+        "User" : "User" 
     },
 
     "Save" : {
-        
+        "Saveimage" : "Save as Image",
+        "test1" : "다른이름으로 저장",
+        "test2" : "서버 저장",
+        "Error on server" : "Error on server",
+        "Save" : "Save",
+        "Success" : "Success",
+        "Error" : "Error",
+        "Update" : "Update"
     },
 
     "SignIn" : {
-        
+        "Member Login" : "Member Login",
+        "Signin" : "Signin",
+        "Forgot" : "Forgot",
+        "Username / Password?" : "Username / Password?",
+        "Create your Account" : "Create your Account",
+        "Success" : "Success",
+        "test1" : "Incorrect username or password.",
+        "Error" : "Error"
     },
 
     "SignUp" : {
-        
+        "test1" : "아이디 중복 또는 옮바르지 않은 비밀번호",
+        "test2" : "질문을 선택해 주세요",
+        "test3" : "답변을 작성해 주세요",
+        "test4" : "원하는 질문을 선택하세요",
+        "test8" : "가장 기억에 남는 추억의 장소",
+        "test9" : "다시 태어나면 되고 싶은 것",
+        "test10" : "나의 보물 제1호",
+        "test11" : "나의 좌우명",
+        "test12" : "내가 존경하는 인물",
+        "DupID" : "ID is invalid or already taken",
+        "Signup" : "Sign up",
+        "Success" : "Success",
+        "Fail" : "Fail",
+        "Error" : "Error",
+        "Member Register" : "Member Register",
+        "Register" : "Register",
+        "Login your Account" : "Login your Account"
     },
 
     "Upload_file" : {
-        
+        "Preview" : "Preview",
+        "Load local image" : "Load local image"
     },
 
     "ui/canvas" : {

@@ -21,7 +21,8 @@ i18n
         fallbackLng: 'ko',
         // ns: ['translation'],
         // defaultNS: "translation",
-        debug: true,
+        debug: false,
+        // debug: true,
         // keySeparator: false, // we do not use keys in form messages.welcome
         interpolation: {
             escapeValue: false // react already safes from xss
