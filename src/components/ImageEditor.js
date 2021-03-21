@@ -1225,6 +1225,10 @@ class ImageEditor extends Component {
     this.setState({isSaved : true, prj_idx : idx});
   }
 
+  buttonLayer = () => {
+    return this.action['Layers'].buttonLayer();
+  }
+
   render() {
     const tab = {
       0: <TextUI 
@@ -1347,6 +1351,7 @@ class ImageEditor extends Component {
                 <div>{i18next.t('ImageEditor.Zoom')} : {this.state.zoom}</div>
                 <div>{this._canvas ? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</div>
               </div>
+              <div>{this.buttonLayer()}</div>
               <HistoryUI showUndoStack = {this.showUndoStack} showCurrentState={this.showCurrentState}/>
           </div>
         </div>
