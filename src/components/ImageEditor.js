@@ -1301,7 +1301,6 @@ class ImageEditor extends Component {
           onClickObjectSnap={this.onClickObjectSnap}
           exportCanvas = {this.exportCanvas}
           importCanvas = {this.importCanvas}
-          buttonLayer = {this.action['Layers'].buttonLayer}
           getCanvasInfo = {this.getCanvasInfo}
         />,
       9: <CanvasUI 
@@ -1351,8 +1350,16 @@ class ImageEditor extends Component {
                 <div>{i18next.t('ImageEditor.Zoom')} : {this.state.zoom}</div>
                 <div>{this._canvas ? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</div>
               </div>
-              <div>{this.buttonLayer()}</div>
-              <HistoryUI showUndoStack = {this.showUndoStack} showCurrentState={this.showCurrentState}/>
+              <div className="history-layers">
+                <div className="history-box">
+                  <div className="history-title">History</div>
+                  <HistoryUI showUndoStack = {this.showUndoStack} showCurrentState={this.showCurrentState}/>
+                </div>
+                <div className="layers-box">
+                  <div className="layers-title">Layers</div>
+                  <div className="layers-detail">{this.buttonLayer()}</div>
+                </div>
+              </div>
           </div>
         </div>
         <Save 
