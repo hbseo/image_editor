@@ -45,6 +45,7 @@ import EffectUI from './ui/Effect';
 class ImageEditor extends Component {
   constructor(props) {
     super(props);
+    // console.log('construct')
     this.state = {
       canvasView : { x: 0, y: 0},
       activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
@@ -52,17 +53,22 @@ class ImageEditor extends Component {
       openSave : false, // save Modal 여는 용도
       tab : 0, // 사이드 NavBar 탭 번호
       user_name : '', // 로그인 되어있는 유저 id
-      isSaved : false, // 서버에 저장되어 있는가?
-      prj_idx : -1, // 현재 열려있는 저장된 프로젝트 idx,
+      isSaved : props.location.save ? true : false, // 서버에 저장되어 있는가?
+      prj_idx : props.location.project_idx ? props.location.project_idx : -1, // 현재 열려있는 저장된 프로젝트 idx,
       imgStatus : false // false : idle 상태. true 로딩 중
     }
-
+    
     this._canvas = null;
     if(!props.location.state) { props.history.push('/'); }
     this._canvasImageUrl = props.location.state ? props.location.state.url : '';
     this._canvasSize = {width : props.location.state? props.location.state.width : 500, height : props.location.state? props.location.state.height : 500}
     this._backgroundImageRatio = props.location.state ? props.location.state.ratio/100 : 1;
+    
+    console.log(props.location)
 
+    this._openProject = props.location.save ? true : false;
+    this._project_data = props.location.project_data ? props.location.project_data : null;
+    
     this._clipboard = null;
     this._backgroundImage = null;
     this.action = {};
@@ -115,26 +121,71 @@ class ImageEditor extends Component {
   }
 
   componentDidMount() {
-    if(this._canvasImageUrl){
-      this.loadImage(
-        this._canvasImageUrl,
-        {x : 0, y : 0}, 
-        {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
-      )
-      .then((img) => this._backgroundImage = img)
+    if(this._openProject){
+      new Promise((resolve) => {
+        // this.importCanvas(JSON.parse(this._project_d ata), resolve);
+        this.importCanvas(this._project_data, resolve);
+      })
       .then(() => {
+        this._createDomEvent();
+          this._createCanvasEvent();
+          this.currentState = this._canvas.toDatalessJSON();
+          this.currentState.width = this._canvas.width;
+          this.currentState.height = this._canvas.height;
+          this.currentState.backFilter = [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+          this.currentState.action = "initilize";
+          this.currentState.id = 0;
+          this.firstState = this.currentState;
+          this.action['Grid'].makeGrid();
+      })
+    }
+    else{
+      if(this._canvasImageUrl){
+        this.loadImage(
+          this._canvasImageUrl,
+          {x : 0, y : 0}, 
+          {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
+        )
+        .then((img) => this._backgroundImage = img)
+        .then(() => {
+          this._canvas = new fabric.Canvas('canvas', {
+            preserveObjectStacking: true,
+            height: this._canvasSize.height,
+            width: this._canvasSize.width,
+            backgroundColor: 'grey',
+            backgroundImage : this._backgroundImage,
+            uniformScaling: false, // When true, objects can be transformed by one side
+            imageSmoothingEnabled : false,
+            fireRightClick: true,
+          });
+        })
+        .then(() => {
+          this._createDomEvent();
+          this._createCanvasEvent();
+          this.currentState = this._canvas.toDatalessJSON();
+          this.currentState.width = this._canvas.width;
+          this.currentState.height = this._canvas.height;
+          this.currentState.backFilter = [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+          this.currentState.action = "initilize";
+          this.currentState.id = 0;
+          this.firstState = this.currentState;
+          this.action['Grid'].makeGrid();
+        })
+        .catch(() => {
+          this.props.history.push('/');
+        })
+      }
+      else{
         this._canvas = new fabric.Canvas('canvas', {
           preserveObjectStacking: true,
           height: this._canvasSize.height,
           width: this._canvasSize.width,
           backgroundColor: 'grey',
           backgroundImage : this._backgroundImage,
-          uniformScaling: false, // When true, objects can be transformed by one side
+          uniformScaling: false,
           imageSmoothingEnabled : false,
           fireRightClick: true,
         });
-      })
-      .then(() => {
         this._createDomEvent();
         this._createCanvasEvent();
         this.currentState = this._canvas.toDatalessJSON();
@@ -145,34 +196,8 @@ class ImageEditor extends Component {
         this.currentState.id = 0;
         this.firstState = this.currentState;
         this.action['Grid'].makeGrid();
-      })
-      .catch(() => {
-        this.props.history.push('/');
-      })
-    }
-    else{
-      this._canvas = new fabric.Canvas('canvas', {
-        preserveObjectStacking: true,
-        height: this._canvasSize.height,
-        width: this._canvasSize.width,
-        backgroundColor: 'grey',
-        backgroundImage : this._backgroundImage,
-        uniformScaling: false,
-        imageSmoothingEnabled : false,
-        fireRightClick: true,
-      });
-      this._createDomEvent();
-      this._createCanvasEvent();
-      this.currentState = this._canvas.toDatalessJSON();
-      this.currentState.width = this._canvas.width;
-      this.currentState.height = this._canvas.height;
-      this.currentState.backFilter = [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
-      this.currentState.action = "initilize";
-      this.currentState.id = 0;
-      this.firstState = this.currentState;
-      this.action['Grid'].makeGrid();
-    }
-    
+      }
+    }   
     this.action['Draw'].setBrush(); // Canvas Required
     this.getCheck();
     this.forceUpdate(); // for showUndo/Redo Stack
@@ -1014,13 +1039,25 @@ class ImageEditor extends Component {
     a.click();
   }
 
-  importCanvas = (event) => {
-    let file = event.target.files[0];
+  importCanvas = (data, resolve) => {
+    // let file = event.target.files[0];
+    const file = new Blob([data], {type:"application/json"});
+    // console.log(file)
     let json;
     var reader = new FileReader();
     reader.onload = (event) => {
       json = JSON.parse(event.target.result);
-      console.log(json);
+      this._canvas = new fabric.Canvas('canvas', {
+        preserveObjectStacking: true,
+        height: 100,
+        width: 100,
+        backgroundColor: 'grey',
+        uniformScaling: false, // When true, objects can be transformed by one side
+        imageSmoothingEnabled : false,
+        fireRightClick: true,
+      });
+
+      // console.log(json);
 
       this._canvas.loadFromJSON(json, () => {
         this.isDragging = false;
@@ -1071,6 +1108,7 @@ class ImageEditor extends Component {
 
         this._canvas.renderAll()
         this.forceUpdate(); // for undo/redo stack
+        resolve();
       })
     }
     reader.readAsText(file);
