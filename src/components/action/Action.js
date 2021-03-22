@@ -80,19 +80,19 @@ export default class Action {
   }
 
   onCanvasMove(){
-    return this.app.onCanvasMove();
+    return this.app._onCanvasMove();
   }
 
   offCanvasMove(){
-    return this.app.offCanvasMove();
+    return this.app._offCanvasMove();
   }
 
   onCanvasZoom(){
-    return this.app.onCanvasZoom();
+    return this.app._onCanvasZoom();
   }
 
   offCanvasZoom(){
-    return this.app.offCanvasZoom();
+    return this.app._offCanvasZoom();
   }
 
   updateLockScale(){

@@ -142,7 +142,7 @@ export default class Text extends Component{
 
   handleBGColorChangeComplete = (color) => {
     if(document.getElementById('textbg').checked){
-      this.props.textObject("background-color", true, convertRGB(this.state.color));
+      this.props.textObject("background-color", true, convertRGB(this.state.bgcolor));
     } 
     else {
       this.setState({ bgcolor: color.rgb })
