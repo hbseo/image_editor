@@ -26,12 +26,12 @@ class Save extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({id : this.props.user_name , title : 'test', data : json})
+      body: JSON.stringify({id : this.props.user_name , title : this.state.title, data : json})
     })
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
-      if(data.prj_idx !== -1){
+      if(data.success && data.prj_idx !== -1){
         alert('save success');
         this.props.getCheckSave(data.prj_idx);
       }
@@ -57,8 +57,13 @@ class Save extends Component {
       })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        alert('update success');
+        if(data.success){
+          console.log(data);
+          alert('update success');
+        }
+        else{
+          alert('error')
+        }
       })
       .catch(() => {
         alert('error');
@@ -126,8 +131,8 @@ class Save extends Component {
                 {imageSize} 
 							  <button id = "close-button" onClick = {close}>close</button>
 							  <button id = "save-image-button" onClick = {this.imageHandler} disabled = {this.state.saveState}>이미지로 저장</button>
-							  <button id = "save-button" onClick = {this.saveHandler} disabled = {this.err}><h4>다른이름으로 저장</h4></button>
-							  <button id = "save-button" onClick = {this.updateHandler} disabled = {this.err}><h4>서버 저장</h4></button>
+							  <button id = "save-button" onClick = {this.saveHandler} disabled = {this.state.saveState}><h4>다른이름으로 저장</h4></button>
+							  <button id = "save-button" onClick = {this.updateHandler} disabled = {this.state.saveState}><h4>서버 저장</h4></button>
               </div>
 
 
