@@ -763,7 +763,9 @@ class ImageEditor extends Component {
   
 
   openSaveModal = () => {
-    this.setState({openSave : true})
+    if(this.state.user_name !== ""){
+      this.setState({openSave : true})
+    }
   }
 
   closeSaveModal = () => {
@@ -1302,6 +1304,9 @@ class ImageEditor extends Component {
           exportCanvas = {this.exportCanvas}
           importCanvas = {this.importCanvas}
           getCanvasInfo = {this.getCanvasInfo}
+          isSaved = {this.state.isSaved}
+          prj_idx = {this.state.prj_idx}
+          user_name = {this.state.user_name} 
         />,
       9: <CanvasUI 
           object={this.state.activeObject} 

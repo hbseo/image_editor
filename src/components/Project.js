@@ -26,7 +26,12 @@ class Project extends Component {
     .then((res) => res.json())
     .then((data) => {
       // console.log(data);
-      this.setState({projects : data});
+      if(data.success){
+        this.setState({projects : data.result});
+      }
+      else{
+        alert("error");
+      }
     })
     .catch(() => {
       alert('error');

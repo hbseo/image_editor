@@ -17,6 +17,7 @@ exports.save = (req, res) => {
     if(result[0]) {
       if(result[0].size + size > 10485760){
         res.status(200).json({
+          success : false,
           msg: 'size exceeded'
         })
       }
@@ -30,6 +31,7 @@ exports.save = (req, res) => {
     }
     else {
       res.status(200).json({
+        success : false,
         msg: 'idx error : no user id'
       })
     }
@@ -46,6 +48,7 @@ exports.save = (req, res) => {
     else {
       database.connection.rollback()
       res.status(200).json({
+        success : false,
         msg: 'save fail'
       })
     }
@@ -60,6 +63,7 @@ exports.save = (req, res) => {
         }
       })
       res.status(200).json({
+        success : true,
         msg: 'save success',
         prj_idx : prj_idx
       })
@@ -67,6 +71,7 @@ exports.save = (req, res) => {
     else {
       database.connection.rollback()
       res.status(200).json({
+        success : false,
         msg: 'update user fail'
       })
     }
@@ -75,6 +80,7 @@ exports.save = (req, res) => {
   const onError = (error) => {
     database.connection.rollback()
     res.status(400).json({
+      success : false,
       msg: error.message
     })
   }
@@ -104,6 +110,7 @@ exports.update = (req, res) => {
       origin_size = result[0].len
       if(user_size - origin_size + size > 10485760){
         res.status(200).json({
+          success : false,
           msg: 'size exceeded'
         })
       }
@@ -116,6 +123,7 @@ exports.update = (req, res) => {
     }
     else {
       res.status(200).json({
+        success : false,
         msg: 'prj idx error'
       })
     }
@@ -132,6 +140,7 @@ exports.update = (req, res) => {
     }
     else {
       res.status(200).json({
+        success : false,
         msg: 'idx error : no user id'
       })
     }
@@ -147,6 +156,7 @@ exports.update = (req, res) => {
     else {
       database.connection.rollback()
       res.status(200).json({
+        success : false,
         msg: 'update project fail'
       })
     }
@@ -161,12 +171,14 @@ exports.update = (req, res) => {
     })
     if(result) {
       res.status(200).json({
+        success : true,
         msg: 'update success'
       })
     }
     else {
       database.connection.rollback()
       res.status(200).json({
+        success : false,
         msg: 'update uesr fail'
       })
     }
@@ -175,6 +187,7 @@ exports.update = (req, res) => {
   const onError = (error) => {
     database.connection.rollback()
     res.status(400).json({
+      success : false,
       msg: error.message
     })
   }
@@ -201,16 +214,21 @@ exports.get = (req, res) => {
     }
     else {
       res.status(200).json({
+        success : false,
         msg: 'idx error : no user id'
       })
     }
   }
   const respond = (result) => {
     if(result) {
-      res.status(200).send(result)
+      res.status(200).json({
+        success : true,
+        result : result
+      })
     }
     else {
       res.status(200).json({
+        success : false,
         msg: 'get fail'
       })
     }
@@ -218,6 +236,7 @@ exports.get = (req, res) => {
 
   const onError = (error) => {
     res.status(400).json({
+      success : false,
       msg: error.message
     })
   }

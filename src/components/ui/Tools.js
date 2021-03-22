@@ -42,6 +42,15 @@ export default class Tools extends Component {
             <input id="grid-show" type="checkbox" onClick={this.props.onClickGrid}/><label  htmlFor = "grid-show">그리드 on/off</label>
             <input id="object-snap" type="checkbox" onClick={this.props.onClickObjectSnap}/><label  htmlFor ="object-snap"> 오브젝트 스냅 옵션</label>
           </div>
+
+          <div>
+            <p>유저 이름 : {this.props.user_name} </p>
+            <p>프로젝트 정보 : {this.props.prj_idx} </p>
+            <p>저장 유무: {this.props.isSaved ? 'true' : 'false'} </p>
+
+            
+            
+          </div>
         </div>
       </div>
     );
