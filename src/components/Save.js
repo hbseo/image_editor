@@ -110,7 +110,7 @@ class Save extends Component {
               </div>
               <div className="title-container">
 					      <input type="text" placeholder=" " className="title-input" id="title-id" name="title-name" value={this.state.title} onChange = {this.handleTitleChange}/>
-                <label className="title-placeholder" for="title-name">Project title</label>
+                <label className="title-placeholder" htmlFor="title-name">Project title</label>
               </div>
               <div className="content">
                 <div className="format-box">
@@ -135,8 +135,8 @@ class Save extends Component {
               <div className = "bottom-div">
                 {/* {imageSize} */}
 							  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>local</button>
-							  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.err}>rename</button>
-							  <button id="save-server" onClick = {this.updateHandler} disabled = {this.err}>server</button>
+							  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>rename</button>
+							  <button id="save-server" onClick = {this.updateHandler} disabled = {this.state.saveState}>server</button>
               </div>
 						</div>
 					</div> : null }
