@@ -136,19 +136,56 @@
     },
 
     "ui/canvas" : {
-
+        "Canvas" : "Canvas",
+        "ResetCavnas" : "Reset Canvas",
+        "CropCanvas" : "Start Crop",
+        "CropEndCanvas" : "End Crop"
     },
 
     "ui/draw" : {
-
+        "Draw" : "Draw",
+        "Brush type" : "Brush Type",
+        "Width" : "Brush Width",
+        "Line Color" : "Brush Color"
     },
 
     "ui/effect" : {
-
+        "Effect" : "Effect",
+        "Blur" : "Blur",
+        "OffsetY" : "Offset Y",
+        "OffsetX" : "Offset X",
+        "Stroke" : "Stroke",
+        "StrokeColor" : "Stroke Color",
+        "Pipette" : "Pipette"
     },
 
     "ui/filter" : {
-
+        "Filters" : "Filter", 
+        "Grey" : "Grey",
+        "Invert" : "Invert",
+        "Brownie" : "Brownie",
+        "Technicolor" : "Technicolor",
+        "Polaroid" : "Polaroid",
+        "Blackwhite" : "Blackwhite",
+        "Vintage" : "Vintage",
+        "Sepia" : "Sepia",
+        "Kodachrome" : "Kodachrome",
+        "Emboss" : "Emboss",
+        "Adjust" : "Adjust", 
+        "Brightness" : "Brightness",
+        "Contrast" : "Contrast",
+        "Pixelate" : "Pixelate",
+        "Blur" : "Blur",
+        "Noise" : "Noise",
+        "Saturation" : "Saturation",
+        "Hue" : "Hue",
+        "Ink" : "Ink",
+        "Vignette" : "Vignette",
+        "Zoomblur" : "Zoomblur",
+        "Vibrance" : "Vibrance",
+        "Denoise" : "Denoise",
+        "Opacity" : "Opacity",
+        "Glfx" : "glfx"
     },
 
     "ui/history" : {
@@ -156,11 +193,18 @@
     },
 
     "ui/icon" : {
-
+        "Icon" : "Icon",
+        "Pick icon" : "Pick icon",
+        "Color" : "Icon Color",
+        "Pipette" : "Pipette"
     },
 
     "ui/image" : {
-
+        "Image" : "Image",
+        "Crop start" : "Crop start",
+        "Crop End" : "Crop End",
+        "Upload image" : "Upload image",
+        "Upload local image" : "Upload local image"
     },
 
     "ui/loading" : {
@@ -168,28 +212,75 @@
     },
 
     "ui/object" : {
-
+        "Object" : "Object",
+        "test1" : "맨 뒤로 보내기",
+        "test2" : "뒤로 보내기",
+        "test3" : "맨 앞으로 보내기",
+        "test4" : "앞으로 보내기",
+        "test5" : "선택 개체 삭제",
+        "test6" : "모든 객체 삭제",
+        "test7" : "그룹화",
+        "test8" : "그룹해제",
+        "Flip x" : "Flip x",
+        "Flip y" : "Flip y",
+        "test9" : "확대 및 축소",
+        "test10" : "비율 유지"
     },
 
     "ui/rotation" : {
-
+        "Rotation" : "회전",
+        "test1" : "각도 설정",
+        "test2" : "30도 회전",
+        "Direct Input" : "Direct Input"
     },
 
     "ui/shape" : {
-
+        "Shape" : "Shape",
+        "Triangle" : "Triangle",
+        "Rectangle" : "Rectangle",
+        "Ellipse" : "Ellipse",
+        "Circle" : "Circle",
+        "Line" : "Line",
+        "Free making" : "Free making",
+        "Click" : "Click",
+        "Drag" : "Drag",
+        "Degree" : "Degree",
+        "Pipette" : "Pipette"
     },
 
     "ui/sidenav" : {
-
+        "Text" : "Text",
+        "Image" : "Image",
+        "Filter" : "Filter",
+        "Icon" : "Icon",
+        "Object" : "Object",
+        "Rotate" : "Rotate",
+        "Shape" : "Shape",
+        "Draw" : "Draw",
+        "Others" : "Others",
+        "Canvas" : "Canvas",
+        "Effect" : "Effect",
+        "Close" : "Close"
     },
 
     "ui/text" : {
-
+        "Text" : "Text",
+        "New Text" : "New Text",
+        "Font" : "Font",
+        "Font size" : "Font size",
+        "Align" : "Align",
+        "Weight" : "Weight",
+        "Bold" : "Bold",
+        "Italic" : "Italic",
+        "Text background" : "Text background",
+        "Active" : "Active",
+        "Text color" : "Text color",
+        "Text bg color" : "Text Background color",
+        "Pipette" : "Pipette"
     },
 
     "ui/tools" : {
 
     }
-
 
 }

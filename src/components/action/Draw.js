@@ -20,7 +20,7 @@ class Draw extends Action {
   }
 
   getBrush = (type) => {
-    return this.brush[type-1];
+    return this.brush[type];
   }
 
   openDrawing = () => {
