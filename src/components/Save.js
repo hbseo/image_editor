@@ -105,37 +105,39 @@ class Save extends Component {
 				  <div className = "modal">
 						<div className = "saveModal">
               <div className="top-div">
-							  <label id="headline">Save {user_name} {this.props.prj_idx} </label>
-                <button id="close" onClick = {close}><i className="fa fa-times" aria-hidden="true"></i></button>
+							  <div className="headline">Save {user_name} {this.props.prj_idx} </div>
+                <button className="close" onClick = {close}>close</button>
               </div>
-              <hr className = "modal-line"></hr>
-              <div className="title-input">
-					      <input id = "title" name="title" value={this.state.title} onChange = {this.handleTitleChange}/>
+              <div className="title-container">
+					      <input type="text" placeholder=" " className="title-input" id="title-id" name="title-name" value={this.state.title} onChange = {this.handleTitleChange}/>
+                <label className="title-placeholder" for="title-name">Project title</label>
               </div>
               <div className="content">
-                <label id="option">Format</label>
-                <input type="radio" id="png" name="format" value="png" defaultChecked onClick={this.changeFormat}/><label htmlFor="png">png</label>
-                <input type="radio" id="jpeg" name="format" value="jpeg" onClick={this.changeFormat}/><label htmlFor="jpeg">jpeg</label>
+                <div className="format-box">
+                  <div id="option">Format</div>
+                  <div className="format-radio">
+                    <input type="radio" id="png" name="format" value="png" defaultChecked onClick={this.changeFormat}/><label htmlFor="png">png</label>
+                    <input type="radio" id="jpeg" name="format" value="jpeg" onClick={this.changeFormat}/><label htmlFor="jpeg">jpeg</label>
+                  </div>
+                </div>
                 { this.state.format === 'jpeg' ? 
-                  <div className="quality-div">
-                    <label id="option">Quality</label>
-                    <input type="radio" id="high" name="quality" value="1.0" defaultChecked/><label htmlFor="high">high</label>
-                    <input type="radio" id="medium" name="quality" value="0.6"/><label htmlFor="medium">medium</label>
-                    <input type="radio" id="low"  name="quality" value="0.1"/><label htmlFor="low">low</label>
+                  <div className="quality-box">
+                    <div id="option">Quality</div>
+                    <div className="quality-radio">
+                      <input type="radio" id="high" name="quality" value="1.0" defaultChecked/><label htmlFor="high">high</label>
+                      <input type="radio" id="medium" name="quality" value="0.6"/><label htmlFor="medium">medium</label>
+                      <input type="radio" id="low"  name="quality" value="0.1"/><label htmlFor="low">low</label>
+                    </div>
                   </div> : null
                 }
-
               </div>
 
               <div className = "bottom-div">
-                {imageSize} 
-							  <button id = "close-button" onClick = {close}>close</button>
-							  <button id = "save-image-button" onClick = {this.imageHandler} disabled = {this.state.saveState}>이미지로 저장</button>
-							  <button id = "save-button" onClick = {this.saveHandler} disabled = {this.state.saveState}><h4>다른이름으로 저장</h4></button>
-							  <button id = "save-button" onClick = {this.updateHandler} disabled = {this.state.saveState}><h4>서버 저장</h4></button>
+                {/* {imageSize} */}
+							  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>local</button>
+							  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.err}>rename</button>
+							  <button id="save-server" onClick = {this.updateHandler} disabled = {this.err}>server</button>
               </div>
-
-
 						</div>
 					</div> : null }
 			</div>
