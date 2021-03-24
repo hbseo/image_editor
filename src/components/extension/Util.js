@@ -1,6 +1,6 @@
 import Extension from './Extension';
 import { fabric } from 'fabric';
-import convertRGB from '../helper/ConverRGB'
+import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
 class Util extends Extension {
   constructor(App) {
     super('Util', App);
