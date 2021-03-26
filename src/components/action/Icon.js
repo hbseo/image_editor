@@ -1,6 +1,6 @@
 import Action from './Action';
 import ResizeHelper from '../helper/Resize';
-import convertRGB from '../helper/ConverRGB';
+import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
 import { fabric } from 'fabric';
 import {iconList} from '../const/consts';
 class Icon extends Action {

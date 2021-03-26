@@ -21,6 +21,7 @@ class Save extends Component {
   saveHandler = () => {
     if(this.props.user_name === ""){alert('server err'); return;}
     var json = this.props.canvas;
+    console.log(this.props.canvas)
     fetch('/content/save', {
       method: 'POST',
       headers: {
@@ -135,8 +136,8 @@ class Save extends Component {
               <div className = "bottom-div">
                 {/* {imageSize} */}
 							  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>local</button>
-							  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>rename</button>
-							  <button id="save-server" onClick = {this.updateHandler} disabled = {this.state.saveState}>server</button>
+							  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>save as</button>
+							  <button id="save-server" onClick = {this.updateHandler} disabled = {this.state.saveState}>save</button>
               </div>
 						</div>
 					</div> : null }
