@@ -88,7 +88,7 @@ class Filter extends Action {
         case 'ink':
           obj.filters[22] = (new Ink({
             ink_matrix : {
-              ink : value * value * value * value * value,
+              ink : value ,
               width : obj.width,
               height : obj.height
             }
