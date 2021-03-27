@@ -20,7 +20,9 @@
 .filter-options{
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   transition: background-color 0.5s;
+  padding-right: 10%;
 
   div{
     margin: 1%;
