@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { SketchPicker } from 'react-color';
-import convertRGB from '../helper/ConverRGB';
+import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
 import '../../css/ui/Draw.scss';
 
 export default class Draw extends Component{

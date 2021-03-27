@@ -1,5 +1,5 @@
 import switchTools from '../helper/SwitchTools'
-import convertRGB from '../helper/ConverRGB'
+import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
 import React, {Component} from 'react';
 import {fontList} from '../const/consts';
 import { ChromePicker } from 'react-color';
@@ -23,7 +23,8 @@ export default class Text extends Component{
         b: '255',
         a: '1'
       },
-      showfont: false
+      showfont: false,
+      testcolor : "#ffffff"
     };
   }
 
@@ -47,10 +48,6 @@ export default class Text extends Component{
     else{
       switchTools('text', true)
     }
-  }
-
-  setColor = (color) => {
-    this.setState({ color: color })
   }
 
   textSelection = (text) => {
@@ -105,7 +102,6 @@ export default class Text extends Component{
   }
 
   addText = () => {
-
     this.props.addText({size : this.state.fontSize, color : convertRGB(this.state.color), font : this.state.font});
   }
 
@@ -142,7 +138,7 @@ export default class Text extends Component{
 
   handleBGColorChangeComplete = (color) => {
     if(document.getElementById('textbg').checked){
-      this.props.textObject("background-color", true, convertRGB(this.state.color));
+      this.props.textObject("background-color", true, convertRGB(this.state.bgcolor));
     } 
     else {
       this.setState({ bgcolor: color.rgb })
@@ -152,6 +148,11 @@ export default class Text extends Component{
   handlefontfamilybutton = () => {
     this.setState({showfont: !this.state.showfont});
   }
+
+  colortest = (event) => {
+    this.setState({ color : HEXtoRGB(event.target.value)});
+    this.props.setColor({rgb : HEXtoRGB(event.target.value)});
+  } 
 
   render(){
     let fontlist = null;
@@ -222,6 +223,7 @@ export default class Text extends Component{
 
           <label className="option-title">Text color</label>
           <div className="color-picker">
+            <input type="color" id="colorSource" value={this.state.testcolor} onChange = { this.colortest}/>
             <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           </div>
 

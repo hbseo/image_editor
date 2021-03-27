@@ -78,7 +78,7 @@ class Main extends Component {
             <div className='dropdown-container'>
               <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button>
               <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
-              <button onClick={this.changeTab} tab='3'>{t('Main.SignIn')}</button>
+              <button onClick={this.changeTab} tab='3'>{t('Main.Signin')}</button>
             </div>
             {this.state.login_state ? 
             <div className='dropdown-btn'>

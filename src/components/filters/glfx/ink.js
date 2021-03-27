@@ -70,7 +70,7 @@ filters.Ink = createClass(filters.BaseFilter, /** @lends fabric.Image.filters.My
     },
 
     sendUniformData: function(gl, uniformLocations) {
-      gl.uniform1f(uniformLocations.uInk, this.ink_matrix.ink);
+      gl.uniform1f(uniformLocations.uInk, Math.pow(this.ink_matrix.ink, 5));
       gl.uniform2fv(uniformLocations.texSize, [this.ink_matrix.width, this.ink_matrix.height]); // max size 
     },
 

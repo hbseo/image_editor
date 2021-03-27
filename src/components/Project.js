@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {fabric} from 'fabric';
+import { Link } from 'react-router-dom';
+
 class Project extends Component {
   constructor(props) {
     super(props);
@@ -51,6 +53,7 @@ class Project extends Component {
 
   initCanvas = () => {
     this.canvas = new fabric.Canvas('c');
+    this.getProjects();
   }
 
   fromJsontoPng = (json, idx) => {
@@ -72,7 +75,18 @@ class Project extends Component {
         listitem = this.state.projects.map((prj) =>
           <div key={prj.idx}>
             <p>{prj.title}</p>
-            <img id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="300px" alt="none"/>
+            <Link 
+                to={{
+                  pathname: '/edit',
+                  save : true,
+                  project_data : prj.project_data,
+                  project_idx : prj.idx,
+                  state: {
+                    width: 500,
+                    height: 400,
+                  }
+            }}><img id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="300px" alt="none" onClick = {this.openProject}/>
+            </Link>
           </div>
         );
       }
@@ -87,6 +101,10 @@ class Project extends Component {
     else{
       return(<div>no login</div>)
     }
+  }
+
+  openProject = () => {
+    
   }
  
   render() {
