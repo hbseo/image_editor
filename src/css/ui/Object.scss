@@ -1,0 +1,179 @@
+.sub-objmenu{
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .option-title{
+        font-size: 1.1em;
+        font-weight: bold;
+        margin: 3%;
+        // color: rgba(0, 0, 0, 0.6);
+    }
+
+    .obj-order{
+        padding: 5%;
+        display: flex;
+        justify-content: space-around;
+        
+        svg{
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+
+        svg:hover{
+            fill: #365AFC;
+        }
+    }
+
+    .flip-delete{
+        display: flex;
+
+        .obj-flip{
+            margin: 3%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-right: 30px;
+
+            .flip-button{
+                display: flex;
+                svg{
+                    width: 50px;
+                    height: 50px;
+                    cursor: pointer;
+                }
+        
+                svg:hover{
+                    fill: #365AFC;
+                }
+            }
+        }
+
+        .obj-delete{
+            margin: 3%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .delete-button{
+                display: flex;
+                svg{
+                    width: 50px;
+                    height: 50px;
+                    cursor: pointer;
+                }
+        
+                svg:hover{
+                    fill: #365AFC;
+                }
+            }
+        }
+    }
+
+    .obj-group{
+        margin: 3%;
+        display: flex;
+        justify-content: space-evenly;
+        
+        svg{
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+
+        svg:hover{
+            fill: #365AFC;
+        }
+    }
+
+    .obj-zoom{
+        margin: 3%;
+        display: flex;
+
+        .zoom-box{
+            width: 50%;
+
+            input[type=range]{
+                height: 10px;
+            }
+
+            .keep-ratio{
+                display: flex;
+                
+                div{
+                    margin-left: 5px;
+                    margin-bottom: 5px;
+                }
+
+                .mycheckbox {
+                    --background: #fff;
+                    --border: #D1D6EE;
+                    --border-hover: #BBC1E1;
+                    --border-active: #365AFC;
+                    --tick: #fff;
+                    position: relative;
+                    input,
+                    svg {
+                        width: 21px;
+                        height: 21px;
+                        display: block;
+                    }
+                    input {
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        position: relative;
+                        outline: none;
+                        background: var(--background);
+                        border: none;
+                        margin: 0;
+                        padding: 0;
+                        cursor: pointer;
+                        border-radius: 4px;
+                        transition: box-shadow .3s;
+                        box-shadow: inset 0 0 0 var(--s, 1px) var(--b, var(--border));
+                        &:hover {
+                            --s: 2px;
+                            --b: var(--border-hover);
+                        }
+                        &:checked {
+                            --b: var(--border-active);
+                        }
+                    }
+                    svg {
+                        pointer-events: none;
+                        fill: none;
+                        stroke-width: 2px;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        stroke: var(--stroke, var(--border-active));
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 21px;
+                        height: 21px;
+                        transform: scale(var(--scale, 1)) translateZ(0);
+                    }
+                    &.path {
+                        input {
+                            &:checked {
+                                --s: 2px;
+                                transition-delay: .4s;
+                                & + svg {
+                                    --a: 16.1 86.12;
+                                    --o: 102.22;
+                                }
+                            }
+                        }
+                        svg {
+                            stroke-dasharray: var(--a, 86.12);
+                            stroke-dashoffset: var(--o, 86.12);
+                            transition: stroke-dasharray .6s, stroke-dashoffset .6s;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
