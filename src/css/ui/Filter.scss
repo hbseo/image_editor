@@ -9,7 +9,7 @@
   flex-direction: column;
   height: 93vh;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 .filter-box{
@@ -65,11 +65,21 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  padding: 5%;
+  width: 100%;
 
-  div{
+  .range-box{
+    width: 100%;
     display: flex;
-    flex-direction: column;
+
+    input[type=range]{
+      width: 80%;
+    }
+
+    label{
+      margin: 13px;
+      width: 20%;
+    }
   }
 }
 

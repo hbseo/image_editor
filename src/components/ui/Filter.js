@@ -152,7 +152,8 @@ export default class Filter extends Component{
             <div className="option-title" onClick = {this.changeMenu}>Adjust</div>
             <CSSTransition in = {!this.state.menu} timeout={200} classNames="my-node" unmountOnExit >
               <div className="adjust-options">
-                <div>
+              <div>Brightness</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -163,10 +164,11 @@ export default class Filter extends Component{
                     step='0.01'
                     value={this.state.brightness || 0}
                     onChange={this.handleFilterChange} filter='brightness'
-                  />Brightness
+                  />
                   <label id='brightness-value'>{this.state.brightness}</label>
                 </div>
-                <div>
+                <div>Contrast</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -177,11 +179,12 @@ export default class Filter extends Component{
                     step='0.01'
                     value={this.state.contrast || 0}
                     onChange={this.handleFilterChange} filter='contrast'
-                  />Contrast
+                  />
                   <label id="contrast-value">{this.state.contrast}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[16] ? this.props.object.filters[16].contrast : 0 } */}
                 </div>
-                <div>
+                <div>Pixelate</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -192,11 +195,12 @@ export default class Filter extends Component{
                     step='1'
                     value={this.state.pixelate || 1}
                     onChange={this.handleFilterChange} filter='pixelate'
-                  />pixelate
+                  />
                   <label id="pixelate-value">{this.state.pixelate}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[17] ? this.props.object.filters[17].blocksize : 0 } */}
                 </div>
-                <div>
+                <div>Blur</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -207,11 +211,12 @@ export default class Filter extends Component{
                     step='0.01'
                     value={this.state.blur || 0}
                     onChange={this.handleFilterChange} filter='blur'
-                  />blur
+                  />
                   <label id="blur-value">{this.state.blur}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[18] ? this.props.object.filters[18].blur : 0 } */}
                 </div>
-                <div>
+                <div>Noise</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -222,11 +227,12 @@ export default class Filter extends Component{
                     step='1'
                     value={this.state.noise || 0}
                     onChange={this.handleFilterChange} filter='noise'
-                  />noise
+                  />
                   <label id="noise-value">{this.state.noise}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[19] ? this.props.object.filters[19].noise : 0 } */}
                 </div>
-                <div>
+                <div>Saturation</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -237,11 +243,12 @@ export default class Filter extends Component{
                     step='0.01'
                     value={this.state.saturation || 0}
                     onChange={this.handleFilterChange} filter='saturation'
-                  />Saturation
+                  />
                   <label id="saturation-value">{this.state.saturation}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[20] ? this.props.object.filters[20].saturation : 0 } */}
                 </div>
-                <div>
+                <div>Hue</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -252,11 +259,12 @@ export default class Filter extends Component{
                     step='0.01'
                     value={this.state.hue || 1}
                     onChange={this.handleFilterChange} filter='hue'
-                  />Hue
+                  />
                   <label id="hue-value">{this.state.hue}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[21] ? this.props.object.filters[21].rotation : 0 } */}
                 </div>
-                <div>
+                <div>Ink</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -267,11 +275,12 @@ export default class Filter extends Component{
                     step='0.01'
                     value={this.state.ink || 0}
                     onChange={this.handleFilterChange} filter='ink'
-                  />ink from glfx.js
+                  />
                   <label id="ink-value">{this.state.ink}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[22] ? this.props.object.filters[22].ink_matrix.ink : 0 } */}
                 </div>
-                <div>
+                <div>Vignette</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -282,11 +291,12 @@ export default class Filter extends Component{
                     step='0.01'
                     value={this.state.vignette || 0}
                     onChange={this.handleFilterChange} filter='vignette'
-                  />vignette from glfx.js
+                  />
                   <label id="vignette-value">{this.state.vignette}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[23] ? this.props.object.filters[23].vignette_matrix.amount : 0 } */}
                 </div>
-                <div>
+                <div>Zoomblur</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -297,11 +307,12 @@ export default class Filter extends Component{
                     step='0.01'
                     value={this.state.zoomblur || 0}
                     onChange={this.handleFilterChange} filter='zoomblur'
-                  />zoomblur from glfx.js
+                  />
                   <label id="zoomblur-value">{this.state.zoomblur}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[24] ? this.props.object.filters[24].zoomblur_matrix.strength : 0 } */}
                 </div>
-                <div>
+                <div>Vibrance</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -312,11 +323,12 @@ export default class Filter extends Component{
                     step='0.1'
                     value={this.state.vibrance || 0}
                     onChange={this.handleFilterChange} filter='vibrance'
-                  />vibrance from glfx.js
+                  />
                   <label id="vibrance-value">{this.state.vibrance}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[24] ? this.props.object.filters[24].zoomblur_matrix.strength : 0 } */}
                 </div>
-                <div>
+                <div>Denoise</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -327,11 +339,12 @@ export default class Filter extends Component{
                     step='1'
                     value={this.state.denoise || 50}
                     onChange={this.handleFilterChange} filter='denoise'
-                  />denoise from glfx.js
+                  />
                   <label id="denoise-value">{this.state.denoise}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[24] ? this.props.object.filters[24].zoomblur_matrix.strength : 0 } */}
                 </div>
-                <div>
+                <div>Opacity</div>
+                <div className="range-box">
                   <input
                     type='range'
                     className='filter'
@@ -343,7 +356,7 @@ export default class Filter extends Component{
                     value={this.state.opacity || 1}
                     onChange={this.handleFilterChange} filter='opacity'
                     disabled = {this.props.object.type === 'image' ? false : true}
-                  />opacity
+                  />
                   <label id="opacity-value">{this.state.opacity}</label>
                   {/* {this.props.object.type === 'image' ? this.props.object.opacity : 0 } */}
                 </div>
