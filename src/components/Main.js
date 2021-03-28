@@ -89,6 +89,9 @@ class Main extends Component {
       <div>
         <div className='Main'>
           <div className='sidenav'>
+            <div className="site-title">
+              <p className="site-title-p">image-editor</p>
+            </div>
             <button onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
             <button className='dropdown-btn'>{t('Main.Load Image')}</button>
             <div className='dropdown-container'>
@@ -102,7 +105,11 @@ class Main extends Component {
             </div> : null
             }
           </div>
+          
           <div className='inner'>
+            <div className='topnav'>
+              <p className="site-title-p">Image Editor</p>
+            </div>
             {tab[this.state.tab]}
           </div>
         </div>
