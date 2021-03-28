@@ -1119,7 +1119,13 @@ class ImageEditor extends Component {
     reader.readAsText(file);
   }
 
+  changeToKorean = () => {
+    i18next.changeLanguage('ko')
+  }
 
+  changeToEnglish = () => {
+    i18next.changeLanguage('en')
+  }
 
   getCanvasInfo = () => {
     console.log(this._canvas);
@@ -1388,6 +1394,8 @@ class ImageEditor extends Component {
             </div>
             <div className="more">
                 <button>{i18next.t('ImageEditor.More')}</button>
+                <button onClick = {this.changeToEnglish}>English</button>
+                <button onClick = {this.changeToKorean}>한글</button>
             </div>
           </div>
           <div className="real" >

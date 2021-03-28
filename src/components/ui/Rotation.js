@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import i18next from "../../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../../css/ui/Rotation.scss';
 
-export default class Rotation extends Component{
+export default withTranslation()(class Rotation extends Component{
   constructor(props){
     super(props);
     this.state = {angle : 0}
@@ -35,12 +37,12 @@ export default class Rotation extends Component{
     return (
       <div className="sub">
         <div className="sub-title">
-            Rotation ( {this.props.object.type} : {this.props.object.angle})
+          {i18next.t('ui/rotation.Rotation')} ( {this.props.object.type} : {this.props.object.angle})
         </div>
         <div className="sub-rotatemenu">
           <div className="rotate-degree">
             <div className="option-title">
-              각도 설정
+              {i18next.t('ui/rotation.Set angle')}
             </div>
             <div className="degree-button">
               <button onClick={this.setAngle} angle='0' >0</button>
@@ -51,7 +53,7 @@ export default class Rotation extends Component{
           </div>
           <div className="rotate-clock">
             <div className="option-title">
-              30도 회전
+              {i18next.t('ui/rotation.Rotate 30')}
             </div>
             <div className="clock-button">
               <div>
@@ -63,7 +65,7 @@ export default class Rotation extends Component{
             </div>
           </div>
           <div className="rotate-input">
-            <label htmlFor="angle" className="option-title">직접 입력</label>
+            <label htmlFor="angle" className="option-title">{i18next.t('ui/rotation.Direct Input')}</label>
             <input
               type='number'
               name='angle'
@@ -79,5 +81,4 @@ export default class Rotation extends Component{
       </div>
     );
   }
-
-}
+})

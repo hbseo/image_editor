@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../css/New_project.scss';
 
 class New_project extends Component {
@@ -62,16 +64,16 @@ class New_project extends Component {
               {this.renderLink(600, 600)}
           </li>
         </ul>
-        <div className="option-title">Direct Input</div>
+        <div className="option-title">{i18next.t('New_Project.Direct Input')}</div>
         <div className="new-project-input">
           <div className="direct-input-button">
             <div className="input-group">
               <input type="number" name="width" value={this.state.width} onChange={this.handleChange} min="5" />
-              <label htmlFor="width">Width:</label>
+              <label htmlFor="width">{i18next.t('New_Project.Width')} : </label>
             </div>
             <div className="input-group">
               <input type="number" name="height" value={this.state.height} onChange={this.handleChange} min="5" />
-              <label htmlFor="height">Height:</label>
+              <label htmlFor="height">{i18next.t('New_Project.Height')} : </label>
             </div>
           </div>
           {this.renderLink(this.state.width, this.state.height)}
@@ -81,4 +83,4 @@ class New_project extends Component {
   }
 }
 
-export default New_project;
+export default withTranslation()(New_project);

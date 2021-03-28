@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 
 class Login extends Component {
@@ -35,11 +37,11 @@ class Login extends Component {
     })
     .then((res) => res.json())
     .then((data) => {
-      alert('로그아웃 성공!');
+      alert(i18next.t('Login.Signout') + ' ' + i18next.t('Login.Success'))
       this.getCheck();
     })
     .catch(() => {
-      alert('error');
+      alert(i18next.t('Login.Error'));
     })
   }
   render() {
@@ -47,26 +49,26 @@ class Login extends Component {
       <div className='login'>
         {this.props.login_state ? 
         <div>
-          <h5>{this.props.id}님 환영합니다</h5>
-          <button onClick={this.logoutClickHandler}>로그아웃</button>
+          <h5>{this.props.id} {i18next.t('Login.Welcome')}</h5>
+          <button onClick={this.logoutClickHandler}>{i18next.t('Login.Signout')}</button>
           <Link to={{
             pathname: `/ChangePassword/${this.props.id}`,
-          }}><button>비밀번호 변경</button></Link>
+          }}><button>{i18next.t('Login.ChangePW')}</button></Link>
         </div> : 
         <div>
           <Link to={{
             pathname: '/login',
-          }}><button>로그인</button></Link>
+          }}><button>{i18next.t('Login.Signin')}</button></Link>
           <Link to={{
             pathname: '/register',
-          }}><button>회원가입</button></Link>
+          }}><button>{i18next.t('Login.Signup')}</button></Link>
           <Link to={{
             pathname: '/find',
-          }}><button>비밀번호 찾기</button></Link>
+          }}><button>{i18next.t('Login.FindPW')}</button></Link>
         </div>}
       </div>
     )
   }
 }
 
-export default Login;
+export default withTranslation()(Login);

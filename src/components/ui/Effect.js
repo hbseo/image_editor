@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import { ChromePicker } from 'react-color';
 import {convertRGB} from '../helper/ConverRGB'
-export default class Effect extends Component {
+import i18next from "../../locale/i18n";
+import { withTranslation } from "react-i18next";
+export default withTranslation()(class Effect extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -104,13 +106,13 @@ export default class Effect extends Component {
     return (
       <div className="sub">
         <div className="sub-title">
-            Effect ( {this.props.object.type} )
+          {i18next.t('ui/effect.Effect')} ( {this.props.object.type} )
         </div>
         <div className="sub-effect">
           <div>
             <input id = "shadow_toggle" type="checkbox" onClick = {this.toggleShadow}></input>
             <label htmlFor='shadow'>
-              <span>블러</span>
+              <span>{i18next.t('ui/effect.Blur')} </span>
               <input
                 type='range'
                 className='shadow'
@@ -121,7 +123,7 @@ export default class Effect extends Component {
                 step='1'
                 value={this.state.blur}
                 onChange={this.handleShadowChange}/>
-              <span>세로 위치</span>
+              <span>{i18next.t('ui/effect.OffsetY')} </span>
               <input
                 type='range'
                 className='shadow'
@@ -132,7 +134,7 @@ export default class Effect extends Component {
                 step='1'
                 value={this.state.offsetY}
                 onChange={this.handleShadowChange}/>
-              <span>가로 위치</span>
+              <span>{i18next.t('ui/effect.OffsetX')} </span>
               <input
                 type='range'
                 className='shadow'
@@ -150,7 +152,7 @@ export default class Effect extends Component {
             </div>
             
             <div className="stroke">
-              <label htmlFor="stroke">stroke</label>
+              <label htmlFor="stroke">{i18next.t('ui/effect.Stroke')} </label>
               <input
                 type='range'
                 className='stroke'
@@ -166,18 +168,18 @@ export default class Effect extends Component {
 
             
             
-            <div className="option-title">strokeColor</div>
+            <div className="option-title">{i18next.t('ui/effect.StrokeColor')} </div>
             
             <div className="color-picker">
               <ChromePicker name="fillColor" color={ this.state.strokeColor } onChange={ this.handleStrokeColorChange } onChangeComplete = { this.handleStrokeColorChangeComplete }/>
             </div>
             
             <div>
-              <button onClick = { this.handlePipette }>pipette</button>
+              <button onClick = { this.handlePipette }>{i18next.t('ui/effect.Pipette')}</button>
             </div>
           </div>
         </div>
       </div>
     );
   }
-}
+})

@@ -2,7 +2,7 @@
     "hello": "hello",
     "icon add" : "Icon Add",
 
-    "Change Password" : {
+    "Change_Password" : {
         "Change Password" : "Change Password",
         "Confirm" : "Confirm",
         "Cancel" : "Cancel",
@@ -85,18 +85,26 @@
         "Title" : "Title",
         "Search" : "Search",
         "Project" : "Project",
-        "User" : "User" 
+        "User" : "User",
+        "Error" : "Error" 
     },
 
     "Save" : {
         "Saveimage" : "Save as Image",
-        "test1" : "다른이름으로 저장",
-        "test2" : "서버 저장",
+        "Save as" : "Save as",
+        "Save on server" : "Save",
         "Error on server" : "Error on server",
         "Save" : "Save",
         "Success" : "Success",
         "Error" : "Error",
-        "Update" : "Update"
+        "Update" : "Update",
+        "Format" : "Format",
+        "Close" : "Close",
+        "Quality" : "Quality",
+        "High" : "High",
+        "Medium" : "Medium",
+        "Low" : "Low",
+        "Title" : "Title"
     },
 
     "SignIn" : {
@@ -106,7 +114,7 @@
         "Username / Password?" : "Username / Password?",
         "Create your Account" : "Create your Account",
         "Success" : "Success",
-        "test1" : "Incorrect username or password.",
+        "Wrong" : "Incorrect username or password.",
         "Error" : "Error"
     },
 
@@ -137,7 +145,7 @@
 
     "ui/canvas" : {
         "Canvas" : "Canvas",
-        "ResetCavnas" : "Reset Canvas",
+        "ResetCanvas" : "Reset Canvas",
         "CropCanvas" : "Start Crop",
         "CropEndCanvas" : "End Crop"
     },
@@ -208,29 +216,31 @@
     },
 
     "ui/loading" : {
-
+        "Loading" : "Loading"
     },
 
     "ui/object" : {
         "Object" : "Object",
-        "test1" : "맨 뒤로 보내기",
-        "test2" : "뒤로 보내기",
-        "test3" : "맨 앞으로 보내기",
-        "test4" : "앞으로 보내기",
-        "test5" : "선택 개체 삭제",
-        "test6" : "모든 객체 삭제",
-        "test7" : "그룹화",
-        "test8" : "그룹해제",
+        "SendToBack" : "SendToBack",
+        "SendBackwards" : "SendBackwards",
+        "BringToFront" : "BringToFront",
+        "BringForward" : "BringForward",
+        "Delete" : "Delete Object",
+        "Deleteall" : "Delete All Objects",
+        "Group" : "Group",
+        "Ungroup" : "Ungroup",
+        "Flip" : "Flip",
         "Flip x" : "Flip x",
         "Flip y" : "Flip y",
-        "test9" : "확대 및 축소",
-        "test10" : "비율 유지"
+        "Change Scale" : "Change Scale",
+        "Lock Ratio" : "Lock Ratio",
+        "Order" : "Order"
     },
 
     "ui/rotation" : {
-        "Rotation" : "회전",
-        "test1" : "각도 설정",
-        "test2" : "30도 회전",
+        "Rotation" : "Rotation",
+        "Set angle" : "Set angle",
+        "Rotate 30" : "Rotate 30 degree",
         "Direct Input" : "Direct Input"
     },
 
@@ -276,7 +286,8 @@
         "Active" : "Active",
         "Text color" : "Text color",
         "Text bg color" : "Text Background color",
-        "Pipette" : "Pipette"
+        "Pipette" : "Pipette",
+        "Font family" : "Font Family"
     },
 
     "ui/tools" : {

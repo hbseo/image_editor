@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { SketchPicker } from 'react-color';
 import {convertRGB} from '../helper/ConverRGB'
+import i18next from "../../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../../css/ui/Draw.scss';
 import pencilBrush from '../../css/img/brush/pencilBrush.JPG';
 import circleBrush from '../../css/img/brush/circleBrush.JPG';
@@ -11,7 +13,7 @@ import hLinePatternBrush from '../../css/img/brush/hLinePatternBrush.JPG';
 import squarePatternBrush from '../../css/img/brush/squarePatternBrush.JPG';
 import diamondPatternBrush from '../../css/img/brush/diamondPatternBrush.JPG';
 
-export default class Draw extends Component{
+export default withTranslation()(class Draw extends Component{
   constructor(props){
     super(props);
     this.state = { 
@@ -76,10 +78,10 @@ export default class Draw extends Component{
     return (
       <div className="sub">
         <div className="sub-title">
-            Draw ( {this.props.object.type} )
+          {i18next.t('ui/draw.Draw')} ( {this.props.object.type} )
         </div>
         <div className="sub-filters">
-          <div className="option-title">Brush type</div> 
+          <div className="option-title">{i18next.t('ui/draw.Brush type')}</div> 
           <div className="select-brush">
             <div>
               <button onClick={this.handlebrushbutton}><img src={this.img[this.brush.indexOf(this.state.brush_now)]} alt={this.state.brush_now}></img></button>
@@ -91,11 +93,11 @@ export default class Draw extends Component{
               }
             </div>
           </div>
-          <div className="option-title">Width</div>
+          <div className="option-title">{i18next.t('ui/draw.Width')}</div>
           <div className="select-width">
             <input type='range' className='drawing' id='width' min='0' max='60' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth}/>
           </div>
-          <div className="option-title">Line Color</div>
+          <div className="option-title">{i18next.t('ui/draw.Line Color')}</div>
           <div className="color-picker">
             <div>
               <SketchPicker color={ this.state.color } onChange = {this.handleColorChange} onChangeComplete={this.handleColorChangeComplete} />
@@ -106,4 +108,4 @@ export default class Draw extends Component{
       
     );
   }
-}
+})

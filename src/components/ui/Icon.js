@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import { ChromePicker } from 'react-color';
+import i18next from "../../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../../css/ui/Icon.scss'
 
-export default class Icon extends Component {
+export default withTranslation()(class Icon extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -52,10 +54,10 @@ export default class Icon extends Component {
     return (
       <div className="sub">
         <div className="sub-title">
-            Icon ( {this.props.object.type} )
+            {i18next.t('ui/icon.Icon')} ( {this.props.object.type} )
         </div>
         <div className="sub-iconmenu">
-          <div className="option-title">Pick icon</div>
+          <div className="option-title">{i18next.t('ui/icon.Pick icon')}</div>
           <div className="icon">
             <button className="fas fa-times" onClick={this.addIcon} type = "icon_cancel"></button>
             <button className="fas fa-arrow-right" onClick={this.addIcon} type = "icon_arrow_2"></button>
@@ -74,15 +76,15 @@ export default class Icon extends Component {
             <button className="fab fa-apple" onClick={this.addIcon} type = "icon_apple"></button>
             
           </div>
-          <div className="option-title">Color</div>
+          <div className="option-title">{i18next.t('ui/icon.Color')}</div>
           <div className="color-picker">
             <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           </div>
           <div>
-            <button onClick = { this.handlePipette }>pipette</button>
+            <button onClick = { this.handlePipette }>{i18next.t('ui/icon.Pipette')}</button>
           </div>
         </div>
       </div>
     );
   }
-}
+})

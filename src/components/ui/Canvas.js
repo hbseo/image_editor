@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-export default class Canvas extends Component {
+import i18next from "../../locale/i18n";
+import { withTranslation } from "react-i18next";
+export default withTranslation()(class Canvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -93,13 +95,13 @@ export default class Canvas extends Component {
     return (
       <div className="sub">
         <div className="sub-title">
-          Canvas ( {this.props.object.type} )
+          {i18next.t('ui/canvas.Canvas')} ( {this.props.object.type} )
         </div>
         <div className="sub-iconmenu">
           <div>
-            <button onClick={this.props.resetCanvas}> 리셋 캔버스</button>
-            <button onClick={this.cropCanvas}>cropCanvas</button>
-            <button onClick={this.cropEndCanvas}>cropEndCanvas</button>
+            <button onClick={this.props.resetCanvas}> {i18next.t('ui/canvas.ResetCanvas')} </button>
+            <button onClick={this.cropCanvas}>{i18next.t('ui/canvas.CropCanvas')}</button>
+            <button onClick={this.cropEndCanvas}>{i18next.t('ui/canvas.CropEndCanvas')}</button>
             {this.state.displayCropCanvas ?
               <div>
                 <label htmlFor='width'> x : </label>
@@ -128,4 +130,4 @@ export default class Canvas extends Component {
       </div>
     );
   }
-}
+})
