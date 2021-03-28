@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { ChromePicker } from 'react-color';
-import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
+import {convertRGB} from '../helper/ConverRGB'
 export default class Effect extends Component {
   constructor(props){
     super(props);

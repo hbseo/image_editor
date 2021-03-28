@@ -62,10 +62,10 @@ export default class Objects extends Component{
               <div className="option-title">Flip</div>
               <div className="flip-button">
                 <svg onClick={this.flipObject} flip="X" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
-                  <path d="M 22.875 5 A 1.0001 1.0001 0 0 0 22.09375 5.5625 L 4.09375 42.5625 A 1.0001 1.0001 0 0 0 5 44 L 23 44 A 1.0001 1.0001 0 0 0 24 43 L 24 6 A 1.0001 1.0001 0 0 0 22.875 5 z M 27.125 5 C 27.014063 4.9872656 26.8955 5.00525 26.78125 5.03125 C 26.32725 5.13625 26 5.534 26 6 L 26 43 C 26 43.553 26.447 44 27 44 L 45 44 C 45.345 44 45.66075 43.82325 45.84375 43.53125 C 46.02675 43.23925 46.05625 42.8725 45.90625 42.5625 L 27.90625 5.5625 C 27.754 5.24825 27.457812 5.0382031 27.125 5 z M 22 10.34375 L 22 42 L 6.59375 42 L 22 10.34375 z" overflow="visible" enable-background="accumulate" font-family="Bitstream Vera Sans"/>
+                  <path d="M 22.875 5 A 1.0001 1.0001 0 0 0 22.09375 5.5625 L 4.09375 42.5625 A 1.0001 1.0001 0 0 0 5 44 L 23 44 A 1.0001 1.0001 0 0 0 24 43 L 24 6 A 1.0001 1.0001 0 0 0 22.875 5 z M 27.125 5 C 27.014063 4.9872656 26.8955 5.00525 26.78125 5.03125 C 26.32725 5.13625 26 5.534 26 6 L 26 43 C 26 43.553 26.447 44 27 44 L 45 44 C 45.345 44 45.66075 43.82325 45.84375 43.53125 C 46.02675 43.23925 46.05625 42.8725 45.90625 42.5625 L 27.90625 5.5625 C 27.754 5.24825 27.457812 5.0382031 27.125 5 z M 22 10.34375 L 22 42 L 6.59375 42 L 22 10.34375 z" overflow="visible" enableBackground="accumulate" fontFamily="Bitstream Vera Sans"/>
                 </svg>
                 <svg onClick={this.flipObject} flip="Y"xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
-                  <path d="M 43.0625 4 C 42.89575 3.991 42.718 4.01875 42.5625 4.09375 L 5.5625 22.09375 C 5.1435 22.29775 4.92725 22.76475 5.03125 23.21875 C 5.13625 23.67175 5.534 24 6 24 L 43 24 C 43.553 24 44 23.552 44 23 L 44 5 C 44 4.655 43.82325 4.33825 43.53125 4.15625 C 43.38575 4.06525 43.22925 4.009 43.0625 4 z M 5.8125 26 A 1.0001 1.0001 0 0 0 5.5625 27.90625 L 42.5625 45.90625 A 1.0001 1.0001 0 0 0 44 45 L 44 27 A 1.0001 1.0001 0 0 0 43 26 L 6 26 A 1.0001 1.0001 0 0 0 5.90625 26 A 1.0001 1.0001 0 0 0 5.8125 26 z M 10.34375 28 L 42 28 L 42 43.40625 L 10.34375 28 z" overflow="visible" enable-background="accumulate" font-family="Bitstream Vera Sans"/>
+                  <path d="M 43.0625 4 C 42.89575 3.991 42.718 4.01875 42.5625 4.09375 L 5.5625 22.09375 C 5.1435 22.29775 4.92725 22.76475 5.03125 23.21875 C 5.13625 23.67175 5.534 24 6 24 L 43 24 C 43.553 24 44 23.552 44 23 L 44 5 C 44 4.655 43.82325 4.33825 43.53125 4.15625 C 43.38575 4.06525 43.22925 4.009 43.0625 4 z M 5.8125 26 A 1.0001 1.0001 0 0 0 5.5625 27.90625 L 42.5625 45.90625 A 1.0001 1.0001 0 0 0 44 45 L 44 27 A 1.0001 1.0001 0 0 0 43 26 L 6 26 A 1.0001 1.0001 0 0 0 5.90625 26 A 1.0001 1.0001 0 0 0 5.8125 26 z M 10.34375 28 L 42 28 L 42 43.40625 L 10.34375 28 z" overflow="visible" enableBackground="accumulate" fontFamily="Bitstream Vera Sans"/>
                 </svg>
               </div>
             </div>
@@ -94,7 +94,7 @@ export default class Objects extends Component{
           <div className="obj-zoom">
             <div className="zoom-box">
               <div className="keep-ratio">
-                <label class="mycheckbox path">
+                <label className="mycheckbox path">
                   <input type="checkbox" id="lockScale" onClick={this.props.lockScaleRatio} disabled = {this.props.object.type === 'not active' || this.props.object.type === 'path' ? true : false}/>
                   <svg viewBox="0 0 21 21">
                     <path d="M5,10.75 L8.5,14.25 L19.4,2.3 C18.8333333,1.43333333 18.0333333,1 17,1 L4,1 C2.35,1 1,2.35 1,4 L1,17 C1,18.65 2.35,20 4,20 L17,20 C18.65,20 20,18.65 20,17 L20,7.99769186"></path>

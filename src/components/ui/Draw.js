@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { SketchPicker } from 'react-color';
-import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
+import {convertRGB} from '../helper/ConverRGB'
 import '../../css/ui/Draw.scss';
 import pencilBrush from '../../css/img/brush/pencilBrush.JPG';
 import circleBrush from '../../css/img/brush/circleBrush.JPG';

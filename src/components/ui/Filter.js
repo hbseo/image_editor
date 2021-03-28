@@ -54,7 +54,7 @@ export default class Filter extends Component{
       ret['ink'] = image.filters[22] ? Number(image.filters[22].ink_matrix.ink) : 0;
       ret['vignette'] = image.filters[23] ? Number(image.filters[23].vignette_matrix.amount) : 0;
       ret['zoomblur'] = image.filters[24] ? Number(image.filters[24].zoomblur_matrix.strength) : 0;
-      ret['vibrance'] = image.filters[25] ? Number(image.filters[25].amout) : 0;
+      ret['vibrance'] = image.filters[25] ? Number(image.filters[25].amount) : 0;
       ret['denoise'] = image.filters[26] ? Number(image.filters[26].denoise_matrix.exponent) : 50;
       ret['opacity'] = image.opacity;
       return ret;
