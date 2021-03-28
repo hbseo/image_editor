@@ -4,6 +4,7 @@ import Login from './Login';
 import Newproject from './New_project';
 import LoadImage from './LoadImage';
 import '../css/Main.scss';
+import checkUserLanguage from './helper/CheckLang'
 import { withTranslation } from "react-i18next";
 import i18next from "../locale/i18n";
 
@@ -15,6 +16,7 @@ class Main extends Component {
       login_state: false,
       id : ''
     }
+    i18next.changeLanguage(checkUserLanguage());
   }
 
   componentDidMount(){
@@ -49,6 +51,20 @@ class Main extends Component {
     .catch(() => {
       this.loginFail();
     })
+  }
+
+  checkUserLanguage = () => {
+    if(navigator){
+      let lang = navigator.language || navigator.userLanguage;
+      switch(lang){
+        case 'ko-KR':
+          i18next.changeLanguage('ko');
+          break;
+        default:
+          i18next.changeLanguage('en');
+          break;
+      }
+    }
   }
 
   changeToKorean = () => {
