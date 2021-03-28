@@ -788,9 +788,11 @@ class ImageEditor extends Component {
   
 
   openSaveModal = () => {
-    if(this.state.user_name !== ""){
-      this.setState({openSave : true})
-    }
+    this.setState({openSave : true})
+
+    // if(this.state.user_name !== ""){
+    //   this.setState({openSave : true})
+    // }
   }
 
   closeSaveModal = () => {
@@ -859,6 +861,10 @@ class ImageEditor extends Component {
 
   rangeFilterObject = (filterOption, value) => {
     this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, true, value);
+  }
+
+  previewFilter = (option) => {
+    this.action['Filter'].previewFilter(this.getActiveObject() || this._canvas.backgroundImage, option);
   }
 
   setColor = (color) => {

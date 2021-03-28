@@ -18,9 +18,9 @@ class Flip extends Action {
           break;
         default:
       }
+      this.saveState('flip');
+      canvas.renderAll();
     }
-    this.saveState('flip');
-    canvas.renderAll();
   }
 }
 export default Flip;

@@ -116,13 +116,13 @@ export default class Filter extends Component{
             <CSSTransition in = {this.state.menu} timeout={200} classNames="my-node" unmountOnExit >
               <div className="filter-options">
                 <div>
-                  <input type='checkbox' id="filter-grey" className='filter' onClick={this.props.filterObject} filter='grey'/><label htmlFor="filter-grey">Grey</label>
+                  <input type='checkbox' id="filter-grey" className='filter' onClick={this.props.filterObject} filter='grey'/><label htmlFor="filter-grey" id="label-filter-grey">grey</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-invert" className='filter' onClick={this.props.filterObject} filter='invert'/><label htmlFor="filter-invert">Invert</label>
+                  <input type='checkbox' id="filter-invert" className='filter' onClick={this.props.filterObject} filter='invert'/><label htmlFor="filter-invert" id="label-filter-invert">Invert</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-brownie" className='filter' onClick={this.props.filterObject} filter='brownie'/><label htmlFor="filter-brownie">Brownie</label>
+                  <input type='checkbox' id="filter-brownie" className='filter' onClick={this.props.filterObject} filter='brownie'/><label htmlFor="filter-brownie" id="label-filter-brownie">Brownie</label>
                 </div>
                 <div>
                   <input type='checkbox' id="filter-technicolor" className='filter' onClick={this.props.filterObject} filter='technicolor'/><label htmlFor="filter-technicolor">Technicolor</label>
