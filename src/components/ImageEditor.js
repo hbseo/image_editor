@@ -581,7 +581,7 @@ class ImageEditor extends Component {
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
     }
-  }, 70);
+  }, 200);
 
   undo = () => {
     if(this.stateStack.length > 0) {
