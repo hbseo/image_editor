@@ -93,7 +93,8 @@
         "Search" : "Search",
         "Project" : "Project",
         "User" : "User",
-        "Error" : "Error" 
+        "Error" : "Error",
+        "PlzSignin" : "Need to Sign in" 
     },
 
     "Save" : {

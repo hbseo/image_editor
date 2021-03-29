@@ -93,7 +93,8 @@
         "Search" : "검색어",
         "Project" : "프로젝트",
         "User" : "유저",
-        "Error" : "오류" 
+        "Error" : "오류",
+        "PlzSignin" : "로그인 필요"
     },
 
     "Save" : {

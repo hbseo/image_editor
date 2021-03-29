@@ -33,7 +33,8 @@ class Main extends Component {
   }
 
   loginFail = () => {
-    this.setState({login_state: false});
+    let tab = this.state.tab === 4 ? 0 : this.state.tab
+    this.setState({login_state: false, tab : tab});
   }
 
   getCheck = () => {
@@ -108,15 +109,22 @@ class Main extends Component {
               <p className="site-title-p">image-editor</p>
             </div>
             <button onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
-            <button className='dropdown-btn'>{t('Main.Load Image')}</button>
-            <div className='dropdown-container'>
+            <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button>
+            <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
+            {/* <button className='dropdown-btn'>{t('Main.Load Image')}</button> */}
+            {/* <div className='dropdown-container'>
               <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button>
               <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
               <button onClick={this.changeTab} tab='3'>{t('Main.Signin')}</button>
-            </div>
+            </div> */}
             {this.state.login_state ? 
-            <div className='dropdown-btn'>
-              <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
+            <div>
+              <div className='dropdown-btn'>
+                <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
+              </div> 
+              <div className='sidenav-user'>
+                {this.state.id}
+              </div>
             </div> : null
             }
           </div>
