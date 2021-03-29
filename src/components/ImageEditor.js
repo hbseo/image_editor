@@ -1027,6 +1027,10 @@ class ImageEditor extends Component {
     this.action['Crop'].resizeCropzone(value);
   }
 
+  setCropCanvasSize = (cropCanvasSize, option, value, obj) => {
+    return this.action['Crop'].setCropCanvasSize(cropCanvasSize, option, value, obj);
+  }
+
   changeBackgroundColor = (color) => {
     this.action['Util'].changeBackgroundColor(color);
   }
@@ -1417,6 +1421,7 @@ class ImageEditor extends Component {
           cropEndCanvas = {this.cropEndCanvas}
           handleCropCanvasSizeChange = {this.handleCropCanvasSizeChange}
           changeBackgroundColor = {this.changeBackgroundColor}
+          setCropCanvasSize = {this.setCropCanvasSize}
         />,
       10: <EffectUI 
           object={this.state.activeObject} 

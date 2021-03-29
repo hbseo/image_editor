@@ -319,6 +319,59 @@ class Crop extends Action {
     canvas.off('mouse:down', this.cropCanvasEvent);
     canvas.off('object:moving', this.movingCropzone);
   }
+
+
+  setCropCanvasSize = (cropCanvasSize, option, value, object) => {
+    let change_state = {
+      width: cropCanvasSize.width,
+      height: cropCanvasSize.height
+    };
+    const canvas = this.getCanvas();
+
+    if (option === 'width') {
+      if (object.left - value / 2 < 0 ||
+        object.left + value / 2 > canvas.width) {
+        if (object.left < value / 2) {
+          object.left = value / 2;
+        }
+        else {
+          object.left = canvas.width - value / 2;
+        }
+        if (value > canvas.width) {
+          object.left = canvas.width / 2;
+          change_state.width = canvas.width;
+        }
+        else {
+          change_state.width = value;
+        }
+      }
+      else {
+        change_state[option] = value;
+      }
+    }
+    else {
+      if (object.top - value / 2 < 0 ||
+        object.top + value / 2 > canvas.height) {
+        if (object.top < value / 2) {
+          object.top = value / 2;
+        }
+        else {
+          object.top = canvas.height - value / 2;
+        }
+        if (value > canvas.height) {
+          object.top = canvas.height / 2;
+          change_state.height = canvas.height;
+        }
+        else {
+          change_state.height = value;
+        }
+      }
+      else {
+        change_state[option] = value;
+      }
+    }
+    return change_state
+  }
 }
 
 export default Crop;

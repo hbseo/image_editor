@@ -62,8 +62,21 @@ class Filter extends Action {
                        -1,  -1, -1 ]
           }));
           break;
+        case 'sharpen':
+          obj.filters[10] = checked && (new fabric.Image.filters.Convolute({
+            matrix: [  0, -1,  0,
+                      -1,  5, -1,
+                       0, -1,  0 ]
+          }));
+          break;
+        case 'removecolor':
+          obj.filters[11] = checked && (new fabric.Image.filters.RemoveColor({
+            distance: value.distance,
+            color: value.color,
+          }));
+          break;
         case 'resize':
-          obj.filters[10] = (new fabric.Image.filters.Resize({
+          obj.filters[12] = (new fabric.Image.filters.Resize({
             resizeType: 'sliceHack',
             scaleX : 0.2,
             scaleY : 0.2
@@ -146,6 +159,13 @@ class Filter extends Action {
             }
           }));
           break;
+        case 'blend-color':
+          obj.filters[27] = checked && (new fabric.Image.filters.BlendColor({
+            color: value.color,
+            mode: value.mode,
+            alpha: value.alpha
+          }));
+          break;
         case 'opacity':
           obj.opacity = value;
           break;
@@ -164,3 +184,56 @@ class Filter extends Action {
 
 export default Filter;
 
+
+
+/*
+ applyfiltervalue ( index, prop, value)
+ obj.filters[index][prop] = value;
+
+
+ 0번 인덱스, grayScale
+  $('average').onclick = function() {
+    applyFilterValue(0, 'mode', 'average');
+  };
+  $('luminosity').onclick = function() {
+    applyFilterValue(0, 'mode', 'luminosity');
+  };
+  $('lightness').onclick = function() {
+    applyFilterValue(0, 'mode', 'lightness');
+  };
+
+2번 인덱스 : removeColor 필터
+$('remove-color-color').onchange = function() {
+    applyFilterValue(2, 'color', this.value);
+  };
+  $('remove-color-distance').oninput = function() {
+    applyFilterValue(2, 'distance', this.value);
+  };
+
+
+17번 인덱스 : gamma필터
+    $('gamma').onclick = function () {
+    var v1 = parseFloat($('gamma-red').value);
+    var v2 = parseFloat($('gamma-green').value);
+    var v3 = parseFloat($('gamma-blue').value);
+    applyFilter(17, this.checked && new f.Gamma({
+      gamma: [v1, v2, v3]
+    }));
+  };
+  $('gamma-red').oninput = function() {
+    var current = getFilter(17).gamma;
+    current[0] = parseFloat(this.value);
+    applyFilterValue(17, 'gamma', current);
+  };
+  $('gamma-green').oninput = function() {
+    var current = getFilter(17).gamma;
+    current[1] = parseFloat(this.value);
+    applyFilterValue(17, 'gamma', current);
+  };
+  $('gamma-blue').oninput = function() {
+    var current = getFilter(17).gamma;
+    current[2] = parseFloat(this.value);
+    applyFilterValue(17, 'gamma', current);
+  };
+
+*/
