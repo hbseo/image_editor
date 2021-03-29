@@ -76,6 +76,7 @@
     },
 
     "New_Project" : {
+        "Select Size" : "캔버스 선택",
         "Direct Input" : "직접 입력",
         "Width" : "가로",
         "Height" : "세로"

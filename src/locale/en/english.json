@@ -76,6 +76,7 @@
     },
 
     "New_Project" : {
+        "Select Size" : "Select Canvas",
         "Direct Input" : "Direct Input",
         "Width" : "Width",
         "Height" : "Height"

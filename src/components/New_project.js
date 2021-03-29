@@ -8,7 +8,7 @@ class New_project extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {width: 5, height: 5}
+    this.state = {width: 500, height: 500}
   }
 
   renderLink = (width, height) => {
@@ -37,43 +37,57 @@ class New_project extends Component {
   render() {
     return (
       <div className='New_project'>
-        <div className="option-title">Select Size</div>
-        <ul className='canvas-list-ul'>
-          <li className="canvas-list">
-              {this.renderLink(800, 600)}
-          </li>
-          <li className="canvas-list">
-              {this.renderLink(360, 360)}
-          </li>
-          <li className="canvas-list">
-              {this.renderLink(1280, 720)}
-          </li>
-          <li className="canvas-list">
-              {this.renderLink(1920, 1080)}
-          </li>
-          <li className="canvas-list">
-              {this.renderLink(512, 512)}
-          </li>
-          <li className="canvas-list">
-              {this.renderLink(1080, 1080)}
-          </li>
-          <li className="canvas-list">
-              {this.renderLink(2048, 2048)}
-          </li>
-          <li className="canvas-list">
-              {this.renderLink(600, 600)}
-          </li>
-        </ul>
-        <div className="option-title">{i18next.t('New_Project.Direct Input')}</div>
+        <div className="option-title">{i18next.t('New_Project.Select Size')}</div>
+        <div className="canvas-list-div">
+          <ul className='canvas-list-ul'>
+            <li className="canvas-list">
+                {this.renderLink(150, 150)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(300, 300)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(360, 360)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(512, 512)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(600, 600)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(640, 480)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(800, 480)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(800, 600)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(1080, 1080)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(1280, 720)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(1920, 1080)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(2048, 2048)}
+            </li>
+          </ul>
+        </div>
+        {/* <div className="option-title">{i18next.t('New_Project.Direct Input')}</div> */}
         <div className="new-project-input">
           <div className="direct-input-button">
             <div className="input-group">
+              <label htmlFor="width">{i18next.t('New_Project.Width')}</label>
               <input type="number" name="width" value={this.state.width} onChange={this.handleChange} min="5" />
-              <label htmlFor="width">{i18next.t('New_Project.Width')} : </label>
             </div>
             <div className="input-group">
+              <label htmlFor="height">{i18next.t('New_Project.Height')}</label>
               <input type="number" name="height" value={this.state.height} onChange={this.handleChange} min="5" />
-              <label htmlFor="height">{i18next.t('New_Project.Height')} : </label>
             </div>
           </div>
           {this.renderLink(this.state.width, this.state.height)}

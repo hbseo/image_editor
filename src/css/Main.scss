@@ -73,13 +73,31 @@
 	  width: 100vw;
 	  height: 100vh;
   }
+
+  .topnav {
+	height : 5vmin;
+	background-color: #021c1e;
+  }
+
+  .site-title {
+	padding-top : 40px;
+	  padding-bottom : 50px;
+  }
+
+  .site-title-p {
+	padding-top : 10px;
+	font-size: 20px;
+	color : white;
+	text-align: center;
+  }
+
   
   .sidenav {
-	height: 50%;
+	// height: 50%;
 	width: 20vmin;
 	background-color: #111;
 	overflow-x: hidden;
-	padding-top: 20px;
+	// padding-top: 100px;
   }
   
   .sidenav button,
@@ -157,5 +175,6 @@
 
  .inner {
 	display: flex;
+    flex-direction: column;
 	width: calc(100% - 20vmin);
   }
