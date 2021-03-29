@@ -2,25 +2,32 @@ import React, { Component } from 'react';
 import i18next from "../../locale/i18n";
 import '../../css/ui/Canvas.scss';
 import { withTranslation } from "react-i18next";
+import { SketchPicker } from 'react-color';
 
 export default withTranslation()(class Canvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
       cropCanvasSize: { width: 0, height: 0 },
-      displayCropCanvas: false
+      displayCropCanvas: false,
+      color: {
+        r: '255',
+        g: '255',
+        b: '255',
+        a: '1',
+      },
     };
   }
 
   componentDidMount() {
-    console.log('Canvas UI Mount');
+    // console.log('Canvas UI Mount');
   }
   componentDidUpdate() {
-    console.log('Canvas UI Update');
+    // console.log('Canvas UI Update');
   }
   componentWillUnmount() {
     this.props.cropEndCanvas();
-    console.log('Canvas UI Unmount');
+    // console.log('Canvas UI Unmount');
   }
 
   handleChange = (event) => {
@@ -93,6 +100,15 @@ export default withTranslation()(class Canvas extends Component {
     this.setState({displayCropCanvas: false});
   }
 
+  handleColorChange = (color) => {
+    this.setState({ color: color.rgb})
+  }
+
+  handleColorChangeComplete = (color) => {
+    this.setState({ color: color.rgb})
+    this.props.changeBackgroundColor(color);
+  }
+
   render() {
     return (
       <div className="sub">
@@ -103,7 +119,7 @@ export default withTranslation()(class Canvas extends Component {
           <div className="canvas-reset">
               <button onClick={this.props.resetCanvas}> {i18next.t('ui/canvas.ResetCanvas')} </button>
           </div>
-          <div className="option-title">Crop canvas</div>
+          <div className="option-title">{i18next.t('ui/canvas.CropCanvas')}</div>
           <div className="canvas-crop">
             <button onClick={this.cropCanvas}>{i18next.t('ui/canvas.CropCanvas')}</button>
             {this.state.displayCropCanvas ?
@@ -131,6 +147,10 @@ export default withTranslation()(class Canvas extends Component {
               </div>
               : null
             }
+          </div>
+          <div className="option-title">{i18next.t('ui/canvas.CanvasColor')}</div>
+          <div className = "canvas-color">
+            <SketchPicker color={ this.state.color } onChange = {this.handleColorChange} onChangeComplete={this.handleColorChangeComplete} />
           </div>
         </div>
       </div>

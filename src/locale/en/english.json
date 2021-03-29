@@ -154,7 +154,8 @@
         "Canvas" : "Canvas",
         "ResetCanvas" : "Reset Canvas",
         "CropCanvas" : "Start Crop",
-        "CropEndCanvas" : "End Crop"
+        "CropEndCanvas" : "End Crop",
+        "CanvasColor" : "Canvas BackgroundColor"
     },
 
     "ui/draw" : {

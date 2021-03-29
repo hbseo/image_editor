@@ -1019,6 +1019,10 @@ class ImageEditor extends Component {
     this.action['Crop'].resizeCropzone(value);
   }
 
+  changeBackgroundColor = (color) => {
+    this.action['Util'].changeBackgroundColor(color);
+  }
+
   cropObjMouseDown = (event) => {
     if(event.target == null || !(event.target === this.cropImg || event.target.type === "Cropzone")){
       this._canvas.off('mouse:down', this.cropObjMouseDown);
@@ -1395,6 +1399,7 @@ class ImageEditor extends Component {
           cropCanvas = {this.cropCanvas}
           cropEndCanvas = {this.cropEndCanvas}
           handleCropCanvasSizeChange = {this.handleCropCanvasSizeChange}
+          changeBackgroundColor = {this.changeBackgroundColor}
         />,
       10: <EffectUI 
           object={this.state.activeObject} 

@@ -154,7 +154,8 @@
         "Canvas" : "캔버스",
         "ResetCanvas" : "리셋 캔버스",
         "CropCanvas" : "캔버스 자르기 시작",
-        "CropEndCanvas" : "자르기 완료"
+        "CropEndCanvas" : "자르기 완료",
+        "CanvasColor" : "캔버스 배경색"
     },
 
     "ui/draw" : {

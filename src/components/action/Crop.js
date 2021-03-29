@@ -240,7 +240,7 @@ class Crop extends Action {
   }
 
   cropEndCanvas = () => {
-    if(this._cropzone === null) {
+    if(this._cropzone === null || this.getCanvas() === null) {
       return;
     }
     let canvas = this.getCanvas();
