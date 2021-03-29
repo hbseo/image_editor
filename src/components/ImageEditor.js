@@ -813,10 +813,6 @@ class ImageEditor extends Component {
 
   openSaveModal = () => {
     this.setState({openSave : true})
-
-    // if(this.state.user_name !== ""){
-    //   this.setState({openSave : true})
-    // }
   }
 
   closeSaveModal = () => {

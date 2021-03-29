@@ -135,12 +135,17 @@ class Save extends Component {
                 }
               </div>
 
-              <div className = "bottom-div">
-                {/* {imageSize} */}
-							  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
-							  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save as')}</button>
-							  <button id="save-server" onClick = {this.updateHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save on server')}</button>
-              </div>
+              {user_name === '' ? 
+                <div className = "bottom-div">
+                  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
+                </div> :
+                <div className = "bottom-div">
+                  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
+                  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save as')}</button>
+                  <button id="save-server" onClick = {this.updateHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save on server')}</button>
+                </div>
+
+              }
 						</div>
 					</div> : null }
 			</div>
