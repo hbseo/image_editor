@@ -207,7 +207,11 @@
     width: 155px;
     display: flex;
     justify-content: center;
+    border-radius: 4px;
 
+    .font-li:hover {
+        background-color: #c1c1c1;
+    }
 }
 
 .font-style:hover {
