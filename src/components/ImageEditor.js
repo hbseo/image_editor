@@ -114,6 +114,15 @@ class ImageEditor extends Component {
 
     this.lockScale = false; // true이면 비율 고정.
 
+    this.stylelang = null; // 언어에 따른 스타일
+
+    this.kostyle = {
+      fontSize : 15,
+    }
+    this.enstyle = {
+      // fontSize : 18,
+    }
+
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     this._createAction();
     this.filterRef = React.createRef()
@@ -1301,6 +1310,12 @@ class ImageEditor extends Component {
   }
 
   render() {
+    if(i18next.language === 'ko'){
+      this.stylelang = this.kostyle;
+    }
+    else {
+      this.stylelang = this.enstyle;
+    }
     const tab = {
       0: <TextUI 
           object={this.state.activeObject} 
@@ -1400,6 +1415,7 @@ class ImageEditor extends Component {
           changeTab = {this.changeTab} 
           tab = {this.state.tab} 
           UI = { tab }
+          stylelang = {this.stylelang}
         >
         </SideNav>
 
