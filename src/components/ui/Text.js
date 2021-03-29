@@ -175,8 +175,8 @@ export default withTranslation()(class Text extends Component{
             <button onClick={this.addText}>{i18next.t('ui/text.New Text')}</button>
           </div>
           <label htmlFor='fontfamily' className="option-title">{i18next.t('ui/text.Font')}</label>
-          <div className="font-style">
-            <button onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}}>{choose}</button>
+          <div className="font-style" onClick={this.handlefontfamilybutton}>
+            <button className="fontfamily-button" onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}}>{choose}</button>
             {fontlist}
           </div>
           <label htmlFor='fontSize' className="option-title">{i18next.t('ui/text.Font size')}</label>

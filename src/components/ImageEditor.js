@@ -237,6 +237,7 @@ class ImageEditor extends Component {
 	_onKeydownEvent = (event) => {
     // metakey is a Command key or Windows key
     const {ctrlKey, keyCode, metaKey} = event;
+    event.preventDefault();
     // if(event.repeat) { 
     //   return; 
     // }
@@ -373,7 +374,7 @@ class ImageEditor extends Component {
       //     vpt[5] = this._canvas.getHeight() - 1000 * zoom;
       //   }
       }
-      console.log(vpt[4], vpt[5])
+      // console.log(vpt[4], vpt[5])
 
       this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
       this._canvas.renderAll();
@@ -1403,6 +1404,10 @@ class ImageEditor extends Component {
           isSaved = {this.state.isSaved}
           prj_idx = {this.state.prj_idx}
           user_name = {this.state.user_name} 
+          canvas = {this._canvas}
+          object = {this.state.activeObject}
+          canvasView = {this.state.canvasView}
+          zoom = {this.state.zoom}
         />,
       9: <CanvasUI 
           object={this.state.activeObject} 

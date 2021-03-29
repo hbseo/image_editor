@@ -205,6 +205,14 @@
     padding: 10px 10px 10px 10px;
     margin: auto;
     width: 155px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.font-style:hover {
+    background-color: #c1c1c1;
+    cursor: pointer;
 }
 
 .font-ul {
