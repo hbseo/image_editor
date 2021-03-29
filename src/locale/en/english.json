@@ -34,7 +34,8 @@
         "Redo" : "Redo",
         "Save" : "Save",
         "More" : "more",
-        "Zoom" : "zoom"
+        "Zoom" : "zoom",
+        "Home" : "Home"
     },
 
     "ImageList" : {
@@ -72,6 +73,11 @@
         "Project" : "Project",
         "More" : "More",
         "Signin" : "SignIn",
+        "Signup" :"Sign up",
+        "Signout" :"Sign out",
+        "Success" : "Success",
+        "Delete account" : "Delete account",
+        "Error" : "Error",
         "Setting" : "Setting"
     },
 

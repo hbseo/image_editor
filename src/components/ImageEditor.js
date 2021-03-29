@@ -1425,9 +1425,7 @@ class ImageEditor extends Component {
                 <button onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
             </div>
             <div className="more">
-                <button>{i18next.t('ImageEditor.More')}</button>
-                <button onClick = {this.changeToEnglish}>English</button>
-                <button onClick = {this.changeToKorean}>한글</button>
+                <button onClick = { () => {this.props.history.push('/')}}>{i18next.t('ImageEditor.Home')}</button>
             </div>
           </div>
           <div className="real" >
@@ -1461,115 +1459,7 @@ class ImageEditor extends Component {
           isSaved = {this.state.isSaved}
           prj_idx = {this.state.prj_idx}
           getCheckSave = {this.getCheckSave}
-        />
-
-
-
-        <hr/>
-
-{/* 
-        <div >
-
-          <h5 onClick = {this.displayRoot}>개발자 기능</h5>
-
-          {this.state.showRoot ?
-          <div>
-
-            {this.state.activeObject.type !== 'not active' ?
-            <div>
-              <p> left : {this.state.activeObject.aCoords.tl.x} </p>
-              <p> right : {this.state.activeObject.aCoords.br.x} </p>
-              <p> top : {this.state.activeObject.aCoords.tl.y} </p>
-              <p> bottom : {this.state.activeObject.aCoords.br.y} </p>
-            </div> : <div></div> }
-
-            <button onClick={this.addImage}>테스트용 이미지 추가</button>
-            <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
-            <button onClick={this.getCanvasInfo}>캔버스정보</button>
-            <button onClick={this.resetCanvas}>캔버스 줌 및 위치 리셋</button>
-            <br/>
-            <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
-            <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
-            <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
-            <button onClick={this.resetState}>state 초기화</button>
-            <input type="checkbox" onClick = {this.getMousePointInfo} /> 캔버스 좌표 보기
-            <p>캔버스 확대 값 = {this.state.zoom}</p>
-            <p>캔버스 크기  {this._canvas? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</p>
-            {this._canvas ? 
-            <div>
-            <p> 좌측 상단 좌표 = x : {(-this.state.canvasView.x / this.state.zoom)}  y : {(-this.state.canvasView.y / this.state.zoom)}</p>
-            <p> 우측 하단 좌표 = x : { (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) }  y : {(-this.state.canvasView.y / this.state.zoom) + (this._canvas.height / this.state.zoom) }</p>
-            </div>
-            : <div></div>}
-            
-            <p>현재 객체 타입 = {this.state.activeObject.type}</p>
-            <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
-            <p>선택 개체 대조 값 = {this.state.filters.contrast}</p>
-            <p>선택 개체 픽셀 값 = {this.state.filters.pixelate}</p>
-            <p>선택 개체 블러 값 = {this.state.filters.blur}</p>
-            <p>선택 개체 각도 값 = { this.state.activeObject.type !== 'not active' ? this.state.activeObject.angle : 'none'}</p>
-            <p>선택 개체 가로 크기 = {this.state.activeObject.scaleX * this.state.activeObject.width}</p>
-            <p>선택 개체 세로 크기 = {this.state.activeObject.scaleY * this.state.activeObject.height}</p>
-            <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
-				  	<p>컬러 헥스 값{this.state.colorHex}</p>
-            <hr />
-            <p>- Undo Stack </p>
-            {this.showUndoStack()} 
-            <hr />
-            <p>- currentState</p>
-            <p style={{color : '#008000'}}>{this.currentState.action}</p>
-            <hr />
-            <p>- Redo Stack  </p>
-            {this.showRedoStack()}
-            
-
-          </div> : null }
-          <hr />
-          <h5>레이어</h5>
-          <hr />
-        </div>
-        
-        <div id='tool'>
-
-         <div>
-            <h5>캔버스 기능</h5>
-            <button onClick={this.changeBackgroundColor}>캔버스 배경색 현재 색깔로 변경</button>
-            <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
-            <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
-            {this.state.displayCropCanvasSize ? 
-              <div>
-                <label htmlFor='cropCanvasWidth'> x : </label>
-                <input 
-                  type='number' 
-                  onChange={this.handleCropCanvasSizeChange} 
-                  name='width'
-                  min='1'
-                  max={this._canvas.width}
-                  value={this.state.cropCanvasSize.width} 
-                />
-                <label htmlFor='cropCanvasHeight'> y : </label>
-                <input 
-                  type='number' 
-                  onChange={this.handleCropCanvasSizeChange} 
-                  name='height'
-                  min='1'
-                  max={this._canvas.height}
-                  value={this.state.cropCanvasSize.height} 
-                />
-              </div> : null
-            }
-          </div>
-
-          <hr />
-            
-          <div>
-            <h5>일단은 안 쓰는 기능</h5>
-            <button onClick={this.newCanvas} disabled>배경이미지 캔버스로 변경</button>
-            <button onClick={this.convertSvg}>svg로 변환하기</button>
-          </div>
-        </div> 
-         */}
-        
+        />       
       </div>
     );
   }

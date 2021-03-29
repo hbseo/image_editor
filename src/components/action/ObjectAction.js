@@ -159,6 +159,8 @@ class ObjectAction extends Action {
         case 'down':
           activeObject.top = (activeObject.top + STEP);
           break;
+        default :
+          break;
       }
       activeObject.setCoords();
       canvas.renderAll();

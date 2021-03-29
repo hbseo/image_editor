@@ -6,6 +6,7 @@ import LoadImage from './LoadImage';
 import '../css/Main.scss';
 import checkUserLanguage from './helper/CheckLang'
 import { withTranslation } from "react-i18next";
+import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
 
 class Main extends Component {
@@ -50,6 +51,20 @@ class Main extends Component {
     })
     .catch(() => {
       this.loginFail();
+    })
+  }
+
+  logoutClickHandler = () => {
+    fetch('/auth/logout', {
+      method: 'POST',
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      alert(i18next.t('Main.Signout') + ' ' + i18next.t('Main.Success'))
+      this.getCheck();
+    })
+    .catch(() => {
+      alert(i18next.t('Main.Error'));
     })
   }
 
@@ -115,12 +130,27 @@ class Main extends Component {
         </div>
         <div className='right'>
             <button className='rightbtn'>{t('Main.More')}</button>
+            {this.state.login_state ? 
             <div className='right-dropdown'>
-              <button>{t('Main.Signin')}</button>
-              <button>{t('Main.Setting')}</button>
+              <button onClick={this.logoutClickHandler}>{i18next.t('Main.Signout')}</button>
+
+              <button>{i18next.t('Main.Delete account')}</button>
+
+              <button onClick = {this.changeToEnglish}>English</button>
+              <button onClick = {this.changeToKorean}>한글</button>
+            </div> :
+            <div className='right-dropdown'>
+              <Link to={{
+                pathname: '/login',
+              }}><button>{i18next.t('Main.Signin')}</button></Link>
+
+              <Link to={{
+                pathname: '/register',
+              }}><button>{i18next.t('Main.Signup')}</button></Link>
               <button onClick = {this.changeToEnglish}>English</button>
               <button onClick = {this.changeToKorean}>한글</button>
             </div>
+            }
           </div>
       </div>
     )

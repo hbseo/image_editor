@@ -34,7 +34,8 @@
         "Redo" : "다시 실행",
         "Save" : "저장",
         "More" : "더 보기",
-        "Zoom" : "확대"
+        "Zoom" : "확대",
+        "Home" : "홈 화면"
     },
 
     "ImageList" : {
@@ -72,6 +73,11 @@
         "Project" : "프로젝트",
         "More" : "더보기",
         "Signin" : "로그인",
+        "Signup" : "회원가입",
+        "Signout" : "로그아웃",
+        "Success" : "성공",
+        "Delete account" : "계정 탈퇴",
+        "Error" : "에러",
         "Setting" : "설정"
     },
 
