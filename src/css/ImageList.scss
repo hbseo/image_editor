@@ -13,80 +13,32 @@ button, input[type="submit"], input[type="number"]{
     height: 100%;
     overflow-y: scroll;
 
-    .option-title{
-        font-size: 1.5em;
-        font-weight: bold;
-        margin-bottom: 1%;
-    }
-
-    .random-input-group{
-        width: 100%;
-        height: 100%;
+    .more-image-search{
+        flex-direction: row;
         display: flex;
-        justify-content: space-between;
-    }
 
-    .random-image{
-        margin: 3%;
-        padding: 3%;
-        border-radius: 10px;
-        width: 500px;
-        height: 100px;
-        background-color: #eeeeee;
-
-        .random-image-input{
-            border: 2px solid #a0a0a0;
-            border-radius: 3px;
-            transition: .3s;
-            width: 150px;
-            height: 20px;
-        }
-
-        .random-image-input:hover {
-            border: 2px solid #0b0b0b;
-        }
-        
-        .random-image-input:focus {
-            border: 2px solid #1A58D3;
-        }
-
-        .random-image-button{
-            width: 50px;
-            height: 50px;
-            border-radius: 5px;
-            background-color: #365AFC;
-            color: white;
-            cursor: pointer;
-        }
-
-        .random-image-button:hover{
-            background-color: #4667FC;
-        }
-    }
-
-    .random-image:hover {
         .option-title{
-            color: #1A58D3;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 1%;
         }
-    }
-
-    .search-image{
-        margin: 3%;
-        padding: 3%;
-        border-radius: 10px;
-        width: 500px;
-        height: 150px;
-        background-color: #eeeeee;
-
-        .search-form{
+    
+        .random-input-group{
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: space-between;
-
-            .search-group{
-                margin-bottom: 1%;
-            }
-
-            .search-input{
+        }
+    
+        .random-image{
+            margin: 3%;
+            padding: 3%;
+            border-radius: 10px;
+            width: 500px;
+            height: 100px;
+            background-color: #eeeeee;
+    
+            .random-image-input{
                 border: 2px solid #a0a0a0;
                 border-radius: 3px;
                 transition: .3s;
@@ -94,15 +46,15 @@ button, input[type="submit"], input[type="number"]{
                 height: 20px;
             }
     
-            .search-input:hover {
+            .random-image-input:hover {
                 border: 2px solid #0b0b0b;
             }
             
-            .search-input:focus {
+            .random-image-input:focus {
                 border: 2px solid #1A58D3;
             }
-
-            .search-image-button{
+    
+            .random-image-button{
                 width: 50px;
                 height: 50px;
                 border-radius: 5px;
@@ -111,28 +63,114 @@ button, input[type="submit"], input[type="number"]{
                 cursor: pointer;
             }
     
-            .search-image-button:hover{
+            .random-image-button:hover{
                 background-color: #4667FC;
             }
         }
-    }
+    
+        .random-image:hover {
+            .option-title{
+                color: #1A58D3;
+            }
+        }
 
-    .search-image:hover{
-        .option-title{
-            color: #1A58D3;
+        .search-image{
+            margin: 3%;
+            padding: 3%;
+            border-radius: 10px;
+            width: 500px;
+            height: 100px;
+            background-color: #eeeeee;
+    
+            .search-form{
+                display: flex;
+                justify-content: space-between;
+    
+                .search-group{
+                    margin-bottom: 1%;
+                    // justify-content: center;
+                    text-align: right;
+                    // flex-direction: row;
+                    // display: flex;
+
+                    .random-image-searchtext {
+                        // text-align: right;
+                    }
+                }
+    
+                .search-input{
+                    border: 2px solid #a0a0a0;
+                    border-radius: 3px;
+                    transition: .3s;
+                    width: 150px;
+                    height: 20px;
+                }
+        
+                .search-input:hover {
+                    border: 2px solid #0b0b0b;
+                }
+                
+                .search-input:focus {
+                    border: 2px solid #1A58D3;
+                }
+    
+                .search-image-button{
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 5px;
+                    background-color: #365AFC;
+                    color: white;
+                    cursor: pointer;
+                }
+        
+                .search-image-button:hover{
+                    background-color: #4667FC;
+                }
+            }
+        }
+    
+        .search-image:hover{
+            .option-title{
+                color: #1A58D3;
+            }
+        }
+    
+        .image-result{
+            margin-top: 5%;
         }
     }
-
-    .image-result{
-        margin-top: 5%;
-    }
-
+  
     #image-list{
         margin: 3%;
         padding: 3%;
         border-radius: 10px;
         background-color: #eeeeee;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        vertical-align: bottom;
+
+        .image-list-box {
+            margin : 1%;
+            background-color: #d3d3d3;
+            border-radius: 10px;
+            padding : 12px;
+            // justify-content: center;
+            // position: relative;
+            flex-grow : 1;
+            min-width: 120px;
+            max-width: 195px;
+    
+        }
+
+        .image-list-img {
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+        }
+
     }
+
 
     #image-list-size{
         margin: 3%;

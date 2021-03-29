@@ -62,6 +62,13 @@ class Filter extends Action {
                        -1,  -1, -1 ]
           }));
           break;
+        case 'resize':
+          obj.filters[10] = (new fabric.Image.filters.Resize({
+            resizeType: 'sliceHack',
+            scaleX : 0.2,
+            scaleY : 0.2
+          }));
+          break;
         case 'brightness':
           obj.filters[15] = (new fabric.Image.filters.Brightness({
             brightness: value

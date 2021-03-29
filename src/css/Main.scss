@@ -145,8 +145,9 @@
 	  top: 0;
 	  right: 0;
 	  margin: 1%;
+	  margin-top : 0px;
 	  width: 8vmin;
-	  height: 5vmin;
+	  height: 4vmin;
 	  text-align: center;
 
 	  .rightbtn{
@@ -155,13 +156,13 @@
 		  color: white;
 		  cursor: pointer;
 		  border-radius: 5px;
-		  background-color: #365AFC;
-		  padding: 10px;
+		  background-color: #021c1e;
+		  padding: 5px;
 		  font-size: 1.1em;
 	  }
 
 	  .rightbtn:hover{
-		  background-color: #4667FC;
+		  background-color: #043c40;
 	  }
 	
 	  .right-dropdown{

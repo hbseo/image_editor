@@ -147,6 +147,9 @@ export default withTranslation()(class Filter extends Component{
                 <div>
                   <input type='checkbox' id="filter-emboss" className='filter' onClick={this.props.filterObject} filter='emboss'/><label htmlFor="filter-emboss">{i18next.t('ui/filter.Emboss')}</label>
                 </div>
+                <div>
+                  <input type='checkbox' id="filter-resize" className='filter' onClick={this.props.filterObject} filter='resize'/><label htmlFor="filter-resize">test</label>
+                </div>
               </div>
             </CSSTransition>
           </div>

@@ -137,7 +137,7 @@ class Main extends Component {
           </div>
         </div>
         <div className='right'>
-            <button className='rightbtn'>{t('Main.More')}</button>
+            <button className='rightbtn'><i class="fas fa-bars"></i></button>
             {this.state.login_state ? 
             <div className='right-dropdown'>
               <button onClick={this.logoutClickHandler}>{i18next.t('Main.Signout')}</button>

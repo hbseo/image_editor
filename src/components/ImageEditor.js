@@ -154,7 +154,14 @@ class ImageEditor extends Component {
           {x : 0, y : 0}, 
           {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
         )
-        .then((img) => this._backgroundImage = img)
+        .then((img) => {
+          this._backgroundImage = img;
+          console.log(this._backgroundImageRatio)
+          // this._backgroundImage.width *= this._backgroundImageRatio
+          // this._backgroundImage.height *= this._backgroundImageRatio
+          // this._backgroundImage.scaleX = 1;
+          // this._backgroundImage.scaleY = 1;
+        })
         .then(() => {
           this._canvas = new fabric.Canvas('canvas', {
             preserveObjectStacking: true,
@@ -723,7 +730,7 @@ class ImageEditor extends Component {
    * @returns {fabric.Canvas._activeObject} 
    */
   getActiveObject = () => {
-    return this._canvas._activeObject;
+    return this._canvas ? this._canvas._activeObject : null;
   }
 
   /**
@@ -1160,6 +1167,10 @@ class ImageEditor extends Component {
     console.log(this._canvas);
   }
 
+  getCanvasBackinfo = () => {
+    alert(this._canvas.backgroundImage.width +' '+ this._canvas.backgroundImage.height +' '+ this._canvas.backgroundImage.scaleX + ' ' + this._canvas.backgroundImage.scaleY)
+  }
+
   getCanvasBackgroundInfo = () => {
     console.log(this._canvas.backgroundImage)
   }
@@ -1388,6 +1399,7 @@ class ImageEditor extends Component {
           exportCanvas = {this.exportCanvas}
           importCanvas = {this.importCanvas}
           getCanvasInfo = {this.getCanvasInfo}
+          getCanvasBackinfo = {this.getCanvasBackinfo}
           isSaved = {this.state.isSaved}
           prj_idx = {this.state.prj_idx}
           user_name = {this.state.user_name} 
