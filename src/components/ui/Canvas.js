@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import i18next from "../../locale/i18n";
+import '../../css/ui/Canvas.scss';
 import { withTranslation } from "react-i18next";
+
 export default withTranslation()(class Canvas extends Component {
   constructor(props) {
     super(props);
@@ -97,31 +99,35 @@ export default withTranslation()(class Canvas extends Component {
         <div className="sub-title">
           {i18next.t('ui/canvas.Canvas')} ( {this.props.object.type} )
         </div>
-        <div className="sub-iconmenu">
-          <div>
-            <button onClick={this.props.resetCanvas}> {i18next.t('ui/canvas.ResetCanvas')} </button>
+        <div className="canvas-menu">
+          <div className="canvas-reset">
+              <button onClick={this.props.resetCanvas}> {i18next.t('ui/canvas.ResetCanvas')} </button>
+          </div>
+          <div className="option-title">Crop canvas</div>
+          <div className="canvas-crop">
             <button onClick={this.cropCanvas}>{i18next.t('ui/canvas.CropCanvas')}</button>
-            <button onClick={this.cropEndCanvas}>{i18next.t('ui/canvas.CropEndCanvas')}</button>
             {this.state.displayCropCanvas ?
-              <div>
-                <label htmlFor='width'> x : </label>
-                <input
-                  type='number'
-                  onChange={this.handleChange}
-                  name='width'
-                  min='1'
-                  max={this.props.canvas.width}
-                  value={this.state.cropCanvasSize.width}
-                />
-                <label htmlFor='height'> y: </label>
-                <input
-                  type='number'
-                  onChange={this.handleChange}
-                  name='height'
-                  min='1'
-                  max={this.props.canvas.height}
-                  value={this.state.cropCanvasSize.height}
-                />
+              <div className="crop-box">
+                <div className="crop-size-input">
+                  <input
+                    type='number'
+                    onChange={this.handleChange}
+                    name='width'
+                    min='1'
+                    max={this.props.canvas.width}
+                    value={this.state.cropCanvasSize.width}
+                  />
+                  <div>x</div>
+                  <input
+                    type='number'
+                    onChange={this.handleChange}
+                    name='height'
+                    min='1'
+                    max={this.props.canvas.height}
+                    value={this.state.cropCanvasSize.height}
+                  />
+                </div>
+                <button onClick={this.cropEndCanvas}>{i18next.t('ui/canvas.CropEndCanvas')}</button>
               </div>
               : null
             }
