@@ -213,10 +213,6 @@ class ImageList extends Component {
             </div>
             <input className="search-image-button" type="submit" value="Enter" />
           </form>
-          <div className="image-result">
-            <div>{i18next.t('ImageList.Search')} : {this.state.search}</div>
-            <div>{i18next.t('ImageList.Image count')}: {this.state.image_count}</div>
-          </div>
         </div>
         {this.showImage(this.state.images)}
         {this.imageSizeVersion()}

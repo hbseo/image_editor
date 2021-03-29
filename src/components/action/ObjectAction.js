@@ -138,6 +138,33 @@ class ObjectAction extends Action {
     }
   }
 
+  // from https://jsfiddle.net/milanhlinak/4fofjzvm/
+  moveSelected = (direction) => {
+    const canvas = this.getCanvas();
+    const STEP = 10;
+    var activeObject = canvas.getActiveObject();
+
+  
+    if (activeObject) {
+      switch (direction) {
+        case 'left':
+          activeObject.left = (activeObject.left - STEP);
+          break;
+        case 'up':
+          activeObject.top = (activeObject.top - STEP);
+          break;
+        case 'right':
+          activeObject.left = (activeObject.left+ STEP);
+          break;
+        case 'down':
+          activeObject.top = (activeObject.top + STEP);
+          break;
+      }
+      activeObject.setCoords();
+      canvas.renderAll();
+      this.saveState(activeObject.type + ' moved using a keyboard')
+    }   
+  }
 }
 
 export default ObjectAction;

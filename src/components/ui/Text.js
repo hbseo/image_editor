@@ -152,7 +152,7 @@ export default withTranslation()(class Text extends Component{
   }
 
   colortest = (event) => {
-    this.setState({ color : HEXtoRGB(event.target.value)});
+    this.setState({ color : HEXtoRGB(event.target.value), testcolor : event.target.value});
     this.props.setColor({rgb : HEXtoRGB(event.target.value)});
   } 
 

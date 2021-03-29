@@ -221,6 +221,9 @@ class ImageEditor extends Component {
 	_onKeydownEvent = (event) => {
     // metakey is a Command key or Windows key
     const {ctrlKey, keyCode, metaKey} = event;
+    // if(event.repeat) { 
+    //   return; 
+    // }
     if(keyCode === 8 || keyCode === 46){
       this.deleteObject();
     }
@@ -233,6 +236,19 @@ class ImageEditor extends Component {
       if(this._clipboard){
         this.pasteObject();
       }
+    }
+
+    if(keyCode === 37) { // handle Left key
+      this.moveSelected('left');
+    } 
+    else if (keyCode === 38) { // handle Up key
+      this.moveSelected('up');
+    } 
+    else if (keyCode === 39) { // handle Right key
+      this.moveSelected('right');
+    } 
+    else if (keyCode === 40) { // handle Down key
+      this.moveSelected('down');
     }
   }
 
@@ -940,6 +956,10 @@ class ImageEditor extends Component {
 
   bringToFront = () => {
     this.action['Object'].bringToFront();
+  }
+
+  moveSelected = (direction) => {
+    this.action['Object'].moveSelected(direction);
   }
 
   setObjectAngle = (changeAngle) => {
