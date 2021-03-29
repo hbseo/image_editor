@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 // import { Link } from 'react-router-dom';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../css/UploadFile.scss';
 
 class Upload_file extends Component {
@@ -12,7 +14,7 @@ class Upload_file extends Component {
       <div className='Upload-file'>
         <div className='upload-file-input'>
           <div className='local'>
-            <label className='input-file-button' htmlFor='input-file'>Load local image</label>
+            <label className='input-file-button' htmlFor='input-file'>{i18next.t('Upload_file.Load local image')}</label>
             <input type='file' id='input-file' onChange={this.props.fileChange} accept='image/*' style={{ display: 'none' }}></input>
           </div>
           <div className='url'>
@@ -26,7 +28,7 @@ class Upload_file extends Component {
           </div>
         </div>
         <div className='preview'>
-          <div className="preview-title">preview</div>
+          <div className="preview-title">{i18next.t('Upload_file.Preview')}</div>
           <div className="preview-inner">
             <img id="preview" src={this.props.imgUrl} alt="preview"></img>
           </div>
@@ -37,4 +39,4 @@ class Upload_file extends Component {
   }
 }
 
-export default Upload_file;
+export default withTranslation()(Upload_file);

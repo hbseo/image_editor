@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../css/Login/font-awesome.min.scss';
 import '../css/Login/main.scss';
 import '../css/Login/util.scss';
@@ -29,7 +31,7 @@ class SignIn extends Component {
     .then((res) => res.json())
     .then((data) => {
       if(data.msg === 'login success') {
-        alert('로그인 성공!');
+        alert(i18next.t('SignIn.Signin') + ' ' + i18next.t('SignIn.Success'));
         try {
           window.location.replace('/'); 
         } catch (error) {
@@ -38,12 +40,12 @@ class SignIn extends Component {
         }
       }
       else {
-        alert('아이디 또는 비밀번호 잘못 입력했습니다.');
+        alert(i18next.t('SignIn.Wrong'));
       }
     })
     .catch((error) => {
       console.log(error);
-      alert('error');
+      alert(i18next.t('SignIn.Error'));
     })
   }
   render(){
@@ -57,7 +59,7 @@ class SignIn extends Component {
               </div>
               <form className="login100-form validate-form" onSubmit={this.loginClickHandler}>
                 <span className="login100-form-title">
-                  Member Login
+                  {i18next.t('SignIn.Member Login')}
               </span>
                 <div className="wrap-input100 validate-input">
                   <input className="input100" type="text" name="id" placeholder="ID" value={this.state.id} onChange={this.loginHandler} />
@@ -75,22 +77,22 @@ class SignIn extends Component {
                 </div>
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" type='submit'>
-                    Login
+                  {i18next.t('SignIn.Signin')}
                 </button>
                 </div>
                 <div className="text-center p-t-12">
                   <span className="txt1">
-                    Forgot
+                  {i18next.t('SignIn.Forgot')}
                 </span>
                   <a className="txt2" href="/find">
-                    Username / Password?
+                  {i18next.t('SignIn.Username / Password?')}
                 </a>
                 </div>
                 <div className="text-center p-t-136">
                   <Link to={{
                     pathname: '/register'
                   }}><div className="txt2 was-a">
-                      Create your Account
+                      {i18next.t('SignIn.Create your Account')}
                     <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true" />
                     </div></Link>
                 </div>
@@ -103,4 +105,4 @@ class SignIn extends Component {
   }
 }
 
-export default SignIn;
+export default withTranslation()(SignIn);

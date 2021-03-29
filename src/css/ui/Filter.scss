@@ -27,6 +27,24 @@
   div{
     margin: 1%;
   }
+
+  #label-filter-grey{
+    background-image: url(../img/filter/grey.png);
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
+
+  #label-filter-invert{
+    background-image: url(../img/filter/invert.png);
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
+
+  #label-filter-brownie{
+    background-image: url(../img/filter/brownie.png);
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
   
   input[type="checkbox"]{
     display: none;

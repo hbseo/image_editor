@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 class Change_password extends Component {
   constructor(props) {
     super(props);
@@ -28,7 +29,7 @@ class Change_password extends Component {
     const {current_password, new_password} = this.state;
     const id = this.id;
     if(!this.validatePassword()) {
-      alert('두 비밀번호가 서로 다름');
+      alert(i18next.t('Change_password.notMatchPW'));
       return;
     }
     if(this.id) {
@@ -42,11 +43,11 @@ class Change_password extends Component {
       .then((res) => res.json())
       .then((data) => {
         if(data.msg === 'success') {
-          alert('변경 성공');
+          alert(i18next.t('Change_password.PWsuccess'));
           window.location.replace('/');
         }
         else {
-          alert('변경 실패');
+          alert(i18next.t('Change_password.PWfail'));
         }
       })
       .catch((error) => {
@@ -64,7 +65,7 @@ class Change_password extends Component {
             <div className="wrap-login100">
               <form className="login100-form validate-form">
                 <span className="login100-form-title">
-                  비밀번호 변경
+                  {i18next.t('Change_password.Change Password')}
               </span>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
                   <input className="input100" type="password" name="current_password" placeholder="Current password" value={this.state.current_password} onChange={this.change_passwordHandler}/>
@@ -89,12 +90,12 @@ class Change_password extends Component {
                 </div>
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" id="confirm" onClick={this.change_passwordClickHandler}>
-                    확인
+                    {i18next.t('Change_password.Confirm')}
                 </button>
                 </div>
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" id="cancel" onClick={() => this.props.history.push('/')}>
-                    취소
+                    {i18next.t('Change_password.Cancel')}
                 </button>
                 </div>
               </form>
@@ -106,4 +107,4 @@ class Change_password extends Component {
   }
 }
 
-export default Change_password;
+export default withTranslation()(Change_password);

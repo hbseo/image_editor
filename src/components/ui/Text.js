@@ -3,9 +3,11 @@ import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
 import React, {Component} from 'react';
 import {fontList} from '../const/consts';
 import { ChromePicker } from 'react-color';
+import i18next from "../../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../../css/ui/Text.scss';
 
-export default class Text extends Component{
+export default withTranslation()(class Text extends Component{
   constructor(props){
     super(props);
     this.state = { 
@@ -162,22 +164,22 @@ export default class Text extends Component{
         {this.fontListUp()}
       </ul>
     }
-    let choose = this.props.object.fontFamily || "fontFamily";
+    let choose = this.props.object.fontFamily || i18next.t('ui/text.Font family');
     return (
       <div className="sub">
         <div className="sub-title">
-            Text ( {this.props.object.type} )
+            {i18next.t('ui/text.Text')} ( {this.props.object.type} )
         </div>
         <div className="sub-textmenu">
           <div className="add-text">
-            <button onClick={this.addText}>New Text</button>
+            <button onClick={this.addText}>{i18next.t('ui/text.New Text')}</button>
           </div>
-          <label htmlFor='fontfamily' className="option-title">Font</label>
+          <label htmlFor='fontfamily' className="option-title">{i18next.t('ui/text.Font')}</label>
           <div className="font-style">
             <button onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}}>{choose}</button>
             {fontlist}
           </div>
-          <label htmlFor='fontSize' className="option-title">Font size</label>
+          <label htmlFor='fontSize' className="option-title">{i18next.t('ui/text.Font size')}</label>
           <div className="font-size">
             <input 
               type='number' 
@@ -194,7 +196,7 @@ export default class Text extends Component{
             </div>
           </div>
 
-          <label htmlFor="align" className="option-title">Align</label>
+          <label htmlFor="align" className="option-title">{i18next.t('ui/text.Align')}</label>
           <div className="text-align">
             <div className="align-button">
               <button type='checkbox' className='align' id="left-align" onClick={this.textAction} text='left-align'></button>
@@ -203,41 +205,40 @@ export default class Text extends Component{
             </div>
           </div>
 
-          <label htmlFor="text" className="option-title">Weight</label>
+          <label htmlFor="text" className="option-title">{i18next.t('ui/text.Weight')}</label>
           <div className="font-weight">
             <div className="bold">
               <input type='checkbox' onClick={this.textAction} text='bold' id='bold_checkbox' />
-              <label htmlFor="bold_checkbox">bold</label>
+              <label htmlFor="bold_checkbox">{i18next.t('ui/text.Bold')}</label>
             </div>
             <div className="italic">
               <input type='checkbox' onClick={this.textAction} text='italic' id='italic_checkbox' />
-              <label htmlFor="italic_checkbox">italic</label>
+              <label htmlFor="italic_checkbox">{i18next.t('ui/text.Italic')}</label>
             </div>
           </div>
 
-          <div className="option-title">Text background</div>
+          <div className="option-title">{i18next.t('ui/text.Text background')}</div>
           <div className="text-bg">
             <input type='checkbox' onClick={this.textActionColor} id="textbg" text="background-color" />
-            <label htmlFor="textbg">Active</label>
+            <label htmlFor="textbg">{i18next.t('ui/text.Active')}</label>
           </div>
 
-          <label className="option-title">Text color</label>
+          <label className="option-title">{i18next.t('ui/text.Text color')}</label>
           <div className="color-picker">
             <input type="color" id="colorSource" value={this.state.testcolor} onChange = { this.colortest}/>
             <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           </div>
 
-          <label className="option-title">Text bg color</label>
+          <label className="option-title">{i18next.t('ui/text.Text bg color')}</label>
           <div className="color-picker">
             <ChromePicker color={ this.state.bgcolor } onChange={ this.handleBGColorChange } onChangeComplete = { this.handleBGColorChangeComplete }/>
           </div>
 
           <div>
-            <button onClick = { this.handlePipette }>pipette</button>
+            <button onClick = { this.handlePipette }>{i18next.t('ui/text.Pipette')}</button>
           </div>
         </div>
       </div>
     );
   }
-
-}
+})

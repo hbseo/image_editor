@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import { ChromePicker } from 'react-color';
+import i18next from "../../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../../css/ui/Shape.scss'
 
-export default class Shape extends Component {
+export default withTranslation()(class Shape extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -68,28 +70,28 @@ export default class Shape extends Component {
     return (
       <div className="sub">
         <div className="sub-title">
-            Shape ( {this.props.object.type} )
+          {i18next.t('ui/shape.Shape')} ( {this.props.object.type} )
         </div>
         <div className="sub-shape">
-          <div className="option-title">Shape</div>
+          <div className="option-title">{i18next.t('ui/shape.Shape')}</div>
           <div className="shape-list">
-            <button onClick={this.addShape} type="triangle">삼각형</button>
-            <button onClick={this.addShape} type="rectangle">직사각형</button>
-            <button onClick={this.addShape} type="ellipse">타원</button>
-            <button onClick={this.addShape} type="circle">원</button>
+            <button onClick={this.addShape} type="triangle">{i18next.t('ui/shape.Triangle')}</button>
+            <button onClick={this.addShape} type="rectangle">{i18next.t('ui/shape.Rectangle')}</button>
+            <button onClick={this.addShape} type="ellipse">{i18next.t('ui/shape.Ellipse')}</button>
+            <button onClick={this.addShape} type="circle">{i18next.t('ui/shape.Circle')}</button>
           </div>
-          <div className="option-title">Line</div>
+          <div className="option-title">{i18next.t('ui/shape.Line')}</div>
           <div className="line-list">
-            <button onClick={this.addLine} type="line">직선</button>
+            <button onClick={this.addLine} type="line">{i18next.t('ui/shape.Line')}</button>
           </div>
-          <div className="option-title">Free making</div>
+          <div className="option-title">{i18next.t('ui/shape.Free making')}</div>
           <div className="free-making">
-            <button onClick={this.props.makePolygonWithClick} type="line">Click</button>
-            <button onClick={this.props.makePolygonWithDrag} type="line">Drag</button>
+            <button onClick={this.props.makePolygonWithClick} type="line">{i18next.t('ui/shape.Click')}</button>
+            <button onClick={this.props.makePolygonWithDrag} type="line">{i18next.t('ui/shape.Drag')}</button>
           </div>
           { this.props.object.type === "circle" ? 
             <div>
-              <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.props.object.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>degree
+              <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.props.object.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>{i18next.t('ui/shape.Degree')}
             </div> : <div></div>
           }
 
@@ -97,10 +99,10 @@ export default class Shape extends Component {
             <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
           </div>
           <div>
-            <button onClick = { this.handlePipette }>pipette</button>
+            <button onClick = { this.handlePipette }>{i18next.t('ui/shape.Pipette')}</button>
           </div>
         </div>
       </div>
     );
   }
-}
+})

@@ -12,6 +12,18 @@ class Filter extends Action {
     console.log()
   }
 
+  previewFilter = (obj, option) => {
+    if(obj && obj.type  === 'image') {
+      obj.clone((cloned) => {
+        cloned.filters[1] = new fabric.Image.filters.Invert();
+        console.log(cloned.src)
+      });
+    } 
+    else{
+      return 'test'
+    }
+  }
+
   applyFilter = (obj, option, checked, value) => {
     let canvas = this.getCanvas();
     if (obj.type === "image") {

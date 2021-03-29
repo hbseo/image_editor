@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import Loading from './Loading';
+import i18next from "../../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../../css/ui/Image.scss'
 
-export default class Image extends Component {
+export default withTranslation()(class Image extends Component {
   constructor(props){
     super(props);
     this.state = { 
@@ -55,10 +57,10 @@ export default class Image extends Component {
     return (
       <div className="sub">
         <div className="sub-title">
-            Image ( { this.props.object.type })
+          {i18next.t('ui/image.Image')} ( { this.props.object.type })
         </div>
         <div className="sub-imagesmenu">
-          <div className="option-title">Crop start</div>
+          <div className="option-title">{i18next.t('ui/image.Crop start')}</div>
           <div className="crop-ratio">
             <div className="crop-start-button">
               <button onClick={this.handleCropImage} className = "cropStart" crop="4:3">4:3</button>
@@ -66,13 +68,13 @@ export default class Image extends Component {
               <button onClick={this.handleCropImage} className = "cropStart" crop="3:2">3:2</button>
               <button onClick={this.handleCropImage} className = "cropStart" crop="1:1">1:1</button>
             </div>
-            <button id="end-button" onClick={this.props.cropEndObject} crop="left">Crop End</button>
+            <button id="end-button" onClick={this.props.cropEndObject} crop="left">{i18next.t('ui/image.Crop End')}</button>
           </div>
-          <div className="option-title">Upload image</div>
+          <div className="option-title">{i18next.t('ui/image.Upload image')}</div>
           <div className="upload-file">
               <div className="image-local">
                 <div className="file-input-group">
-                  <label className="input-file-button" htmlFor="_file">Upload local image</label>
+                  <label className="input-file-button" htmlFor="_file">{i18next.t('ui/image.Upload local image')}</label>
                   <input name="file" type='file' id='_file' onChange={this.importImage} accept="image/*" style={{ display: 'none' }}></input>
                 </div>
               </div>
@@ -91,5 +93,4 @@ export default class Image extends Component {
       </div>
     );
   }
-
-}
+})

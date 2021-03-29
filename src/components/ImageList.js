@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../css/ImageList.scss';
 
 class ImageList extends Component {
@@ -63,7 +65,7 @@ class ImageList extends Component {
       .then(res => this.setState({ images: res }))
       .catch((error) => {
         console.log("error : ", error);
-        alert('fail');
+        alert(i18next.t('ImageList.Fail'));
       });
   }
 
@@ -78,7 +80,7 @@ class ImageList extends Component {
   }
 
   showImage = (imagelist) => {
-    if(imagelist['errors']){ alert('showimage errors'); return null;}
+    if(imagelist['errors']){ alert(i18next.t('ImageList.Showimage errors')); return null;}
     const listitem = imagelist.map((image) =>
 
       <img key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small}/>
@@ -187,33 +189,33 @@ class ImageList extends Component {
     return (
       <div className="more-image-main">
         <div className="random-image">
-          <div className="option-title">Get random image</div>
+          <div className="option-title">{i18next.t('ImageList.Get random image')}</div>
           <div className="random-input-group">
             <div>
-              <label htmlFor="random-count">Image count: </label>
+              <label htmlFor="random-count">{i18next.t('ImageList.Image count')} : </label>
               <input className="random-image-input" type="number" name = "random_count" value={this.state.random_count} onChange = {this.randomCountChange}></input>
             </div>
             <button className="random-image-button" onClick={() => this.getRandomImage()}>Enter</button>
           </div>
         </div>
         <div className="search-image">
-          <div className="option-title">Search random image</div>
+          <div className="option-title">{i18next.t('ImageList.Search random image')}</div>
           <form className="search-form" onSubmit={this.handleSubmit}> 
             <div>
               <div className="search-group">
-                <label htmlFor="search">Image name: </label>
+                <label htmlFor="search">{i18next.t('ImageList.Image name')}: </label>
                 <input className="search-input" name="search" value={this.state.search} onChange={this.searchChange} />
               </div>
               <div className="search-group">
-                <label htmlFor="image_count">Image count: </label>
+                <label htmlFor="image_count">{i18next.t('ImageList.Image count')} : </label>
                 <input className="search-input" type="number" name="image_count" value={this.state.image_count} onChange={this.searchChange} />
               </div>
             </div>
             <input className="search-image-button" type="submit" value="Enter" />
           </form>
           <div className="image-result">
-            <div>검색어: {this.state.search}</div>
-            <div>이미지 수: {this.state.image_count}</div>
+            <div>{i18next.t('ImageList.Search')} : {this.state.search}</div>
+            <div>{i18next.t('ImageList.Image count')}: {this.state.image_count}</div>
           </div>
         </div>
         {this.showImage(this.state.images)}
@@ -224,4 +226,4 @@ class ImageList extends Component {
     )
   }
 }
-export default ImageList
+export default withTranslation()(ImageList);

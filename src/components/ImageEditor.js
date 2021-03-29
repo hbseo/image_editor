@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import { withTranslation } from "react-i18next";
 import i18next from "../locale/i18n";
+import { debounce } from 'lodash';
 
 import '../css/ImageEditor.scss'
 import Save from './Save';
@@ -39,8 +40,6 @@ import DrawUI from './ui/Draw';
 import CanvasUI from './ui/Canvas';
 import HistoryUI from './ui/History';
 import EffectUI from './ui/Effect';
-
-
 
 class ImageEditor extends Component {
   constructor(props) {
@@ -262,18 +261,18 @@ class ImageEditor extends Component {
       document.addEventListener('keydown',this._onKeydownEvent);
     }
     else{
-      if(event.target.type === 'range') {
-        this.dotoggle = false;
-      }
+      // if(event.target.type === 'range') {
+      //   this.dotoggle = false;
+      // }
       document.removeEventListener('keydown',this._onKeydownEvent);
     }
   }
 
   _onMouseUpEvent = (event) => {
-    if(event.target.type === 'range') {
-      this.dotoggle = true;
-      this.saveState(event.target.name + ' change');
-    }
+    // if(event.target.type === 'range') {
+    //   this.dotoggle = true;
+    //   this.saveState(event.target.name + ' change');
+    // }
   }
 
   /**
@@ -553,7 +552,7 @@ class ImageEditor extends Component {
     }
   }
 
-  saveState = (action) => {
+  saveState = debounce((action) => {
     if(this.dotoggle && !this.lock) {
       if(this.stateStack.length === this.maxSize) {
         this.stateStack.shift();
@@ -582,7 +581,7 @@ class ImageEditor extends Component {
       this.redoStack.length = 0;
       this.forceUpdate(); // for showUndo/Redo Stack
     }
-  }
+  }, 70);
 
   undo = () => {
     if(this.stateStack.length > 0) {
@@ -788,9 +787,11 @@ class ImageEditor extends Component {
   
 
   openSaveModal = () => {
-    if(this.state.user_name !== ""){
-      this.setState({openSave : true})
-    }
+    this.setState({openSave : true})
+
+    // if(this.state.user_name !== ""){
+    //   this.setState({openSave : true})
+    // }
   }
 
   closeSaveModal = () => {
@@ -859,6 +860,10 @@ class ImageEditor extends Component {
 
   rangeFilterObject = (filterOption, value) => {
     this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, true, value);
+  }
+
+  previewFilter = (option) => {
+    this.action['Filter'].previewFilter(this.getActiveObject() || this._canvas.backgroundImage, option);
   }
 
   setColor = (color) => {
@@ -1114,7 +1119,13 @@ class ImageEditor extends Component {
     reader.readAsText(file);
   }
 
+  changeToKorean = () => {
+    i18next.changeLanguage('ko')
+  }
 
+  changeToEnglish = () => {
+    i18next.changeLanguage('en')
+  }
 
   getCanvasInfo = () => {
     console.log(this._canvas);
@@ -1383,6 +1394,8 @@ class ImageEditor extends Component {
             </div>
             <div className="more">
                 <button>{i18next.t('ImageEditor.More')}</button>
+                <button onClick = {this.changeToEnglish}>English</button>
+                <button onClick = {this.changeToKorean}>한글</button>
             </div>
           </div>
           <div className="real" >

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import debounce from 'lodash/debounce';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import '../css/Login/font-awesome.min.scss';
 import '../css/Login/main.scss';
@@ -222,4 +224,4 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+export default withTranslation()(SignUp);

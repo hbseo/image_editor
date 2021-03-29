@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {fabric} from 'fabric';
 import { Link } from 'react-router-dom';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 
 class Project extends Component {
   constructor(props) {
@@ -32,11 +34,11 @@ class Project extends Component {
         this.setState({projects : data.result});
       }
       else{
-        alert("error");
+        alert(i18next.t('Project.Error'));
       }
     })
     .catch(() => {
-      alert('error');
+      alert(i18next.t('Project.Error'));
     })
   }
 
@@ -92,7 +94,7 @@ class Project extends Component {
       }
       return(
         <div>
-            {this.props.id} 유저
+            {this.props.id} {i18next.t('Project.User')}
             <hr/>
             {listitem}  
         </div>
@@ -111,15 +113,16 @@ class Project extends Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          프로젝트 title : <input name="search" value={this.state.search} onChange={this.handleSearchChange} />
+          {i18next.t('Project.Title')} <input name="search" value={this.state.search} onChange={this.handleSearchChange} />
           <input type="submit" value="Submit" />
         </form>
-        <p>검색어 : {this.state.search}</p>
+        <p>{i18next.t('Project.Search')} : {this.state.search}</p>
         <hr/>
-        <h4>프로젝트</h4>
+        <h4>{i18next.t('Project.Project')}</h4>
         {this.showProjects()}
       </div>
     )
   }
 }
-export default Project
+
+export default withTranslation()(Project);

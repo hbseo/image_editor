@@ -2,7 +2,7 @@
     "hello": "hello",
     "icon add" : "아이콘 추가",
 
-    "Change Password" : {
+    "Change_Password" : {
         "Change Password" : "비밀번호 변경",
         "Confirm" : "확인",
         "Cancel" : "취소",
@@ -85,22 +85,30 @@
         "Title" : "제목",
         "Search" : "검색어",
         "Project" : "프로젝트",
-        "User" : "유저" 
+        "User" : "유저",
+        "Error" : "오류" 
     },
 
     "Save" : {
         "Saveimage" : "이미지로 저장",
-        "test1" : "다른이름으로 저장",
-        "test2" : "서버 저장",
+        "Save as" : "다른이름으로 저장",
+        "Save on server" : "서버 저장",
         "Error on server" : "서버 에러",
         "Save" : "저장",
         "Success" : "성공",
         "Error" : "오류",
-        "Update" : "업데이트"
+        "Update" : "업데이트",
+        "Format" : "확장자",
+        "Close" : "닫기",
+        "Quality" : "품질",
+        "High" : "상",
+        "Medium" : "중",
+        "Low" : "하",
+        "Title" : "이름"
     },
 
     "SignIn" : {
-        "test1" : "아이디 또는 비밀번호 잘못 입력했습니다.",
+        "Wrong" : "아이디 또는 비밀번호 잘못 입력했습니다.",
         "Member Login" : "회원 로그인",
         "Signin" : "로그인",
         "Forgot" : "이거 뭐냐",
@@ -137,7 +145,7 @@
 
     "ui/canvas" : {
         "Canvas" : "캔버스",
-        "ResetCavnas" : "리셋 캔버스",
+        "ResetCanvas" : "리셋 캔버스",
         "CropCanvas" : "캔버스 자르기 시작",
         "CropEndCanvas" : "자르기 완료"
     },
@@ -175,7 +183,7 @@
         "Brightness" : "번역필요",
         "Contrast" : "번역필요",
         "Pixelate" : "번역필요",
-        "Blur" : "번역필요",
+        "Blur" : "흐림 효과",
         "Noise" : "번역필요",
         "Saturation" : "번역필요",
         "Hue" : "번역필요",
@@ -184,7 +192,7 @@
         "Zoomblur" : "번역필요",
         "Vibrance" : "번역필요",
         "Denoise" : "번역필요",
-        "Opacity" : "번역필요",
+        "Opacity" : "투명도",
         "Glfx" : "glfx"
     },
 
@@ -208,29 +216,31 @@
     },
 
     "ui/loading" : {
-
+        "Loading" : "로딩"
     },
 
     "ui/object" : {
         "Object" : "오브젝트",
-        "test1" : "맨 뒤로 보내기",
-        "test2" : "뒤로 보내기",
-        "test3" : "맨 앞으로 보내기",
-        "test4" : "앞으로 보내기",
-        "test5" : "선택 개체 삭제",
-        "test6" : "모든 객체 삭제",
-        "test7" : "그룹화",
-        "test8" : "그룹해제",
+        "SendToBack" : "맨 뒤로 보내기",
+        "SendBackwards" : "뒤로 보내기",
+        "BringToFront" : "맨 앞으로 보내기",
+        "BringForward" : "앞으로 보내기",
+        "Delete" : "선택 개체 삭제",
+        "Deleteall" : "모든 객체 삭제",
+        "Group" : "그룹화",
+        "Ungroup" : "그룹해제",
+        "Flip" : "번역필요",
         "Flip x" : "번역필요",
         "Flip y" : "번역필요",
-        "test9" : "확대 및 축소",
-        "test10" : "비율 유지"
+        "Change Scale" : "확대 및 축소",
+        "Lock Ratio" : "비율 유지",
+        "Order" : "순서?"
     },
 
     "ui/rotation" : {
         "Rotation" : "회전",
-        "test1" : "각도 설정",
-        "test2" : "30도 회전",
+        "Set angle" : "각도 설정",
+        "Rotate 30" : "30도 회전",
         "Direct Input" : "직접 입력"
     },
 
@@ -276,7 +286,8 @@
         "Active" : "번역필요",
         "Text color" : "글자색",
         "Text bg color" : "글자 배경색",
-        "Pipette" : "스포이드"
+        "Pipette" : "스포이드",
+        "Font family" : "폰트 패밀리"
     },
 
     "ui/tools" : {

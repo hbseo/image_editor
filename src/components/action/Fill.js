@@ -1,5 +1,5 @@
 import Action from './Action';
-import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
+import {convertRGB} from '../helper/ConverRGB'
 
 class Fill extends Action {
   constructor(App) {

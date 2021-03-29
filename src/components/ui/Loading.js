@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import i18next from "../../locale/i18n";
+import { withTranslation } from "react-i18next";
 import '../../css/Loading.scss'
 
 class Loading extends Component {
@@ -23,11 +25,12 @@ class Loading extends Component {
 				{open === true ?
 				  <div className = "modal">
 						<div className = "loadingModal">
-              				<h1>로딩</h1>
+              				<h1>{i18next.t('ui/loading.Loading')}</h1>
 						</div>
 					</div> : null }
 			</div>
 		)
   }
 }
-export default Loading;
+
+export default withTranslation()(Loading);

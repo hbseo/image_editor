@@ -22,3 +22,23 @@
   
     }
   }
+
+.brush_ul img {
+  display: flex;
+  transition: 0.5s;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.brush_ul {
+  position:absolute;
+  z-index: 1;
+  background-color: #FFFFFF;
+  list-style-type: none;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  color: #666666;
+  height: fit-content;
+}

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 import $ from 'jquery';
 import '../css/Save.scss'
 
@@ -19,7 +21,7 @@ class Save extends Component {
   }
 
   saveHandler = () => {
-    if(this.props.user_name === ""){alert('server err'); return;}
+    if(this.props.user_name === ""){alert(i18next.t('Save.Error on server')); return;}
     var json = this.props.canvas;
     console.log(this.props.canvas)
     fetch('/content/save', {
@@ -33,16 +35,16 @@ class Save extends Component {
     .then((data) => {
       console.log(data);
       if(data.success && data.prj_idx !== -1){
-        alert('save success');
+        alert(i18next.t('Save.Save') + ' ' + i18next.t('Save.Success'));
         this.props.getCheckSave(data.prj_idx);
       }
       else{
-        alert('error on server');
+        alert(i18next.t('Save.Error on server'));
       }
 
     })
     .catch(() => {
-      alert('error');
+      alert(i18next.t('Save.Error'));
     })
   }
 
@@ -60,14 +62,14 @@ class Save extends Component {
       .then((data) => {
         if(data.success){
           console.log(data);
-          alert('update success');
+          alert(i18next.t('Save.Update') + ' '+ i18next.t('Save.Success'));
         }
         else{
-          alert('error')
+          alert(i18next.t('Save.Error'))
         }
       })
       .catch(() => {
-        alert('error');
+        alert(i18next.t('Save.Error'));
       })
     }
     else{
@@ -106,16 +108,16 @@ class Save extends Component {
 				  <div className = "modal">
 						<div className = "saveModal">
               <div className="top-div">
-							  <div className="headline">Save {user_name} {this.props.prj_idx} </div>
-                <button className="close" onClick = {close}>close</button>
+							  <div className="headline">{i18next.t('Save.Save')} {user_name} {this.props.prj_idx} </div>
+                <button className="close" onClick = {close}>{i18next.t('Save.Close')}</button>
               </div>
               <div className="title-container">
 					      <input type="text" placeholder=" " className="title-input" id="title-id" name="title-name" value={this.state.title} onChange = {this.handleTitleChange}/>
-                <label className="title-placeholder" htmlFor="title-name">Project title</label>
+                <label className="title-placeholder" htmlFor="title-name">{i18next.t('Save.Title')}</label>
               </div>
               <div className="content">
                 <div className="format-box">
-                  <div id="option">Format</div>
+                  <div id="option">{i18next.t('Save.Format')}</div>
                   <div className="format-radio">
                     <input type="radio" id="png" name="format" value="png" defaultChecked onClick={this.changeFormat}/><label htmlFor="png">png</label>
                     <input type="radio" id="jpeg" name="format" value="jpeg" onClick={this.changeFormat}/><label htmlFor="jpeg">jpeg</label>
@@ -123,11 +125,11 @@ class Save extends Component {
                 </div>
                 { this.state.format === 'jpeg' ? 
                   <div className="quality-box">
-                    <div id="option">Quality</div>
+                    <div id="option">{i18next.t('Save.Quality')}</div>
                     <div className="quality-radio">
-                      <input type="radio" id="high" name="quality" value="1.0" defaultChecked/><label htmlFor="high">high</label>
-                      <input type="radio" id="medium" name="quality" value="0.6"/><label htmlFor="medium">medium</label>
-                      <input type="radio" id="low"  name="quality" value="0.1"/><label htmlFor="low">low</label>
+                      <input type="radio" id="high" name="quality" value="1.0" defaultChecked/><label htmlFor="high">{i18next.t('Save.High')}</label>
+                      <input type="radio" id="medium" name="quality" value="0.6"/><label htmlFor="medium">{i18next.t('Save.Medium')}</label>
+                      <input type="radio" id="low"  name="quality" value="0.1"/><label htmlFor="low">{i18next.t('Save.Low')}</label>
                     </div>
                   </div> : null
                 }
@@ -135,9 +137,9 @@ class Save extends Component {
 
               <div className = "bottom-div">
                 {/* {imageSize} */}
-							  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>local</button>
-							  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>save as</button>
-							  <button id="save-server" onClick = {this.updateHandler} disabled = {this.state.saveState}>save</button>
+							  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
+							  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save as')}</button>
+							  <button id="save-server" onClick = {this.updateHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save on server')}</button>
               </div>
 						</div>
 					</div> : null }
@@ -145,4 +147,5 @@ class Save extends Component {
 		)
   }
 }
-export default Save;
+
+export default withTranslation()(Save);
