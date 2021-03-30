@@ -341,3 +341,80 @@ exports.delete = (req, res) => {
     .catch(onError)
   })
 }
+
+exports.deleteall = (req, res) => {
+  const database = new Database();
+  const { id } = req.body;
+  let date = moment().format('YYYY-MM-DD HH:mm:ss');
+  let check_query = `SELECT idx FROM USERS WHERE userid = "${id}";`;
+  let user_idx;
+
+  const checkuser = (result) => {
+    if(result[0]){
+      user_idx = result[0].idx;
+      let delete_query = `DELETE FROM PROJECTS WHERE useridx = "${user_idx}";`;
+      database.query(delete_query)
+      .then(userUpdate)
+      .catch(onError);
+    }
+    else {
+      res.status(200).json({
+        success : false,
+        msg: 'idx error : no user id : deleteall'
+      })
+    }
+  }
+
+  const userUpdate = (result) => {
+    if(result) {
+      let update_query = `UPDATE USERS SET size = 0, project = 0 WHERE idx = '${user_idx}'`;
+      database.query(update_query)
+      .then(respond)
+      .catch(onError);
+    }
+    else {
+      database.connection.rollback()
+      res.status(200).json({
+        success : false,
+        msg: 'fail to delete all projects'
+      })
+    }
+  }
+
+  const respond = (result) => {
+    database.connection.commit((err)=>{
+      if(err){
+        database.connection.rollback()
+        throw err;
+      }
+    })
+    if(result) {
+      res.status(200).json({
+        success : true,
+        msg: 'all delete success'
+      })
+    }
+    else {
+      database.connection.rollback()
+      res.status(200).json({
+        success : false,
+        msg: 'all delete fail'
+      })
+    }
+  }
+
+  const onError = (error) => {
+    database.connection.rollback()
+    res.status(400).json({
+      success : false,
+      msg: error.message
+    })
+  }
+
+  database.connection.beginTransaction((err) => {
+    if(err){throw err;}
+    database.query(check_query)
+    .then(checkuser)
+    .catch(onError)
+  })
+}

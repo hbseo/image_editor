@@ -98,7 +98,10 @@
         "Project" : "Project",
         "User" : "User",
         "Error" : "Error",
-        "PlzSignin" : "Need to Sign in" 
+        "PlzSignin" : "Need to Sign in",
+        "Deletecheck" : "Are you sure you want to delete the project?",
+        "Deleteallcheck" : "Are you sure you want to delete ALL projects",
+        "Cancel" : "Cancel"
     },
 
     "Save" : {
@@ -116,7 +119,8 @@
         "High" : "High",
         "Medium" : "Medium",
         "Low" : "Low",
-        "Title" : "Title"
+        "Title" : "Title",
+        "TooLong" : "File name is too Long."
     },
 
     "SignIn" : {

@@ -93,7 +93,7 @@ class Project extends Component {
             </div>
             <div className="project-title">
               <p>{prj.title}</p>
-              <button idx= {prj.idx} onClick={this.deleteProject}>X</button>
+              <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
             </div>
           </div>
         );
@@ -116,13 +116,15 @@ class Project extends Component {
   }
 
   deleteProject = (event) => {
-    if(this.props.id === '') { return; }
+    let idx = event.target.getAttribute('idx');
+    if(this.props.id === '' || isNaN(idx)) { return; }
+
     fetch('/content/delete', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({id : this.props.id, prj_idx : event.target.getAttribute('idx')})
+      body: JSON.stringify({id : this.props.id, prj_idx : idx})
     })
     .then((res) => res.json())
     .then((data) => {
@@ -138,11 +140,61 @@ class Project extends Component {
       alert(i18next.t('Project.Error'));
     })
   }
+
+  deleteAllProjects = () => {
+    if(this.props.id === '') { return; }
+    fetch('/content/deleteall', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id : this.props.id})
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      if(data.success){
+        this.getProjects();
+      }
+      else{
+        alert(i18next.t('Project.Error'));
+      }
+    })
+    .catch(() => {
+      alert(i18next.t('Project.Error'));
+    })
+  }
+
+  checkDelete = (event) => {
+
+    let option = event.target.getAttribute('delete');
+    let delete_check;
+
+    if( option === 'all'){
+      delete_check= window.confirm(i18next.t('Project.Deleteallcheck'));
+      if(delete_check){
+        this.deleteAllProjects();
+      }
+      // else{
+      //   alert(i18next.t('Project.Cancel'))
+      // }
+    }
+    else{
+      delete_check= window.confirm(i18next.t('Project.Deletecheck'));
+      if(delete_check){
+        this.deleteProject(event);
+      }
+      // else{
+      //   alert(i18next.t('Project.Cancel'))
+      // }
+    }
+  }
  
   render() {
     return (
       <div>
         <h2>{i18next.t('Project.Project')}</h2>
+        <button delete = "all" onClick={this.checkDelete}><i delete = "all" className="fas fa-times-circle fa-4x"></i></button>
         <div className="project-search">
           <div className="project-search-form">
             <form onSubmit={this.handleSubmit}>
