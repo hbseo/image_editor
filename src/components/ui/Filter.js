@@ -24,7 +24,8 @@ export default withTranslation()(class Filter extends Component{
       vibrance : 0,
       denoise : 50,
       opacity : 1,
-      menu : true, // true = filter, false = adjust
+      filtermenu : false, // true = open
+      adjustmenu : false,
     };
     // this.inputRef = React.createRef();
   }
@@ -78,7 +79,7 @@ export default withTranslation()(class Filter extends Component{
       switchTools('filter', true)
     }
 
-    if(!this.state.menu){
+    if(this.state.adjustmenu){
       for(let i=15; i<filterList.length; i++){
         document.getElementById(filterList[i].toLowerCase()).disabled = !$("input:checkbox[id='"+filterList[i].toLowerCase()+"-checkbox']").is(":checked")
       }
@@ -117,8 +118,17 @@ export default withTranslation()(class Filter extends Component{
     })
   }
 
-  changeMenu = () => {
-    this.setState({menu : !this.state.menu})
+  changeMenu = (event) => {
+    let option = event.target.getAttribute('option');
+    if(option === 'filter'){
+      this.setState({filtermenu : true, adjustmenu : false})
+    }
+    else if (option === 'adjust') {
+      this.setState({filtermenu : false, adjustmenu : true})
+    }
+    else {
+      this.setState({filtermenu : false, adjustmenu : false})
+    }
   }
 
   render(){
@@ -128,39 +138,45 @@ export default withTranslation()(class Filter extends Component{
           {i18next.t('ui/filter.Filters')} ( {this.props.object.type} )
         </div>
         <div className="sub-filtersmenu">
+          <div className="filter-title-open">
+            <div className="option-title" option="filter" onClick = {this.changeMenu}>{i18next.t('ui/filter.Filters')}</div>
+            <div className="option-title" option="adjust" onClick = {this.changeMenu}>{i18next.t('ui/filter.Adjust')}</div>
+            <div className="option-title" option="cancel" onClick = {this.changeMenu}>{i18next.t('ui/filter.Close')}</div>
+          </div>
           <div className="filter-box">
-            <div className="option-title" onClick = {this.changeMenu}>{i18next.t('ui/filter.Filters')}</div>
-            <CSSTransition in = {this.state.menu} timeout={200} classNames="my-node" unmountOnExit >
+            <CSSTransition in = {this.state.filtermenu} timeout={200} classNames="my-node" unmountOnExit >
               <div className="filter-options">
                 <div>
-                  <input type='checkbox' id="filter-grey" className='filter' onClick={this.props.filterObject} filter='grey'/><label htmlFor="filter-grey" id="label-filter-grey">{i18next.t('ui/filter.Grey')}</label>
+                  <input type='checkbox' id="filter-grey" className='filter' onClick={this.props.filterObject} filter='grey'/><label htmlFor="filter-grey" className="label-filter-icon" id="label-filter-grey"></label>
+                  <label className="filter-name">{i18next.t('ui/filter.Grey')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-invert" className='filter' onClick={this.props.filterObject} filter='invert'/><label htmlFor="filter-invert" id="label-filter-invert">{i18next.t('ui/filter.Invert')}</label>
+                  <input type='checkbox' id="filter-invert" className='filter' onClick={this.props.filterObject} filter='invert'/><label htmlFor="filter-invert" className="label-filter-icon" id="label-filter-invert"></label>
+                  <label className="filter-name">{i18next.t('ui/filter.Invert')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-brownie" className='filter' onClick={this.props.filterObject} filter='brownie'/><label htmlFor="filter-brownie" id="label-filter-brownie">{i18next.t('ui/filter.Brownie')}</label>
+                  <input type='checkbox' id="filter-brownie" className='filter' onClick={this.props.filterObject} filter='brownie'/><label htmlFor="filter-brownie" className="label-filter-icon" id="label-filter-brownie">{i18next.t('ui/filter.Brownie')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-technicolor" className='filter' onClick={this.props.filterObject} filter='technicolor'/><label htmlFor="filter-technicolor">{i18next.t('ui/filter.Technicolor')}</label>
+                  <input type='checkbox' id="filter-technicolor" className='filter' onClick={this.props.filterObject} filter='technicolor'/><label htmlFor="filter-technicolor" className="label-filter-icon" id="label-filter-technicolor">{i18next.t('ui/filter.Technicolor')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-polaroid" className='filter' onClick={this.props.filterObject} filter='polaroid'/><label htmlFor="filter-polaroid">{i18next.t('ui/filter.Polaroid')}</label>
+                  <input type='checkbox' id="filter-polaroid" className='filter' onClick={this.props.filterObject} filter='polaroid'/><label htmlFor="filter-polaroid" className="label-filter-icon" id="label-filter-polaroid">{i18next.t('ui/filter.Polaroid')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-blackwhite" className='filter' onClick={this.props.filterObject} filter='blackwhite'/><label htmlFor="filter-blackwhite">{i18next.t('ui/filter.Blackwhite')}</label>
+                  <input type='checkbox' id="filter-blackwhite" className='filter' onClick={this.props.filterObject} filter='blackwhite'/><label htmlFor="filter-blackwhite" className="label-filter-icon" id="label-filter-blackwhite">{i18next.t('ui/filter.Blackwhite')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-vintage" className='filter' onClick={this.props.filterObject} filter='vintage'/><label htmlFor="filter-vintage">{i18next.t('ui/filter.Vintage')}</label>
+                  <input type='checkbox' id="filter-vintage" className='filter' onClick={this.props.filterObject} filter='vintage'/><label htmlFor="filter-vintage" className="label-filter-icon" id="label-filter-vintage">{i18next.t('ui/filter.Vintage')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-sepia" className='filter' onClick={this.props.filterObject} filter='sepia'/><label htmlFor="filter-sepia">{i18next.t('ui/filter.Sepia')}</label>
+                  <input type='checkbox' id="filter-sepia" className='filter' onClick={this.props.filterObject} filter='sepia'/><label htmlFor="filter-sepia" className="label-filter-icon" id="label-filter-sepia">{i18next.t('ui/filter.Sepia')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-kodachrome" className='filter' onClick={this.props.filterObject} filter='kodachrome'/><label htmlFor="filter-kodachrome">{i18next.t('ui/filter.Kodachrome')}</label>
+                  <input type='checkbox' id="filter-kodachrome" className='filter' onClick={this.props.filterObject} filter='kodachrome'/><label htmlFor="filter-kodachrome" className="label-filter-icon" id="label-filter-kodachrome">{i18next.t('ui/filter.Kodachrome')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-emboss" className='filter' onClick={this.props.filterObject} filter='emboss'/><label htmlFor="filter-emboss">{i18next.t('ui/filter.Emboss')}</label>
+                  <input type='checkbox' id="filter-emboss" className='filter' onClick={this.props.filterObject} filter='emboss'/><label htmlFor="filter-emboss" className="label-filter-icon" id="label-filter-emboss">{i18next.t('ui/filter.Emboss')}</label>
                 </div>
                 <div>
                   <input type='checkbox' id="filter-resize" className='filter' onClick={this.props.filterObject} filter='resize'/><label htmlFor="filter-resize">test</label>
@@ -169,8 +185,7 @@ export default withTranslation()(class Filter extends Component{
             </CSSTransition>
           </div>
           <div className="adjust-box">
-            <div className="option-title" onClick = {this.changeMenu}>{i18next.t('ui/filter.Adjust')}</div>
-            <CSSTransition in = {!this.state.menu} timeout={200} classNames="my-node" unmountOnExit >
+            <CSSTransition in = {this.state.adjustmenu} timeout={200} classNames="my-node" unmountOnExit >
               <div className="adjust-options">
               <div>{i18next.t('ui/filter.Brightness')}</div>
                 <input type='checkbox' id="brightness-checkbox" className='rangefilter' onClick={this.props.filterObject} filter='brightness' value={this.state.brightness || 0}/>

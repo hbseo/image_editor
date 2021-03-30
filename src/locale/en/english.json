@@ -210,7 +210,8 @@
         "Vibrance" : "Vibrance",
         "Denoise" : "Denoise",
         "Opacity" : "Opacity",
-        "Glfx" : "glfx"
+        "Glfx" : "glfx",
+        "Close" : "Close"
     },
 
     "ui/history" : {

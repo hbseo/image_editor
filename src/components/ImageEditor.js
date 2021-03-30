@@ -238,7 +238,6 @@ class ImageEditor extends Component {
 	_onKeydownEvent = (event) => {
     // metakey is a Command key or Windows key
     const {ctrlKey, keyCode, metaKey} = event;
-    event.preventDefault();
     // if(event.repeat) { 
     //   return; 
     // }
@@ -257,15 +256,19 @@ class ImageEditor extends Component {
     }
 
     if(keyCode === 37) { // handle Left key
+      event.preventDefault();
       this.moveSelected('left');
     } 
     else if (keyCode === 38) { // handle Up key
+      event.preventDefault();
       this.moveSelected('up');
     } 
     else if (keyCode === 39) { // handle Right key
+      event.preventDefault();
       this.moveSelected('right');
     } 
     else if (keyCode === 40) { // handle Down key
+      event.preventDefault();
       this.moveSelected('down');
     }
   }
