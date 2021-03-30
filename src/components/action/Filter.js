@@ -83,42 +83,42 @@ class Filter extends Action {
           }));
           break;
         case 'brightness':
-          obj.filters[15] = (new fabric.Image.filters.Brightness({
+          obj.filters[15] = checked && (new fabric.Image.filters.Brightness({
             brightness: value
           }));
           break;
         case 'contrast':
-          obj.filters[16] = (new fabric.Image.filters.Contrast({
+          obj.filters[16] = checked && (new fabric.Image.filters.Contrast({
             contrast: value
           }));
           break;
         case 'pixelate':
-          obj.filters[17] = (new fabric.Image.filters.Pixelate({
+          obj.filters[17] = checked && (new fabric.Image.filters.Pixelate({
             blocksize : value
           }));
           break;
         case 'blur':
-          obj.filters[18] = (new fabric.Image.filters.Blur({
+          obj.filters[18] = checked && (new fabric.Image.filters.Blur({
             blur : value
           }));
           break;
         case 'noise':
-          obj.filters[19] = (new fabric.Image.filters.Noise({
+          obj.filters[19] = checked && (new fabric.Image.filters.Noise({
             noise : value
           }));
           break;          
         case 'saturation':
-          obj.filters[20] = (new fabric.Image.filters.Saturation({
+          obj.filters[20] = checked && (new fabric.Image.filters.Saturation({
             saturation : value
           }));
           break;
         case 'hue':
-          obj.filters[21] = (new fabric.Image.filters.HueRotation({
+          obj.filters[21] = checked && (new fabric.Image.filters.HueRotation({
             rotation : value
           }));
           break;
         case 'ink':
-          obj.filters[22] = (new Ink({
+          obj.filters[22] = checked && (new Ink({
             ink_matrix : {
               ink : value ,
               width : obj.width,
@@ -127,7 +127,7 @@ class Filter extends Action {
           }));
           break;
         case 'vignette':
-          obj.filters[23] = (new Vignette({
+          obj.filters[23] = checked && (new Vignette({
             vignette_matrix : {
               size :  0.66,
               amount : value
@@ -135,7 +135,7 @@ class Filter extends Action {
           }));
           break;
         case 'zoomblur':
-          obj.filters[24] = (new ZoomBlur({
+          obj.filters[24] = checked && (new ZoomBlur({
             zoomblur_matrix : {
               center_x : obj.width/2, // Controllable
               center_y : obj.height/2, // Controllable
@@ -146,12 +146,12 @@ class Filter extends Action {
           }));
           break;
         case 'vibrance':
-          obj.filters[25] = (new Vibrance({
+          obj.filters[25] = checked && (new Vibrance({
             amount : value
           }));
           break;
         case 'denoise':
-          obj.filters[26] = (new Denoise({
+          obj.filters[26] = checked && (new Denoise({
             denoise_matrix : {
               exponent : value,
               width : obj.width,

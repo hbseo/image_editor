@@ -156,7 +156,7 @@ class ImageEditor extends Component {
         )
         .then((img) => {
           this._backgroundImage = img;
-          console.log(this._backgroundImageRatio)
+          // console.log(this._backgroundImageRatio)
           // this._backgroundImage.width *= this._backgroundImageRatio
           // this._backgroundImage.height *= this._backgroundImageRatio
           // this._backgroundImage.scaleX = 1;
@@ -185,6 +185,7 @@ class ImageEditor extends Component {
           this.currentState.id = 0;
           this.firstState = this.currentState;
           this.action['Grid'].makeGrid();
+          this.forceUpdate(); // canvas size error
         })
         .catch(() => {
           this.props.history.push('/');
@@ -212,10 +213,10 @@ class ImageEditor extends Component {
         this.firstState = this.currentState;
         this.action['Grid'].makeGrid();
       }
-    }   
+    }
+    this.forceUpdate(); // for showUndo/Redo Stack
     this.action['Draw'].setBrush(); // Canvas Required
     this.getCheck();
-    this.forceUpdate(); // for showUndo/Redo Stack
   }
   
   componentWillUnmount() {
@@ -887,8 +888,8 @@ class ImageEditor extends Component {
     this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , event.target.getAttribute('filter'), event.target.checked, event.target.value);
   }
 
-  rangeFilterObject = (filterOption, value) => {
-    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, true, value);
+  rangeFilterObject = (filterOption, checked, value) => {
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, checked, value);
   }
 
   previewFilter = (option) => {

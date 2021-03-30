@@ -25,7 +25,6 @@ class LoadImage extends Component {
   handleSubmit = (event) => {
     if (event) { event.preventDefault(); }
     this.url = this.state.url;
-    console.log(this.url); 
     this.setState({ url: "", submit: false, width: 0, height: 0, imgRatio: 100 });
     this.image = new Image();
     this.image.onload = this.imageFound;
@@ -90,6 +89,7 @@ class LoadImage extends Component {
     new Promise((resolve) => {
       let file = event.target.files[0];
       this.setState({ url: URL.createObjectURL(file) });
+      event.target.value = null;
       resolve();
     })
     .then(() => {
