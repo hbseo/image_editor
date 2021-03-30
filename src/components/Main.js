@@ -119,7 +119,7 @@ class Main extends Component {
             </div> */}
             {this.state.login_state ? 
             <div>
-              <div className='dropdown-btn'>
+              <div className='dropdown-btn3'>
                 <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
               </div> 
               <div className='sidenav-user'>

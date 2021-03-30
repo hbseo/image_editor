@@ -93,6 +93,7 @@ class Project extends Component {
             </div>
             <div className="project-title">
               <p>{prj.title}</p>
+              <button idx= {prj.idx} onClick={this.deleteProject}>X</button>
             </div>
           </div>
         );
@@ -114,8 +115,28 @@ class Project extends Component {
     }
   }
 
-  openProject = () => {
-    
+  deleteProject = (event) => {
+    if(this.props.id === '') { return; }
+    fetch('/content/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id : this.props.id, prj_idx : event.target.getAttribute('idx')})
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      if(data.success){
+        this.getProjects();
+      }
+      else{
+        alert(i18next.t('Project.Error'));
+      }
+    })
+    .catch(() => {
+      alert(i18next.t('Project.Error'));
+    })
   }
  
   render() {

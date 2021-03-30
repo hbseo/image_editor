@@ -6,10 +6,12 @@ const controller = require('./controller');
 router.use('/save', authMiddleware);
 router.use('/get', authMiddleware);
 router.use('/update', authMiddleware);
+router.use('/delete', authMiddleware);
 
 router.post('/save', controller.save)
 router.post('/get', controller.get)
 router.post('/update', controller.update)
+router.post('/delete', controller.delete)
 
 
 module.exports = router;
