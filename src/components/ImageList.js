@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
+import {randomWord} from './const/consts';
+import imgerror from '../css/img/imgerror.svg';
 import '../css/ImageList.scss';
 
 class ImageList extends Component {
@@ -8,17 +10,17 @@ class ImageList extends Component {
     super(props);
 
     this.state = {
-      random_count : 0,
+      random_count : 10,
       images: [],
-      search: '',
-      image_count: 1,
-      url: '',
+      search: randomWord[ Math.floor(Math.random() * (randomWord.length))],
+      image_count: 10,
+      url: false,
       image : {
         full : '',
         raw : '',
         regular : '',
         small : '',
-        thumb : ''
+        thumb : imgerror
       },
       imageSize : {
         full : { x:0, y:0},
@@ -95,6 +97,7 @@ class ImageList extends Component {
   onClickThumb = (event) => {
     new Promise((resolve) => {
       this.setState({
+        url : true,
         image : {
           full : event.target.getAttribute('full'),
           raw : event.target.getAttribute('raw'),
@@ -155,22 +158,22 @@ class ImageList extends Component {
     }
     else{
       return (
-        <div id="image-list-size">
+        <div id="image-list-size" >
           <ul>
             <li>
-              <img src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg} />
+              <img className="image-list-img" src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}/>
               <div>full: {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}</div>
             </li>
             <li>
-              <img src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg} />
+              <img className="image-list-img" src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg} />
               <div>regular: {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}</div>
             </li>
             <li>
-              <img src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg} />
+              <img className="image-list-img" src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg} />
               <div>small: {this.state.imageSize.small.x} X {this.state.imageSize.small.y}</div>
             </li>
             <li>
-              <img src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg} />
+              <img className="image-list-img" src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg} />
               <div>thumb: {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
             </li>
           </ul>
@@ -190,7 +193,7 @@ class ImageList extends Component {
       <div className="more-image-main">
         <div className="more-image-search">
           <div className="search-image">
-            <div className="option-title">{i18next.t('ImageList.Search random image')}</div>
+            <div className="option-title">{i18next.t('ImageList.Search random image')} {this.state.search}</div>
             <form className="search-form" onSubmit={this.handleSubmit}> 
               <div>
                 <div className="search-group">
@@ -217,7 +220,7 @@ class ImageList extends Component {
           </div>
         </div>
         {this.showImage(this.state.images)}
-        {this.imageSizeVersion()}
+        {this.state.url ? this.imageSizeVersion() : null}
         {this.props.children}
 
       </div>

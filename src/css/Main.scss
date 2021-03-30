@@ -112,6 +112,7 @@
 	width: 100%;
 	text-align: left;
 	outline: none;
+	transition: background-color 0.2s linear, color 0.2s linear, transform 0.2s ease;
   }
 
   .dropdown-btn {
@@ -138,6 +139,8 @@
   .sidenav button:hover,
   .dropdown-btn:hover {
 	color: #f1f1f1;
+	background-color: #3f3f3f;
+	transform: translateX(40px)
   }
 
   .right{
@@ -159,6 +162,7 @@
 		  background-color: #021c1e;
 		  padding: 5px;
 		  font-size: 1.1em;
+		  transition: background-color 0.2s linear;
 	  }
 
 	  .rightbtn:hover{
