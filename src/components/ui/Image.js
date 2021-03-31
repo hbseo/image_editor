@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Loading from './Loading';
 import i18next from "../../locale/i18n";
+import ImageMini from './ImageMini';
 import { withTranslation } from "react-i18next";
 import '../../css/ui/Image.scss'
 
@@ -87,6 +88,9 @@ export default withTranslation()(class Image extends Component {
                 <input className="url-submit" type="submit" value="Submit" />
               </form>
             </div>
+          </div>
+          <div className="load-image-mini">
+            <ImageMini addImage={this.props.addImage} />
           </div>
         </div>
         {this.props.imgStatus ? <Loading open = {true} /> : null}
