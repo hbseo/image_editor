@@ -10,7 +10,7 @@ class Save extends Component {
     this.state = {
       format : 'png',
       title : '',
-      saveState : true
+      saveState : true // true이면 저장 불가능, false이면 저장 가능
     };
     this.err = false;
   }
@@ -21,7 +21,16 @@ class Save extends Component {
   }
 
   saveHandler = () => {
-    if(this.props.user_name === ""){alert(i18next.t('Save.Error on server')); return;}
+    // 다른이름으로 저장 : 무조건 새로운 프로젝트로 저장
+    if(this.state.title.length > 25) {
+      alert(i18next.t('Save.TooLong'));
+      return;
+    }
+    if(this.props.user_name === ""){
+      alert(i18next.t('Save.Error on server')); 
+      return;
+    }
+
     var json = this.props.canvas;
     console.log(this.props.canvas)
     fetch('/content/save', {
@@ -49,6 +58,7 @@ class Save extends Component {
   }
 
   updateHandler = () => {
+    // 저장 : 이미 저장되어 있다면, 업데이트를 해주고, 아니면 saveHandler
     if(this.props.isSaved && this.props.prj_idx > 0){
       var json = this.props.canvas;
       fetch('/content/update', {
@@ -83,7 +93,7 @@ class Save extends Component {
       resolve();
     })
     .then(() => {
-      if(this.state.title === ""){
+      if(this.state.title.length === 0 || this.state.title.length > 25){
         this.setState({ saveState : true});
       }
       else{
@@ -135,12 +145,17 @@ class Save extends Component {
                 }
               </div>
 
-              <div className = "bottom-div">
-                {/* {imageSize} */}
-							  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
-							  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save as')}</button>
-							  <button id="save-server" onClick = {this.updateHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save on server')}</button>
-              </div>
+              {user_name === '' ? 
+                <div className = "bottom-div">
+                  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
+                </div> :
+                <div className = "bottom-div">
+                  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
+                  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save as')}</button>
+                  <button id="save-server" onClick = {this.updateHandler} disabled = {!this.props.isSaved}>{i18next.t('Save.Save on server')}</button>
+                </div>
+
+              }
 						</div>
 					</div> : null }
 			</div>

@@ -245,3 +245,176 @@ exports.get = (req, res) => {
   .then(get)
   .catch(onError)
 }
+
+exports.delete = (req, res) => {
+  const database = new Database();
+  const { id, prj_idx } = req.body;
+  let date = moment().format('YYYY-MM-DD HH:mm:ss');
+  let check_query = `SELECT idx, size FROM USERS WHERE userid = "${id}";`;
+  let delete_size;
+  let user_idx;
+  let user_size; // user size ( total )
+
+  const deletepj = (result) => {
+    if(result[0]) {
+      delete_size = result[0].len
+      let update_query = `DELETE FROM PROJECTS WHERE idx = "${prj_idx}";`;
+      database.query(update_query)
+      .then(userUpdate)
+      .catch(onError);
+    }
+    else {
+      res.status(200).json({
+        success : false,
+        msg: 'prj idx error'
+      })
+    }
+  }
+
+  const checkSize = (result) => {
+    if(result[0]){
+      user_idx = result[0].idx;
+      user_size = result[0].size;
+      let size_query = `SELECT length(project_data) AS len FROM PROJECTS WHERE idx = ${prj_idx};`;
+      database.query(size_query)
+      .then(deletepj)
+      .catch(onError);
+    }
+    else {
+      res.status(200).json({
+        success : false,
+        msg: 'idx error : no user id : delete'
+      })
+    }
+  }
+
+  const userUpdate = (result) => {
+    if(result) {
+      let update_query = `UPDATE USERS SET size = size - ${delete_size}, project = project - 1 WHERE idx = '${user_idx}'`;
+      database.query(update_query)
+      .then(respond)
+      .catch(onError);
+    }
+    else {
+      database.connection.rollback()
+      res.status(200).json({
+        success : false,
+        msg: 'fail to delete a project'
+      })
+    }
+  }
+
+  const respond = (result) => {
+    database.connection.commit((err)=>{
+      if(err){
+        database.connection.rollback()
+        throw err;
+      }
+    })
+    if(result) {
+      res.status(200).json({
+        success : true,
+        msg: 'delete success'
+      })
+    }
+    else {
+      database.connection.rollback()
+      res.status(200).json({
+        success : false,
+        msg: 'delete fail'
+      })
+    }
+  }
+
+  const onError = (error) => {
+    database.connection.rollback()
+    res.status(400).json({
+      success : false,
+      msg: error.message
+    })
+  }
+
+  database.connection.beginTransaction((err) => {
+    if(err){throw err;}
+    database.query(check_query)
+    .then(checkSize)
+    .catch(onError)
+  })
+}
+
+exports.deleteall = (req, res) => {
+  const database = new Database();
+  const { id } = req.body;
+  let date = moment().format('YYYY-MM-DD HH:mm:ss');
+  let check_query = `SELECT idx FROM USERS WHERE userid = "${id}";`;
+  let user_idx;
+
+  const checkuser = (result) => {
+    if(result[0]){
+      user_idx = result[0].idx;
+      let delete_query = `DELETE FROM PROJECTS WHERE useridx = "${user_idx}";`;
+      database.query(delete_query)
+      .then(userUpdate)
+      .catch(onError);
+    }
+    else {
+      res.status(200).json({
+        success : false,
+        msg: 'idx error : no user id : deleteall'
+      })
+    }
+  }
+
+  const userUpdate = (result) => {
+    if(result) {
+      let update_query = `UPDATE USERS SET size = 0, project = 0 WHERE idx = '${user_idx}'`;
+      database.query(update_query)
+      .then(respond)
+      .catch(onError);
+    }
+    else {
+      database.connection.rollback()
+      res.status(200).json({
+        success : false,
+        msg: 'fail to delete all projects'
+      })
+    }
+  }
+
+  const respond = (result) => {
+    database.connection.commit((err)=>{
+      if(err){
+        database.connection.rollback()
+        throw err;
+      }
+    })
+    if(result) {
+      res.status(200).json({
+        success : true,
+        msg: 'all delete success'
+      })
+    }
+    else {
+      database.connection.rollback()
+      res.status(200).json({
+        success : false,
+        msg: 'all delete fail'
+      })
+    }
+  }
+
+  const onError = (error) => {
+    database.connection.rollback()
+    res.status(400).json({
+      success : false,
+      msg: error.message
+    })
+  }
+
+  database.connection.beginTransaction((err) => {
+    if(err){throw err;}
+    database.query(check_query)
+    .then(checkuser)
+    .catch(onError)
+  })
+}

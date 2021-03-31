@@ -114,6 +114,15 @@ class ImageEditor extends Component {
 
     this.lockScale = false; // true이면 비율 고정.
 
+    this.stylelang = null; // 언어에 따른 스타일
+
+    this.kostyle = {
+      fontSize : 15,
+    }
+    this.enstyle = {
+      // fontSize : 18,
+    }
+
     fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
     this._createAction();
     this.filterRef = React.createRef()
@@ -145,7 +154,14 @@ class ImageEditor extends Component {
           {x : 0, y : 0}, 
           {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
         )
-        .then((img) => this._backgroundImage = img)
+        .then((img) => {
+          this._backgroundImage = img;
+          // console.log(this._backgroundImageRatio)
+          // this._backgroundImage.width *= this._backgroundImageRatio
+          // this._backgroundImage.height *= this._backgroundImageRatio
+          // this._backgroundImage.scaleX = 1;
+          // this._backgroundImage.scaleY = 1;
+        })
         .then(() => {
           this._canvas = new fabric.Canvas('canvas', {
             preserveObjectStacking: true,
@@ -169,6 +185,7 @@ class ImageEditor extends Component {
           this.currentState.id = 0;
           this.firstState = this.currentState;
           this.action['Grid'].makeGrid();
+          this.forceUpdate(); // canvas size error
         })
         .catch(() => {
           this.props.history.push('/');
@@ -196,10 +213,10 @@ class ImageEditor extends Component {
         this.firstState = this.currentState;
         this.action['Grid'].makeGrid();
       }
-    }   
+    }
+    this.forceUpdate(); // for showUndo/Redo Stack
     this.action['Draw'].setBrush(); // Canvas Required
     this.getCheck();
-    this.forceUpdate(); // for showUndo/Redo Stack
   }
   
   componentWillUnmount() {
@@ -221,6 +238,9 @@ class ImageEditor extends Component {
 	_onKeydownEvent = (event) => {
     // metakey is a Command key or Windows key
     const {ctrlKey, keyCode, metaKey} = event;
+    // if(event.repeat) { 
+    //   return; 
+    // }
     if(keyCode === 8 || keyCode === 46){
       this.deleteObject();
     }
@@ -233,6 +253,23 @@ class ImageEditor extends Component {
       if(this._clipboard){
         this.pasteObject();
       }
+    }
+
+    if(keyCode === 37) { // handle Left key
+      event.preventDefault();
+      this.moveSelected('left');
+    } 
+    else if (keyCode === 38) { // handle Up key
+      event.preventDefault();
+      this.moveSelected('up');
+    } 
+    else if (keyCode === 39) { // handle Right key
+      event.preventDefault();
+      this.moveSelected('right');
+    } 
+    else if (keyCode === 40) { // handle Down key
+      event.preventDefault();
+      this.moveSelected('down');
     }
   }
 
@@ -341,7 +378,7 @@ class ImageEditor extends Component {
       //     vpt[5] = this._canvas.getHeight() - 1000 * zoom;
       //   }
       }
-      console.log(vpt[4], vpt[5])
+      // console.log(vpt[4], vpt[5])
 
       this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
       this._canvas.renderAll();
@@ -698,7 +735,7 @@ class ImageEditor extends Component {
    * @returns {fabric.Canvas._activeObject} 
    */
   getActiveObject = () => {
-    return this._canvas._activeObject;
+    return this._canvas ? this._canvas._activeObject : null;
   }
 
   /**
@@ -788,10 +825,6 @@ class ImageEditor extends Component {
 
   openSaveModal = () => {
     this.setState({openSave : true})
-
-    // if(this.state.user_name !== ""){
-    //   this.setState({openSave : true})
-    // }
   }
 
   closeSaveModal = () => {
@@ -858,8 +891,8 @@ class ImageEditor extends Component {
     this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , event.target.getAttribute('filter'), event.target.checked, event.target.value);
   }
 
-  rangeFilterObject = (filterOption, value) => {
-    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, true, value);
+  rangeFilterObject = (filterOption, checked, value) => {
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, checked, value);
   }
 
   previewFilter = (option) => {
@@ -942,6 +975,10 @@ class ImageEditor extends Component {
     this.action['Object'].bringToFront();
   }
 
+  moveSelected = (direction) => {
+    this.action['Object'].moveSelected(direction);
+  }
+
   setObjectAngle = (changeAngle) => {
     this.action['Rotation'].setAngle(Number(changeAngle));
   }
@@ -992,6 +1029,14 @@ class ImageEditor extends Component {
 
   handleCropCanvasSizeChange = (value) => {
     this.action['Crop'].resizeCropzone(value);
+  }
+
+  setCropCanvasSize = (cropCanvasSize, option, value, obj) => {
+    return this.action['Crop'].setCropCanvasSize(cropCanvasSize, option, value, obj);
+  }
+
+  changeBackgroundColor = (color) => {
+    this.action['Util'].changeBackgroundColor(color);
   }
 
   cropObjMouseDown = (event) => {
@@ -1129,6 +1174,10 @@ class ImageEditor extends Component {
 
   getCanvasInfo = () => {
     console.log(this._canvas);
+  }
+
+  getCanvasBackinfo = () => {
+    alert(this._canvas.backgroundImage.width +' '+ this._canvas.backgroundImage.height +' '+ this._canvas.backgroundImage.scaleX + ' ' + this._canvas.backgroundImage.scaleY)
   }
 
   getCanvasBackgroundInfo = () => {
@@ -1273,7 +1322,7 @@ class ImageEditor extends Component {
 
   getCheckSave = (idx) => {
     if(!idx){ idx = -1 }
-    this.setState({isSaved : true, prj_idx : idx});
+    this.setState({isSaved : idx === -1 ? false : true, prj_idx : idx});
   }
 
   buttonLayer = () => {
@@ -1281,6 +1330,12 @@ class ImageEditor extends Component {
   }
 
   render() {
+    if(i18next.language === 'ko'){
+      this.stylelang = this.kostyle;
+    }
+    else {
+      this.stylelang = this.enstyle;
+    }
     const tab = {
       0: <TextUI 
           object={this.state.activeObject} 
@@ -1353,9 +1408,14 @@ class ImageEditor extends Component {
           exportCanvas = {this.exportCanvas}
           importCanvas = {this.importCanvas}
           getCanvasInfo = {this.getCanvasInfo}
+          getCanvasBackinfo = {this.getCanvasBackinfo}
           isSaved = {this.state.isSaved}
           prj_idx = {this.state.prj_idx}
           user_name = {this.state.user_name} 
+          canvas = {this._canvas}
+          object = {this.state.activeObject}
+          canvasView = {this.state.canvasView}
+          zoom = {this.state.zoom}
         />,
       9: <CanvasUI 
           object={this.state.activeObject} 
@@ -1364,6 +1424,8 @@ class ImageEditor extends Component {
           cropCanvas = {this.cropCanvas}
           cropEndCanvas = {this.cropEndCanvas}
           handleCropCanvasSizeChange = {this.handleCropCanvasSizeChange}
+          changeBackgroundColor = {this.changeBackgroundColor}
+          setCropCanvasSize = {this.setCropCanvasSize}
         />,
       10: <EffectUI 
           object={this.state.activeObject} 
@@ -1380,6 +1442,7 @@ class ImageEditor extends Component {
           changeTab = {this.changeTab} 
           tab = {this.state.tab} 
           UI = { tab }
+          stylelang = {this.stylelang}
         >
         </SideNav>
 
@@ -1393,9 +1456,7 @@ class ImageEditor extends Component {
                 <button onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
             </div>
             <div className="more">
-                <button>{i18next.t('ImageEditor.More')}</button>
-                <button onClick = {this.changeToEnglish}>English</button>
-                <button onClick = {this.changeToKorean}>한글</button>
+                <button onClick = { () => {this.props.history.push('/')}}>{i18next.t('ImageEditor.Home')}</button>
             </div>
           </div>
           <div className="real" >
@@ -1429,115 +1490,7 @@ class ImageEditor extends Component {
           isSaved = {this.state.isSaved}
           prj_idx = {this.state.prj_idx}
           getCheckSave = {this.getCheckSave}
-        />
-
-
-
-        <hr/>
-
-{/* 
-        <div >
-
-          <h5 onClick = {this.displayRoot}>개발자 기능</h5>
-
-          {this.state.showRoot ?
-          <div>
-
-            {this.state.activeObject.type !== 'not active' ?
-            <div>
-              <p> left : {this.state.activeObject.aCoords.tl.x} </p>
-              <p> right : {this.state.activeObject.aCoords.br.x} </p>
-              <p> top : {this.state.activeObject.aCoords.tl.y} </p>
-              <p> bottom : {this.state.activeObject.aCoords.br.y} </p>
-            </div> : <div></div> }
-
-            <button onClick={this.addImage}>테스트용 이미지 추가</button>
-            <button onClick={this.objectInfo}>오브젝트 정보 콘솔 출력</button>
-            <button onClick={this.getCanvasInfo}>캔버스정보</button>
-            <button onClick={this.resetCanvas}>캔버스 줌 및 위치 리셋</button>
-            <br/>
-            <button onClick={this.getCanvasEventInfo}>캔버스 이벤트 정보</button>
-            <button onClick={this.convertObjSvg}>클릭된 오브젝트 svg로 변환하기</button>
-            <button onClick={this.convertObjScale}>클릭된 오브젝트 scale값 1로 변환</button>
-            <button onClick={this.resetState}>state 초기화</button>
-            <input type="checkbox" onClick = {this.getMousePointInfo} /> 캔버스 좌표 보기
-            <p>캔버스 확대 값 = {this.state.zoom}</p>
-            <p>캔버스 크기  {this._canvas? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</p>
-            {this._canvas ? 
-            <div>
-            <p> 좌측 상단 좌표 = x : {(-this.state.canvasView.x / this.state.zoom)}  y : {(-this.state.canvasView.y / this.state.zoom)}</p>
-            <p> 우측 하단 좌표 = x : { (-this.state.canvasView.x / this.state.zoom)  + (this._canvas.width / this.state.zoom) }  y : {(-this.state.canvasView.y / this.state.zoom) + (this._canvas.height / this.state.zoom) }</p>
-            </div>
-            : <div></div>}
-            
-            <p>현재 객체 타입 = {this.state.activeObject.type}</p>
-            <p>선택 개체 밝기 값 = {this.state.filters.brightness}</p>
-            <p>선택 개체 대조 값 = {this.state.filters.contrast}</p>
-            <p>선택 개체 픽셀 값 = {this.state.filters.pixelate}</p>
-            <p>선택 개체 블러 값 = {this.state.filters.blur}</p>
-            <p>선택 개체 각도 값 = { this.state.activeObject.type !== 'not active' ? this.state.activeObject.angle : 'none'}</p>
-            <p>선택 개체 가로 크기 = {this.state.activeObject.scaleX * this.state.activeObject.width}</p>
-            <p>선택 개체 세로 크기 = {this.state.activeObject.scaleY * this.state.activeObject.height}</p>
-            <p style={styles.color} >컬러 {this.state.color.r} {this.state.color.g} {this.state.color.b} {this.state.color.a} </p>
-				  	<p>컬러 헥스 값{this.state.colorHex}</p>
-            <hr />
-            <p>- Undo Stack </p>
-            {this.showUndoStack()} 
-            <hr />
-            <p>- currentState</p>
-            <p style={{color : '#008000'}}>{this.currentState.action}</p>
-            <hr />
-            <p>- Redo Stack  </p>
-            {this.showRedoStack()}
-            
-
-          </div> : null }
-          <hr />
-          <h5>레이어</h5>
-          <hr />
-        </div>
-        
-        <div id='tool'>
-
-         <div>
-            <h5>캔버스 기능</h5>
-            <button onClick={this.changeBackgroundColor}>캔버스 배경색 현재 색깔로 변경</button>
-            <button onClick={this.cropCanvas}>캔버스 자르기 시작</button>
-            <button onClick={this.cropEndCanvas}>캔버스 자르기 완료</button>
-            {this.state.displayCropCanvasSize ? 
-              <div>
-                <label htmlFor='cropCanvasWidth'> x : </label>
-                <input 
-                  type='number' 
-                  onChange={this.handleCropCanvasSizeChange} 
-                  name='width'
-                  min='1'
-                  max={this._canvas.width}
-                  value={this.state.cropCanvasSize.width} 
-                />
-                <label htmlFor='cropCanvasHeight'> y : </label>
-                <input 
-                  type='number' 
-                  onChange={this.handleCropCanvasSizeChange} 
-                  name='height'
-                  min='1'
-                  max={this._canvas.height}
-                  value={this.state.cropCanvasSize.height} 
-                />
-              </div> : null
-            }
-          </div>
-
-          <hr />
-            
-          <div>
-            <h5>일단은 안 쓰는 기능</h5>
-            <button onClick={this.newCanvas} disabled>배경이미지 캔버스로 변경</button>
-            <button onClick={this.convertSvg}>svg로 변환하기</button>
-          </div>
-        </div> 
-         */}
-        
+        />       
       </div>
     );
   }

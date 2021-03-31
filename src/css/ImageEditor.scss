@@ -118,11 +118,17 @@ ul {
   background-color: rgba(0, 0,0, 0);
 }
 
-.nav-bar-button:focus{
+.nav-bar-button-active {
   background-color: #EEEEEE;
   color: #365AFC;
   font-weight: bold;
 }
+
+// .nav-bar-button:focus{
+//   background-color: #EEEEEE;
+//   color: #365AFC;
+//   font-weight: bold;
+// }
 
 .do button,
 .save button {
@@ -261,6 +267,10 @@ input[type=range] {
 
 input[type=range]:focus {
   outline: none;
+}
+
+input[type=range]:disabled {
+  border: 1px solid #c7d0fe;
 }
 
 input[type=range]::-webkit-slider-runnable-track {

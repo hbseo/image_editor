@@ -40,6 +40,7 @@ export default withTranslation()(class Text extends Component{
   }
   componentWillUnmount(){
     // console.log('Text UI Unmount');
+    document.removeEventListener('mousedown', this.onShowFontEvent);
   }
 
   documentUpdate = () => {
@@ -115,7 +116,7 @@ export default withTranslation()(class Text extends Component{
 
   textActionColor = (event) => {
     let textOption = event.target.getAttribute('text');
-    this.props.textObject(textOption, event.target.checked, convertRGB(this.state.color));
+    this.props.textObject(textOption, event.target.checked, convertRGB(this.state.bgcolor));
   }
 
   setColor = (color) => {
@@ -149,10 +150,18 @@ export default withTranslation()(class Text extends Component{
 
   handlefontfamilybutton = () => {
     this.setState({showfont: !this.state.showfont});
+    document.addEventListener('mousedown', this.onShowFontEvent);
+  }
+
+  onShowFontEvent = (event) => {
+    if(event.target.className !== 'font-style' && event.target.className !== 'font-ul' && event.target.className !== 'fontfamily-button' && event.target.className !== 'font-li'){
+      this.setState({showfont: false});
+    }
+    document.removeEventListener('mousedown', this.onShowFontEvent);
   }
 
   colortest = (event) => {
-    this.setState({ color : HEXtoRGB(event.target.value)});
+    this.setState({ color : HEXtoRGB(event.target.value), testcolor : event.target.value});
     this.props.setColor({rgb : HEXtoRGB(event.target.value)});
   } 
 
@@ -175,8 +184,8 @@ export default withTranslation()(class Text extends Component{
             <button onClick={this.addText}>{i18next.t('ui/text.New Text')}</button>
           </div>
           <label htmlFor='fontfamily' className="option-title">{i18next.t('ui/text.Font')}</label>
-          <div className="font-style">
-            <button onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}}>{choose}</button>
+          <div className="font-style" onClick={this.handlefontfamilybutton}>
+            <button className="fontfamily-button" onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}}>{choose}</button>
             {fontlist}
           </div>
           <label htmlFor='fontSize' className="option-title">{i18next.t('ui/text.Font size')}</label>
@@ -219,7 +228,7 @@ export default withTranslation()(class Text extends Component{
 
           <div className="option-title">{i18next.t('ui/text.Text background')}</div>
           <div className="text-bg">
-            <input type='checkbox' onClick={this.textActionColor} id="textbg" text="background-color" />
+            <input type='checkbox' onClick={this.textActionColor} id="textbg" text="background-color" disabled = {this.props.object.type ==='textbox' ? false : true }/>
             <label htmlFor="textbg">{i18next.t('ui/text.Active')}</label>
           </div>
 

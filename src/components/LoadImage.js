@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import ImageList from './ImageList';
 import Uploadfile from './Upload_file';
+import ImageModal from './ImageModal';
 import { Link } from 'react-router-dom';
 
 class LoadImage extends Component {
   constructor(props) {
     super(props);
-    this.state = { width: 5, height: 5, url: "", submit: false, imgRatio: 100, imgWidth: 0, imgHeight: 0 };
+    this.state = { width: 5, height: 5, url: "", submit: false, imgRatio: 100, imgWidth: 0, imgHeight: 0, imageModal : false };
     this.url = "";
     this.image = null;
   }
@@ -24,7 +25,6 @@ class LoadImage extends Component {
   handleSubmit = (event) => {
     if (event) { event.preventDefault(); }
     this.url = this.state.url;
-    console.log(this.url); 
     this.setState({ url: "", submit: false, width: 0, height: 0, imgRatio: 100 });
     this.image = new Image();
     this.image.onload = this.imageFound;
@@ -59,7 +59,7 @@ class LoadImage extends Component {
   }
 
   imageFound = () => {
-    document.getElementById("imgRatio").disabled = false;
+    // document.getElementById("imgRatio").disabled = false;
     var ratio = 1;
     if (this.image.width > 2048 || this.image.height > 2048) {
       if (this.image.width > this.image.height) {
@@ -80,7 +80,8 @@ class LoadImage extends Component {
       // imgRatio: ratio * 100,
       imgRatio: 100,
       imgWidth: this.image.width,
-      imgHeight: this.image.height
+      imgHeight: this.image.height,
+      imageModal : true,
     })
   }
 
@@ -88,6 +89,7 @@ class LoadImage extends Component {
     new Promise((resolve) => {
       let file = event.target.files[0];
       this.setState({ url: URL.createObjectURL(file) });
+      event.target.value = null;
       resolve();
     })
     .then(() => {
@@ -114,28 +116,38 @@ class LoadImage extends Component {
       })
   }
 
+  closeImageModal = () => {
+    this.setState({ imageModal : false});
+  }
+
   showPreviewImg = () => {
     return(
       <div className='preview'>
-        {/* <img id="preview" src={this.url} alt="preview"></img> */}
-          { !this.state.submit ? null : 
-            <div>
-              <Link 
-                to={{
-                  pathname: '/edit',
-                  state: {
-                    width: this.state.width,
-                    height: this.state.height,
-                    url: this.url,
-                    ratio: this.state.imgRatio,
-                  }
-                }}>
-              <i className="far fa-square fa-5x canvas-icon"></i></Link>
-              <p>{this.state.width}X{this.state.height}</p>
+        <ImageModal 
+          open = {this.state.imageModal}
+          close = {this.closeImageModal} >
+            <div className='preview'>
+              <div className="preview-box">
+                <Link 
+                  to={{
+                    pathname: '/edit',
+                    state: {
+                      width: this.state.width,
+                      height: this.state.height,
+                      url: this.url,
+                      ratio: this.state.imgRatio,
+                    }
+                  }}>
+                    <img id="preview" src={this.url} alt="preview" ></img>
+                </Link>
+                <p>{this.state.width}X{this.state.height}</p>
+              </div>
+              <div className="preview-bottom">
+                <input type="range" name="imgRatio" id="imgRatio" value={this.state.imgRatio} onChange={this.handleImageSizeChange} min="5" max="200" step="1" />
+                <p>{this.state.imgRatio}</p>
+              </div>
             </div>
-          }
-          <input disabled type="range" name="imgRatio" id="imgRatio" value={this.state.imgRatio} onChange={this.handleImageSizeChange} min="5" max="200" step="1" />
-        <p>{this.state.imgRatio}</p>
+        </ImageModal>
       </div>
     )
   }
@@ -162,3 +174,27 @@ class LoadImage extends Component {
 }
 
 export default LoadImage;
+
+/*
+backup
+ <div className='preview'>
+        { !this.state.submit ? null : 
+          <div>
+            <Link 
+              to={{
+                pathname: '/edit',
+                state: {
+                  width: this.state.width,
+                  height: this.state.height,
+                  url: this.url,
+                  ratio: this.state.imgRatio,
+                }
+              }}>
+            <i className="far fa-square fa-5x canvas-icon"></i></Link>
+            <p>{this.state.width}X{this.state.height}</p>
+          </div>
+        }
+        <input disabled type="range" name="imgRatio" id="imgRatio" value={this.state.imgRatio} onChange={this.handleImageSizeChange} min="5" max="200" step="1" />
+      <p>{this.state.imgRatio}</p>
+    </div>
+*/

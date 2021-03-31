@@ -206,6 +206,10 @@ $label-padding: $title-container-padding !default;
             button:hover{
                 background-color: #e6e9eb;
             }
+
+            button:disabled{
+                background-color: #85949e;
+            }
         }
     }
 }

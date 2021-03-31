@@ -54,9 +54,6 @@ class SignIn extends Component {
         <div className="limiter">
           <div className="container-login100">
             <div className="wrap-login100">
-              <div className="login100-pic js-tilt" data-tilt>
-                <img src='https://t1.daumcdn.net/cfile/tistory/998019475A445E7A2F' alt="IMG" />
-              </div>
               <form className="login100-form validate-form" onSubmit={this.loginClickHandler}>
                 <span className="login100-form-title">
                   {i18next.t('SignIn.Member Login')}

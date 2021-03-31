@@ -3,6 +3,7 @@ import {fabric} from 'fabric';
 import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
+import '../css/Project.scss';
 
 class Project extends Component {
   constructor(props) {
@@ -75,50 +76,137 @@ class Project extends Component {
       let listitem = null;
       if(this.state.projects.length > 0) {
         listitem = this.state.projects.map((prj) =>
-          <div key={prj.idx}>
-            <p>{prj.title}</p>
-            <Link 
-                to={{
-                  pathname: '/edit',
-                  save : true,
-                  project_data : prj.project_data,
-                  project_idx : prj.idx,
-                  state: {
-                    width: 500,
-                    height: 400,
-                  }
-            }}><img id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="300px" alt="none" onClick = {this.openProject}/>
-            </Link>
+          <div className="project-div" key={prj.idx}>
+            <div className="project-img">
+              <Link 
+              to={{
+                pathname: '/edit',
+                save : true,
+                project_data : prj.project_data,
+                project_idx : prj.idx,
+                state: {
+                  width: 500,
+                  height: 400,
+                }
+              }}><img className="project-thumb" id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="200px" alt="none" onClick = {this.openProject}/>
+              </Link>
+            </div>
+            <div className="project-title">
+              <p>{prj.title}</p>
+              <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
+            </div>
           </div>
         );
       }
       return(
-        <div>
-            {this.props.id} {i18next.t('Project.User')}
-            <hr/>
-            {listitem}  
+        <div id="project-list">
+          {listitem}  
         </div>
       );
     }
     else{
-      return(<div>no login</div>)
+      return(
+        <div id="project-list">
+          <div className="project-div">
+            {i18next.t('Project.PlzSignin')}
+          </div>
+        </div>
+      )
     }
   }
 
-  openProject = () => {
-    
+  deleteProject = (event) => {
+    let idx = event.target.getAttribute('idx');
+    if(this.props.id === '' || isNaN(idx)) { return; }
+
+    fetch('/content/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id : this.props.id, prj_idx : idx})
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      if(data.success){
+        this.getProjects();
+      }
+      else{
+        alert(i18next.t('Project.Error'));
+      }
+    })
+    .catch(() => {
+      alert(i18next.t('Project.Error'));
+    })
+  }
+
+  deleteAllProjects = () => {
+    if(this.props.id === '') { return; }
+    fetch('/content/deleteall', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id : this.props.id})
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      if(data.success){
+        this.getProjects();
+      }
+      else{
+        alert(i18next.t('Project.Error'));
+      }
+    })
+    .catch(() => {
+      alert(i18next.t('Project.Error'));
+    })
+  }
+
+  checkDelete = (event) => {
+
+    let option = event.target.getAttribute('delete');
+    let delete_check;
+
+    if( option === 'all'){
+      delete_check= window.confirm(i18next.t('Project.Deleteallcheck'));
+      if(delete_check){
+        this.deleteAllProjects();
+      }
+      // else{
+      //   alert(i18next.t('Project.Cancel'))
+      // }
+    }
+    else{
+      delete_check= window.confirm(i18next.t('Project.Deletecheck'));
+      if(delete_check){
+        this.deleteProject(event);
+      }
+      // else{
+      //   alert(i18next.t('Project.Cancel'))
+      // }
+    }
   }
  
   render() {
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          {i18next.t('Project.Title')} <input name="search" value={this.state.search} onChange={this.handleSearchChange} />
-          <input type="submit" value="Submit" />
-        </form>
-        <p>{i18next.t('Project.Search')} : {this.state.search}</p>
-        <hr/>
-        <h4>{i18next.t('Project.Project')}</h4>
+        <h2>{i18next.t('Project.Project')}</h2>
+        <button delete = "all" onClick={this.checkDelete}><i delete = "all" className="fas fa-times-circle fa-4x"></i></button>
+        <div className="project-search">
+          <div className="project-search-form">
+            <form onSubmit={this.handleSubmit}>
+              {i18next.t('Project.Title')} <input name="search" value={this.state.search} onChange={this.handleSearchChange} />
+              <input type="submit" value="Submit" />
+            </form>
+          </div>
+          {/* <div>
+            {this.props.id} {i18next.t('Project.User')}
+            <p className="project-search-data">{i18next.t('Project.Search')} : {this.state.search}</p>
+          </div> */}
+        </div>
         {this.showProjects()}
       </div>
     )

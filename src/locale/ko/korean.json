@@ -34,7 +34,8 @@
         "Redo" : "다시 실행",
         "Save" : "저장",
         "More" : "더 보기",
-        "Zoom" : "확대"
+        "Zoom" : "확대",
+        "Home" : "홈 화면"
     },
 
     "ImageList" : {
@@ -46,6 +47,10 @@
         "Showimage errors" : "이미지 불러오기 에러",
         "Fail" : "실패",
         "Error" : "에러"
+    },
+
+    "ImageModal" : {
+        "New" : "신규 생성"
     },
 
     "LoadImage" : {
@@ -72,6 +77,11 @@
         "Project" : "프로젝트",
         "More" : "더보기",
         "Signin" : "로그인",
+        "Signup" : "회원가입",
+        "Signout" : "로그아웃",
+        "Success" : "성공",
+        "Delete account" : "계정 탈퇴",
+        "Error" : "에러",
         "Setting" : "설정"
     },
 
@@ -87,7 +97,11 @@
         "Search" : "검색어",
         "Project" : "프로젝트",
         "User" : "유저",
-        "Error" : "오류" 
+        "Error" : "오류",
+        "PlzSignin" : "로그인 필요",
+        "Deletecheck" : "프로젝트를 삭제하시겠습니까?",
+        "Deleteallcheck" : "모든 프로젝트를 삭제하시겠습니까?",
+        "Cancel" : "취소"
     },
 
     "Save" : {
@@ -105,7 +119,8 @@
         "High" : "상",
         "Medium" : "중",
         "Low" : "하",
-        "Title" : "이름"
+        "Title" : "이름",
+        "TooLong" : "파일 이름이 너무 깁니다."
     },
 
     "SignIn" : {
@@ -148,7 +163,8 @@
         "Canvas" : "캔버스",
         "ResetCanvas" : "리셋 캔버스",
         "CropCanvas" : "캔버스 자르기 시작",
-        "CropEndCanvas" : "자르기 완료"
+        "CropEndCanvas" : "자르기 완료",
+        "CanvasColor" : "캔버스 배경색"
     },
 
     "ui/draw" : {
@@ -176,25 +192,26 @@
         "Technicolor" : "번역필요",
         "Polaroid" : "번역필요",
         "Blackwhite" : "번역필요",
-        "Vintage" : "번역필요",
-        "Sepia" : "번역필요",
+        "Vintage" : "빈티지",
+        "Sepia" : "세피아",
         "Kodachrome" : "번역필요",
         "Emboss" : "번역필요",
-        "Adjust" : "번역필요",
-        "Brightness" : "번역필요",
+        "Adjust" : "조정 필터",
+        "Brightness" : "밝기",
         "Contrast" : "번역필요",
-        "Pixelate" : "번역필요",
+        "Pixelate" : "모자이크",
         "Blur" : "흐림 효과",
         "Noise" : "번역필요",
         "Saturation" : "번역필요",
         "Hue" : "번역필요",
-        "Ink" : "번역필요",
+        "Ink" : "잉크 효과",
         "Vignette" : "번역필요",
-        "Zoomblur" : "번역필요",
+        "Zoomblur" : "줌 블러",
         "Vibrance" : "번역필요",
-        "Denoise" : "번역필요",
+        "Denoise" : "노이즈 제거",
         "Opacity" : "투명도",
-        "Glfx" : "glfx"
+        "Glfx" : "glfx",
+        "Close" : "닫기"
     },
 
     "ui/history" : {

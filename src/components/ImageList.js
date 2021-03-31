@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
+import {randomWord} from './const/consts';
+import imgerror from '../css/img/imgerror.svg';
 import '../css/ImageList.scss';
 
 class ImageList extends Component {
@@ -8,17 +10,17 @@ class ImageList extends Component {
     super(props);
 
     this.state = {
-      random_count : 0,
+      random_count : 10,
       images: [],
-      search: '',
-      image_count: 1,
-      url: '',
+      search: randomWord[ Math.floor(Math.random() * (randomWord.length))],
+      image_count: 10,
+      url: false,
       image : {
         full : '',
         raw : '',
         regular : '',
         small : '',
-        thumb : ''
+        thumb : imgerror
       },
       imageSize : {
         full : { x:0, y:0},
@@ -82,9 +84,9 @@ class ImageList extends Component {
   showImage = (imagelist) => {
     if(imagelist['errors']){ alert(i18next.t('ImageList.Showimage errors')); return null;}
     const listitem = imagelist.map((image) =>
-
-      <img key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small}/>
-
+      <div className="image-list-box" key={image.id} >
+        <img className="image-list-img" key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small}/>
+      </div>
       // ursl뒤에 raw, small, regular, full 등의 따라 사이즈 조절
     );
     return (
@@ -95,6 +97,7 @@ class ImageList extends Component {
   onClickThumb = (event) => {
     new Promise((resolve) => {
       this.setState({
+        url : true,
         image : {
           full : event.target.getAttribute('full'),
           raw : event.target.getAttribute('raw'),
@@ -155,22 +158,22 @@ class ImageList extends Component {
     }
     else{
       return (
-        <div id="image-list-size">
+        <div id="image-list-size" >
           <ul>
             <li>
-              <img src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg} />
+              <img className="image-list-img" src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}/>
               <div>full: {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}</div>
             </li>
             <li>
-              <img src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg} />
+              <img className="image-list-img" src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg} />
               <div>regular: {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}</div>
             </li>
             <li>
-              <img src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg} />
+              <img className="image-list-img" src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg} />
               <div>small: {this.state.imageSize.small.x} X {this.state.imageSize.small.y}</div>
             </li>
             <li>
-              <img src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg} />
+              <img className="image-list-img" src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg} />
               <div>thumb: {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
             </li>
           </ul>
@@ -188,38 +191,36 @@ class ImageList extends Component {
   render() {
     return (
       <div className="more-image-main">
-        <div className="random-image">
-          <div className="option-title">{i18next.t('ImageList.Get random image')}</div>
-          <div className="random-input-group">
-            <div>
-              <label htmlFor="random-count">{i18next.t('ImageList.Image count')} : </label>
-              <input className="random-image-input" type="number" name = "random_count" value={this.state.random_count} onChange = {this.randomCountChange}></input>
-            </div>
-            <button className="random-image-button" onClick={() => this.getRandomImage()}>Enter</button>
+        <div className="more-image-search">
+          <div className="search-image">
+            <div className="option-title">{i18next.t('ImageList.Search random image')} {this.state.search}</div>
+            <form className="search-form" onSubmit={this.handleSubmit}> 
+              <div>
+                <div className="search-group">
+                  <label className ="random-image-searchtext" htmlFor="search">{i18next.t('ImageList.Image name')}</label>
+                  <input className="search-input" name="search" value={this.state.search} onChange={this.searchChange} />
+                </div>
+                <div className="search-group">
+                  <label className ="random-image-searchtext" htmlFor="image_count">{i18next.t('ImageList.Image count')}</label>
+                  <input className="search-input" type="number" name="image_count" value={this.state.image_count} onChange={this.searchChange} />
+                </div>
+              </div>
+              <input className="search-image-button" type="submit" value="Enter" />
+            </form>
           </div>
-        </div>
-        <div className="search-image">
-          <div className="option-title">{i18next.t('ImageList.Search random image')}</div>
-          <form className="search-form" onSubmit={this.handleSubmit}> 
-            <div>
-              <div className="search-group">
-                <label htmlFor="search">{i18next.t('ImageList.Image name')}: </label>
-                <input className="search-input" name="search" value={this.state.search} onChange={this.searchChange} />
+          <div className="random-image">
+            <div className="option-title">{i18next.t('ImageList.Get random image')}</div>
+            <div className="random-input-group">
+              <div>
+                <label htmlFor="random-count">{i18next.t('ImageList.Image count')} : </label>
+                <input className="random-image-input" type="number" name = "random_count" value={this.state.random_count} onChange = {this.randomCountChange}></input>
               </div>
-              <div className="search-group">
-                <label htmlFor="image_count">{i18next.t('ImageList.Image count')} : </label>
-                <input className="search-input" type="number" name="image_count" value={this.state.image_count} onChange={this.searchChange} />
-              </div>
+              <button className="random-image-button" onClick={() => this.getRandomImage()}>Enter</button>
             </div>
-            <input className="search-image-button" type="submit" value="Enter" />
-          </form>
-          <div className="image-result">
-            <div>{i18next.t('ImageList.Search')} : {this.state.search}</div>
-            <div>{i18next.t('ImageList.Image count')}: {this.state.image_count}</div>
           </div>
         </div>
         {this.showImage(this.state.images)}
-        {this.imageSizeVersion()}
+        {this.state.url ? this.imageSizeVersion() : null}
         {this.props.children}
 
       </div>

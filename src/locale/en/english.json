@@ -34,7 +34,8 @@
         "Redo" : "Redo",
         "Save" : "Save",
         "More" : "more",
-        "Zoom" : "zoom"
+        "Zoom" : "zoom",
+        "Home" : "Home"
     },
 
     "ImageList" : {
@@ -46,6 +47,10 @@
         "Showimage errors" : "Fail to load images",
         "Fail" : "Fail",
         "Error" : "Error"
+    },
+
+    "ImageModal" : {
+        "New" : "Create New"
     },
 
     "LoadImage" : {
@@ -72,6 +77,11 @@
         "Project" : "Project",
         "More" : "More",
         "Signin" : "SignIn",
+        "Signup" :"Sign up",
+        "Signout" :"Sign out",
+        "Success" : "Success",
+        "Delete account" : "Delete account",
+        "Error" : "Error",
         "Setting" : "Setting"
     },
 
@@ -87,7 +97,11 @@
         "Search" : "Search",
         "Project" : "Project",
         "User" : "User",
-        "Error" : "Error" 
+        "Error" : "Error",
+        "PlzSignin" : "Need to Sign in",
+        "Deletecheck" : "Are you sure you want to delete the project?",
+        "Deleteallcheck" : "Are you sure you want to delete ALL projects",
+        "Cancel" : "Cancel"
     },
 
     "Save" : {
@@ -105,7 +119,8 @@
         "High" : "High",
         "Medium" : "Medium",
         "Low" : "Low",
-        "Title" : "Title"
+        "Title" : "Title",
+        "TooLong" : "File name is too Long."
     },
 
     "SignIn" : {
@@ -148,7 +163,8 @@
         "Canvas" : "Canvas",
         "ResetCanvas" : "Reset Canvas",
         "CropCanvas" : "Start Crop",
-        "CropEndCanvas" : "End Crop"
+        "CropEndCanvas" : "End Crop",
+        "CanvasColor" : "Canvas BackgroundColor"
     },
 
     "ui/draw" : {
@@ -194,7 +210,8 @@
         "Vibrance" : "Vibrance",
         "Denoise" : "Denoise",
         "Opacity" : "Opacity",
-        "Glfx" : "glfx"
+        "Glfx" : "glfx",
+        "Close" : "Close"
     },
 
     "ui/history" : {
