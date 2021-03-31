@@ -96,6 +96,8 @@
         "Title" : "Title",
         "Search" : "Search",
         "Project" : "Project",
+        "Date" : "Date",
+        "Sort" : "Sort",
         "User" : "User",
         "Error" : "Error",
         "PlzSignin" : "Need to Sign in",

@@ -45,7 +45,7 @@ class LoadImage extends Component {
   }
 
   handleChange = (event) => {
-    document.getElementById("imgRatio").disabled = true;
+    // document.getElementById("imgRatio").disabled = true;
     let change_state = {};
     change_state[event.target.name] = event.target.value;
     this.url = ""
@@ -86,15 +86,38 @@ class LoadImage extends Component {
   }
 
   fileChange = (event) => {
-    new Promise((resolve) => {
-      let file = event.target.files[0];
-      this.setState({ url: URL.createObjectURL(file) });
-      event.target.value = null;
-      resolve();
-    })
-    .then(() => {
+    // new Promise((resolve) => {
+    //   let file = event.target.files[0];
+    //   this.setState({ url: URL.createObjectURL(file) });
+    //   event.target.value = null;
+    //   resolve();
+    // })
+    // .then(() => {
+    //   this.handleSubmit();
+    // })
+    let file = event.target.files[0];
+    event.target.value = null;
+    let imgObj = new Image();
+
+    imgObj.crossOrigin = "anonymous";
+    imgObj.onload  = () => {
+      var tempCanvas = document.createElement('CANVAS');
+      var tempCtx = tempCanvas.getContext('2d');
+      // tempCtx.drawImage(this, 0, 0);
+      tempCanvas.height = imgObj.naturalHeight;
+      tempCanvas.width = imgObj.naturalWidth;
+      tempCtx.drawImage(imgObj, 0, 0);
+      var dataURL = tempCanvas.toDataURL();
+      this.setState({url : dataURL})
       this.handleSubmit();
-    })
+    }
+
+    imgObj.onerror = () => {
+      alert('image load error');
+      console.log('fail');
+    }
+
+    imgObj.src = URL.createObjectURL(file);
   }
 
   handleImageSizeChange = (event) => {

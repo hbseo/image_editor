@@ -96,6 +96,8 @@
         "Title" : "제목",
         "Search" : "검색어",
         "Project" : "프로젝트",
+        "Date" : "날짜",
+        "Sort" : "정렬",
         "User" : "유저",
         "Error" : "오류",
         "PlzSignin" : "로그인 필요",
