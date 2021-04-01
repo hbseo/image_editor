@@ -294,7 +294,7 @@ class ImageEditor extends Component {
   }
   
   _onMouseDownEvent = (event) => {
-    if(event.target.tagName === 'CANVAS'){
+    if(event.target.tagName === 'CANVAS' || event.target.getAttribute('name') === 'layer'){
       document.addEventListener('keydown',this._onKeydownEvent);
     }
     else{

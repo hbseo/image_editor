@@ -11,6 +11,7 @@ class Project extends Component {
     this.state = {
       search: '',
       projects : [],
+      proejct_list : [],
       sort : 0 // 0,1번이 title, 2,3번이 create_date
     }
     this.canvas = null;
@@ -27,13 +28,14 @@ class Project extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({id : this.props.id, count : 20, sort : this.state.sort})
+      body: JSON.stringify({id : this.props.id, count : 20, sort : this.state.sort, search : this.state.search})
     })
     .then((res) => res.json())
     .then((data) => {
       // console.log(data);
       if(data.success){
         this.setState({projects : data.result});
+        this.showProjects();
       }
       else{
         alert(i18next.t('Project.Error'));
@@ -101,20 +103,22 @@ class Project extends Component {
           </div>
         );
       }
-      return(
-        <div id="project-list">
-          {listitem}  
-        </div>
-      );
+      console.log('ttt', listitem)
+      this.setState({project_list : listitem})
+      // return(
+      //   <div id="project-list">
+      //     {listitem}  
+      //   </div>
+      // );
     }
     else{
-      return(
-        <div id="project-list">
-          <div className="project-div">
-            {i18next.t('Project.PlzSignin')}
-          </div>
-        </div>
-      )
+      // return(
+      //   <div id="project-list">
+      //     <div className="project-div">
+      //       {i18next.t('Project.PlzSignin')}
+      //     </div>
+      //   </div>
+      // )
     }
   }
 
@@ -230,7 +234,9 @@ class Project extends Component {
             <p className="project-search-data">{i18next.t('Project.Search')} : {this.state.search}</p>
           </div> */}
         </div>
-        {this.showProjects()}
+        <div id="project-list">
+          {this.state.project_list}  
+        </div>
       </div>
     )
   }
