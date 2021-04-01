@@ -17,7 +17,7 @@ class Main extends Component {
       tab : 0,
       login_state: false,
       id : '',
-      withdrawalModal: true
+      withdrawalModal: false
     }
     i18next.changeLanguage(checkUserLanguage());
   }
@@ -114,10 +114,6 @@ class Main extends Component {
     return (
       <div>
         <div className='Main'>
-        {this.state.withdrawalModal ?
-          <Withdrawal id={this.state.id} close={this.withdrawalModalHandler}></Withdrawal>:
-          null
-        }
           <div className='sidenav'>
             <div className="site-title">
               <p className="site-title-p">image-editor</p>
@@ -174,6 +170,10 @@ class Main extends Component {
             <button onClick = {this.changeToKorean}>한글</button>
           </div> }
         </div>
+        {this.state.withdrawalModal ?
+          <Withdrawal id={this.state.id} close={this.withdrawalModalHandler}></Withdrawal>:
+          null
+        }
       </div>
     )
   }

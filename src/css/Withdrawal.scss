@@ -1,7 +1,15 @@
-.Withdrawal {
-  position: absolute;
-  z-index: 3;
-  width: 30%;
-  height: 250px;
-  background-color: rgb(145, 175, 73);
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  .withdrawal {
+    width: 350px;
+    height: 450px;
+    background-color: white;
+    border: 1px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+  }
 }

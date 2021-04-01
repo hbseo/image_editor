@@ -302,6 +302,7 @@ exports.delete = (req, res) => {
   }
 
   const respond = () => {
+    res.clearCookie('token');
     res.status(200).json({
       msg: 'success'
     })
