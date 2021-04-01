@@ -83,6 +83,8 @@ class LoadImage extends Component {
       imgHeight: this.image.height,
       imageModal : true,
     })
+    console.log("loading finish")
+
   }
 
   urlImageChange = (event) => {
