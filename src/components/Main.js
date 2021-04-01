@@ -3,6 +3,7 @@ import Project from './Project';
 import Login from './Login';
 import Newproject from './New_project';
 import LoadImage from './LoadImage';
+import Withdrawal from './Withdrawal';
 import '../css/Main.scss';
 import checkUserLanguage from './helper/CheckLang'
 import { withTranslation } from "react-i18next";
@@ -15,7 +16,8 @@ class Main extends Component {
     this.state = {
       tab : 0,
       login_state: false,
-      id : ''
+      id : '',
+      withdrawalModal: true
     }
     i18next.changeLanguage(checkUserLanguage());
   }
@@ -69,6 +71,14 @@ class Main extends Component {
     })
   }
 
+  withdrawalModalHandler = () => {
+    this.setState({withdrawalModal: !this.state.withdrawalModal});
+  }
+
+  withdrawalHandler = () => {
+
+  }
+
   checkUserLanguage = () => {
     if(navigator){
       let lang = navigator.language || navigator.userLanguage;
@@ -104,6 +114,10 @@ class Main extends Component {
     return (
       <div>
         <div className='Main'>
+        {this.state.withdrawalModal ?
+          <Withdrawal id={this.state.id} close={this.withdrawalModalHandler}></Withdrawal>:
+          null
+        }
           <div className='sidenav'>
             <div className="site-title">
               <p className="site-title-p">image-editor</p>
@@ -141,7 +155,11 @@ class Main extends Component {
           {this.state.login_state ? 
           <div className='right-dropdown'>
             <button onClick={this.logoutClickHandler}>{i18next.t('Main.Signout')}</button>
-            <button>{i18next.t('Main.Delete account')}</button>
+            <Link to={{
+              pathname: `/ChangePassword/${this.state.id}`,
+            }}><button>{i18next.t('Login.ChangePW')}</button></Link>
+            {/* <button>{i18next.t('Main.Delete account')}</button> */}
+            <button onClick={this.withdrawalModalHandler}>{i18next.t('Main.Delete account')}</button>
             <button onClick = {this.changeToEnglish}>English</button>
             <button onClick = {this.changeToKorean}>한글</button>
           </div> :
