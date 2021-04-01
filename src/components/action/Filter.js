@@ -28,97 +28,93 @@ class Filter extends Action {
     let canvas = this.getCanvas();
     if (obj.type === "image") {
       switch (option) {
-        case 'grey':
-          obj.filters[0] = checked && (new fabric.Image.filters.Grayscale());
-          break;
         case 'invert':
-          obj.filters[1] = checked && (new fabric.Image.filters.Invert());
+          obj.filters[0] = checked && (new fabric.Image.filters.Invert());
           break;
         case 'brownie':
-          obj.filters[2] = checked && (new fabric.Image.filters.Brownie());
+          obj.filters[1] = checked && (new fabric.Image.filters.Brownie());
           break;
         case 'technicolor':
-          obj.filters[3] = checked && (new fabric.Image.filters.Technicolor());
+          obj.filters[2] = checked && (new fabric.Image.filters.Technicolor());
           break;
         case 'polaroid':
-          obj.filters[4] = checked && (new fabric.Image.filters.Polaroid());
+          obj.filters[3] = checked && (new fabric.Image.filters.Polaroid());
           break;
         case 'blackwhite':
-          obj.filters[5] = checked && (new fabric.Image.filters.BlackWhite());
+          obj.filters[4] = checked && (new fabric.Image.filters.BlackWhite());
           break;
         case 'vintage':
-          obj.filters[6] = checked && (new fabric.Image.filters.Vintage());
+          obj.filters[5] = checked && (new fabric.Image.filters.Vintage());
           break;
         case 'sepia':
-          obj.filters[7] = checked && (new fabric.Image.filters.Sepia());
+          obj.filters[6] = checked && (new fabric.Image.filters.Sepia());
           break;
         case 'kodachrome':
-          obj.filters[8] = checked && (new fabric.Image.filters.Kodachrome());
+          obj.filters[7] = checked && (new fabric.Image.filters.Kodachrome());
           break;
         case 'emboss':
-          obj.filters[9] = checked && (new fabric.Image.filters.Convolute({
+          obj.filters[8] = checked && (new fabric.Image.filters.Convolute({
             matrix :  [ 1,   1,  1,
                         1, 0.7, -1,
                        -1,  -1, -1 ]
           }));
           break;
         case 'sharpen':
-          obj.filters[10] = checked && (new fabric.Image.filters.Convolute({
+          obj.filters[9] = checked && (new fabric.Image.filters.Convolute({
             matrix: [  0, -1,  0,
                       -1,  5, -1,
                        0, -1,  0 ]
           }));
           break;
-        case 'removecolor':
-          obj.filters[11] = checked && (new fabric.Image.filters.RemoveColor({
-            distance: value.distance,
-            color: value.color,
-          }));
-          break;
-        case 'resize':
-          obj.filters[12] = (new fabric.Image.filters.Resize({
-            resizeType: 'sliceHack',
-            scaleX : 0.2,
-            scaleY : 0.2
+        // case 'resize':
+        //   obj.filters[11] = (new fabric.Image.filters.Resize({
+        //     resizeType: 'sliceHack',
+        //     scaleX : 0.2,
+        //     scaleY : 0.2
+        //   }));
+        //   break;
+        case 'grayscale':
+          obj.filters[10] = checked && (new fabric.Image.filters.Grayscale({
+            mode : gray_mode[value]
           }));
           break;
         case 'brightness':
-          obj.filters[15] = checked && (new fabric.Image.filters.Brightness({
+          obj.filters[11] = checked && (new fabric.Image.filters.Brightness({
             brightness: value
           }));
           break;
         case 'contrast':
-          obj.filters[16] = checked && (new fabric.Image.filters.Contrast({
+          obj.filters[12] = checked && (new fabric.Image.filters.Contrast({
             contrast: value
           }));
           break;
         case 'pixelate':
-          obj.filters[17] = checked && (new fabric.Image.filters.Pixelate({
+          obj.filters[13] = checked && (new fabric.Image.filters.Pixelate({
             blocksize : value
           }));
           break;
         case 'blur':
-          obj.filters[18] = checked && (new fabric.Image.filters.Blur({
+          obj.filters[14] = checked && (new fabric.Image.filters.Blur({
             blur : value
           }));
           break;
         case 'noise':
-          obj.filters[19] = checked && (new fabric.Image.filters.Noise({
+          obj.filters[15] = checked && (new fabric.Image.filters.Noise({
             noise : value
           }));
           break;          
         case 'saturation':
-          obj.filters[20] = checked && (new fabric.Image.filters.Saturation({
+          obj.filters[16] = checked && (new fabric.Image.filters.Saturation({
             saturation : value
           }));
           break;
         case 'hue':
-          obj.filters[21] = checked && (new fabric.Image.filters.HueRotation({
+          obj.filters[17] = checked && (new fabric.Image.filters.HueRotation({
             rotation : value
           }));
           break;
         case 'ink':
-          obj.filters[22] = checked && (new Ink({
+          obj.filters[18] = checked && (new Ink({
             ink_matrix : {
               ink : value ,
               width : obj.width,
@@ -127,7 +123,7 @@ class Filter extends Action {
           }));
           break;
         case 'vignette':
-          obj.filters[23] = checked && (new Vignette({
+          obj.filters[19] = checked && (new Vignette({
             vignette_matrix : {
               size :  0.66,
               amount : value
@@ -135,7 +131,7 @@ class Filter extends Action {
           }));
           break;
         case 'zoomblur':
-          obj.filters[24] = checked && (new ZoomBlur({
+          obj.filters[20] = checked && (new ZoomBlur({
             zoomblur_matrix : {
               center_x : obj.width/2, // Controllable
               center_y : obj.height/2, // Controllable
@@ -146,12 +142,12 @@ class Filter extends Action {
           }));
           break;
         case 'vibrance':
-          obj.filters[25] = checked && (new Vibrance({
+          obj.filters[21] = checked && (new Vibrance({
             amount : value
           }));
           break;
         case 'denoise':
-          obj.filters[26] = checked && (new Denoise({
+          obj.filters[22] = checked && (new Denoise({
             denoise_matrix : {
               exponent : value,
               width : obj.width,
@@ -159,8 +155,15 @@ class Filter extends Action {
             }
           }));
           break;
+        case 'removecolor':
+          // console.log(checked, value)
+          obj.filters[23] = checked && (new fabric.Image.filters.RemoveColor({
+            distance: value.distance,
+            color: value.color,
+          }));
+          break;
         case 'blend-color':
-          obj.filters[27] = checked && (new fabric.Image.filters.BlendColor({
+          obj.filters[24] = checked && (new fabric.Image.filters.BlendColor({
             color: value.color,
             mode: value.mode,
             alpha: value.alpha
@@ -172,7 +175,7 @@ class Filter extends Action {
 
         default:
       }
-      this.saveState(checked ? 'apply filter ' : 'off filter ' + option);
+      this.saveState(checked ? 'apply filter ' + option : 'off filter ' + option);
       this.updateObject();
       obj.applyFilters();
     }
@@ -184,7 +187,7 @@ class Filter extends Action {
 
 export default Filter;
 
-
+const gray_mode = ['average', 'luminosity', 'lightness']
 
 /*
  applyfiltervalue ( index, prop, value)

@@ -891,6 +891,10 @@ class ImageEditor extends Component {
     this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , event.target.getAttribute('filter'), event.target.checked, event.target.value);
   }
 
+  filterValueObject = (option, checked, value) => {
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , option, checked, value);
+  }
+
   rangeFilterObject = (filterOption, checked, value) => {
     this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , filterOption, checked, value);
   }
@@ -1356,6 +1360,7 @@ class ImageEditor extends Component {
           filterObject={this.filterObject} 
           getBackgroundImage = {this.getBackgroundImage} 
           rangeFilterObject={this.rangeFilterObject}
+          filterValueObject = {this.filterValueObject}
           />,
       3: <IconUI 
           object={this.state.activeObject} 
