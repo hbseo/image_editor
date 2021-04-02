@@ -114,36 +114,37 @@ class Main extends Component {
     return (
       <div>
         <div className='Main'>
-          <div className='sidenav'>
-            <div className="site-title">
-              <p className="site-title-p">image-editor</p>
-            </div>
-            <button onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
-            <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button>
-            <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
-            {/* <button className='dropdown-btn'>{t('Main.Load Image')}</button> */}
-            {/* <div className='dropdown-container'>
+          <div className='topnav'>
+            <p className="site-title-p">Image Editor</p>
+          </div>
+          <div className="main-box">
+            <div className='sidenav'>
+              <div className="site-title">
+                <p className="site-title-p">image-editor</p>
+              </div>
+              <button onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
               <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button>
               <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
-              <button onClick={this.changeTab} tab='3'>{t('Main.Signin')}</button>
-            </div> */}
-            {this.state.login_state ? 
-            <div>
-              <div className='dropdown-btn3'>
-                <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
-              </div> 
-              <div className='sidenav-user'>
-                {this.state.id}
-              </div>
-            </div> : null
-            }
-          </div>
-          
-          <div className='inner'>
-            <div className='topnav'>
-              <p className="site-title-p">Image Editor</p>
+              {/* <button className='dropdown-btn'>{t('Main.Load Image')}</button> */}
+              {/* <div className='dropdown-container'>
+                <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button>
+                <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
+                <button onClick={this.changeTab} tab='3'>{t('Main.Signin')}</button>
+              </div> */}
+              {this.state.login_state ? 
+              <div>
+                <div className='dropdown-btn3'>
+                  <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
+                </div> 
+                <div className='sidenav-user'>
+                  {this.state.id}
+                </div>
+              </div> : null
+              }
             </div>
-            {tab[this.state.tab]}
+            <div className='inner'>
+              {tab[this.state.tab]}
+            </div>
           </div>
         </div>
         <div className='right'>

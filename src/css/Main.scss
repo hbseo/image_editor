@@ -70,6 +70,7 @@
 
   .Main{
 	  display: flex;
+	  flex-direction: column;
 	  width: 100vw;
 	  height: 100vh;
   }
@@ -91,6 +92,10 @@
 	text-align: center;
   }
 
+  .main-box{
+	  display: flex;
+	  height: calc(100vh - 5vmin);
+  }
   
   .sidenav {
 	// height: 50%;
