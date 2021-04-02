@@ -246,16 +246,16 @@
         "SendBackwards" : "뒤로 보내기",
         "BringToFront" : "맨 앞으로 보내기",
         "BringForward" : "앞으로 보내기",
-        "Delete" : "선택 개체 삭제",
+        "Delete" : "개체 삭제",
         "Deleteall" : "모든 객체 삭제",
         "Group" : "그룹화",
         "Ungroup" : "그룹해제",
-        "Flip" : "번역필요",
-        "Flip x" : "번역필요",
-        "Flip y" : "번역필요",
+        "Flip" : "반전",
+        "Flip x" : "상하반전",
+        "Flip y" : "좌우반전",
         "Change Scale" : "확대 및 축소",
         "Lock Ratio" : "비율 유지",
-        "Order" : "순서?"
+        "Order" : "순서"
     },
 
     "ui/rotation" : {

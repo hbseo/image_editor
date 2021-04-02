@@ -100,6 +100,10 @@
     height: 4vmin;
 }
 
+#left-align svg:hover{
+    fill: blue;
+}
+
 #right-align{
     background-image: url(../img/align-right.svg);
     background-repeat: no-repeat;
