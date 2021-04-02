@@ -499,7 +499,9 @@ class ImageEditor extends Component {
 		});
     
     this._canvas.on('object:added', (event) => {
-
+      if(this._canvas.isDrawingMode && !this.lock) {
+        this.saveState('drawing add');
+      }
     })
     this._canvas.on('object:modified', (event) => {
 

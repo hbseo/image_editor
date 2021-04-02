@@ -28,10 +28,13 @@ export default withTranslation()(class Text extends Component{
       showfont: false,
       testcolor : "#ffffff"
     };
+    this.isPressed = false;
   }
 
   componentDidMount(){
     // console.log('Text UI Mount');
+    document.addEventListener('mousedown', this.onFontSizemousedownEvent);
+    document.addEventListener('mouseup', this.onFontSizemouseupEvent);
     this.documentUpdate();
   }
   componentDidUpdate(){
@@ -41,6 +44,8 @@ export default withTranslation()(class Text extends Component{
   componentWillUnmount(){
     // console.log('Text UI Unmount');
     document.removeEventListener('mousedown', this.onShowFontEvent);
+    document.removeEventListener('mousedown', this.onFontSizemousedownEvent);
+    document.removeEventListener('mouseup', this.onFontSizemouseupEvent);
   }
 
   documentUpdate = () => {
@@ -102,6 +107,28 @@ export default withTranslation()(class Text extends Component{
     .then(() => {
       this.setState({fontSize : this.state.fontSize + level});
     })
+  }
+
+  onFontSizemousedownEvent = (event) => {
+    if(event.target.className === "fontSizeBtn") {
+      this.isPressed =  true;
+      this.handlefontSizeInterval(event);
+    }
+  }
+
+  onFontSizemouseupEvent = (event) => {
+    if(event.target.className === "fontSizeBtn") {
+      this.isPressed =  false;
+    }
+  }
+
+  handlefontSizeInterval = (event) => {
+    if(this.isPressed) {
+      this.handlefontSizeButton(event);
+      setTimeout(() => {
+        this.handlefontSizeInterval(event);
+      },100)
+    }
   }
 
   addText = () => {
@@ -200,8 +227,8 @@ export default withTranslation()(class Text extends Component{
               value={this.state.fontSize} 
             />
             <div className="u-d">
-              <button onClick={this.handlefontSizeButton} text='fontSize' name='fontSize' id='fontSize' updown="t">UP</button>
-              <button onClick={this.handlefontSizeButton} text='fontSize' name='fontSize' id='fontSize' updown="f">Down </button>
+              <button onClick={this.handlefontSizeButton} className="fontSizeBtn" text='fontSize' name='fontSize' id='fontSize' updown="t">UP</button>
+              <button onClick={this.handlefontSizeButton} className="fontSizeBtn" text='fontSize' name='fontSize' id='fontSize' updown="f">Down </button>
             </div>
           </div>
 

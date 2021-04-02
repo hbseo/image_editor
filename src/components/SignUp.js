@@ -21,17 +21,27 @@ class SignUp extends Component {
     this.choose = null;
   }
   registerHandler = (e) => {
-    const { name, value } = e.target;
-    if(name === 'choose') {
-      this.choose = value;
-      document.getElementById("options-view-button").checked = false;
-    }
-    else {
-      this.setState({ [name]: value });
-    }
-    if(name === 'id') {
-      this.registerDupHandler(value);
-    }
+    let { name, value } = e.target;
+    new Promise((resolve) => {
+      if(name === 'choose') {
+        this.choose = value;
+        document.getElementById("options-view-button").checked = false;
+      }
+      else {
+        if(name === "id" || name === "password") {
+          let pattern = /[^a-zA-Z-_0-9]/g;
+          if(value.length > 0 && value.match(pattern)) value = value.replace(pattern, "");
+        }
+        this.setState({ [name]: value });
+      }
+      resolve();
+    })
+    .then(() => {
+      if(this.state.id || this.state.password) this.validateInput(name);
+      if(name === 'id') {
+        this.registerDupHandler(value);
+      }
+    })
   }
   validatePassword = () => {
     if(this.state.password === '' || this.state.passwordConfirm === '') {
@@ -40,8 +50,70 @@ class SignUp extends Component {
     return this.state.password === this.state.passwordConfirm;
   }
 
+  validateInput = (name) => {
+    let lowerCaseLetters = /[a-z]/g;
+    let upperCaseLetters = /[A-Z]/g;
+    let numbers = /[0-9]/g;
+    let length = /.{8,20}/g;
+    if(name === "id") {
+      if(this.state.id.match(lowerCaseLetters)) {
+        document.getElementById("letter_id").classList.remove("invalid");
+        document.getElementById("letter_id").classList.add("valid");
+      } else {
+        document.getElementById("letter_id").classList.remove("valid");
+        document.getElementById("letter_id").classList.add("invalid");
+      }
+      if(this.state.id.match(numbers)) {
+        document.getElementById("number_id").classList.remove("invalid");
+        document.getElementById("number_id").classList.add("valid");
+      } else {
+        document.getElementById("number_id").classList.remove("valid");
+        document.getElementById("number_id").classList.add("invalid");
+      }
+      if(this.state.id.match(length)) {
+        document.getElementById("length_id").classList.remove("invalid");
+        document.getElementById("length_id").classList.add("valid");
+      } else {
+        document.getElementById("length_id").classList.remove("valid");
+        document.getElementById("length_id").classList.add("invalid");
+      }
+    }
+    if(name === "password") {
+      if(this.state.password.match(lowerCaseLetters)) {
+        document.getElementById("letter_pass").classList.remove("invalid");
+        document.getElementById("letter_pass").classList.add("valid");
+      } else {
+        document.getElementById("letter_pass").classList.remove("valid");
+        document.getElementById("letter_pass").classList.add("invalid");
+      }
+      if(this.state.password.match(upperCaseLetters)) {
+        document.getElementById("capital_pass").classList.remove("invalid");
+        document.getElementById("capital_pass").classList.add("valid");
+      } else {
+        document.getElementById("capital_pass").classList.remove("valid");
+        document.getElementById("capital_pass").classList.add("invalid");
+      }
+      if(this.state.password.match(numbers)) {
+        document.getElementById("number_pass").classList.remove("invalid");
+        document.getElementById("number_pass").classList.add("valid");
+      } else {
+        document.getElementById("number_pass").classList.remove("valid");
+        document.getElementById("number_pass").classList.add("invalid");
+      }
+      if(this.state.password.match(length)) {
+        document.getElementById("length_pass").classList.remove("invalid");
+        document.getElementById("length_pass").classList.add("valid");
+      } else {
+        document.getElementById("length_pass").classList.remove("valid");
+        document.getElementById("length_pass").classList.add("invalid");
+      }
+    }
+  }
+
   registerClickHandler = (e) => {
     e.preventDefault();
+    let pattern = "^(?=.*[0-9])(?=.*[a-z]).{8,20}$"
+    if(!this.state.id.match(pattern) || !this.state.password.match(pattern)) return;
     if(!this.validatePassword()) {
       alert('아이디 중복 또는 옮바르지 않은 비밀번호');
       return;
@@ -114,6 +186,27 @@ class SignUp extends Component {
         this.id_style = {border: '5px solid red'}
       }
     }
+    let validId = null;
+    let validPass = null;
+    if(this.state.id) {
+      validId = 
+      <div className="validateId">
+        <h3>아이디 요구 조건</h3>
+        <p className="invalid" id="letter_id"><b>소문자</b></p>
+        <p className="invalid" id="number_id"><b>숫자</b></p>
+        <p className="invalid" id="length_id"><b>최소길이 8</b></p>
+      </div>
+    }
+    if(this.state.password) {
+      validPass = 
+      <div className="validatePass">
+        <h3>비밀번호 요구 조건</h3>
+        <p className="invalid" id="letter_pass"><b>소문자</b></p>
+        <p className="invalid" id="capital_pass"><b>대문자</b></p>
+        <p className="invalid" id="number_pass"><b>숫자</b></p>
+        <p className="invalid" id="length_pass"><b>최소길이 8</b></p>
+      </div>
+    }
     return (
       <div className='SignUp'>
         <div className="limiter">
@@ -124,21 +217,23 @@ class SignUp extends Component {
                   Member Register
               </span>
                 <div className="wrap-input100 validate-input" data-validate='ID is required'>
-                  <input className="input100" type="text" name="id" placeholder="ID" value={this.state.id} onChange={this.registerHandler} style={this.id_style} />
+                  <input className="input100" type="text" name="id" placeholder="ID" value={this.state.id} onChange={this.registerHandler} style={this.id_style} maxLength="20" />
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-envelope" aria-hidden="true" />
                   </span>
+                  {validId}
                 </div>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
-                  <input className="input100" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.registerHandler}/>
+                  <input className="input100" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.registerHandler} maxLength="20"/>
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-lock" aria-hidden="true" />
                   </span>
+                  {validPass}
                 </div>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
-                  <input className="input100" type="password" name="passwordConfirm" placeholder="Password Confirm" vlaue={this.state.passwordConfirm} onChange={this.registerHandler} />
+                  <input className="input100" type="password" name="passwordConfirm" placeholder="Password Confirm" vlaue={this.state.passwordConfirm} onChange={this.registerHandler} maxLength="20"/>
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-lock" aria-hidden="true" />
