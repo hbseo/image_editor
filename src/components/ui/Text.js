@@ -226,10 +226,6 @@ export default withTranslation()(class Text extends Component{
               min='1'
               value={this.state.fontSize} 
             />
-            <div className="u-d">
-              <button onClick={this.handlefontSizeButton} className="fontSizeBtn" text='fontSize' name='fontSize' id='fontSize' updown="t">UP</button>
-              <button onClick={this.handlefontSizeButton} className="fontSizeBtn" text='fontSize' name='fontSize' id='fontSize' updown="f">Down </button>
-            </div>
           </div>
 
           <label htmlFor="align" className="option-title">{i18next.t('ui/text.Align')}</label>
