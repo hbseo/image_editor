@@ -202,12 +202,14 @@ exports.update = (req, res) => {
 
 exports.get = (req, res) => {
   const database = new Database();
-  const {id, count} = req.body;
+  const {id, count, sort, search} = req.body;
   let check_query = `SELECT idx FROM USERS WHERE userid = "${id}";`;
+  let sort_option = sortlist[sort];
+  let search_option = search.length != 0 ? `AND title LIKE '%${search}%'` : ``;
 
   const get = (result) => {
     if(result[0]) {
-      let get_query = `SELECT * FROM PROJECTS WHERE useridx = ${result[0].idx} LIMIT ${count};`;
+      let get_query = `SELECT * FROM PROJECTS WHERE useridx = ${result[0].idx} ` + search_option + sort_option +` LIMIT ${count};`;
       database.query(get_query)
       .then(respond)
       .catch(onError);
@@ -223,7 +225,9 @@ exports.get = (req, res) => {
     if(result) {
       res.status(200).json({
         success : true,
-        result : result
+        result : result,
+        sort_option : sort_option,
+        search : search_option
       })
     }
     else {
@@ -418,3 +422,10 @@ exports.deleteall = (req, res) => {
     .catch(onError)
   })
 }
+
+const sortlist = [
+'ORDER BY TITLE ASC',
+'ORDER BY TITLE DESC',
+'ORDER BY create_date ASC',
+'ORDER BY create_date DESC',
+]

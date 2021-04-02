@@ -30,8 +30,8 @@ export const fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New',
 'Cambria', 'Garamond', 'Perpetua', 'brush Script MT', 'Lucida Bright',
 'Copperplate'];
 
-export const filterList = ['Grayscale', 'Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome',
-'Convolute', 'Resize', '', '', '', '', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation','Ink', 'Vignette', 'ZoomBlur', 'Vibrance', 'Denoise' ];
+export const filterList = ['Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome','Convolute', 'Convolute', 
+'Grayscale', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation', 'Ink', 'Vignette', 'ZoomBlur', 'Vibrance', 'Denoise', 'RemoveColor'];
 
 
 export const ObjectIcon = {

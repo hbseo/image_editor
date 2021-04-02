@@ -32,20 +32,20 @@ class LoadImage extends Component {
     this.image.src = this.url;
   }
 
-  handleUrlSubmit = (event) => {
-    if (event) { event.preventDefault(); }
-    this.url = 'https://cors-anywhere.herokuapp.com/' + this.state.url;
-    console.log(this.url); 
-    this.setState({ url: "", submit: false, width: 0, height: 0, imgRatio: 100 });
-    this.image = new Image();
-    this.image.crossOrigin = "";
-    this.image.onload = this.imageFound;
-    this.image.onerror = this.imageNotFound;
-    this.image.src = this.url;
-  }
+  // handleUrlSubmit = (event) => {
+  //   if (event) { event.preventDefault(); }
+  //   this.url = 'https://cors-anywhere.herokuapp.com/' + this.state.url;
+  //   console.log(this.url); 
+  //   this.setState({ url: "", submit: false, width: 0, height: 0, imgRatio: 100 });
+  //   this.image = new Image();
+  //   this.image.crossOrigin = "";
+  //   this.image.onload = this.imageFound;
+  //   this.image.onerror = this.imageNotFound;
+  //   this.image.src = this.url;
+  // }
 
   handleChange = (event) => {
-    document.getElementById("imgRatio").disabled = true;
+    // document.getElementById("imgRatio").disabled = true;
     let change_state = {};
     change_state[event.target.name] = event.target.value;
     this.url = ""
@@ -83,18 +83,69 @@ class LoadImage extends Component {
       imgHeight: this.image.height,
       imageModal : true,
     })
+    console.log("loading finish")
+
+  }
+
+  urlImageChange = (event) => {
+    if (event) { event.preventDefault(); }
+
+    let imgObj = new Image();
+
+    imgObj.crossOrigin = "anonymous";
+    imgObj.onload  = () => {
+      var tempCanvas = document.createElement('CANVAS');
+      var tempCtx = tempCanvas.getContext('2d');
+      // tempCtx.drawImage(this, 0, 0);
+      tempCanvas.height = imgObj.naturalHeight;
+      tempCanvas.width = imgObj.naturalWidth;
+      tempCtx.drawImage(imgObj, 0, 0);
+      var dataURL = tempCanvas.toDataURL();
+      this.setState({url : dataURL})
+      this.handleSubmit();
+    }
+
+    imgObj.onerror = () => {
+      alert('image load error');
+      console.log('fail');
+    }
+
+    imgObj.src = 'https://cors-anywhere.herokuapp.com/' + this.state.url;
   }
 
   fileChange = (event) => {
-    new Promise((resolve) => {
-      let file = event.target.files[0];
-      this.setState({ url: URL.createObjectURL(file) });
-      event.target.value = null;
-      resolve();
-    })
-    .then(() => {
+    // new Promise((resolve) => {
+    //   let file = event.target.files[0];
+    //   this.setState({ url: URL.createObjectURL(file) });
+    //   event.target.value = null;
+    //   resolve();
+    // })
+    // .then(() => {
+    //   this.handleSubmit();
+    // })
+    let file = event.target.files[0];
+    event.target.value = null;
+    let imgObj = new Image();
+
+    imgObj.crossOrigin = "anonymous";
+    imgObj.onload  = () => {
+      var tempCanvas = document.createElement('CANVAS');
+      var tempCtx = tempCanvas.getContext('2d');
+      // tempCtx.drawImage(this, 0, 0);
+      tempCanvas.height = imgObj.naturalHeight;
+      tempCanvas.width = imgObj.naturalWidth;
+      tempCtx.drawImage(imgObj, 0, 0);
+      var dataURL = tempCanvas.toDataURL();
+      this.setState({url : dataURL})
       this.handleSubmit();
-    })
+    }
+
+    imgObj.onerror = () => {
+      alert('image load error');
+      console.log('fail');
+    }
+
+    imgObj.src = URL.createObjectURL(file);
   }
 
   handleImageSizeChange = (event) => {
@@ -158,7 +209,7 @@ class LoadImage extends Component {
           fileChange = {this.fileChange}
           handleChange = {this.handleChange}
           handleSubmit = {this.handleSubmit}
-          handleUrlSubmit = {this.handleUrlSubmit}
+          urlImageChange = {this.urlImageChange}
           url = {this.state.url}
           imgUrl = {this.url}>
           {this.showPreviewImg()}

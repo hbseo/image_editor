@@ -1,0 +1,19 @@
+#mini-image-list {
+  margin: 0.1% 3% 0.1% 3%;
+  padding: 1%;
+  border-radius: 10px;
+  background-color: #eeeeee;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  // vertical-align: bottom;
+
+  .mini-image-list-box {
+
+
+    .image-list-img {
+      width: 80px;
+      height: auto;
+    }
+  }
+}

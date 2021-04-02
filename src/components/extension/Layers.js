@@ -49,7 +49,7 @@ class Layers extends Extension {
       if(canvas){
         const listitem = canvas._objects.map((obj, index) =>
           <div key = {index}>
-            <button onClick = {this.clickLayer} index = {index}>{obj.type}</button>
+            <button onClick = {this.clickLayer} index = {index} name="layer">{obj.type}</button>
           </div>
         );
         return(

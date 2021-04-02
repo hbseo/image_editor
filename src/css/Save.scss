@@ -4,7 +4,8 @@ $label-padding: $title-container-padding !default;
     display: flex;
     justify-content: center;
     align-items: center;
-
+    z-index: 1;
+    
     .saveModal {
         width: 350px;
         height: 450px;

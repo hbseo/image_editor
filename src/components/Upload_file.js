@@ -18,7 +18,7 @@ class Upload_file extends Component {
             <input type='file' id='input-file' onChange={this.props.fileChange} accept='image/*' style={{ display: 'none' }}></input>
           </div>
           <div className='url'>
-            <form id='imgload' onSubmit={this.props.handleUrlSubmit}>
+            <form id='imgload' onSubmit={this.props.urlImageChange}>
               <div className="input-group">
                 <input className="input-url" name='url' value={this.props.url} onChange={this.props.handleChange} placeholder='https://example.com/example.jpg'></input>
                 <label htmlFor="url">URL:</label>
