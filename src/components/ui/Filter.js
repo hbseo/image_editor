@@ -25,6 +25,16 @@ export default withTranslation()(class Filter extends Component{
       vibrance : 0,
       denoise : 50,
       grayscale : 0,
+      blendcolor : {
+        color : '#ffffff',
+        mode : 'add',
+        alpha : 0
+      },
+      gamma : {
+        r : 0,
+        g : 0,
+        b : 0
+      },
       opacity : 1,
       filtermenu : false, // true = open
       adjustmenu : false,
@@ -50,6 +60,7 @@ export default withTranslation()(class Filter extends Component{
     if((nextProps.object.type === 'image') || ( nextProps.object.type === 'not active' && nextProps.getBackgroundImage())) {
       if(nextProps.object.type === 'not active') { image = nextProps.getBackgroundImage(); }
       let ret = {};
+      ret['grayscale'] = image.filters[10] ? Number(gray_mode.indexOf(image.filters[10].mode)) : 0;
       ret['brightness'] = image.filters[11] ? Number(image.filters[11].brightness) : 0;
       ret['contrast'] = image.filters[12] ? Number(image.filters[12].contrast) : 0;
       ret['pixelate'] = image.filters[13] ? Number(image.filters[13].blocksize) : 1;
@@ -58,12 +69,13 @@ export default withTranslation()(class Filter extends Component{
       ret['saturation'] = image.filters[16] ? Number(image.filters[16].saturation) : 0;
       ret['hue'] = image.filters[17] ? Number(image.filters[17].rotation) : 0;
       ret['ink'] = image.filters[18] ? Number(image.filters[18].ink_matrix.ink) : 0;
-      ret['removecolor'] = image.filters[23] ? { color : image.filters[23].color , distance : image.filters[23].distance} : { color : prevState.removecolor.color , distance : 0};
       ret['vignette'] = image.filters[19] ? Number(image.filters[19].vignette_matrix.amount) : 0;
       ret['zoomblur'] = image.filters[20] ? Number(image.filters[20].zoomblur_matrix.strength) : 0;
       ret['vibrance'] = image.filters[21] ? Number(image.filters[21].amount) : 0;
       ret['denoise'] = image.filters[22] ? Number(image.filters[22].denoise_matrix.exponent) : 50;
-      ret['grayscale'] = image.filters[10] ? Number(gray_mode.indexOf(image.filters[10].mode)) : 0;
+      ret['removecolor'] = image.filters[23] ? { color : image.filters[23].color , distance : image.filters[23].distance} : { color : prevState.removecolor.color , distance : 0};
+      ret['blendcolor'] = image.filters[24] ? { color : image.filters[24].color , alpha : image.filters[24].alpha, mode : image.filters[24].mode} : { color : prevState.blendcolor.color , mode : 'add', alpha : 0};
+      ret['gamma'] = image.filters[25] ? { r : image.filters[25].r , g : image.filters[25].g, b : image.filters[25].b} : { r : 0, g : 0, b : 0 };
       ret['opacity'] = image.opacity;
       // console.log("prevstate ",prevState.removecolor)
       return ret;
@@ -160,13 +172,31 @@ export default withTranslation()(class Filter extends Component{
     })
   }
 
+  handleBlendColorChange = (event) => {
+    const value = { color : this.state.blendcolor.color, alpha : event.target.value, mode : this.state.blendcolor.mode}
+    let filterOption = event.target.getAttribute('filter');
+    let checked = $("input:checkbox[id='"+ filterOption +"-checkbox']").is(":checked");
+    new Promise((resolve) => {
+      this.setState({blendcolor : value });
+      console.log(filterOption, checked, value)
+      resolve();
+    })
+    .then(() => {
+      this.props.rangeFilterObject(filterOption, checked, value);
+    })
+  }
+
   //this.props.filterObject 대신 사용하는 함수 : value 전달위해 : 체크박스 함수에 사용
   removeColorObject = (event) => {
     this.props.filterValueObject('removecolor', event.target.checked, this.state.removecolor )
   }
 
+  blendColorObject = (event) => {
+    this.props.filterValueObject('blendcolor', event.target.checked, this.state.blendcolor )
+  }
+
   //removecolor color 함수에 사용. 색상이 변경되면, 체크여부 확인 후, 현재 distance와 함께 필터 적용.
-  setColor = (event) => {
+  setRemoveColor = (event) => {
     const value = {color  : event.target.value, distance : this.state.removecolor.distance}
     new Promise((resolve) => {
       // console.log("what : ", event.target.value)
@@ -181,7 +211,23 @@ export default withTranslation()(class Filter extends Component{
         this.props.rangeFilterObject('removecolor', checked, value);
       }
     })
+  }
 
+  setBlendColor = (event) => {
+    const value = {color  : event.target.value, alpha : this.state.blendcolor.alpha, mode:  this.state.blendcolor.mode}
+    new Promise((resolve) => {
+      // console.log("what : ", event.target.value)
+      this.setState({ blendcolor : value});
+      resolve();
+    })
+    .then(() => {
+      let checked = $("input:checkbox[id='blendcolor-checkbox']").is(":checked");
+      // console.log("setcolor : ", this.state.removecolor, checked)
+      if(checked){
+        // console.log("checkde : ", value)
+        this.props.rangeFilterObject('blendcolor', checked, value);
+      }
+    })
   }
 
   render(){
@@ -459,7 +505,7 @@ export default withTranslation()(class Filter extends Component{
                 <div>{i18next.t('ui/filter.RemoveColor')}</div>
                 <input type='checkbox' id="removecolor-checkbox" className='rangefilter' onClick={this.removeColorObject} filter='removecolor'/>
                 <div className="range-box">
-                  <input type="color" id="colorSource" value={this.state.removecolor.color} onChange = { this.setColor}/>
+                  <input type="color" id="colorSource" value={this.state.removecolor.color} onChange = { this.setRemoveColor}/>
                   <input
                     type='range'
                     className='filter'
@@ -470,6 +516,24 @@ export default withTranslation()(class Filter extends Component{
                     step='0.01'
                     value={this.state.removecolor.distance || 0}
                     onChange={ this.handleRemoveColorChange } filter='removecolor'
+                  />
+                  {/* <label id="hue-value">{this.state.hue}</label> */}
+                  {/* {this.props.object.type === 'image' && this.props.object.filters[21] ? this.props.object.filters[21].rotation : 0 } */}
+                </div>
+                <div>{i18next.t('ui/filter.BlendColor')}</div>
+                <input type='checkbox' id="blendcolor-checkbox" className='rangefilter' onClick={this.blendColorObject} filter='blendcolor'/>
+                <div className="range-box">
+                  <input type="color" id="colorSource" value={this.state.blendcolor.color} onChange = { this.setBlendColor }/>
+                  <input
+                    type='range'
+                    className='filter'
+                    id='blendcolor'
+                    min='0'
+                    max='1'
+                    name='blendcolor'
+                    step='0.01'
+                    value={this.state.blendcolor.alpha || 0}
+                    onChange={ this.handleBlendColorChange } filter='blendcolor'
                   />
                   {/* <label id="hue-value">{this.state.hue}</label> */}
                   {/* {this.props.object.type === 'image' && this.props.object.filters[21] ? this.props.object.filters[21].rotation : 0 } */}

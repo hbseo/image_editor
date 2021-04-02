@@ -9,7 +9,8 @@ import { fabric } from 'fabric';
 class Filter extends Action {
   constructor(App) {
     super('Filter', App);
-    console.log()
+    fabric.filterBackend  = new fabric.WebglFilterBackend()
+    fabric.isWebglSupported(fabric.textureSize);
   }
 
   previewFilter = (obj, option) => {
@@ -162,11 +163,20 @@ class Filter extends Action {
             color: value.color,
           }));
           break;
-        case 'blend-color':
+        case 'blendcolor':
+          // console.log(value)
           obj.filters[24] = checked && (new fabric.Image.filters.BlendColor({
             color: value.color,
             mode: value.mode,
             alpha: value.alpha
+          }));
+          // console.log(obj.filters)
+          break;
+        case 'gamma':
+          obj.filters[25] = checked && (new fabric.Image.filters.Gamma({
+            r: parseFloat(value.r),
+            g: parseFloat(value.g),
+            n: parseFloat(value.b)
           }));
           break;
         case 'opacity':
