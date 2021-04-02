@@ -11,6 +11,8 @@ class Project extends Component {
     this.state = {
       search: '',
       projects : [],
+      proejct_list : [],
+      sort : 0 // 0,1번이 title, 2,3번이 create_date
     }
     this.canvas = null;
   }
@@ -26,13 +28,14 @@ class Project extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({id : this.props.id, count : 10})
+      body: JSON.stringify({id : this.props.id, count : 20, sort : this.state.sort, search : this.state.search})
     })
     .then((res) => res.json())
     .then((data) => {
       // console.log(data);
       if(data.success){
         this.setState({projects : data.result});
+        this.showProjects();
       }
       else{
         alert(i18next.t('Project.Error'));
@@ -66,6 +69,7 @@ class Project extends Component {
       // console.log(this.canvas.backgroundImage); // 밖에다 두면 backgrounImage를 null로 인식함... 이유? 콜백함수라서 img 태그가 다 load되고 나서 불러와지기 때문
       if(document.getElementById(idx)){
         document.getElementById(idx).src = this.canvas.toDataURL({format : 'png'});
+        this.canvas.clear();
       }
     })
     return this.canvas.toDataURL({format : 'png'});
@@ -93,25 +97,28 @@ class Project extends Component {
             </div>
             <div className="project-title">
               <p>{prj.title}</p>
+              {/* <p> {prj.create_date} </p> */}
               <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
             </div>
           </div>
         );
       }
-      return(
-        <div id="project-list">
-          {listitem}  
-        </div>
-      );
+      console.log('ttt', listitem)
+      this.setState({project_list : listitem})
+      // return(
+      //   <div id="project-list">
+      //     {listitem}  
+      //   </div>
+      // );
     }
     else{
-      return(
-        <div id="project-list">
-          <div className="project-div">
-            {i18next.t('Project.PlzSignin')}
-          </div>
-        </div>
-      )
+      // return(
+      //   <div id="project-list">
+      //     <div className="project-div">
+      //       {i18next.t('Project.PlzSignin')}
+      //     </div>
+      //   </div>
+      // )
     }
   }
 
@@ -189,12 +196,32 @@ class Project extends Component {
       // }
     }
   }
+
+  projectSort = (event) => {
+    let option = event.target.getAttribute('option');
+
+    new Promise((resolve, reject) => {
+      this.setState({sort : parseInt(option)});
+      if(option >=0 && option <= 3){
+        resolve()
+      }
+      else{
+        reject();
+      }
+    })
+    .then(() => this.getProjects())
+    .catch((err) => { alert(err); })
+  }
  
   render() {
     return (
       <div>
         <h2>{i18next.t('Project.Project')}</h2>
         <button delete = "all" onClick={this.checkDelete}><i delete = "all" className="fas fa-times-circle fa-4x"></i></button>
+        <button option = "0" onClick= {this.projectSort}> {i18next.t('Project.Title')} 오름 </button>
+        <button option = "1" onClick= {this.projectSort}> {i18next.t('Project.Title')} 내림 </button>
+        <button option = "2" onClick= {this.projectSort}> {i18next.t('Project.Date')} 오름 </button>
+        <button option = "3" onClick= {this.projectSort}> {i18next.t('Project.Date')} 내림 </button>
         <div className="project-search">
           <div className="project-search-form">
             <form onSubmit={this.handleSubmit}>
@@ -207,7 +234,9 @@ class Project extends Component {
             <p className="project-search-data">{i18next.t('Project.Search')} : {this.state.search}</p>
           </div> */}
         </div>
-        {this.showProjects()}
+        <div id="project-list">
+          {this.state.project_list}  
+        </div>
       </div>
     )
   }

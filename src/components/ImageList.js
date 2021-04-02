@@ -3,6 +3,7 @@ import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
 import {randomWord} from './const/consts';
 import imgerror from '../css/img/imgerror.svg';
+import { getSearchImage } from './helper/GetImage';
 import '../css/ImageList.scss';
 
 class ImageList extends Component {
@@ -14,7 +15,7 @@ class ImageList extends Component {
       images: [],
       search: randomWord[ Math.floor(Math.random() * (randomWord.length))],
       image_count: 10,
-      url: false,
+      url: false, // 썸네일 클릭 여부 유무, 즉, imageSizeVersion 함수 실행 여부
       image : {
         full : '',
         raw : '',
@@ -33,42 +34,13 @@ class ImageList extends Component {
     }
   }
 
-  getRandomImage() {
-    var url = new URL("https://api.unsplash.com/photos/random");
-    var params = {
-      client_id: 'ua3Yx_zNDTdYyxlcX5JaO-KoZs4ri2-xZXZqc7_rcp0',
-      count: this.state.random_count
-    }
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    fetch(url, {
-      method: 'get',
-    })
-      .then(res => res.json())
-      // .then(res=>console.log(res))
-      .then(res => this.setState({ images: res }))
-      .catch((error) => {
-        console.log("error : ", error);
-      });
-  }
-
   getImage() {
-    console.log("getimage", this.state.search,);
-    var url = new URL("https://api.unsplash.com/photos/random");
-    var params = {
-      client_id: 'ua3Yx_zNDTdYyxlcX5JaO-KoZs4ri2-xZXZqc7_rcp0',
-      count: this.state.image_count,
-      query: this.state.search
-    }
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    fetch(url, {
-      method: 'get',
-    })
-      .then(res => res.json())
-      .then(res => this.setState({ images: res }))
-      .catch((error) => {
-        console.log("error : ", error);
-        alert(i18next.t('ImageList.Fail'));
-      });
+    getSearchImage(this.state.search, this.state.image_count) 
+    .then(res => this.setState({ images: res }))
+    .catch((error) => {
+      console.log("error : ", error);
+      alert(i18next.t('ImageList.Fail'));
+    });
   }
 
   handleSubmit = (event) => {
@@ -85,7 +57,7 @@ class ImageList extends Component {
     if(imagelist['errors']){ alert(i18next.t('ImageList.Showimage errors')); return null;}
     const listitem = imagelist.map((image) =>
       <div className="image-list-box" key={image.id} >
-        <img className="image-list-img" key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small}/>
+        <img className="image-list-img" key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small} full-width = {image.width} />
       </div>
       // ursl뒤에 raw, small, regular, full 등의 따라 사이즈 조절
     );
@@ -103,7 +75,8 @@ class ImageList extends Component {
           raw : event.target.getAttribute('raw'),
           regular : event.target.getAttribute('regular'),
           small : event.target.getAttribute('small'),   
-          thumb : event.target.src     
+          thumb : event.target.src,
+          full_width : event.target.getAttribute("full-width")     
       }})
       resolve();
     })
@@ -114,6 +87,7 @@ class ImageList extends Component {
   }
 
   onClickImg = (event) => {
+    console.log('loading start')
     this.props.onImgUrlChange(event.target.getAttribute('url'));
   }
 
@@ -131,19 +105,19 @@ class ImageList extends Component {
   }
   
   getImageSize = () => {
-    let full_img = new Image();
-    full_img.onload = () => {
+    let thumb_img = new Image();
+    thumb_img.onload = () => {
       this.setState({
         imageSize : {
-          full : { x: full_img.width, y: full_img.height},
-          small : { x : 400, y: Math.round(full_img.height * (400 / full_img.width)) },
-          thumb : { x : 200, y: Math.round(full_img.height * (200 / full_img.width)) },
-          regular : { x : 1080, y: Math.round(full_img.height * (1080 / full_img.width)) },
+          full : { x: this.state.image.full_width, y: Math.round(thumb_img.height * (this.state.image.full_width / thumb_img.width))},
+          small : { x : 400, y : Math.round(thumb_img.height * (400 / thumb_img.width)) },
+          thumb : { x: thumb_img.width, y: thumb_img.height},
+          regular : { x : 1080, y: Math.round(thumb_img.height * (1080 / thumb_img.width)) },
         }
       })
     };
-    full_img.onerror = this.imageNotFound;
-    full_img.src = this.state.image.full;
+    thumb_img.onerror = this.imageNotFound;
+    thumb_img.src = this.state.image.thumb;
   }
 
   imageSizeVersion = () => {

@@ -294,7 +294,7 @@ class ImageEditor extends Component {
   }
   
   _onMouseDownEvent = (event) => {
-    if(event.target.tagName === 'CANVAS'){
+    if(event.target.tagName === 'CANVAS' || event.target.getAttribute('name') === 'layer'){
       document.addEventListener('keydown',this._onKeydownEvent);
     }
     else{
@@ -499,7 +499,9 @@ class ImageEditor extends Component {
 		});
     
     this._canvas.on('object:added', (event) => {
-
+      if(this._canvas.isDrawingMode && !this.lock) {
+        this.saveState('drawing add');
+      }
     })
     this._canvas.on('object:modified', (event) => {
 
@@ -889,6 +891,10 @@ class ImageEditor extends Component {
 
   filterObject = (event) => {
     this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , event.target.getAttribute('filter'), event.target.checked, event.target.value);
+  }
+
+  filterValueObject = (option, checked, value) => {
+    this.action['Filter'].applyFilter(this.getActiveObject() || this._canvas.backgroundImage , option, checked, value);
   }
 
   rangeFilterObject = (filterOption, checked, value) => {
@@ -1356,6 +1362,7 @@ class ImageEditor extends Component {
           filterObject={this.filterObject} 
           getBackgroundImage = {this.getBackgroundImage} 
           rangeFilterObject={this.rangeFilterObject}
+          filterValueObject = {this.filterValueObject}
           />,
       3: <IconUI 
           object={this.state.activeObject} 
