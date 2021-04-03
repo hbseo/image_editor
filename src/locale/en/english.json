@@ -38,7 +38,8 @@
         "Save" : "Save",
         "More" : "more",
         "Zoom" : "zoom",
-        "Home" : "Home"
+        "Home" : "Home",
+        "LeavePage" : "Are you sure you're leaveing?"
     },
 
     "ImageList" : {
