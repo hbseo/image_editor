@@ -3,6 +3,7 @@ import { fabric } from 'fabric';
 import { withTranslation } from "react-i18next";
 import i18next from "../locale/i18n";
 import { debounce } from 'lodash';
+import Draggable from 'react-draggable';
 
 import '../css/ImageEditor.scss'
 import Save from './Save';
@@ -54,7 +55,8 @@ class ImageEditor extends Component {
       user_name : '', // 로그인 되어있는 유저 id
       isSaved : props.location.save ? true : false, // 서버에 저장되어 있는가?
       prj_idx : props.location.project_idx ? props.location.project_idx : -1, // 현재 열려있는 저장된 프로젝트 idx,
-      imgStatus : false // false : idle 상태. true 로딩 중
+      imgStatus : false, // false : idle 상태. true 로딩 중
+      activeTab: 0,
     }
     
     this._canvas = null;
@@ -1335,12 +1337,43 @@ class ImageEditor extends Component {
     return this.action['Layers'].buttonLayer();
   }
 
+  clickHandler = (id) => {
+    this.setState({activeTab : id});
+    console.log(this.state.activeTab);
+  }
+
   render() {
     if(i18next.language === 'ko'){
       this.stylelang = this.kostyle;
     }
     else {
       this.stylelang = this.enstyle;
+    }
+
+    let historyBorder, layerBorder, infoBorder;
+    if(this.state.activeTab === 0){
+      historyBorder = "history-tab-border";
+      layerBorder = "layer-tab";
+      infoBorder = "info-tab";
+    }
+    else if(this.state.activeTab === 1){
+      historyBorder = "history-tab";
+      layerBorder = "layer-tab-border";
+      infoBorder = "info-tab";
+    }
+    else if(this.state.activeTab === 2){
+      historyBorder = "history-tab";
+      layerBorder = "layer-tab";
+      infoBorder = "info-tab-border";
+    }
+
+    const popupTab = {
+      0: <HistoryUI showUndoStack = {this.showUndoStack} showCurrentState={this.showCurrentState}/>,
+      1: <div className="layers-detail">{this.buttonLayer()}</div>,
+      2: <div className="canvas-info">
+          <div>{i18next.t('ImageEditor.Zoom')} : {this.state.zoom}</div>
+          <div>{this._canvas ? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</div>
+        </div>,
     }
     const tab = {
       0: <TextUI 
@@ -1454,6 +1487,19 @@ class ImageEditor extends Component {
         </SideNav>
 
         <div className="editor" id='editor'>
+          <Draggable
+            boutnds="editor">
+            <div className="popup">
+              <div className="popup-tab">
+                <div className={historyBorder} onClick={()=>this.clickHandler(0)}>{i18next.t('ImageEditor.History')}</div>
+                <div className={layerBorder} onClick={()=>this.clickHandler(1)}>{i18next.t('ImageEditor.Layer')}</div>
+                <div className={infoBorder} onClick={()=>this.clickHandler(2)}>{i18next.t('ImageEditor.Info')}</div>
+              </div>
+              <div className="popup-content">
+                {popupTab[this.state.activeTab]}
+              </div>
+            </div>
+          </Draggable>
           <div className="editor-nav">
             <div className="do">
                 <button onClick = {this.undo}>{i18next.t('ImageEditor.Undo')}</button>
@@ -1468,22 +1514,6 @@ class ImageEditor extends Component {
           </div>
           <div className="real" >
             <canvas id='canvas' tabIndex='0'></canvas>
-          </div>
-          <div className="canvas-footer">
-              <div className="canvas-info">
-                <div>{i18next.t('ImageEditor.Zoom')} : {this.state.zoom}</div>
-                <div>{this._canvas ? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</div>
-              </div>
-              <div className="history-layers">
-                <div className="history-box">
-                  <div className="history-title">History</div>
-                  <HistoryUI showUndoStack = {this.showUndoStack} showCurrentState={this.showCurrentState}/>
-                </div>
-                <div className="layers-box">
-                  <div className="layers-title">Layers</div>
-                  <div className="layers-detail">{this.buttonLayer()}</div>
-                </div>
-              </div>
           </div>
         </div>
         <Save 

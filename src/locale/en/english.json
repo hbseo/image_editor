@@ -30,6 +30,9 @@
     },
 
     "ImageEditor" : {
+        "History" : "History",
+        "Layer" : "Layer",
+        "Info" : "Info",
         "Undo" : "Undo",
         "Redo" : "Redo",
         "Save" : "Save",
