@@ -215,25 +215,26 @@ export default withTranslation()(class Text extends Component{
             <button className="fontfamily-button" onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}}>{choose}</button>
             {fontlist}
           </div>
-          <label htmlFor='fontSize' className="option-title">{i18next.t('ui/text.Font size')}</label>
-          <div className="font-size">
-            <input 
-              type='number' 
-              onChange={this.handlefontSizeChange} 
-              text='fontSize'
-              name='fontSize'
-              id='fontSize'
-              min='1'
-              value={this.state.fontSize} 
-            />
-          </div>
-
-          <label htmlFor="align" className="option-title">{i18next.t('ui/text.Align')}</label>
-          <div className="text-align">
-            <div className="align-button">
-              <button type='checkbox' className='align' id="left-align" onClick={this.textAction} text='left-align'></button>
-              <button type='checkbox' className='align' id="center-align" onClick={this.textAction} text='center-align'></button>
-              <button type='checkbox' className='align' id="right-align" onClick={this.textAction} text='right-align' ></button>
+          <div className="size-align">
+            <div className="font-size">
+            <label htmlFor='fontSize' className="option-title">{i18next.t('ui/text.Font size')}</label>
+              <input 
+                type='number' 
+                onChange={this.handlefontSizeChange} 
+                text='fontSize'
+                name='fontSize'
+                id='fontSize'
+                min='1'
+                value={this.state.fontSize} 
+              />
+            </div>
+            <div className="text-align">
+              <label htmlFor="align" className="option-title">{i18next.t('ui/text.Align')}</label>
+              <div className="align-button">
+                <button type='checkbox' className='align' id="left-align" onClick={this.textAction} text='left-align'></button>
+                <button type='checkbox' className='align' id="center-align" onClick={this.textAction} text='center-align'></button>
+                <button type='checkbox' className='align' id="right-align" onClick={this.textAction} text='right-align' ></button>
+              </div>
             </div>
           </div>
 
