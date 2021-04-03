@@ -56,7 +56,7 @@ class ImageEditor extends Component {
       isSaved : props.location.save ? true : false, // 서버에 저장되어 있는가?
       prj_idx : props.location.project_idx ? props.location.project_idx : -1, // 현재 열려있는 저장된 프로젝트 idx,
       imgStatus : false, // false : idle 상태. true 로딩 중
-      activeTab: 0,
+      activePopupTab: 0, // 현재 popup 탭 번호
     }
     
     this._canvas = null;
@@ -1338,8 +1338,7 @@ class ImageEditor extends Component {
   }
 
   clickHandler = (id) => {
-    this.setState({activeTab : id});
-    console.log(this.state.activeTab);
+    this.setState({activePopupTab : id});
   }
 
   render() {
@@ -1351,17 +1350,17 @@ class ImageEditor extends Component {
     }
 
     let historyBorder, layerBorder, infoBorder;
-    if(this.state.activeTab === 0){
+    if(this.state.activePopupTab === 0){
       historyBorder = "history-tab-border";
       layerBorder = "layer-tab";
       infoBorder = "info-tab";
     }
-    else if(this.state.activeTab === 1){
+    else if(this.state.activePopupTab === 1){
       historyBorder = "history-tab";
       layerBorder = "layer-tab-border";
       infoBorder = "info-tab";
     }
-    else if(this.state.activeTab === 2){
+    else if(this.state.activePopupTab === 2){
       historyBorder = "history-tab";
       layerBorder = "layer-tab";
       infoBorder = "info-tab-border";
@@ -1496,7 +1495,7 @@ class ImageEditor extends Component {
                 <div className={infoBorder} onClick={()=>this.clickHandler(2)}>{i18next.t('ImageEditor.Info')}</div>
               </div>
               <div className="popup-content">
-                {popupTab[this.state.activeTab]}
+                {popupTab[this.state.activePopupTab]}
               </div>
             </div>
           </Draggable>
