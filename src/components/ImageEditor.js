@@ -4,6 +4,7 @@ import { withTranslation } from "react-i18next";
 import i18next from "../locale/i18n";
 import { debounce } from 'lodash';
 import Draggable from 'react-draggable';
+import { Prompt } from 'react-router-dom';
 
 import '../css/ImageEditor.scss'
 import Save from './Save';
@@ -1341,6 +1342,13 @@ class ImageEditor extends Component {
     this.setState({activePopupTab : id});
   }
 
+  returnToHome = () => {
+    let home_check= window.confirm(i18next.t('ImageEditor.LeavePage'));
+    if(home_check){
+      this.props.history.push('/')
+    }
+  }
+
   render() {
     if(i18next.language === 'ko'){
       this.stylelang = this.kostyle;
@@ -1508,7 +1516,7 @@ class ImageEditor extends Component {
                 <button onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
             </div>
             <div className="more">
-                <button onClick = { () => {this.props.history.push('/')}}>{i18next.t('ImageEditor.Home')}</button>
+                <button onClick = { this.returnToHome }>{i18next.t('ImageEditor.Home')}</button>
             </div>
           </div>
           <div className="real" >
@@ -1526,6 +1534,10 @@ class ImageEditor extends Component {
           isSaved = {this.state.isSaved}
           prj_idx = {this.state.prj_idx}
           getCheckSave = {this.getCheckSave}
+        />
+        <Prompt 
+        	when={true}
+          message={i18next.t('ImageEditor.LeavePage')}
         />       
       </div>
     );
