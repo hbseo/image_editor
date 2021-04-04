@@ -507,7 +507,9 @@ class ImageEditor extends Component {
       }
     })
     this._canvas.on('object:modified', (event) => {
-
+      if(event.target.type === 'textbox') {
+        this.saveState('text modified');
+      }
     })
 
     this._canvas.on('object:rotated', (event) => {
