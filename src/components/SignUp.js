@@ -15,10 +15,26 @@ class SignUp extends Component {
       password: '',
       passwordConfirm: '',
       answer: '',
-      idDupCheck: null
+      idDupCheck: null,
+      id_highlight: false,
+      password_hightlight: false
     }
     this.id_style = null;
     this.choose = null;
+  }
+  componentDidMount() {
+    document.addEventListener("mouseup", this.findHighlightTag);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("mouseup", this.findHighlightTag);
+  }
+  findHighlightTag = () => {
+    const id = document.activeElement.id;
+    if(id === "id" || id === "password") {
+      if(id === "id") this.setState({id_highlight: true, password_hightlight: false});
+      else this.setState({id_highlight: false, password_hightlight: true});
+    }
+    else this.setState({id_highlight: false, password_hightlight: false});
   }
   registerHandler = (e) => {
     let { name, value } = e.target;
@@ -55,7 +71,7 @@ class SignUp extends Component {
     let upperCaseLetters = /[A-Z]/g;
     let numbers = /[0-9]/g;
     let length = /.{8,20}/g;
-    if(name === "id") {
+    if(name === "id" && this.state.id_highlight) {
       if(this.state.id.match(lowerCaseLetters)) {
         document.getElementById("letter_id").classList.remove("invalid");
         document.getElementById("letter_id").classList.add("valid");
@@ -78,7 +94,7 @@ class SignUp extends Component {
         document.getElementById("length_id").classList.add("invalid");
       }
     }
-    if(name === "password") {
+    if(name === "password" && this.state.password_hightlight) {
       if(this.state.password.match(lowerCaseLetters)) {
         document.getElementById("letter_pass").classList.remove("invalid");
         document.getElementById("letter_pass").classList.add("valid");
@@ -112,8 +128,9 @@ class SignUp extends Component {
 
   registerClickHandler = (e) => {
     e.preventDefault();
-    let pattern = "^(?=.*[0-9])(?=.*[a-z]).{8,20}$"
-    if(!this.state.id.match(pattern) || !this.state.password.match(pattern)) return;
+    let pattern_id = /(?=.*\d)(?=.*[a-z]).{8,20}/;
+    let pattern_pass = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}/;
+    if(!this.state.id.match(pattern_id) || !this.state.password.match(pattern_pass)) return;
     if(!this.validatePassword()) {
       alert('아이디 중복 또는 옮바르지 않은 비밀번호');
       return;
@@ -188,7 +205,7 @@ class SignUp extends Component {
     }
     let validId = null;
     let validPass = null;
-    if(this.state.id) {
+    if(this.state.id_highlight) {
       validId = 
       <div className="validateId">
         <h3>아이디 요구 조건</h3>
@@ -197,7 +214,7 @@ class SignUp extends Component {
         <p className="invalid" id="length_id"><b>최소길이 8</b></p>
       </div>
     }
-    if(this.state.password) {
+    if(this.state.password_hightlight) {
       validPass = 
       <div className="validatePass">
         <h3>비밀번호 요구 조건</h3>
@@ -217,7 +234,7 @@ class SignUp extends Component {
                   Member Register
               </span>
                 <div className="wrap-input100 validate-input" data-validate='ID is required'>
-                  <input className="input100" type="text" name="id" placeholder="ID" value={this.state.id} onChange={this.registerHandler} style={this.id_style} maxLength="20" />
+                  <input className="input100 highlight" type="text" id="id" name="id" placeholder="ID" value={this.state.id} onChange={this.registerHandler} style={this.id_style} maxLength="20" />
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-envelope" aria-hidden="true" />
@@ -225,7 +242,7 @@ class SignUp extends Component {
                   {validId}
                 </div>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
-                  <input className="input100" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.registerHandler} maxLength="20"/>
+                  <input className="input100 highlight" type="password" id="password" name="password" placeholder="Password" value={this.state.password} onChange={this.registerHandler} maxLength="20"/>
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-lock" aria-hidden="true" />
