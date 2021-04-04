@@ -4,14 +4,14 @@ import {convertRGB} from '../helper/ConverRGB'
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
 import '../../css/ui/Draw.scss';
-import pencilBrush from '../../css/img/brush/pencilBrush.JPG';
-import circleBrush from '../../css/img/brush/circleBrush.JPG';
-import patternBrush from '../../css/img/brush/patternBrush.JPG';
-import sprayPatternBrush from '../../css/img/brush/sprayPatternBrush.JPG';
-import vLinePatternBrush from '../../css/img/brush/vLinePatternBrush.JPG';
-import hLinePatternBrush from '../../css/img/brush/hLinePatternBrush.JPG';
-import squarePatternBrush from '../../css/img/brush/squarePatternBrush.JPG';
-import diamondPatternBrush from '../../css/img/brush/diamondPatternBrush.JPG';
+import pencilBrush from '../../css/img/brush/pencilBrush.png';
+import circleBrush from '../../css/img/brush/circleBrush.png';
+import patternBrush from '../../css/img/brush/patternBrush.png';
+import sprayPatternBrush from '../../css/img/brush/sprayPatternBrush.png';
+import vLinePatternBrush from '../../css/img/brush/vLinePatternBrush.png';
+import hLinePatternBrush from '../../css/img/brush/hLinePatternBrush.png';
+import squarePatternBrush from '../../css/img/brush/squarePatternBrush.png';
+import diamondPatternBrush from '../../css/img/brush/diamondPatternBrush.png';
 
 export default withTranslation()(class Draw extends Component{
   constructor(props){
