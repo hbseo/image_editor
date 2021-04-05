@@ -27,6 +27,7 @@ class Filter extends Action {
 
   applyFilter = (obj, option, checked, value) => {
     let canvas = this.getCanvas();
+    // var timeStart = +new Date();
     if (obj.type === "image") {
       switch (option) {
         case 'invert':
@@ -80,14 +81,9 @@ class Filter extends Action {
           }));
           break;
         case 'brightness':
-          if(checked && obj.filters[11]){
-            obj.filters[11].brightness = value;
-          }
-          else{
-            obj.filters[11] = checked && (new fabric.Image.filters.Brightness({
-              brightness: value
-            }));
-          }
+          obj.filters[11] = checked && (new fabric.Image.filters.Brightness({
+            brightness: value
+          }));
           break;
         case 'contrast':
           obj.filters[12] = checked && (new fabric.Image.filters.Contrast({
@@ -191,6 +187,8 @@ class Filter extends Action {
       this.saveState(checked ? 'apply filter ' + option : 'off filter ' + option);
       this.updateObject();
       obj.applyFilters();
+      // var timeEnd = +new Date();
+      // console.log(parseFloat(timeEnd-timeStart) + 'ms');
     }
     canvas.renderAll();
   }

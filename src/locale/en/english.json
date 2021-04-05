@@ -216,6 +216,8 @@
         "Zoomblur" : "Zoomblur",
         "Vibrance" : "Vibrance",
         "Denoise" : "Denoise",
+        "BlendColor" : "BlendColor",
+        "Gamma" : "Gamma",
         "Opacity" : "Opacity",
         "Glfx" : "glfx",
         "Close" : "Close"

@@ -186,6 +186,21 @@ export default withTranslation()(class Filter extends Component{
     })
   }
 
+  handleBlendModeChange = (event) => {
+    let value = this.state.blendcolor;
+    value.mode = event.target.value;
+    let filterOption = 'blendcolor'
+    let checked = $("input:checkbox[id='"+ filterOption +"-checkbox']").is(":checked");
+    new Promise((resolve) => {
+      this.setState({ blendcolor : value });
+      console.log(filterOption, checked, value)
+      resolve();
+    })
+    .then(() => {
+      this.props.rangeFilterObject(filterOption, checked, value);
+    })
+  }
+
   handleGammaChange = (event) => {
     const gamma_id = event.target.getAttribute("id");
     let value;
@@ -558,6 +573,18 @@ export default withTranslation()(class Filter extends Component{
                 <input type='checkbox' id="blendcolor-checkbox" className='rangefilter' onClick={this.blendColorObject} filter='blendcolor'/>
                 <div className="range-box">
                   <input type="color" id="colorSource" value={this.state.blendcolor.color} onChange = { this.setBlendColor }/>
+                  <select id="blend-mode" name="blend-mode" onChange = {this.handleBlendModeChange} value = {this.state.blendcolor.mode}>
+                    <option value="add">Add</option>
+                    <option value="diff">Diff</option>
+                    <option value="subtract">Subtract</option>
+                    <option value="multiply">Multiply</option>
+                    <option value="screen">Screen</option>
+                    <option value="lighten">Lighten</option>
+                    <option value="darken">Darken</option>
+                    <option value="overlay">Overlay</option>
+                    <option value="exclusion">Exclusion</option>
+                    <option value="tint">Tint</option>
+                  </select>
                   <input
                     type='range'
                     className='filter'

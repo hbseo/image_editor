@@ -216,6 +216,8 @@
         "Zoomblur" : "줌 블러",
         "Vibrance" : "생동감",
         "Denoise" : "노이즈 제거",
+        "BlendColor" : "색 혼합",
+        "Gamma" : "감마",
         "Opacity" : "투명도",
         "Glfx" : "glfx",
         "Close" : "닫기"
