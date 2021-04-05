@@ -80,9 +80,14 @@ class Filter extends Action {
           }));
           break;
         case 'brightness':
-          obj.filters[11] = checked && (new fabric.Image.filters.Brightness({
-            brightness: value
-          }));
+          if(checked && obj.filters[11]){
+            obj.filters[11].brightness = value;
+          }
+          else{
+            obj.filters[11] = checked && (new fabric.Image.filters.Brightness({
+              brightness: value
+            }));
+          }
           break;
         case 'contrast':
           obj.filters[12] = checked && (new fabric.Image.filters.Contrast({
@@ -174,9 +179,7 @@ class Filter extends Action {
           break;
         case 'gamma':
           obj.filters[25] = checked && (new fabric.Image.filters.Gamma({
-            r: parseFloat(value.r),
-            g: parseFloat(value.g),
-            n: parseFloat(value.b)
+            gamma : [parseFloat(value.r), parseFloat(value.g), parseFloat(value.b)]
           }));
           break;
         case 'opacity':
