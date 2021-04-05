@@ -1,7 +1,7 @@
 import switchTools from '../helper/SwitchTools'
 import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
 import React, {Component} from 'react';
-import {fontList, styleIcon} from '../const/consts';
+import {fontList, textIcon} from '../const/consts';
 import { ChromePicker } from 'react-color';
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
@@ -190,7 +190,7 @@ export default withTranslation()(class Text extends Component{
   colortest = (event) => {
     this.setState({ color : HEXtoRGB(event.target.value), testcolor : event.target.value});
     this.props.setColor({rgb : HEXtoRGB(event.target.value)});
-  } 
+  }
 
   render(){
     let fontlist = null;
@@ -201,6 +201,7 @@ export default withTranslation()(class Text extends Component{
       </ul>
     }
     let choose = this.props.object.fontFamily || i18next.t('ui/text.Font family');
+
     return (
       <div className="sub">
         <div className="sub-title">
@@ -211,8 +212,8 @@ export default withTranslation()(class Text extends Component{
             <button onClick={this.addText}>{i18next.t('ui/text.New Text')}</button>
           </div>
           <label htmlFor='fontfamily' className="option-title">{i18next.t('ui/text.Font')}</label>
-          <div className="font-style" onClick={this.handlefontfamilybutton}>
-            <button className="fontfamily-button" onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}}>{choose}</button>
+          <div className={this.props.object.type ==='textbox' ? "font-style" : "font-style-disabled" } onClick={this.handlefontfamilybutton}>
+            <button className="fontfamily-button" onClick={this.handlefontfamilybutton} style={{'fontFamily': this.props.object.fontFamily}} disabled = {this.props.object.type ==='textbox' ? false : true }>{choose}</button>
             {fontlist}
           </div>
           <div className="size-align">
@@ -225,34 +226,50 @@ export default withTranslation()(class Text extends Component{
                 name='fontSize'
                 id='fontSize'
                 min='1'
-                value={this.state.fontSize} 
+                value={this.state.fontSize}
+                disabled = {this.props.object.type ==='textbox' ? false : true }
               />
             </div>
             <div className="text-align">
               <label htmlFor="align" className="option-title">{i18next.t('ui/text.Align')}</label>
-              <div className="align-button">
-                <button type='checkbox' className='align' id="left-align" onClick={this.textAction} text='left-align'></button>
-                <button type='checkbox' className='align' id="center-align" onClick={this.textAction} text='center-align'></button>
-                <button type='checkbox' className='align' id="right-align" onClick={this.textAction} text='right-align' ></button>
+              <div className={this.props.object.type ==='textbox' ? "align-button" : "align-button-disabled"}>
+                <label>
+                  <button type='checkbox' className='align' id="left-align" onClick={this.textAction} text='left-align'></button>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                    <path d={textIcon.alignLeft}/>
+                  </svg>
+                </label>
+                <label>
+                  <button type='checkbox' className='align' id="center-align" onClick={this.textAction} text='center-align'></button>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                    <path d={textIcon.alignCenter}/>
+                  </svg>
+                </label>
+                <label>
+                  <button type='checkbox' className='align' id="right-align" onClick={this.textAction} text='right-align'></button>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                    <path d={textIcon.alignRight}/>
+                  </svg>
+                </label>
               </div>
             </div>
           </div>
 
           <label htmlFor="text" className="option-title">{i18next.t('ui/text.Weight')}</label>
           <div className="font-weight">
-            <div className="bold">
+            <div className={this.props.object.type ==='textbox' ? "bold" : "bold-disabled"}>
               <label>
                 <input type='checkbox' onClick={this.textAction} text='bold' id='bold_checkbox' disabled = {this.props.object.type ==='textbox' ? false : true } />
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
-                  <path d={styleIcon.bold}/>
+                  <path d={textIcon.bold}/>
                 </svg>
               </label>
             </div>
-            <div className="italic">
+            <div className={this.props.object.type ==='textbox' ? "italic" : "italic-disabled"}>
               <label>
               <input type='checkbox' onClick={this.textAction} text='italic' id='italic_checkbox' disabled = {this.props.object.type ==='textbox' ? false : true } />
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
-                  <path d={styleIcon.italic}/>
+                  <path d={textIcon.italic}/>
                 </svg>
               </label>
             </div>
