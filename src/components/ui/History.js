@@ -18,10 +18,8 @@ class History extends Component {
   render(){
     return (
       <div className="history">
-        <div className="history-inner">
-          {this.props.showCurrentState()}
-          {this.props.showUndoStack()}
-        </div>
+        {this.props.showCurrentState()}
+        {this.props.showUndoStack()}
       </div>
     );
   }
