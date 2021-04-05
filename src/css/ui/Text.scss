@@ -88,6 +88,10 @@
             width: 23px;
             cursor: pointer;
           }
+
+          input[type="number"]:disabled{
+              cursor: default;
+          }
     }
 
     .text-align{
@@ -99,39 +103,56 @@
         .align-button{
             display: flex;
             justify-content: space-evenly;
+            
+            label{
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 5px;
+
+                button{
+                    display: none;
+                }
+
+                button:active + svg{
+                    fill: #365AFC;
+                }
+
+                svg{
+                    width: 50%;
+                    height: 50%;
+                }
+            }
+
+            label:hover{
+                background-color: #D9D9D9;
+
+            }
         }
+
+        .align-button-disabled{
+            display: flex;
+            justify-content: space-evenly;
+            
+            label{
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 5px;
         
-        #center-align{
-            background-image: url(../img/align-center.svg);
-            background-repeat: no-repeat;
-            width: 4vmin;
-            height: 4vmin;
-        }
+                button{
+                    display: none;
+                }
         
-        #left-align{
-            background-image: url(../img/align-left.svg);
-            background-repeat: no-repeat;
-            width: 4vmin;
-            height: 4vmin;
-        }
-        
-        #left-align svg:hover{
-            fill: blue;
-        }
-        
-        #right-align{
-            background-image: url(../img/align-right.svg);
-            background-repeat: no-repeat;
-            width: 4vmin;
-            height: 4vmin;
-        }
-        
-        .align{
-            border-radius: 5px;
-        }
-        
-        .align:hover{
-            background-color: #DFDFDF;
+                svg{
+                    width: 50%;
+                    height: 50%;
+                }
+            }
         }
     }
 }
@@ -175,6 +196,30 @@
         }
     }
 
+    .bold-disabled{
+        width: 50px;
+        height: 50px;
+        background-color: #E6E6E6;
+        border-radius: 5px;
+
+        label{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        input[type="checkbox"]{
+            display: none;
+        }
+
+        svg{
+            width: 50%;
+            height: 50%;
+        }
+    }
+
     .italic{
         width: 50px;
         height: 50px;
@@ -205,6 +250,30 @@
 
     .italic:hover svg{
         fill: #365AFC;
+    }
+
+    .italic-disabled{
+        width: 50px;
+        height: 50px;
+        background-color: #E6E6E6;
+        border-radius: 5px;
+
+        label{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        input[type="checkbox"]{
+            display: none;
+        }
+
+        svg{
+            width: 50%;
+            height: 50%;
+        }
     }
 }
 
@@ -269,6 +338,23 @@
 .font-style:hover {
     background-color: #c1c1c1;
     cursor: pointer;
+}
+
+.font-style-disabled {
+    width: fit-content;
+    border: 1px solid #b8b8b8;
+    font-size: 18px;
+    color: #666666;
+    padding: 10px 10px 10px 10px;
+    margin: auto;
+    width: 155px;
+    display: flex;
+    justify-content: center;
+    border-radius: 4px;
+
+    .font-li:hover {
+        background-color: #c1c1c1;
+    }
 }
 
 .font-ul {
