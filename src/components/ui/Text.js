@@ -1,7 +1,7 @@
 import switchTools from '../helper/SwitchTools'
 import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
 import React, {Component} from 'react';
-import {fontList} from '../const/consts';
+import {fontList, styleIcon} from '../const/consts';
 import { ChromePicker } from 'react-color';
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
@@ -241,12 +241,20 @@ export default withTranslation()(class Text extends Component{
           <label htmlFor="text" className="option-title">{i18next.t('ui/text.Weight')}</label>
           <div className="font-weight">
             <div className="bold">
-              <input type='checkbox' onClick={this.textAction} text='bold' id='bold_checkbox' />
-              <label htmlFor="bold_checkbox">{i18next.t('ui/text.Bold')}</label>
+              <label>
+                <input type='checkbox' onClick={this.textAction} text='bold' id='bold_checkbox' disabled = {this.props.object.type ==='textbox' ? false : true } />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
+                  <path d={styleIcon.bold}/>
+                </svg>
+              </label>
             </div>
             <div className="italic">
-              <input type='checkbox' onClick={this.textAction} text='italic' id='italic_checkbox' />
-              <label htmlFor="italic_checkbox">{i18next.t('ui/text.Italic')}</label>
+              <label>
+              <input type='checkbox' onClick={this.textAction} text='italic' id='italic_checkbox' disabled = {this.props.object.type ==='textbox' ? false : true } />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
+                  <path d={styleIcon.italic}/>
+                </svg>
+              </label>
             </div>
           </div>
 
