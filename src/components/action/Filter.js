@@ -27,6 +27,7 @@ class Filter extends Action {
 
   applyFilter = (obj, option, checked, value) => {
     let canvas = this.getCanvas();
+    // var timeStart = +new Date();
     if (obj.type === "image") {
       switch (option) {
         case 'invert':
@@ -174,9 +175,7 @@ class Filter extends Action {
           break;
         case 'gamma':
           obj.filters[25] = checked && (new fabric.Image.filters.Gamma({
-            r: parseFloat(value.r),
-            g: parseFloat(value.g),
-            n: parseFloat(value.b)
+            gamma : [parseFloat(value.r), parseFloat(value.g), parseFloat(value.b)]
           }));
           break;
         case 'opacity':
@@ -188,6 +187,8 @@ class Filter extends Action {
       this.saveState(checked ? 'apply filter ' + option : 'off filter ' + option);
       this.updateObject();
       obj.applyFilters();
+      // var timeEnd = +new Date();
+      // console.log(parseFloat(timeEnd-timeStart) + 'ms');
     }
     canvas.renderAll();
   }

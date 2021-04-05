@@ -94,7 +94,7 @@ class ImageEditor extends Component {
     this.stateStack = [];
     this.redoStack = [];
     this.firstState = null;
-    this.maxSize = 100;
+    this.stackMaxSize = 50;
     this.state_id = 1;
     this.dotoggle = true;
 
@@ -598,7 +598,7 @@ class ImageEditor extends Component {
 
   saveState = debounce((action) => {
     if(this.dotoggle && !this.lock) {
-      if(this.stateStack.length === this.maxSize) {
+      if(this.stateStack.length === this.stackMaxSize) {
         this.stateStack.shift();
       }
       this.stateStack.push(this.currentState);
@@ -1137,7 +1137,7 @@ class ImageEditor extends Component {
         this.stateStack = [];
         this.redoStack = [];
         this.firstState = null;
-        this.maxSize = 100;
+        this.stackMaxSize = 50;
         this.state_id = 1;
         this.undoCanvasSize = [];
         this.redoCanvasSize = [];

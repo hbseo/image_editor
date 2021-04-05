@@ -31,9 +31,9 @@ export default withTranslation()(class Filter extends Component{
         alpha : 0
       },
       gamma : {
-        r : 0,
-        g : 0,
-        b : 0
+        r : 1,
+        g : 1,
+        b : 1,
       },
       opacity : 1,
       filtermenu : false, // true = open
@@ -75,7 +75,7 @@ export default withTranslation()(class Filter extends Component{
       ret['denoise'] = image.filters[22] ? Number(image.filters[22].denoise_matrix.exponent) : 50;
       ret['removecolor'] = image.filters[23] ? { color : image.filters[23].color , distance : image.filters[23].distance} : { color : prevState.removecolor.color , distance : 0};
       ret['blendcolor'] = image.filters[24] ? { color : image.filters[24].color , alpha : image.filters[24].alpha, mode : image.filters[24].mode} : { color : prevState.blendcolor.color , mode : 'add', alpha : 0};
-      ret['gamma'] = image.filters[25] ? { r : image.filters[25].r , g : image.filters[25].g, b : image.filters[25].b} : { r : 0, g : 0, b : 0 };
+      ret['gamma'] = image.filters[25] ? { r : image.filters[25].gamma[0] , g : image.filters[25].gamma[1], b : image.filters[25].gamma[2]} : { r : 1, g : 1, b : 1 };
       ret['opacity'] = image.opacity;
       // console.log("prevstate ",prevState.removecolor)
       return ret;
@@ -186,6 +186,51 @@ export default withTranslation()(class Filter extends Component{
     })
   }
 
+  handleBlendModeChange = (event) => {
+    let value = this.state.blendcolor;
+    value.mode = event.target.value;
+    let filterOption = 'blendcolor'
+    let checked = $("input:checkbox[id='"+ filterOption +"-checkbox']").is(":checked");
+    new Promise((resolve) => {
+      this.setState({ blendcolor : value });
+      console.log(filterOption, checked, value)
+      resolve();
+    })
+    .then(() => {
+      this.props.rangeFilterObject(filterOption, checked, value);
+    })
+  }
+
+  handleGammaChange = (event) => {
+    const gamma_id = event.target.getAttribute("id");
+    let value;
+    console.log(this.state.gamma)
+    switch(gamma_id){
+      case 'gamma':
+        value = { r : event.target.value, g : this.state.gamma.g, b : this.state.gamma.b}
+        break;
+      case 'gamma-g':
+        value = { r : this.state.gamma.r, g : event.target.value, b : this.state.gamma.b}
+        break;
+      case 'gamma-b':
+        value = { r : this.state.gamma.r, g : this.state.gamma.g, b : event.target.value}
+        break;
+      default:
+        value = this.state.gamma;
+        break;
+    }
+    let filterOption = event.target.getAttribute('filter');
+    let checked = $("input:checkbox[id='"+ filterOption +"-checkbox']").is(":checked");
+    new Promise((resolve) => {
+      this.setState({ gamma : value });
+      console.log(filterOption, checked, value)
+      resolve();
+    })
+    .then(() => {
+      this.props.rangeFilterObject(filterOption, checked, value);
+    })
+  }
+
   //this.props.filterObject 대신 사용하는 함수 : value 전달위해 : 체크박스 함수에 사용
   removeColorObject = (event) => {
     this.props.filterValueObject('removecolor', event.target.checked, this.state.removecolor )
@@ -193,6 +238,10 @@ export default withTranslation()(class Filter extends Component{
 
   blendColorObject = (event) => {
     this.props.filterValueObject('blendcolor', event.target.checked, this.state.blendcolor )
+  }
+
+  gammaObject = (event) => {
+    this.props.filterValueObject('gamma', event.target.checked, this.state.gamma )
   }
 
   //removecolor color 함수에 사용. 색상이 변경되면, 체크여부 확인 후, 현재 distance와 함께 필터 적용.
@@ -524,6 +573,18 @@ export default withTranslation()(class Filter extends Component{
                 <input type='checkbox' id="blendcolor-checkbox" className='rangefilter' onClick={this.blendColorObject} filter='blendcolor'/>
                 <div className="range-box">
                   <input type="color" id="colorSource" value={this.state.blendcolor.color} onChange = { this.setBlendColor }/>
+                  <select id="blend-mode" name="blend-mode" onChange = {this.handleBlendModeChange} value = {this.state.blendcolor.mode}>
+                    <option value="add">Add</option>
+                    <option value="diff">Diff</option>
+                    <option value="subtract">Subtract</option>
+                    <option value="multiply">Multiply</option>
+                    <option value="screen">Screen</option>
+                    <option value="lighten">Lighten</option>
+                    <option value="darken">Darken</option>
+                    <option value="overlay">Overlay</option>
+                    <option value="exclusion">Exclusion</option>
+                    <option value="tint">Tint</option>
+                  </select>
                   <input
                     type='range'
                     className='filter'
@@ -534,6 +595,45 @@ export default withTranslation()(class Filter extends Component{
                     step='0.01'
                     value={this.state.blendcolor.alpha || 0}
                     onChange={ this.handleBlendColorChange } filter='blendcolor'
+                  />
+                  {/* <label id="hue-value">{this.state.hue}</label> */}
+                  {/* {this.props.object.type === 'image' && this.props.object.filters[21] ? this.props.object.filters[21].rotation : 0 } */}
+                </div>
+                <div>{i18next.t('ui/filter.Gamma')}</div>
+                <input type='checkbox' id="gamma-checkbox" className='rangefilter' onClick={this.gammaObject} filter='gamma'/>
+                <div className="range-box">
+                  <input
+                    type='range'
+                    className='filter'
+                    id='gamma'
+                    min='0.2'
+                    max='2.2'
+                    name='gamma'
+                    step='0.01'
+                    value={this.state.gamma.r || 1}
+                    onChange={ this.handleGammaChange } filter='gamma'
+                  />
+                  <input
+                    type='range'
+                    className='filter'
+                    id='gamma-g'
+                    min='0.2'
+                    max='2.2'
+                    name='gamma'
+                    step='0.01'
+                    value={this.state.gamma.g || 1}
+                    onChange={ this.handleGammaChange } filter='gamma'
+                  />
+                  <input
+                    type='range'
+                    className='filter'
+                    id='gamma-b'
+                    min='0.2'
+                    max='2.2'
+                    name='gamma'
+                    step='0.01'
+                    value={this.state.gamma.b || 1}
+                    onChange={ this.handleGammaChange } filter='gamma'
                   />
                   {/* <label id="hue-value">{this.state.hue}</label> */}
                   {/* {this.props.object.type === 'image' && this.props.object.filters[21] ? this.props.object.filters[21].rotation : 0 } */}
