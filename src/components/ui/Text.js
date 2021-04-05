@@ -1,7 +1,7 @@
 import switchTools from '../helper/SwitchTools'
 import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
 import React, {Component} from 'react';
-import {fontList} from '../const/consts';
+import {fontList, styleIcon} from '../const/consts';
 import { ChromePicker } from 'react-color';
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
@@ -243,16 +243,16 @@ export default withTranslation()(class Text extends Component{
             <div className="bold">
               <label>
                 <input type='checkbox' onClick={this.textAction} text='bold' id='bold_checkbox' disabled = {this.props.object.type ==='textbox' ? false : true } />
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
-                  <path d="M22.941,18.046c0,1.116-0.234,2.06-0.706,2.828c-0.47,0.772-1.144,1.378-2.022,1.825 c-0.932,0.473-2.003,0.811-3.217,1.008C15.781,23.902,15.352,24,13.708,24H2v-1.784c0.32-0.028,2.031-0.421,2.031-1.953V6.053 C4.031,4.197,2.32,3.979,2,3.929V2h11.953c3.008,0,3.639,0.414,4.973,1.239c1.334,0.829,2,2.048,2,3.66 c0,3.087-2.469,4.929-3.275,5.116v0.294C18.457,12.392,22.941,13.26,22.941,18.046z M15.434,7.824c0-0.911-0.344-1.623-1.031-2.132 c-0.687-0.515-1.488-0.769-2.862-0.769c-0.196,0-0.452,0.007-0.766,0.018c-0.316,0.012-0.588,0.022-0.815,0.029v6.102h0.806 c1.675,0,2.68-0.293,3.476-0.877C15.035,9.612,15.434,8.823,15.434,7.824z M16.248,17.475c0-1.165-0.435-2.061-1.309-2.682 c-0.871-0.623-1.903-0.934-3.539-0.934c-0.188,0-0.438,0.006-0.75,0.018c-0.311,0.014-0.542,0.022-0.691,0.029v7.174 c0,0,1.643,0,2.307,0c1.18,0,2.137-0.314,2.876-0.945C15.879,19.505,16.248,18.617,16.248,17.475z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
+                  <path d={styleIcon.bold}/>
                 </svg>
               </label>
             </div>
             <div className="italic">
               <label>
               <input type='checkbox' onClick={this.textAction} text='italic' id='italic_checkbox' disabled = {this.props.object.type ==='textbox' ? false : true } />
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" enable-background="new 0 0 26 26">
-                  <path d="M16.4,24H4.2l0.5-1.9C5,22.1,5.5,22,6,22c0.6,0,0.9-0.1,1.2-0.2c0.4-0.2,0.7-0.4,0.9-0.6c0.2-0.3,0.4-0.6,0.5-1l3.6-14.1 c0.1-0.4,0.1-0.7,0-0.9c-0.1-0.3-0.3-0.5-0.6-0.7c-0.2-0.1-0.6-0.2-1-0.3C10.1,4.1,9.6,4,9.3,4l0.5-2H22l-0.5,2 c-0.3,0-1.1,0.1-1.6,0.1c-0.5,0.1-0.9,0.1-1.2,0.2c-0.4,0.1-0.8,0.3-1,0.6c-0.2,0.3-0.4,0.6-0.4,1l-3.6,14.1c-0.1,0.4-0.1,0.7,0,1 c0.1,0.3,0.3,0.5,0.6,0.6c0.2,0.1,0.5,0.2,1,0.3c0.5,0.1,1.3,0.1,1.6,0.2L16.4,24z"/>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
+                  <path d={styleIcon.italic}/>
                 </svg>
               </label>
             </div>
