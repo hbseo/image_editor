@@ -450,7 +450,7 @@ export default withTranslation()(class Filter extends Component{
                   {/* {this.props.object.type === 'image' && this.props.object.filters[20] ? this.props.object.filters[20].saturation : 0 } */}
                 </div>
                 <div>{i18next.t('ui/filter.Hue')}</div>
-                <input type='checkbox' id="huerotation-checkbox" className='rangefilter' onClick={this.props.filterObject} filter='hue' value={this.state.hue || 0}/>
+                <input type='checkbox' id="huerotation-checkbox" className='rangefilter' onClick={this.props.filterObject} filter='huerotation' value={this.state.hue || 0}/>
                 <div className="range-box">
                   <input
                     type='range'
@@ -458,10 +458,10 @@ export default withTranslation()(class Filter extends Component{
                     id='huerotation'
                     min='-1'
                     max='1'
-                    name='hue'
+                    name='huerotation'
                     step='0.01'
                     value={this.state.hue || 1}
-                    onChange={this.handleFilterChange} filter='hue'
+                    onChange={this.handleFilterChange} filter='huerotation'
                   />
                   <label id="hue-value">{this.state.hue}</label>
                   {/* {this.props.object.type === 'image' && this.props.object.filters[21] ? this.props.object.filters[21].rotation : 0 } */}
