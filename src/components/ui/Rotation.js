@@ -57,10 +57,10 @@ export default withTranslation()(class Rotation extends Component{
             </div>
             <div className="clock-button">
               <div>
-                <button id="clockwise" onClick={this.rotateObject} angle='30'></button>
+                <button id="clockwise" onClick={this.rotateObject} angle='-30'></button>
               </div>
               <div>
-                <button id="c-clockwise" onClick={this.rotateObject} angle='-30'></button>
+                <button id="c-clockwise" onClick={this.rotateObject} angle='30'></button>
               </div>
             </div>
           </div>

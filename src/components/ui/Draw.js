@@ -66,7 +66,7 @@ export default withTranslation()(class Draw extends Component{
   brushListUp = () => {
     let i = 0;
     return this.brush.map(br => (
-      <img className="brush_img" src={this.img[i++]} alt={br} onClick={(e) => this.handleDrawingBrush(br, e)}></img>
+      <img className="brush_img" src={this.img[i++]} key = {i} alt={br} onClick={(e) => this.handleDrawingBrush(br, e)}></img>
     ))
   }
 

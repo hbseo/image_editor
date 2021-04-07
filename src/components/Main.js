@@ -123,7 +123,7 @@ class Main extends Component {
                 <p className="site-title-p">image-editor</p>
               </div>
               <button onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
-              <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button>
+              {/* <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button> */}
               <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
               {/* <button className='dropdown-btn'>{t('Main.Load Image')}</button> */}
               {/* <div className='dropdown-container'>
@@ -131,6 +131,7 @@ class Main extends Component {
                 <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
                 <button onClick={this.changeTab} tab='3'>{t('Main.Signin')}</button>
               </div> */}
+              <LoadImage tab = '1'/>
               {this.state.login_state ? 
               <div>
                 <div className='dropdown-btn3'>
