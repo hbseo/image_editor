@@ -234,7 +234,7 @@ class SignUp extends Component {
                   Member Register
               </span>
                 <div className="wrap-input100 validate-input" data-validate='ID is required'>
-                  <input className="input100 highlight" type="text" id="id" name="id" placeholder="ID" value={this.state.id} onChange={this.registerHandler} style={this.id_style} maxLength="20" />
+                  <input className="input100" type="text" id="id" name="id" placeholder="ID" value={this.state.id} onChange={this.registerHandler} style={this.id_style} maxLength="20" />
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-envelope" aria-hidden="true" />
@@ -242,7 +242,7 @@ class SignUp extends Component {
                   {validId}
                 </div>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
-                  <input className="input100 highlight" type="password" id="password" name="password" placeholder="Password" value={this.state.password} onChange={this.registerHandler} maxLength="20"/>
+                  <input className="input100" type="password" id="password" name="password" placeholder="Password" value={this.state.password} onChange={this.registerHandler} maxLength="20"/>
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-lock" aria-hidden="true" />
