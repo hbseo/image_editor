@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
+import { CSSTransition } from 'react-transition-group';
 import '../css/Login/main.scss';
 class Change_password extends Component {
   constructor(props) {
@@ -51,29 +52,29 @@ class Change_password extends Component {
     let upperCaseLetters = /[A-Z]/g;
     let numbers = /[0-9]/g;
     let length = /.{8,20}/g;
-    if(this.state.password_hightlight) {
-      if(this.state.password.match(lowerCaseLetters)) {
+    if(this.state.password_highlight) {
+      if(this.state.new_password.match(lowerCaseLetters)) {
         document.getElementById("letter_pass").classList.remove("invalid");
         document.getElementById("letter_pass").classList.add("valid");
       } else {
         document.getElementById("letter_pass").classList.remove("valid");
         document.getElementById("letter_pass").classList.add("invalid");
       }
-      if(this.state.password.match(upperCaseLetters)) {
+      if(this.state.new_password.match(upperCaseLetters)) {
         document.getElementById("capital_pass").classList.remove("invalid");
         document.getElementById("capital_pass").classList.add("valid");
       } else {
         document.getElementById("capital_pass").classList.remove("valid");
         document.getElementById("capital_pass").classList.add("invalid");
       }
-      if(this.state.password.match(numbers)) {
+      if(this.state.new_password.match(numbers)) {
         document.getElementById("number_pass").classList.remove("invalid");
         document.getElementById("number_pass").classList.add("valid");
       } else {
         document.getElementById("number_pass").classList.remove("valid");
         document.getElementById("number_pass").classList.add("invalid");
       }
-      if(this.state.password.match(length)) {
+      if(this.state.new_password.match(length)) {
         document.getElementById("length_pass").classList.remove("invalid");
         document.getElementById("length_pass").classList.add("valid");
       } else {
@@ -119,17 +120,6 @@ class Change_password extends Component {
   }
 
   render() {
-    let validPass = null;
-    if(this.state.password_highlight) {
-      validPass = 
-      <div className="validatePass">
-        <h3>비밀번호 요구 조건</h3>
-        <p className="invalid" id="letter_pass"><b>소문자</b></p>
-        <p className="invalid" id="capital_pass"><b>대문자</b></p>
-        <p className="invalid" id="number_pass"><b>숫자</b></p>
-        <p className="invalid" id="length_pass"><b>최소길이 8</b></p>
-      </div>
-    }
     return(
       <div className="Change_password">
         <div className="limiter">
@@ -152,7 +142,14 @@ class Change_password extends Component {
                   <span className="symbol-input100">
                     <i className="fa fa-lock" aria-hidden="true" />
                   </span>
-                  {validPass}
+                  <CSSTransition in ={this.state.password_highlight} timeout={200} classNames="validCheck" unmountOnExit>
+                  <div className="validatePass">
+                    <p className="invalid" id="letter_pass"><b>소문자</b></p>
+                    <p className="invalid" id="capital_pass"><b>대문자</b></p>
+                    <p className="invalid" id="number_pass"><b>숫자</b></p>
+                    <p className="invalid" id="length_pass"><b>최소길이 8</b></p>
+                  </div>
+                  </CSSTransition>
                 </div>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
                   <input className="input100" type="password" name="confirm_password" placeholder="Confirm password" value={this.state.confirm_password} onChange={this.change_passwordHandler} />
