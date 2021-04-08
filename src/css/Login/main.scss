@@ -900,7 +900,39 @@
   }
 }
 
+// SignUp.js
 .SignUp {
+  .valid {
+    color: green;
+  }
+  
+  .valid:before {
+    position: relative;
+    left: -35px;
+    content: "✔";
+  }
+  
+  .invalid {
+    color: red;
+  }
+  
+  .invalid:before {
+    position: relative;
+    left: -35px;
+    content: "✖";
+  }
+  .validateId {
+    position: absolute;
+    top: -50px;
+  }
+  .validatePass {
+    position: absolute;
+    top: -50px;
+  }
+}
+
+// Change_password.js
+.Change_password {
   .valid {
     color: green;
   }

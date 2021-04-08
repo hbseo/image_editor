@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
+import '../css/Login/main.scss';
 class Change_password extends Component {
   constructor(props) {
     super(props);
@@ -8,8 +9,18 @@ class Change_password extends Component {
       current_password: '',
       new_password: '',
       confirm_password: '',
+      password_highlight: false
     }
     this.id = props.match.params.id;
+  }
+
+  componentDidMount() {
+    document.addEventListener("mouseup", this.findHighlightTag);
+    document.addEventListener("keyup", this.findHighlightTag);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("mouseup", this.findHighlightTag);
+    document.removeEventListener("keyup", this.findHighlightTag);
   }
 
   validatePassword = () => {
@@ -19,13 +30,63 @@ class Change_password extends Component {
     return this.state.new_password === this.state.confirm_password;
   }
 
+  findHighlightTag = () => {
+    const id = document.activeElement.id;
+    if(id === "password") this.setState({password_highlight: true})
+    else this.setState({password_highlight: false});
+  }
+
   change_passwordHandler = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name] : value});
+    new Promise((resolve) => {
+      this.setState({ [name] : value});
+      resolve();
+    })
+    .then(() => {
+      if(name === "new_password") this.validateInput();
+    })
+  }
+  validateInput = () => {
+    let lowerCaseLetters = /[a-z]/g;
+    let upperCaseLetters = /[A-Z]/g;
+    let numbers = /[0-9]/g;
+    let length = /.{8,20}/g;
+    if(this.state.password_hightlight) {
+      if(this.state.password.match(lowerCaseLetters)) {
+        document.getElementById("letter_pass").classList.remove("invalid");
+        document.getElementById("letter_pass").classList.add("valid");
+      } else {
+        document.getElementById("letter_pass").classList.remove("valid");
+        document.getElementById("letter_pass").classList.add("invalid");
+      }
+      if(this.state.password.match(upperCaseLetters)) {
+        document.getElementById("capital_pass").classList.remove("invalid");
+        document.getElementById("capital_pass").classList.add("valid");
+      } else {
+        document.getElementById("capital_pass").classList.remove("valid");
+        document.getElementById("capital_pass").classList.add("invalid");
+      }
+      if(this.state.password.match(numbers)) {
+        document.getElementById("number_pass").classList.remove("invalid");
+        document.getElementById("number_pass").classList.add("valid");
+      } else {
+        document.getElementById("number_pass").classList.remove("valid");
+        document.getElementById("number_pass").classList.add("invalid");
+      }
+      if(this.state.password.match(length)) {
+        document.getElementById("length_pass").classList.remove("invalid");
+        document.getElementById("length_pass").classList.add("valid");
+      } else {
+        document.getElementById("length_pass").classList.remove("valid");
+        document.getElementById("length_pass").classList.add("invalid");
+      }
+    }
   }
 
   change_passwordClickHandler = (e) => {
     e.preventDefault();
+    let pattern_pass = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}/;
+    if(!this.state.new_password.match(pattern_pass)) return;
     const {current_password, new_password} = this.state;
     const id = this.id;
     if(!this.validatePassword()) {
@@ -58,6 +119,17 @@ class Change_password extends Component {
   }
 
   render() {
+    let validPass = null;
+    if(this.state.password_highlight) {
+      validPass = 
+      <div className="validatePass">
+        <h3>비밀번호 요구 조건</h3>
+        <p className="invalid" id="letter_pass"><b>소문자</b></p>
+        <p className="invalid" id="capital_pass"><b>대문자</b></p>
+        <p className="invalid" id="number_pass"><b>숫자</b></p>
+        <p className="invalid" id="length_pass"><b>최소길이 8</b></p>
+      </div>
+    }
     return(
       <div className="Change_password">
         <div className="limiter">
@@ -75,11 +147,12 @@ class Change_password extends Component {
                   </span>
                 </div>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
-                  <input className="input100" type="password" name="new_password" placeholder="New password" value={this.state.new_password} onChange={this.change_passwordHandler} />
+                  <input className="input100" type="password" id="password" name="new_password" placeholder="New password" value={this.state.new_password} onChange={this.change_passwordHandler} />
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-lock" aria-hidden="true" />
                   </span>
+                  {validPass}
                 </div>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
                   <input className="input100" type="password" name="confirm_password" placeholder="Confirm password" value={this.state.confirm_password} onChange={this.change_passwordHandler} />
