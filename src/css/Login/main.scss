@@ -901,6 +901,7 @@
   }
 }
 
+// SignUp.js
 .SignUp {
   .validCheck-enter {
     // max-height: 0px;
@@ -977,5 +978,62 @@
     border-radius: 10px;
     padding : 10px;
 
+  }
+}
+
+// Change_password.js
+.Change_password {
+  .validCheck-enter {
+    // max-height: 0px;
+    opacity: 0;
+    -webkit-transition : opacity 0.5s ease;
+    overflow: hidden;
+  }
+  .validCheck-enter-active {
+    // height : auto;
+    // max-height: 100px;
+    opacity : 1;
+  }
+  
+  .validCheck-exit {
+    // max-height: 100px;
+    opacity : 1;
+    -webkit-transition : opacity 0.5s ease;
+  }
+  .validCheck-exit-active {
+    // max-height: 0px;
+    opacity : 0;
+    overflow: hidden;
+  }
+
+  .valid {
+    color: green;
+  }
+  
+  .valid:before {
+    position: relative;
+    left: 0px;
+    content: "✔";
+  }
+  
+  .invalid {
+    color: red;
+  }
+  
+  .invalid:before {
+    position: relative;
+    left: 0px;
+    content: "✖";
+  }
+  .validatePass {
+    position: absolute;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+    left : 110%;
+    top : -50%;
+    // height : 140px;
+    width : 170px;
+    padding : 10px;
+    background-color: #eeeeee;
   }
 }

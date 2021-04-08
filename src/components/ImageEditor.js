@@ -1345,10 +1345,7 @@ class ImageEditor extends Component {
   }
 
   returnToHome = () => {
-    let home_check= window.confirm(i18next.t('ImageEditor.LeavePage'));
-    if(home_check){
-      this.props.history.push('/')
-    }
+    if(window.confirm(i18next.t('ImageEditor.LeavePage'))) window.location.replace('/');
   }
 
   render() {

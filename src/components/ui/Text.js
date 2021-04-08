@@ -273,6 +273,14 @@ export default withTranslation()(class Text extends Component{
                 </svg>
               </label>
             </div>
+            <div className={this.props.object.type ==='textbox' ? "underline" : "underline-disabled"}>
+              <label>
+              <input type='checkbox' onClick={this.textAction} text='underline' id='underline_checkbox' disabled = {this.props.object.type ==='textbox' ? false : true } />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26">
+                  <path d={textIcon.underline}/>
+                </svg>
+              </label>
+            </div>
           </div>
 
           <div className="option-title">{i18next.t('ui/text.Text background')}</div>

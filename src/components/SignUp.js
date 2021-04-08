@@ -25,9 +25,11 @@ class SignUp extends Component {
   }
   componentDidMount() {
     document.addEventListener("mouseup", this.findHighlightTag);
+    document.addEventListener("keyup", this.findHighlightTag);
   }
   componentWillUnmount() {
     document.removeEventListener("mouseup", this.findHighlightTag);
+    document.removeEventListener("keyup", this.findHighlightTag);
   }
   findHighlightTag = () => {
     const id = document.activeElement.id;
@@ -165,7 +167,7 @@ class SignUp extends Component {
         .then((data) => {
           if (data.msg === 'success') {
             alert('회원가입 성공');
-            window.location.replace('/'); 
+            window.location.replace('/login'); 
           }
           else {
             alert('회원가입 실패');
