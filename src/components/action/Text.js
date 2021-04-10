@@ -69,6 +69,11 @@ class Text extends Action {
             fontStyle: checked ? 'italic' : 'normal'
           }).setCoords();
           break;
+        case 'underline':
+          activeObject.set({
+            underline: checked ? 'true' : ''
+          }).setCoords();
+          break;
         case 'left-align':
           activeObject.set({
             textAlign: 'left'

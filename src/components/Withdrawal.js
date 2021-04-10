@@ -45,15 +45,15 @@ class Withdrawal extends Component {
     return(
       <div className='modal'>
         <div className='withdrawal'>
-          <p>&#183;정말로 회원 탈퇴 하시겠습니까?<br/>&#183;탈퇴하시려면 비밀번호를 입력해주세요.</p>
+          <p>&#183;정말로 회원 탈퇴 하시겠습니까?<br/>&#183;탈퇴하시려면 비밀번호를 입력해 주세요.</p>
           <input 
             type="password" 
             name="password" 
             value={this.state.password} 
             onChange={this.inputHandler}
             maxLength="20"></input>
-          <button onClick={this.withdrawalHandler}>확인</button>
-          <button onClick={this.props.close}>취소</button>
+          <button className="confirm" onClick={this.withdrawalHandler}>확인</button>
+          <button className="cancel" onClick={this.props.close}>취소</button>
         </div>
       </div>
     )

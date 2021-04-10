@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import debounce from 'lodash/debounce';
 import i18next from "../locale/i18n";
+import { CSSTransition } from 'react-transition-group';
 import { withTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import '../css/Login/font-awesome.min.scss';
@@ -24,15 +25,24 @@ class SignUp extends Component {
   }
   componentDidMount() {
     document.addEventListener("mouseup", this.findHighlightTag);
+    document.addEventListener("keyup", this.findHighlightTag);
   }
   componentWillUnmount() {
     document.removeEventListener("mouseup", this.findHighlightTag);
+    document.removeEventListener("keyup", this.findHighlightTag);
   }
   findHighlightTag = () => {
     const id = document.activeElement.id;
     if(id === "id" || id === "password") {
-      if(id === "id") this.setState({id_highlight: true, password_hightlight: false});
-      else this.setState({id_highlight: false, password_hightlight: true});
+      if(id === "id") {
+        this.setState({id_highlight: true, password_hightlight: false});
+        this.validateInput('id')
+
+      }
+      else {
+        this.setState({id_highlight: false, password_hightlight: true});
+        this.validateInput('password')
+      }
     }
     else this.setState({id_highlight: false, password_hightlight: false});
   }
@@ -157,7 +167,7 @@ class SignUp extends Component {
         .then((data) => {
           if (data.msg === 'success') {
             alert('회원가입 성공');
-            window.location.replace('/'); 
+            window.location.replace('/login'); 
           }
           else {
             alert('회원가입 실패');
@@ -196,33 +206,12 @@ class SignUp extends Component {
 
   render() {
     let duptag = null;
-    this.id_style = null;
+    this.id_style = {border: '0px solid #ff4c4c'};
     if(this.state.id !== '') {
       if(this.state.idDupCheck !== null && !this.state.idDupCheck) {
-        duptag = <div>아이디 중복</div>
-        this.id_style = {border: '5px solid red'}
+        duptag = <div className = 'duptag' >아이디 중복</div>
+        this.id_style = {border: '5px solid #ff4c4c'}
       }
-    }
-    let validId = null;
-    let validPass = null;
-    if(this.state.id_highlight) {
-      validId = 
-      <div className="validateId">
-        <h3>아이디 요구 조건</h3>
-        <p className="invalid" id="letter_id"><b>소문자</b></p>
-        <p className="invalid" id="number_id"><b>숫자</b></p>
-        <p className="invalid" id="length_id"><b>최소길이 8</b></p>
-      </div>
-    }
-    if(this.state.password_hightlight) {
-      validPass = 
-      <div className="validatePass">
-        <h3>비밀번호 요구 조건</h3>
-        <p className="invalid" id="letter_pass"><b>소문자</b></p>
-        <p className="invalid" id="capital_pass"><b>대문자</b></p>
-        <p className="invalid" id="number_pass"><b>숫자</b></p>
-        <p className="invalid" id="length_pass"><b>최소길이 8</b></p>
-      </div>
     }
     return (
       <div className='SignUp'>
@@ -234,20 +223,35 @@ class SignUp extends Component {
                   Member Register
               </span>
                 <div className="wrap-input100 validate-input" data-validate='ID is required'>
-                  <input className="input100 highlight" type="text" id="id" name="id" placeholder="ID" value={this.state.id} onChange={this.registerHandler} style={this.id_style} maxLength="20" />
+                  {duptag}
+                  <input className="input100" type="text" id="id" name="id" placeholder="ID" value={this.state.id} onChange={this.registerHandler} style={this.id_style} maxLength="20" />
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-envelope" aria-hidden="true" />
                   </span>
-                  {validId}
+
+                  <CSSTransition in = {this.state.id_highlight} timeout={200} classNames="validCheck" unmountOnExit >
+                    <div className="validateId">
+                      <p className="invalid" id="letter_id"><b>소문자</b></p>
+                      <p className="invalid" id="number_id"><b>숫자</b></p>
+                      <p className="invalid" id="length_id"><b>최소길이 8</b></p>
+                    </div>
+                  </CSSTransition>
                 </div>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
-                  <input className="input100 highlight" type="password" id="password" name="password" placeholder="Password" value={this.state.password} onChange={this.registerHandler} maxLength="20"/>
+                  <input className="input100" type="password" id="password" name="password" placeholder="Password" value={this.state.password} onChange={this.registerHandler} maxLength="20"/>
                   <span className="focus-input100" />
                   <span className="symbol-input100">
                     <i className="fa fa-lock" aria-hidden="true" />
                   </span>
-                  {validPass}
+                  <CSSTransition in = {this.state.password_hightlight} timeout={200} classNames="validCheck" unmountOnExit >
+                    <div className="validatePass">
+                      <p className="invalid" id="letter_pass"><b>소문자</b></p>
+                      <p className="invalid" id="capital_pass"><b>대문자</b></p>
+                      <p className="invalid" id="number_pass"><b>숫자</b></p>
+                      <p className="invalid" id="length_pass"><b>최소길이 8</b></p>
+                    </div>
+                  </CSSTransition>
                 </div>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
                   <input className="input100" type="password" name="passwordConfirm" placeholder="Password Confirm" vlaue={this.state.passwordConfirm} onChange={this.registerHandler} maxLength="20"/>
@@ -310,7 +314,6 @@ class SignUp extends Component {
                     <i className="fa fa-sticky-note" aria-hidden="true" />
                   </span>
                 </div>
-                {duptag}
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" type='submit'>
                     Register

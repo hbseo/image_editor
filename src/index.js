@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Error from './components/Error';
 import Main from './components/Main';
 import ImageEditor from './components/ImageEditor';
+import ImageFilter from './components/ImageFilter';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import ChangePassword from './components/Change_password';
@@ -17,6 +18,7 @@ ReactDOM.render(
     <Switch>
       <Route exact path="/" component={Main} />
 			<Route exact path="/edit" component={ImageEditor} />
+			<Route exact path="/filter" component={ImageFilter} />
       {/* <Route exact path="/login" component={SignIn} /> */}
       {/* <Route exact path="/register" component={SignUp} /> */}
       {/* <Route exact path="/ChangePassword/:id" component={ChangePassword} /> */}

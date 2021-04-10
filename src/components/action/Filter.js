@@ -110,7 +110,7 @@ class Filter extends Action {
             saturation : value
           }));
           break;
-        case 'hue':
+        case 'huerotation':
           obj.filters[17] = checked && (new fabric.Image.filters.HueRotation({
             rotation : value
           }));
