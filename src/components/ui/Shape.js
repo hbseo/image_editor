@@ -90,6 +90,18 @@ export default withTranslation()(class Shape extends Component {
             <button onClick={this.addShape} type="ellipse">{i18next.t('ui/shape.Ellipse')}</button>
             <button onClick={this.addShape} type="circle">{i18next.t('ui/shape.Circle')}</button>
           </div>
+          <div className="option-title">각도 조절</div>
+          <div className={this.props.object.type ==='circle' ? "circle-degree" : "circle-degree-disabled"}>
+            <input 
+            type="number" 
+            name="endAngle" 
+            min='0' 
+            max='360' 
+            step = '0' 
+            value = {this.props.object.endAngle * 180 / Math.PI}
+            disabled = {this.props.object.type ==='circle' ? false : true }
+            onChange = {this.handleEndAngleChange}/>{i18next.t('ui/shape.Degree')}
+          </div>
           <div className="option-title">{i18next.t('ui/shape.Line')}</div>
           <div className="line-list">
             <button onClick={this.addLine} type="line">{i18next.t('ui/shape.Line')}</button>
@@ -99,12 +111,6 @@ export default withTranslation()(class Shape extends Component {
             <button onClick={this.props.makePolygonWithClick} type="line">{i18next.t('ui/shape.Click')}</button>
             <button onClick={this.props.makePolygonWithDrag} type="line">{i18next.t('ui/shape.Drag')}</button>
           </div>
-          { this.props.object.type === "circle" ? 
-            <div>
-              <input type="number" name="endAngle" min='0' max='360' step = '0' value = {this.props.object.endAngle * 180 / Math.PI} onChange = {this.handleEndAngleChange}/>{i18next.t('ui/shape.Degree')}
-            </div> : <div></div>
-          }
-
           <div className="color-picker">            
             <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
             <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
