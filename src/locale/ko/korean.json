@@ -239,7 +239,9 @@
         "Crop start" : "이미지 자르기 시작",
         "Crop End" : "이미지 자르기 완료",
         "Upload image" : "이미지 업로드",
-        "Upload local image" : "내 컴퓨터에서 불러오기"
+        "Upload local image" : "내 컴퓨터에서 불러오기",
+        "Upload URL image" : "주소로 불러오기",
+        "Upload library image" : "라이브러리 불러오기"
     },
 
     "ui/loading" : {

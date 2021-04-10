@@ -50,7 +50,11 @@ class ImageMini extends Component {
       </div>
     );
     return (
-      <div id="mini-image-list">{listitem}</div>
+      <div className="mini-image-list">
+        <div>
+          {listitem}
+        </div>
+      </div>
     )
   }
 
@@ -149,25 +153,20 @@ class ImageMini extends Component {
 
   render() {
     return (
-      <div className="mini-image-list">
-        <div>
-          <form className="asearch-form" onSubmit={this.handleSubmit}> 
-            <div>
-              <div className="asearch-group">
-                <label className ="arandom-image-searchtext" htmlFor="search">{i18next.t('ImageList.Image name')}</label>
-                <input className="asearch-input" name="search" value={this.state.search} onChange={this.searchChange} />
-              </div>
-              <div className="asearch-group">
-                <label className ="arandom-image-searchtext" htmlFor="image_count">{i18next.t('ImageList.Image count')}</label>
-                <input className="asearch-input" type="number" name="image_count" value={this.state.image_count} onChange={this.searchChange} />
-              </div>
+      <div className="mini-image">
+        <form className="asearch-form" onSubmit={this.handleSubmit}> 
+          <div className="form-box">
+            <label className ="arandom-image-searchtext" htmlFor="search">{i18next.t('ImageList.Image name')}</label>
+            <input id="lib-name" autoComplete="off" placeholder="Search Library" name="search" value={this.state.search} onChange={this.searchChange} />
+            
+            <label className ="arandom-image-searchtext" htmlFor="image_count">{i18next.t('ImageList.Image count')}</label>
+            <div className="asearch-group">
+              <input className="asearch-input" type="number" name="image_count" value={this.state.image_count} onChange={this.searchChange} />
             </div>
             <input className="asearch-image-button" type="submit" value="Enter" />
-          </form>
-        </div>
-        <div>
-          {this.showImage(this.state.images)}
-        </div>
+          </div>
+        </form>
+        {this.showImage(this.state.images)}
         {this.state.url ? this.imageSizeVersion() : null}
       </div>
     )
