@@ -1,8 +1,7 @@
 import switchTools from '../helper/SwitchTools'
-import {convertRGB, HEXtoRGB} from '../helper/ConverRGB'
+import {convertRGB, HEXtoRGBA, } from '../helper/ConverRGB'
 import React, {Component} from 'react';
 import {fontList, textIcon} from '../const/consts';
-import { ChromePicker } from 'react-color';
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
 import '../../css/ui/Text.scss';
@@ -25,8 +24,9 @@ export default withTranslation()(class Text extends Component{
         b: '255',
         a: '1'
       },
+      hexcolor : '#ffffff',
+      hexbgcolor : '#ffffff',
       showfont: false,
-      testcolor : "#ffffff"
     };
     this.isPressed = false;
   }
@@ -37,10 +37,12 @@ export default withTranslation()(class Text extends Component{
     document.addEventListener('mouseup', this.onFontSizemouseupEvent);
     this.documentUpdate();
   }
+
   componentDidUpdate(){
     // console.log('Text UI Update');
     this.documentUpdate();
   }
+
   componentWillUnmount(){
     // console.log('Text UI Unmount');
     document.removeEventListener('mousedown', this.onShowFontEvent);
@@ -154,25 +156,32 @@ export default withTranslation()(class Text extends Component{
     this.props.pipette.enablePipette(this.setColor); 
   }
 
-  handleColorChange = (color) => {
-    this.setState({ color: color.rgb })
+  handleColorChange = (event) => {
+    this.setState({ color : HEXtoRGBA(event.target.value, this.state.color.a), hexcolor : event.target.value});
+    this.props.setColor({rgb : HEXtoRGBA(event.target.value, this.state.color.a)});
   }
 
-  handleColorChangeComplete = (color) => {
-    this.props.setColor(color);
+  handleOpacityChange = (event) => {
+    let change = this.state.color;
+    change.a = event.target.value;
+    this.setState({ color : change });
+    this.props.setColor({rgb : this.state.color});
   }
 
-  handleBGColorChange = (color) => {
-    this.setState({ bgcolor: color.rgb })
-  }
-
-  handleBGColorChangeComplete = (color) => {
+  handleBGColorChange = (event) => {
+    this.setState({ bgcolor: HEXtoRGBA(event.target.value, this.state.bgcolor.a), hexbgcolor : event.target.value })
     if(document.getElementById('textbg').checked){
       this.props.textObject("background-color", true, convertRGB(this.state.bgcolor));
     } 
-    else {
-      this.setState({ bgcolor: color.rgb })
-    }
+  }
+
+  handleBGOpacityChange = (event) => {
+    let change = this.state.bgcolor;
+    change.a = event.target.value;
+    this.setState({ bgcolor : change });
+    if(document.getElementById('textbg').checked){
+      this.props.textObject("background-color", true, convertRGB(this.state.bgcolor));
+    } 
   }
 
   handlefontfamilybutton = () => {
@@ -185,11 +194,6 @@ export default withTranslation()(class Text extends Component{
       this.setState({showfont: false});
     }
     document.removeEventListener('mousedown', this.onShowFontEvent);
-  }
-
-  colortest = (event) => {
-    this.setState({ color : HEXtoRGB(event.target.value), testcolor : event.target.value});
-    this.props.setColor({rgb : HEXtoRGB(event.target.value)});
   }
 
   render(){
@@ -291,13 +295,14 @@ export default withTranslation()(class Text extends Component{
 
           <label className="option-title">{i18next.t('ui/text.Text color')}</label>
           <div className="color-picker">
-            <input type="color" id="colorSource" value={this.state.testcolor} onChange = { this.colortest}/>
-            <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange }/>
+            <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
           </div>
 
           <label className="option-title">{i18next.t('ui/text.Text bg color')}</label>
-          <div className="color-picker">
-            <ChromePicker color={ this.state.bgcolor } onChange={ this.handleBGColorChange } onChangeComplete = { this.handleBGColorChangeComplete }/>
+          <div className="color-picker">            
+            <input type="color" id="colorSource" value={this.state.hexbgcolor} onChange = { this.handleBGColorChange}/>
+            <input type="range" value = {this.state.bgcolor.a} min='0' max='1' step='0.01' onChange = {this.handleBGOpacityChange} />
           </div>
 
           <div>
