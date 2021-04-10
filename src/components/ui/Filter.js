@@ -295,35 +295,44 @@ export default withTranslation()(class Filter extends Component{
             <CSSTransition in = {this.state.filtermenu} timeout={200} classNames="my-node" unmountOnExit >
               <div className="filter-options">
                 <div>
-                  <input type='checkbox' id="filter-invert" className='filter' onClick={this.props.filterObject} filter='invert'/><label htmlFor="filter-invert" className="label-filter-icon" id="label-filter-invert"></label>
-                  <label className="filter-name">{i18next.t('ui/filter.Invert')}</label>
+                  <input type='checkbox' id="filter-invert" className='filter' onClick={this.props.filterObject} filter='invert'/>
+                  <label htmlFor="filter-invert" className="label-filter-icon" id="label-filter-invert">{i18next.t('ui/filter.Invert')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-brownie" className='filter' onClick={this.props.filterObject} filter='brownie'/><label htmlFor="filter-brownie" className="label-filter-icon" id="label-filter-brownie">{i18next.t('ui/filter.Brownie')}</label>
+                  <input type='checkbox' id="filter-brownie" className='filter' onClick={this.props.filterObject} filter='brownie'/>
+                  <label htmlFor="filter-brownie" className="label-filter-icon" id="label-filter-brownie">{i18next.t('ui/filter.Brownie')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-technicolor" className='filter' onClick={this.props.filterObject} filter='technicolor'/><label htmlFor="filter-technicolor" className="label-filter-icon" id="label-filter-technicolor">{i18next.t('ui/filter.Technicolor')}</label>
+                  <input type='checkbox' id="filter-technicolor" className='filter' onClick={this.props.filterObject} filter='technicolor'/>
+                  <label htmlFor="filter-technicolor" className="label-filter-icon" id="label-filter-technicolor">{i18next.t('ui/filter.Technicolor')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-polaroid" className='filter' onClick={this.props.filterObject} filter='polaroid'/><label htmlFor="filter-polaroid" className="label-filter-icon" id="label-filter-polaroid">{i18next.t('ui/filter.Polaroid')}</label>
+                  <input type='checkbox' id="filter-polaroid" className='filter' onClick={this.props.filterObject} filter='polaroid'/>
+                  <label htmlFor="filter-polaroid" className="label-filter-icon" id="label-filter-polaroid">{i18next.t('ui/filter.Polaroid')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-blackwhite" className='filter' onClick={this.props.filterObject} filter='blackwhite'/><label htmlFor="filter-blackwhite" className="label-filter-icon" id="label-filter-blackwhite">{i18next.t('ui/filter.Blackwhite')}</label>
+                  <input type='checkbox' id="filter-blackwhite" className='filter' onClick={this.props.filterObject} filter='blackwhite'/>
+                  <label htmlFor="filter-blackwhite" className="label-filter-icon" id="label-filter-blackwhite">{i18next.t('ui/filter.Blackwhite')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-vintage" className='filter' onClick={this.props.filterObject} filter='vintage'/><label htmlFor="filter-vintage" className="label-filter-icon" id="label-filter-vintage">{i18next.t('ui/filter.Vintage')}</label>
+                  <input type='checkbox' id="filter-vintage" className='filter' onClick={this.props.filterObject} filter='vintage'/>
+                  <label htmlFor="filter-vintage" className="label-filter-icon" id="label-filter-vintage">{i18next.t('ui/filter.Vintage')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-sepia" className='filter' onClick={this.props.filterObject} filter='sepia'/><label htmlFor="filter-sepia" className="label-filter-icon" id="label-filter-sepia">{i18next.t('ui/filter.Sepia')}</label>
+                  <input type='checkbox' id="filter-sepia" className='filter' onClick={this.props.filterObject} filter='sepia'/>
+                  <label htmlFor="filter-sepia" className="label-filter-icon" id="label-filter-sepia">{i18next.t('ui/filter.Sepia')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-kodachrome" className='filter' onClick={this.props.filterObject} filter='kodachrome'/><label htmlFor="filter-kodachrome" className="label-filter-icon" id="label-filter-kodachrome">{i18next.t('ui/filter.Kodachrome')}</label>
+                  <input type='checkbox' id="filter-kodachrome" className='filter' onClick={this.props.filterObject} filter='kodachrome'/>
+                  <label htmlFor="filter-kodachrome" className="label-filter-icon" id="label-filter-kodachrome">{i18next.t('ui/filter.Kodachrome')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-emboss" className='filter' onClick={this.props.filterObject} filter='emboss'/><label htmlFor="filter-emboss" className="label-filter-icon" id="label-filter-emboss">{i18next.t('ui/filter.Emboss')}</label>
+                  <input type='checkbox' id="filter-emboss" className='filter' onClick={this.props.filterObject} filter='emboss'/>
+                  <label htmlFor="filter-emboss" className="label-filter-icon" id="label-filter-emboss">{i18next.t('ui/filter.Emboss')}</label>
                 </div>
                 <div>
-                  <input type='checkbox' id="filter-sharpen" className='filter' onClick={this.props.filterObject} filter='sharpen'/><label htmlFor="filter-sharpen" className="label-filter-icon" id="label-filter-sharpen">{i18next.t('ui/filter.Sharpen')}</label>
+                  <input type='checkbox' id="filter-sharpen" className='filter' onClick={this.props.filterObject} filter='sharpen'/>
+                  <label htmlFor="filter-sharpen" className="label-filter-icon" id="label-filter-sharpen">{i18next.t('ui/filter.Sharpen')}</label>
                 </div>
               </div>
             </CSSTransition>

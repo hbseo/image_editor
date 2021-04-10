@@ -20,125 +20,110 @@
 
 .filter-box{
   width: 100%;
-  padding: 1% 5% 1% 5%;
+  height: 100%;
 }
 
 .filter-options{
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  transition: background-color 0.5s;
   padding-right: 10%;
 
   div{
-    margin: 1%;
+    margin: 3%;
+    width: 200px;
+    height: 100px;
+    position: relative;
+
+    input[type="checkbox"]{
+      display: none;
+    }
+  
+    input[type="checkbox"] + label{
+      width: 100%;
+      height: 100%;
+      background-color: #E6E6E6;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 5px;
+    }
+
+    .label-filter-icon{
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      opacity: 1;
+      transition-property: opacity;
+      transition: 0.3s;
+    }
+
+    .label-filter-icon:hover{
+      opacity: 0.8;
+    }
   }
-
-
-
 
   #label-filter-grey{
     background-image: url(../img/filter/grey.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
-  }
-
-  .filter-name {
-    // display: none;
-    // height : 20px;
-    display: block;
-    text-align: center;
-    transition: color 0.1s linear;
-    color : #eeeeee;
-  }
-
-  .label-filter-icon:hover + .filter-name{
-    display: block;
-    text-align: center;
-    color : black;
-    // height: auto;
+    background-size: 100% 100%;
   }
 
   #label-filter-invert{
     background-image: url(../img/filter/invert.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
+    background-size: 100% 100%;
   }
 
   #label-filter-brownie{
     background-image: url(../img/filter/brownie.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
+    background-size: 100% 100%;
   }
 
   #label-filter-technicolor{
     background-image: url(../img/filter/technicolor.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
+    background-size: 100% 100%;
   }
 
   #label-filter-polaroid{
     background-image: url(../img/filter/polaroid.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
+    background-size: 100% 100%;
   }
 
   #label-filter-blackwhite{
     background-image: url(../img/filter/blackwhite.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
+    background-size: 100% 100%;
   }
 
   #label-filter-vintage{
     background-image: url(../img/filter/vintage.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
+    background-size: 100% 100%;
   }
 
   #label-filter-sepia{
     background-image: url(../img/filter/sepia.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
+    background-size: 100% 100%;
   }
 
   #label-filter-kodachrome{
     background-image: url(../img/filter/kodachrome.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
+    background-size: 100% 100%;
   }
 
   #label-filter-emboss{
     background-image: url(../img/filter/emboss.png);
     background-repeat: no-repeat;
-    background-size: auto 100%;
-  }
-  
-  input[type="checkbox"]{
-    display: none;
-  }
-
-  input[type="checkbox"] + label{
-    width: 10vmin;
-    height: 10vmin;
-    background-color: #E6E6E6;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-  }
-  
-  input[type="checkbox"] + label:hover{
-      background-color: #D9D9D9;
-  }
-  
-  input[type="checkbox"]:disabled + label:hover{
-    background-color: #E6E6E6;
-  }
-
-  input[type="checkbox"]:checked + label{
-    background-color: #365AFC;
-    color: white;
+    background-size: 100% 100%;
   }
 }
 
