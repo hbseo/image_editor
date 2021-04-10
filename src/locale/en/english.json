@@ -239,7 +239,9 @@
         "Crop start" : "Crop start",
         "Crop End" : "Crop End",
         "Upload image" : "Upload image",
-        "Upload local image" : "Upload local image"
+        "Upload local image" : "Upload local image",
+        "Upload URL image" : "Upload URL image",
+        "Upload library image" : "Upload library image"
     },
 
     "ui/loading" : {

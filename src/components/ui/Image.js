@@ -10,6 +10,8 @@ export default withTranslation()(class Image extends Component {
     super(props);
     this.state = { 
       imgURL : '',
+      displayURL: false,
+      displaylib: false,
     }
     this.url = '';
   }
@@ -54,6 +56,16 @@ export default withTranslation()(class Image extends Component {
     })
   }
 
+  urlOpen = () => {
+    let url = this.state.displayURL;
+    this.setState({displayURL: !url});
+  }
+
+  libOpen = () => {
+    let lib = this.state.displaylib;
+    this.setState({displaylib: !lib});
+  }
+
   render(){
     return (
       <div className="sub">
@@ -73,12 +85,14 @@ export default withTranslation()(class Image extends Component {
           </div>
           <div className="option-title">{i18next.t('ui/image.Upload image')}</div>
           <div className="upload-file">
-              <div className="image-local">
-                <div className="file-input-group">
-                  <label className="input-file-button" htmlFor="_file">{i18next.t('ui/image.Upload local image')}</label>
-                  <input name="file" type='file' id='_file' onChange={this.importImage} accept="image/*" style={{ display: 'none' }}></input>
-                </div>
+            <div className="image-local">
+              <div className="file-input-group">
+                <label className="input-file-button" htmlFor="_file">{i18next.t('ui/image.Upload local image')}</label>
+                <input name="file" type='file' id='_file' onChange={this.importImage} accept="image/*" style={{ display: 'none' }}></input>
               </div>
+            </div>
+            <button className="open-url" onClick={this.urlOpen}>{i18next.t('ui/image.Upload URL image')}</button>
+            {this.state.displayURL ?
             <div className="image-url">
               <form id="imgload" onSubmit={this.handleSubmit}>
                 <div className="image-url-group">
@@ -87,10 +101,9 @@ export default withTranslation()(class Image extends Component {
                 </div>
                 <input className="url-submit" type="submit" value="Submit" />
               </form>
-            </div>
-          </div>
-          <div className="load-image-mini">
-            <ImageMini addImage={this.props.addImage} />
+            </div> : null}
+            <button className="open-lib" onClick={this.libOpen}>{i18next.t('ui/image.Upload library image')}</button>
+            {this.state.displaylib ? <ImageMini addImage={this.props.addImage} /> : null}
           </div>
         </div>
         {this.props.imgStatus ? <Loading open = {true} /> : null}
