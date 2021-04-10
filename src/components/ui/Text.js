@@ -157,8 +157,14 @@ export default withTranslation()(class Text extends Component{
   }
 
   handleColorChange = (event) => {
-    this.setState({ color : HEXtoRGBA(event.target.value, this.state.color.a), hexcolor : event.target.value});
-    this.props.setColor({rgb : HEXtoRGBA(event.target.value, this.state.color.a)});
+    new Promise((resolve) => {
+      let color = HEXtoRGBA(event.target.value, this.state.color.a)
+      this.setState({ color : color, hexcolor : event.target.value});
+      resolve(color);
+    })
+    .then((color) => {
+      this.props.setColor({rgb : color});
+    })
   }
 
   handleOpacityChange = (event) => {
@@ -169,10 +175,16 @@ export default withTranslation()(class Text extends Component{
   }
 
   handleBGColorChange = (event) => {
-    this.setState({ bgcolor: HEXtoRGBA(event.target.value, this.state.bgcolor.a), hexbgcolor : event.target.value })
-    if(document.getElementById('textbg').checked){
-      this.props.textObject("background-color", true, convertRGB(this.state.bgcolor));
-    } 
+    new Promise((resolve) => {
+      this.setState({ bgcolor: HEXtoRGBA(event.target.value, this.state.bgcolor.a), hexbgcolor : event.target.value })
+      resolve();
+    })
+    .then(() => {
+      if(document.getElementById('textbg').checked){
+        this.props.textObject("background-color", true, convertRGB(this.state.bgcolor));
+      } 
+    })
+
   }
 
   handleBGOpacityChange = (event) => {

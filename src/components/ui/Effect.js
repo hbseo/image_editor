@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import { ChromePicker } from 'react-color';
-import {convertRGB} from '../helper/ConverRGB'
+import {convertRGB, HEXtoRGBA } from '../helper/ConverRGB';
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
 export default withTranslation()(class Effect extends Component {
@@ -16,13 +15,15 @@ export default withTranslation()(class Effect extends Component {
         b: '0',
         a: '1'
       },
+      hexcolor : "#000000",
       strokeWidth: 5,
       strokeColor:{
         r:'0',
         g:'0',
         b:'0',
         a:'1'
-      }
+      },
+      hexstrokeColor : "#000000",
     }
     this.spoid = {r :0, g:0, b:0, a:1};
   }
@@ -70,14 +71,25 @@ export default withTranslation()(class Effect extends Component {
     }
   }
 
-  handleColorChange = (color) => {
-    this.setState({ color: color.rgb })
+
+  handleColorChange = (event) => {
+    new Promise((resolve) => {
+      let color = HEXtoRGBA(event.target.value, this.state.color.a);
+      this.setState({ color : color, hexcolor : event.target.value});
+      resolve(color);
+    })
+    .then((color) => {
+      if(document.getElementById("shadow_toggle").checked){
+        this.props.setShadow({color : convertRGB(color), blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
+      }
+    })
   }
 
-  handleColorChangeComplete = (color) => {
-    if(document.getElementById("shadow_toggle").checked){
-      this.props.setShadow({color : `rgba(${ color.rgb.r }, ${ color.rgb.g }, ${ color.rgb.b }, ${ color.rgb.a })`, blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
-    }
+  handleOpacityChange = (event) => {
+    let change = this.state.color;
+    change.a = event.target.value;
+    this.setState({ color : change });
+    this.props.setShadow({color : convertRGB(change), blur : this.state.blur, offsetX : this.state.offsetX, offsetY : this.state.offsetY});
   }
 
   handlePipette = () => {
@@ -90,17 +102,26 @@ export default withTranslation()(class Effect extends Component {
 
   handleStrokeWidthChange = (event) => {
     this.setState({ strokeWidth : Number(event.target.value)});
-    this.props.setStroke({ color : `rgba(${ this.state.strokeColor.r }, ${ this.state.strokeColor.g }, ${ this.state.strokeColor.b }, ${ this.state.strokeColor.a })`, width : Number(event.target.value)});
+    this.props.setStroke({ color : convertRGB(this.state.strokeColor), width : Number(event.target.value)});
   }
 
-  handleStrokeColorChange = (color) => {
-    this.setState({ strokeColor : color.rgb });
+  handleStrokeColorChange = (event) => {
+    new Promise((resolve) => {
+      let color = HEXtoRGBA(event.target.value, this.state.strokeColor.a);
+      this.setState({ strokeColor : color, hexstrokeColor : event.target.value});
+      resolve(color);
+    })
+    .then((color) => {
+      this.props.setStrokeColor(color);
+    })
   }
 
-  handleStrokeColorChangeComplete = (color) => {
-    this.props.setStrokeColor(color);
+  handleStrokeOpacityChange = (event) => {
+    let change = this.state.strokeColor;
+    change.a = event.target.value;
+    this.setState({ strokeColor : change });
+    this.props.setStrokeColor(change);
   }
-  
 
   render(){
     return (
@@ -147,8 +168,9 @@ export default withTranslation()(class Effect extends Component {
                 onChange={this.handleShadowChange}/>
             </label>
 
-            <div className="color-picker">
-              <ChromePicker name="fillColor" color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+            <div className="color-picker">            
+              <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
+              <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
             </div>
             
             <div className="stroke">
@@ -170,8 +192,9 @@ export default withTranslation()(class Effect extends Component {
             
             <div className="option-title">{i18next.t('ui/effect.StrokeColor')} </div>
             
-            <div className="color-picker">
-              <ChromePicker name="fillColor" color={ this.state.strokeColor } onChange={ this.handleStrokeColorChange } onChangeComplete = { this.handleStrokeColorChangeComplete }/>
+            <div className="color-picker">            
+              <input type="color" id="colorSource" value={this.state.hexstrokeColor} onChange = { this.handleStrokeColorChange}/>
+              <input type="range" value = {this.state.strokeColor.a} min='0' max='1' step='0.01' onChange = {this.handleStrokeOpacityChange} />
             </div>
             
             <div>

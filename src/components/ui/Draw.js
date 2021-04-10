@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import { SketchPicker } from 'react-color';
-import {convertRGB} from '../helper/ConverRGB'
+import {convertRGB, HEXtoRGBA } from '../helper/ConverRGB'
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
 import '../../css/ui/Draw.scss';
@@ -18,11 +17,12 @@ export default withTranslation()(class Draw extends Component{
     super(props);
     this.state = { 
       color: {
-        r: '255',
-        g: '255',
-        b: '255',
+        r: '0',
+        g: '0',
+        b: '0',
         a: '1',
       },
+      hexcolor : "#000000",
       lineWidth : 10,
       showbrush: false,
       brush_now: 'pencilBrush'
@@ -43,12 +43,20 @@ export default withTranslation()(class Draw extends Component{
     this.props.closeDrawing();
   }
 
-  handleColorChange = (color) => {
-    this.setState({ color: color.rgb})
+  handleColorChange = (event) => {
+    new Promise((resolve) => {
+      this.setState({ color : HEXtoRGBA(event.target.value, this.state.color.a), hexcolor : event.target.value});
+      resolve();
+    })
+    .then(() => {
+      this.props.changeDrawingColor(convertRGB(this.state.color));
+    })
   }
 
-  handleColorChangeComplete = (color) => {
-    this.setState({ color: color.rgb})
+  handleOpacityChange = (event) => {
+    let change = this.state.color;
+    change.a = event.target.value;
+    this.setState({ color : change });
     this.props.changeDrawingColor(convertRGB(this.state.color));
   }
 
@@ -98,10 +106,9 @@ export default withTranslation()(class Draw extends Component{
             <input type='range' className='drawing' id='width' min='0' max='60' name='width' step='1' value={this.state.lineWidth} onChange={this.handleDrawingWidth}/>
           </div>
           <div className="option-title">{i18next.t('ui/draw.Line Color')}</div>
-          <div className="color-picker">
-            <div>
-              <SketchPicker color={ this.state.color } onChange = {this.handleColorChange} onChangeComplete={this.handleColorChangeComplete} />
-            </div>
+          <div className="color-picker">            
+            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
+            <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
           </div>
         </div>
       </div>
