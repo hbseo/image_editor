@@ -90,7 +90,7 @@ export default withTranslation()(class Shape extends Component {
             <button onClick={this.addShape} type="ellipse">{i18next.t('ui/shape.Ellipse')}</button>
             <button onClick={this.addShape} type="circle">{i18next.t('ui/shape.Circle')}</button>
           </div>
-          <div className="option-title">각도 조절</div>
+          <div className="option-title">{i18next.t('ui/shape.Adjust degree')}</div>
           <div className={this.props.object.type ==='circle' ? "circle-degree" : "circle-degree-disabled"}>
             <input 
             type="number" 
