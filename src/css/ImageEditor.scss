@@ -349,10 +349,6 @@ input[type=range]:focus {
   outline: none;
 }
 
-input[type=range]:disabled {
-  border: 1px solid #c7d0fe;
-}
-
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   height: 3px;
