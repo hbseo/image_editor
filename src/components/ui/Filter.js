@@ -164,7 +164,7 @@ export default withTranslation()(class Filter extends Component{
     let checked = $("input:checkbox[id='"+ filterOption +"-checkbox']").is(":checked");
     new Promise((resolve) => {
       this.setState({removecolor : value });
-      console.log(filterOption, checked, value)
+      // console.log(filterOption, checked, value)
       resolve();
     })
     .then(() => {
@@ -178,7 +178,7 @@ export default withTranslation()(class Filter extends Component{
     let checked = $("input:checkbox[id='"+ filterOption +"-checkbox']").is(":checked");
     new Promise((resolve) => {
       this.setState({blendcolor : value });
-      console.log(filterOption, checked, value)
+      // console.log(filterOption, checked, value)
       resolve();
     })
     .then(() => {
@@ -193,7 +193,7 @@ export default withTranslation()(class Filter extends Component{
     let checked = $("input:checkbox[id='"+ filterOption +"-checkbox']").is(":checked");
     new Promise((resolve) => {
       this.setState({ blendcolor : value });
-      console.log(filterOption, checked, value)
+      // console.log(filterOption, checked, value)
       resolve();
     })
     .then(() => {
