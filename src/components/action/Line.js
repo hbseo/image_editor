@@ -14,6 +14,7 @@ class Line extends Action {
 		line.set({x2 : pointer.x, y2 : pointer.y});
 		canvas.renderAll();
 	}
+
 	addLineEvent = (event) => {
 		const canvas = this.getCanvas();
 		this.removeKeyDownEvent();
@@ -59,7 +60,16 @@ class Line extends Action {
 		// console.log('off')
 		canvas.selection = true;
 		canvas.renderAll();
-		this.saveState('line add');
+
+    let activeObject = this.getActiveObject();
+    if(activeObject.width === 0 || activeObject.height === 0){
+      canvas.remove(activeObject);
+    }
+    else{
+      this.saveState('line add');
+    }
+
+
 		if(this.disableObj){
 			this.disableObj.lockMovementY = false;
 			this.disableObj.lockMovementX = false;
@@ -68,6 +78,7 @@ class Line extends Action {
 		this.addKeyDownEvent();
 		canvas.off('mouse:up', this.addLineEndEvent);
 	}
+
 	addLine = (options) => {
 		const canvas = this.getCanvas();
     this.color = `rgba(${ options.color.r }, ${ options.color.g }, ${ options.color.b }, ${ options.color.a })`

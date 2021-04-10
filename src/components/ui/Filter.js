@@ -186,6 +186,22 @@ export default withTranslation()(class Filter extends Component{
     })
   }
 
+  handleMultipleFilterChange = (event) => {
+    // 바꿔야 할 부분은 const랑 setState하는 부분. Mode는 어떻게 합치지?
+    // 결국 value랑 state부분만 잘 손보면 정리 가능할 듯
+
+    // const value = { color : this.state.removecolor.color, distance : event.target.value}
+    // let filterOption = event.target.getAttribute('filter');
+    // let checked = $("input:checkbox[id='"+ filterOption +"-checkbox']").is(":checked");
+    // new Promise((resolve) => {
+    //   // this.setState({removecolor : value });
+    //   resolve();
+    // })
+    // .then(() => {
+    //   this.props.rangeFilterObject(filterOption, checked, value);
+    // })
+  }
+
   handleBlendModeChange = (event) => {
     let value = this.state.blendcolor;
     value.mode = event.target.value;
@@ -204,7 +220,7 @@ export default withTranslation()(class Filter extends Component{
   handleGammaChange = (event) => {
     const gamma_id = event.target.getAttribute("id");
     let value;
-    console.log(this.state.gamma)
+    // console.log(this.state.gamma)
     switch(gamma_id){
       case 'gamma':
         value = { r : event.target.value, g : this.state.gamma.g, b : this.state.gamma.b}
@@ -230,8 +246,23 @@ export default withTranslation()(class Filter extends Component{
       this.props.rangeFilterObject(filterOption, checked, value);
     })
   }
-
   //this.props.filterObject 대신 사용하는 함수 : value 전달위해 : 체크박스 함수에 사용
+  filterObjectforValue = (event) => {
+    let option = event.target.getAttribute('filter')
+    switch(option){
+      case 'removecolor':
+        this.props.filterValueObject('removecolor', event.target.checked, this.state.removecolor );
+        break;
+      case 'blendcolor':
+        this.props.filterValueObject('blendcolor', event.target.checked, this.state.blendcolor )
+        break;
+      case 'gamma':
+        this.props.filterValueObject('gamma', event.target.checked, this.state.gamma )
+        break;
+      default :
+    }
+  }
+
   removeColorObject = (event) => {
     this.props.filterValueObject('removecolor', event.target.checked, this.state.removecolor )
   }

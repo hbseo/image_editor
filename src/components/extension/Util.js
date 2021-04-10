@@ -39,7 +39,7 @@ class Util extends Extension {
   changeBackgroundColor = (color) => {
     const canvas = this.getCanvas();
     if(canvas){
-      canvas.backgroundColor = convertRGB(color.rgb);
+      canvas.backgroundColor = convertRGB(color);
       this.saveState('change backgroundColor');
       canvas.renderAll();
     }

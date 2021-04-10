@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import { ChromePicker } from 'react-color';
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
+import { HEXtoRGBA } from '../helper/ConverRGB';
 import '../../css/ui/Icon.scss'
 
 export default withTranslation()(class Icon extends Component {
@@ -14,16 +14,17 @@ export default withTranslation()(class Icon extends Component {
         b: '0',
         a: '1'
       },
+      hexcolor : "#ffffff"
     }
   }
   componentDidMount(){
-    console.log('Icon UI Mount');
+    // console.log('Icon UI Mount');
   }
   componentDidUpdate(){
-    console.log('Icon UI Update');
+    // console.log('Icon UI Update');
   }
   componentWillUnmount(){
-    console.log('Icon UI Unmount');
+    // console.log('Icon UI Unmount');
   }
 
   addIcon = (event) => {
@@ -34,12 +35,22 @@ export default withTranslation()(class Icon extends Component {
     this.props.addIcon(options);
   }
 
-  handleColorChange = (color) => {
-    this.setState({ color: color.rgb })
+  handleColorChange = (event) => {
+    new Promise((resolve) => {
+      let color = HEXtoRGBA(event.target.value, this.state.color.a)
+      this.setState({ color : color, hexcolor : event.target.value});
+      resolve(color);
+    })
+    .then((color) => {
+      this.props.setColor({rgb : color});
+    })
   }
 
-  handleColorChangeComplete = (color) => {
-    this.props.setColor(color);
+  handleOpacityChange = (event) => {
+    let change = this.state.color;
+    change.a = event.target.value;
+    this.setState({ color : change });
+    this.props.setColor({rgb : this.state.color});
   }
 
   setColor = (color) => {
@@ -77,8 +88,9 @@ export default withTranslation()(class Icon extends Component {
             
           </div>
           <div className="option-title">{i18next.t('ui/icon.Color')}</div>
-          <div className="color-picker">
-            <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          <div className="color-picker">            
+            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
+            <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
           </div>
           <div>
             <button onClick = { this.handlePipette }>{i18next.t('ui/icon.Pipette')}</button>

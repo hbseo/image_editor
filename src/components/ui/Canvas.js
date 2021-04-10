@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import i18next from "../../locale/i18n";
 import '../../css/ui/Canvas.scss';
 import { withTranslation } from "react-i18next";
-import { SketchPicker } from 'react-color';
+import { HEXtoRGBA } from '../helper/ConverRGB';
 
 export default withTranslation()(class Canvas extends Component {
   constructor(props) {
@@ -16,6 +16,7 @@ export default withTranslation()(class Canvas extends Component {
         b: '255',
         a: '1',
       },
+      hexcolor : '#ffffff'
     };
   }
 
@@ -54,13 +55,23 @@ export default withTranslation()(class Canvas extends Component {
     this.setState({displayCropCanvas: false});
   }
 
-  handleColorChange = (color) => {
-    this.setState({ color: color.rgb})
+  handleColorChange = (event) => {
+    new Promise((resolve) => {
+      let color = HEXtoRGBA(event.target.value, this.state.color.a)
+      this.setState({ color : color, hexcolor : event.target.value});
+      resolve(color);
+    })
+    .then((color) => {
+      console.log(color)
+      this.props.changeBackgroundColor(color);
+    })
   }
 
-  handleColorChangeComplete = (color) => {
-    this.setState({ color: color.rgb})
-    this.props.changeBackgroundColor(color);
+  handleOpacityChange = (event) => {
+    let change = this.state.color;
+    change.a = event.target.value;
+    this.setState({ color : change });
+    this.props.changeBackgroundColor(change);
   }
 
   render() {
@@ -103,8 +114,9 @@ export default withTranslation()(class Canvas extends Component {
             }
           </div>
           <div className="option-title">{i18next.t('ui/canvas.CanvasColor')}</div>
-          <div className = "canvas-color">
-            <SketchPicker color={ this.state.color } onChange = {this.handleColorChange} onChangeComplete={this.handleColorChangeComplete} />
+          <div className="color-picker">            
+            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
+            <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
           </div>
         </div>
       </div>

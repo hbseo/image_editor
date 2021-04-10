@@ -25,7 +25,7 @@ class Shape extends Action {
     if(this.getActiveObject()) {
       let shape = this.getActiveObject();
       shape.set({
-        stroke: option.width === 0 ? null : shape.stroke || option.color,
+        stroke: option.width === 0 ? null : option.color,
         strokeWidth: option.width,
         noScaleCache: true,
         strokeUniform: true,
@@ -41,7 +41,7 @@ class Shape extends Action {
     const canvas = this.getCanvas();
     if(activeObject) {
       activeObject.set({
-        stroke: convertRGB(color.rgb)
+        stroke: convertRGB(color)
       })
       this.saveState('Stroke color change', activeObject.type);
       canvas.renderAll();

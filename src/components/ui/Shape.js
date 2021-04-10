@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ChromePicker } from 'react-color';
+import { HEXtoRGBA } from '../helper/ConverRGB'
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
 import '../../css/ui/Shape.scss'
@@ -14,7 +14,7 @@ export default withTranslation()(class Shape extends Component {
         b: '0',
         a: '1'
       },
-
+      hexcolor : '#000000'
     }
     this.spoid = {r :0, g:0, b:0, a:1};
   }
@@ -46,12 +46,22 @@ export default withTranslation()(class Shape extends Component {
     this.props.setEndAngle(event.target.value)
   }
 
-  handleColorChange = (color) => {
-    this.setState({ color: color.rgb })
+  handleColorChange = (event) => {
+    new Promise((resolve) => {
+      let color = HEXtoRGBA(event.target.value, this.state.color.a)
+      this.setState({ color : color, hexcolor : event.target.value});
+      resolve(color);
+    })
+    .then((color) => {
+      this.props.setColor({rgb : color});
+    })
   }
 
-  handleColorChangeComplete = (color) => {
-    this.props.setColor(color);
+  handleOpacityChange = (event) => {
+    let change = this.state.color;
+    change.a = event.target.value;
+    this.setState({ color : change });
+    this.props.setColor({rgb : this.state.color});
   }
 
   setColor = (color) => {
@@ -95,8 +105,9 @@ export default withTranslation()(class Shape extends Component {
             </div> : <div></div>
           }
 
-          <div className="color-picker">
-            <ChromePicker color={ this.state.color } onChange={ this.handleColorChange } onChangeComplete = { this.handleColorChangeComplete }/>
+          <div className="color-picker">            
+            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
+            <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
           </div>
           <div>
             <button onClick = { this.handlePipette }>{i18next.t('ui/shape.Pipette')}</button>
