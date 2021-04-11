@@ -3,7 +3,7 @@ import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
 import { getSearchImage} from '../helper/GetImage';
 import imgerror from '../../css/img/imgerror.svg';
-import Modal from '../Modal';
+import ImageModal from '../ImageModal';
 import '../../css/ui/ImageMini.scss';
 
 class ImageMini extends Component {
@@ -116,6 +116,10 @@ class ImageMini extends Component {
     full_img.src = this.state.image.full;
   }
 
+  closeModal = () => {
+    this.setState({openModal : false});
+  }
+
   imageSizeVersion = () => {
     let image = this.state.image;
     if(!image){
@@ -127,26 +131,26 @@ class ImageMini extends Component {
     }
     else{
       return (
-        <Modal open={this.state.openModal}>
+        <ImageModal open={this.state.openModal} close = {this.closeModal}>
           <div id="mini-image-list" >
             <div className="mini-image-list-box">
               <img className="image-list-img" src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}/>
-              <div>full: {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}</div>
+              <div className="image-list-text">full: {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}</div>
             </div>
             <div className="mini-image-list-box">
               <img className="image-list-img" src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg} />
-              <div>regular: {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}</div>
+              <div className="image-list-text">regular: {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}</div>
             </div>
             <div className="mini-image-list-box">
               <img className="image-list-img" src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg} />
-              <div>small: {this.state.imageSize.small.x} X {this.state.imageSize.small.y}</div>
+              <div className="image-list-text">small: {this.state.imageSize.small.x} X {this.state.imageSize.small.y}</div>
             </div>
             <div className="mini-image-list-box">
               <img className="image-list-img" src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg} />
-              <div>thumb: {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
+              <div className="image-list-text">thumb: {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
             </div>
           </div>
-        </Modal>
+        </ImageModal>
       )
     }
   }

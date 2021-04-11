@@ -12,7 +12,7 @@ class Modal extends Component {
 				  <div className = "modal">
 						<div className = "saveModal">
               <div className="top-div">
-                test
+                <button onClick = {close}>X</button>
               </div>
               {this.props.children}
 						</div>

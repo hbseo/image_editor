@@ -17,13 +17,13 @@ export default withTranslation()(class Image extends Component {
   }
 
   componentDidMount(){
-    console.log('Image UI Mount');
+    // console.log('Image UI Mount');
   }
   componentDidUpdate(){
-    console.log('Image UI Update');
+    // console.log('Image UI Update');
   }
   componentWillUnmount(){
-    console.log('Image UI Unmount');
+    // console.log('Image UI Unmount');
   }
   handleCropImage = (event) => {
     let cropOption = event.target.getAttribute('crop');
