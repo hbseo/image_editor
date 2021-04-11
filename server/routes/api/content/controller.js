@@ -5,6 +5,7 @@ const {Database} = require('../../../database/index');
 exports.save = (req, res) => {
   const database = new Database();
   const {title, id, data} = req.body;
+  console.log(data);
   let date = moment().format('YYYY-MM-DD HH:mm:ss');
   let check_query = `SELECT idx, size FROM USERS WHERE userid = "${id}";`;
   let user_idx;
@@ -202,14 +203,13 @@ exports.update = (req, res) => {
 
 exports.get = (req, res) => {
   const database = new Database();
-  const {id, count, sort, search} = req.body;
+  const {id, search, limit, offset} = req.body;
   let check_query = `SELECT idx FROM USERS WHERE userid = "${id}";`;
-  let sort_option = sortlist[sort];
-  let search_option = search.length != 0 ? `AND title LIKE '%${search}%'` : ``;
+  let search_option = search.length !== 0 ? `AND title LIKE '%${search}%'` : ``;
 
   const get = (result) => {
     if(result[0]) {
-      let get_query = `SELECT * FROM PROJECTS WHERE useridx = ${result[0].idx} ` + search_option + sort_option +` LIMIT ${count};`;
+      let get_query = `SELECT * FROM PROJECTS WHERE useridx = ${result[0].idx} ` + search_option +` LIMIT ${limit} OFFSET ${offset};`;
       database.query(get_query)
       .then(respond)
       .catch(onError);
@@ -226,7 +226,6 @@ exports.get = (req, res) => {
       res.status(200).json({
         success : true,
         result : result,
-        sort_option : sort_option,
         search : search_option
       })
     }
@@ -422,10 +421,3 @@ exports.deleteall = (req, res) => {
     .catch(onError)
   })
 }
-
-const sortlist = [
-'ORDER BY TITLE ASC',
-'ORDER BY TITLE DESC',
-'ORDER BY create_date ASC',
-'ORDER BY create_date DESC',
-]

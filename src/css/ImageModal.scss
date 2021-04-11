@@ -67,6 +67,32 @@ $label-padding: $title-container-padding !default;
             }
         }
 
+        //for mini-image
+        #mini-image-list {
+            display: flex;
+            flex-direction: row;
+            align-self: center;
+
+            .mini-image-list-box {
+                padding : 5px;
+                .image-list-img {
+                    object-fit: contain;
+                    width: 100%;
+                    height: auto;
+                    outline: solid 0px #021c1e;
+                    transition: outline 0.1s linear;
+                }
+                .image-list-img:hover {
+                    outline-width: 5px;
+                    cursor: pointer;
+                }
+
+                .image-list-text {
+                    display: none;
+                }
+            }
+        }
+
     }
 
     

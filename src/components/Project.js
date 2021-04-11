@@ -3,6 +3,7 @@ import {fabric} from 'fabric';
 import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
+import InfiniteScroll from "react-infinite-scroll-component";
 import '../css/Project.scss';
 
 class Project extends Component {
@@ -11,10 +12,12 @@ class Project extends Component {
     this.state = {
       search: '',
       projects : [],
-      proejct_list : [],
-      sort : 0 // 0,1번이 title, 2,3번이 create_date
+      project_length : 20,
+      scroll: true
     }
     this.canvas = null;
+    this.limit = 20;
+    this.offset = 0;
   }
 
   componentDidMount(){
@@ -28,14 +31,21 @@ class Project extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({id : this.props.id, count : 20, sort : this.state.sort, search : this.state.search})
+      body: JSON.stringify({id : this.props.id, 
+        search : this.state.search,
+        limit : this.limit,
+        offset : this.offset})
     })
     .then((res) => res.json())
     .then((data) => {
-      // console.log(data);
       if(data.success){
-        this.setState({projects : data.result});
-        this.showProjects();
+        if(data.result.length === 0) {
+          this.setState({scroll: false});
+          return;
+        }
+        this.offset = this.offset + this.limit;
+        let projects = this.state.projects.concat(data.result);
+        this.setState({projects : projects, project_length: projects.length});
       }
       else{
         alert(i18next.t('Project.Error'));
@@ -75,52 +85,51 @@ class Project extends Component {
     return this.canvas.toDataURL({format : 'png'});
   }
 
-  showProjects = () => {
-    if(this.props.login){
-      let listitem = null;
-      if(this.state.projects.length > 0) {
-        listitem = this.state.projects.map((prj) =>
-          <div className="project-div" key={prj.idx}>
-            <div className="project-img">
-              <Link 
-              to={{
-                pathname: '/edit',
-                save : true,
-                project_data : prj.project_data,
-                project_idx : prj.idx,
-                state: {
-                  width: 500,
-                  height: 400,
-                }
-              }}><img className="project-thumb" id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="200px" alt="none" onClick = {this.openProject}/>
-              </Link>
-            </div>
-            <div className="project-title">
-              <p>{prj.title}</p>
-              {/* <p> {prj.create_date} </p> */}
-              <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
-            </div>
-          </div>
-        );
-      }
-      console.log('ttt', listitem)
-      this.setState({project_list : listitem})
-      // return(
-      //   <div id="project-list">
-      //     {listitem}  
-      //   </div>
-      // );
-    }
-    else{
-      // return(
-      //   <div id="project-list">
-      //     <div className="project-div">
-      //       {i18next.t('Project.PlzSignin')}
-      //     </div>
-      //   </div>
-      // )
-    }
-  }
+  // showProjects = () => {
+  //   if(this.props.login){
+  //     let listitem = null;
+  //     if(this.state.projects.length > 0) {
+  //       listitem = this.state.projects.map((prj) =>
+  //         <div className="project-div" key={prj.idx}>
+  //           <div className="project-img">
+  //             <Link 
+  //             to={{
+  //               pathname: '/edit',
+  //               save : true,
+  //               project_data : prj.project_data,
+  //               project_idx : prj.idx,
+  //               state: {
+  //                 width: 500,
+  //                 height: 400,
+  //               }
+  //             }}><img className="project-thumb" id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="200px" alt="none" onClick = {this.openProject}/>
+  //             </Link>
+  //           </div>
+  //           <div className="project-title">
+  //             <p>{prj.title}</p>
+  //             {/* <p> {prj.create_date} </p> */}
+  //             <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
+  //           </div>
+  //         </div>
+  //       );
+  //     }
+  //     this.setState({project_list : listitem})
+  //     // return(
+  //     //   <div id="project-list">
+  //     //     {listitem}  
+  //     //   </div>
+  //     // );
+  //   }
+  //   else{
+  //     // return(
+  //     //   <div id="project-list">
+  //     //     <div className="project-div">
+  //     //       {i18next.t('Project.PlzSignin')}
+  //     //     </div>
+  //     //   </div>
+  //     // )
+  //   }
+  // }
 
   deleteProject = (event) => {
     let idx = event.target.getAttribute('idx');
@@ -135,9 +144,13 @@ class Project extends Component {
     })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
       if(data.success){
-        this.getProjects();
+        let index = this.state.projects.findIndex((element) => {
+          if(Number(element.idx) === Number(idx)) return 1;
+        });
+        this.state.projects.splice(index, 1);
+        let bool = this.state.projects.length === 0 ? false : true;
+        this.setState({project_length: this.state.projects.length, scroll: bool});
       }
       else{
         alert(i18next.t('Project.Error'));
@@ -161,7 +174,7 @@ class Project extends Component {
     .then((data) => {
       console.log(data);
       if(data.success){
-        this.getProjects();
+        this.setState({projects: [], project_length: 0, scroll:false});
       }
       else{
         alert(i18next.t('Project.Error'));
@@ -199,18 +212,26 @@ class Project extends Component {
 
   projectSort = (event) => {
     let option = event.target.getAttribute('option');
-
-    new Promise((resolve, reject) => {
-      this.setState({sort : parseInt(option)});
-      if(option >=0 && option <= 3){
-        resolve()
-      }
-      else{
-        reject();
-      }
-    })
-    .then(() => this.getProjects())
-    .catch((err) => { alert(err); })
+    if(option === '0') {
+      this.setState({projects : this.state.projects.sort((o1, o2) => {
+        return o1.title - o2.title;
+      })});
+    }
+    else if(option === '1') {
+      this.setState({projects: this.state.projects.sort((o1, o2) => {
+        return o2.title - o1.title;
+      })});
+    }
+    else if(option === '2') {
+      this.setState({projects: this.state.projects.sort((o1, o2) => {
+        return o1.create_date - o2.create_date;
+      })});
+    }
+    else if(option === '3') {
+      this.setState({projects: this.state.projects.sort((o1, o2) => {
+        return o2.create_date - o1.create_date;
+      })});
+    }
   }
  
   render() {
@@ -234,8 +255,37 @@ class Project extends Component {
             <p className="project-search-data">{i18next.t('Project.Search')} : {this.state.search}</p>
           </div> */}
         </div>
-        <div id="project-list">
-          {this.state.project_list}  
+        <div id="project-list" style={{overflow:"auto", height:500}}>
+          <InfiniteScroll 
+            dataLength={this.state.project_length}
+            next={this.getProjects}
+            hasMore={this.state.scroll}
+            loader={<h4>Loading...</h4>}
+            scrollableTarget="project-list">
+            {this.state.projects.map((prj) =>
+              <div className="project-div" key={prj.idx}>
+                <div className="project-img">
+                  <Link 
+                  to={{
+                    pathname: '/edit',
+                    save : true,
+                    project_data : prj.project_data,
+                    project_idx : prj.idx,
+                    state: {
+                      width: 500,
+                      height: 400,
+                    }
+                  }}><img className="project-thumb" id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="200px" alt="none" onClick = {this.openProject}/>
+                  </Link>
+                </div>
+                <div className="project-title">
+                  <p>{prj.title}</p>
+                  {/* <p> {prj.create_date} </p> */}
+                  <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
+                </div>
+              </div>
+            )}
+          </InfiniteScroll>
         </div>
       </div>
     )
