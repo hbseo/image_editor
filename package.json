@@ -28,6 +28,7 @@
     "react-dom": "^16.13.1",
     "react-draggable": "^4.4.3",
     "react-i18next": "^11.8.10",
+    "react-infinite-scroll-component": "^6.0.0",
     "react-motion": "^0.5.2",
     "react-redux": "^7.2.1",
     "react-router": "^5.2.0",
