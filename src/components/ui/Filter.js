@@ -397,25 +397,33 @@ export default withTranslation()(class Filter extends Component{
           <div className="adjust-box">
             <CSSTransition in = {this.state.adjustmenu} timeout={200} classNames="my-node" unmountOnExit >
               <div className="adjust-options">
+                <div className="range-onoff">
+                  <input type='checkbox' id="grayscale-checkbox" className='rangefilter' onClick={this.filterObject} filter='grayscale' value={this.state.grayscale|| 0}/>
+                  <label htmlFor="grayscale-checkbox">{i18next.t('ui/filter.Grey')}</label>
+                </div>
+                {/* <div onClick = {this.changeRange} filter='grayscale'> {this.state.grayscale}</div> */}
+                <div className="range-box" style = {this.rangeStyle('grayscale')}>
+                  <input
+                    type='range'
+                    className='filter'
+                    id='grayscale'
+                    min='0'
+                    max='2'
+                    name='grayscale'
+                    step='1'
+                    value={this.state.grayscale || 0}
+                    onChange={this.handleFilterChange} filter='grayscale'
+                  />
+                  <div className="range-value">
+                    {this.state.grayscale}
+                  </div>
+                </div>
               
-              <div onClick = {this.changeRange} filter='grayscale'>{i18next.t('ui/filter.Grey')} {this.state.grayscale}</div>
-              <input type='checkbox' id="grayscale-checkbox" className='rangefilter' onClick={this.filterObject} filter='grayscale' value={this.state.grayscale|| 0}/>
-              <div className="range-box" style = {this.rangeStyle('grayscale')}>
-                <input
-                  type='range'
-                  className='filter'
-                  id='grayscale'
-                  min='0'
-                  max='2'
-                  name='grayscale'
-                  step='1'
-                  value={this.state.grayscale || 0}
-                  onChange={this.handleFilterChange} filter='grayscale'
-                />
-              </div>
-              
-              <div onClick = {this.changeRange} filter='brightness'>{i18next.t('ui/filter.Brightness')} {this.state.brightness}</div>
-                <input type='checkbox' id="brightness-checkbox" className='rangefilter' onClick={this.filterObject} filter='brightness' value={this.state.brightness || 0}/>
+                {/* <div onClick = {this.changeRange} filter='brightness'>{i18next.t('ui/filter.Brightness')} {this.state.brightness}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="brightness-checkbox" className='rangefilter' onClick={this.filterObject} filter='brightness' value={this.state.brightness || 0}/>
+                  <label htmlFor="brightness-checkbox">{i18next.t('ui/filter.Brightness')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('brightness')}>
                   <input
                     type='range'
@@ -428,11 +436,17 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.brightness || 0}
                     onChange={this.handleFilterChange} filter='brightness'
                   />
+                  <div className="range-value">
+                    {this.state.brightness}
+                  </div>
                 </div>
                
-                <div onClick = {this.changeRange} filter='contrast'>{i18next.t('ui/filter.Contrast')} {this.state.contrast}</div>
-                <input type='checkbox' id="contrast-checkbox" className='rangefilter' onClick={this.filterObject} filter='contrast' value={this.state.contrast || 0}/>
-                <div className="range-box"  style = {this.rangeStyle('contrast')} >
+                {/* <div onClick = {this.changeRange} filter='contrast'>{i18next.t('ui/filter.Contrast')} {this.state.contrast}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="contrast-checkbox" className='rangefilter' onClick={this.filterObject} filter='contrast' value={this.state.contrast || 0}/>
+                  <label htmlFor="contrast-checkbox">{i18next.t('ui/filter.Contrast')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('contrast')}>
                   <input
                     type='range'
                     className='filter'
@@ -444,11 +458,17 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.contrast || 0}
                     onChange={this.handleFilterChange} filter='contrast'
                   />
+                  <div className="range-value">
+                    {this.state.contrast}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='pixelate'>{i18next.t('ui/filter.Pixelate')} {this.state.pixelate}</div>
-                <input type='checkbox' id="pixelate-checkbox" className='rangefilter' onClick={this.filterObject} filter='pixelate' value={this.state.pixelate || 0}/>
-                <div className="range-box"  style = {this.rangeStyle('pixelate')} >
+                {/* <div onClick = {this.changeRange} filter='pixelate'>{i18next.t('ui/filter.Pixelate')} {this.state.pixelate}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="pixelate-checkbox" className='rangefilter' onClick={this.filterObject} filter='pixelate' value={this.state.pixelate || 0}/>
+                  <label htmlFor="pixelate-checkbox">{i18next.t('ui/filter.Pixelate')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('pixelate')}>
                   <input
                     type='range'
                     className='filter'
@@ -460,10 +480,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.pixelate || 1}
                     onChange={this.handleFilterChange} filter='pixelate'
                   />
+                  <div className="range-value">
+                    {this.state.pixelate}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='blur'>{i18next.t('ui/filter.Blur')} {this.state.blur}</div>
-                <input type='checkbox' id="blur-checkbox" className='rangefilter' onClick={this.filterObject} filter='blur' value={this.state.blur || 0}/>
+                {/* <div onClick = {this.changeRange} filter='blur'>{i18next.t('ui/filter.Blur')} {this.state.blur}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="blur-checkbox" className='rangefilter' onClick={this.filterObject} filter='blur' value={this.state.blur || 0}/>
+                  <label htmlFor="blur-checkbox">{i18next.t('ui/filter.Blur')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('blur')}>
                   <input
                     type='range'
@@ -476,10 +502,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.blur || 0}
                     onChange={this.handleFilterChange} filter='blur'
                   />
+                  <div className="range-value">
+                    {this.state.blur}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='noise'>{i18next.t('ui/filter.Noise')} {this.state.noise}</div>
-                <input type='checkbox' id="noise-checkbox" className='rangefilter' onClick={this.filterObject} filter='noise' value={this.state.noise || 0}/>
+                {/* <div onClick = {this.changeRange} filter='noise'>{i18next.t('ui/filter.Noise')} {this.state.noise}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="noise-checkbox" className='rangefilter' onClick={this.filterObject} filter='noise' value={this.state.noise || 0}/>
+                  <label htmlFor="noise-checkbox">{i18next.t('ui/filter.Noise')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('noise')}>
                   <input
                     type='range'
@@ -492,10 +524,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.noise || 0}
                     onChange={this.handleFilterChange} filter='noise'
                   />
+                  <div className="range-value">
+                    {this.state.noise}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='saturation'>{i18next.t('ui/filter.Saturation')} {this.state.saturation}</div>
-                <input type='checkbox' id="saturation-checkbox" className='rangefilter' onClick={this.filterObject} filter='saturation' value={this.state.saturation || 0}/>
+                {/* <div onClick = {this.changeRange} filter='saturation'>{i18next.t('ui/filter.Saturation')} {this.state.saturation}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="saturation-checkbox" className='rangefilter' onClick={this.filterObject} filter='saturation' value={this.state.saturation || 0}/>
+                  <label htmlFor="saturation-checkbox">{i18next.t('ui/filter.Saturation')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('saturation')}>
                   <input
                     type='range'
@@ -508,10 +546,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.saturation || 0}
                     onChange={this.handleFilterChange} filter='saturation'
                   />
+                  <div className="range-value">
+                    {this.state.saturation}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='huerotation'>{i18next.t('ui/filter.Hue')} {this.state.hue}</div>
-                <input type='checkbox' id="huerotation-checkbox" className='rangefilter' onClick={this.filterObject} filter='huerotation' value={this.state.hue || 0}/>
+                {/* <div onClick = {this.changeRange} filter='huerotation'>{i18next.t('ui/filter.Hue')} {this.state.hue}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="huerotation-checkbox" className='rangefilter' onClick={this.filterObject} filter='huerotation' value={this.state.hue || 0}/>
+                  <label htmlFor="huerotation-checkbox">{i18next.t('ui/filter.Hue')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('huerotation')}>
                   <input
                     type='range'
@@ -524,10 +568,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.hue || 1}
                     onChange={this.handleFilterChange} filter='huerotation'
                   />
+                  <div className="range-value">
+                    {this.state.hue}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='ink'>{i18next.t('ui/filter.Ink')} {this.state.ink}</div>
-                <input type='checkbox' id="ink-checkbox" className='rangefilter' onClick={this.filterObject} filter='ink' value={this.state.ink  || 0}/>
+                {/* <div onClick = {this.changeRange} filter='ink'>{i18next.t('ui/filter.Ink')} {this.state.ink}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="ink-checkbox" className='rangefilter' onClick={this.filterObject} filter='ink' value={this.state.ink  || 0}/>
+                  <label htmlFor="ink-checkbox">{i18next.t('ui/filter.Ink')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('ink')}>
                   <input
                     type='range'
@@ -540,10 +590,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.ink || 0}
                     onChange={this.handleFilterChange} filter='ink'
                   />
+                  <div className="range-value">
+                    {this.state.ink}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='vignette'>{i18next.t('ui/filter.Vignette')} {this.state.vignette}</div>
-                <input type='checkbox' id="vignette-checkbox" className='rangefilter' onClick={this.filterObject} filter='vignette' value={this.state.vignette || 0}/>
+                {/* <div onClick = {this.changeRange} filter='vignette'>{i18next.t('ui/filter.Vignette')} {this.state.vignette}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="vignette-checkbox" className='rangefilter' onClick={this.filterObject} filter='vignette' value={this.state.vignette || 0}/>
+                  <label htmlFor="vignette-checkbox">{i18next.t('ui/filter.Vignette')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('vignette')}>
                   <input
                     type='range'
@@ -556,10 +612,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.vignette || 0}
                     onChange={this.handleFilterChange} filter='vignette'
                   />
+                  <div className="range-value">
+                    {this.state.vignette}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='zoomblur'>{i18next.t('ui/filter.Zoomblur')} {this.state.zoomblur}</div>
-                <input type='checkbox' id="zoomblur-checkbox" className='rangefilter' onClick={this.filterObject} filter='zoomblur' value={this.state.zoomblur || 0}/>
+                {/* <div onClick = {this.changeRange} filter='zoomblur'>{i18next.t('ui/filter.Zoomblur')} {this.state.zoomblur}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="zoomblur-checkbox" className='rangefilter' onClick={this.filterObject} filter='zoomblur' value={this.state.zoomblur || 0}/>
+                  <label htmlFor="zoomblur-checkbox">{i18next.t('ui/filter.Zoomblur')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('zoomblur')}>
                   <input
                     type='range'
@@ -572,10 +634,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.zoomblur || 0}
                     onChange={this.handleFilterChange} filter='zoomblur'
                   />
+                  <div className="range-value">
+                    {this.state.zoomblur}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='vibrance'>{i18next.t('ui/filter.Vibrance')} {this.state.vibrance}</div>
-                <input type='checkbox' id="vibrance-checkbox" className='rangefilter' onClick={this.filterObject} filter='vibrance' value={this.state.vibrance || 0}/>
+                {/* <div onClick = {this.changeRange} filter='vibrance'>{i18next.t('ui/filter.Vibrance')} {this.state.vibrance}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="vibrance-checkbox" className='rangefilter' onClick={this.filterObject} filter='vibrance' value={this.state.vibrance || 0}/>
+                  <label htmlFor="vibrance-checkbox">{i18next.t('ui/filter.Vibrance')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('vibrance')}>
                   <input
                     type='range'
@@ -588,10 +656,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.vibrance || 0}
                     onChange={this.handleFilterChange} filter='vibrance'
                   />
+                  <div className="range-value">
+                    {this.state.vibrance}
+                  </div>
                 </div>
 
-                <div onClick = {this.changeRange} filter='denoise'>{i18next.t('ui/filter.Denoise')} {this.state.denoise}</div>
-                <input type='checkbox' id="denoise-checkbox" className='rangefilter' onClick={this.filterObject} filter='denoise' value={this.state.denoise || 0}/>
+                {/* <div onClick = {this.changeRange} filter='denoise'>{i18next.t('ui/filter.Denoise')} {this.state.denoise}</div> */}
+                <div className="range-onoff">
+                  <input type='checkbox' id="denoise-checkbox" className='rangefilter' onClick={this.filterObject} filter='denoise' value={this.state.denoise || 0}/>
+                  <label htmlFor="denoise-checkbox">{i18next.t('ui/filter.Denoise')}</label>
+                </div>
                 <div className="range-box" style = {this.rangeStyle('denoise')}>
                   <input
                     type='range'
@@ -604,6 +678,9 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.denoise || 50}
                     onChange={this.handleFilterChange} filter='denoise'
                   />
+                  <div className="range-value">
+                    {this.state.denoise}
+                  </div>
                 </div>
                 
                 <div>이 아래로 수정 필요</div>
