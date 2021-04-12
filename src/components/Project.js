@@ -14,12 +14,12 @@ class Project extends Component {
       projects : [],
       project_length : 20,
       scroll: true,
-      sort : 0, 
-      last : '', // 마지막으로 로드 된 데이터
+      sort : 0
     }
     this.canvas = null;
     this.limit = 20;
     this.offset = 0;
+    this.update = false;
   }
 
   componentDidMount(){
@@ -38,8 +38,7 @@ class Project extends Component {
         search : this.state.search,
         limit : this.limit,
         offset : this.offset,
-        sort : this.state.sort,
-        last : this.state.sort > 1 ? this.state.last.create_date : this.state.last.title
+        sort : this.state.sort
       })
     })
     .then((res) => res.json())
@@ -49,9 +48,13 @@ class Project extends Component {
           this.setState({scroll: false});
           return;
         }
-        this.offset = data.result[data.result.length - 1].idx;
         let projects = this.state.projects.concat(data.result);
-        this.setState({projects : projects, project_length: projects.length, last : data.result[data.result.length - 1]});
+        if(this.update) {
+          projects = data.result;
+          this.update = false;
+        }
+        this.offset = projects.length;
+        this.setState({projects : projects, project_length: projects.length, scroll: data.result.length === this.limit});
       }
       else{
         alert(i18next.t('Project.Error'));
@@ -64,6 +67,8 @@ class Project extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    this.offset = 0;
+    this.update = true;
     this.getProjects();
   }
 
@@ -218,39 +223,12 @@ class Project extends Component {
 
   projectSort = (event) => {
     let option = event.target.getAttribute('option');
-
-    // if(option === '0') {
-    //   this.setState({projects : this.state.projects.sort((o1, o2) => {
-    //     return o1.title > o2.title ? 1 : -1;
-    //   })});
-    // }
-    // else if(option === '1') {
-    //   this.setState({projects: this.state.projects.sort((o1, o2) => {
-    //     return o2.title > o1.title ? 1 : -1;
-    //   })});
-    // }
-    // else if(option === '2') {
-    //   this.setState({projects: this.state.projects.sort((o1, o2) => {
-    //     return o1.create_date > o2.create_date ? 1 : -1;
-    //   })});
-    // }
-    // else if(option === '3') {
-    //   this.setState({projects: this.state.projects.sort((o1, o2) => {
-    //     return o2.create_date > o1.create_date ? 1 : -1;
-    //   })});
-    // }
-
+    if(this.state.sort === Number(option)) return;
     new Promise((resolve, reject) => {
-      let past_option = this.state.sort;
-
+      this.update = true;
       if(option >=0 && option <= 3){
-        if(past_option != option){
-          this.setState({sort : parseInt(option), last : '', projects : [], scroll: true });
-          this.offset = 0;
-        }
-        else{
-          this.setState({sort : parseInt(option)});
-        }
+        this.setState({sort : parseInt(option), last : '', projects : []});
+        this.offset = 0;
         resolve();
       }
       else{
@@ -259,7 +237,6 @@ class Project extends Component {
     })
     .then(() => this.getProjects())
     .catch((err) => { alert(err); })
-    
   }
 
   render() {
@@ -309,7 +286,11 @@ class Project extends Component {
                 </div>
                 <div className="project-title">
                   <p>{prj.title}</p>
-                  {/* <p> {prj.create_date} </p> */}
+                  <p> {
+                  `${new Date(prj.create_date).getMonth()}/${new Date(prj.create_date).getDate()}
+                  ${new Date(prj.create_date).getFullYear()} ${new Date(prj.create_date).getHours()}:
+                  ${new Date(prj.create_date).getMinutes()}`
+                  } </p>
                   <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
                 </div>
               </div>
