@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
 import {randomWord} from './const/consts';
+import Loading from './ui/Loading';
 import imgerror from '../css/img/imgerror.svg';
 import { getSearchImage } from './helper/GetImage';
 import '../css/ImageList.scss';
@@ -182,21 +183,11 @@ class ImageList extends Component {
               <input className="search-image-button" type="submit" value="Enter" />
             </form>
           </div>
-          <div className="random-image">
-            <div className="option-title">{i18next.t('ImageList.Get random image')}</div>
-            <div className="random-input-group">
-              <div>
-                <label htmlFor="random-count">{i18next.t('ImageList.Image count')} : </label>
-                <input className="random-image-input" type="number" name = "random_count" value={this.state.random_count} onChange = {this.randomCountChange}></input>
-              </div>
-              <button className="random-image-button" onClick={() => this.getRandomImage()}>Enter</button>
-            </div>
-          </div>
         </div>
         {this.showImage(this.state.images)}
         {this.state.url ? this.imageSizeVersion() : null}
         {this.props.children}
-
+        <Loading open = {this.props.loading}/>
       </div>
     )
   }

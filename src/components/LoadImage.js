@@ -7,14 +7,14 @@ import { Link } from 'react-router-dom';
 class LoadImage extends Component {
   constructor(props) {
     super(props);
-    this.state = { width: 5, height: 5, url: "", submit: false, imgRatio: 100, imgWidth: 0, imgHeight: 0, imageModal : false };
+    this.state = { width: 5, height: 5, url: "", submit: false, imgRatio: 100, imgWidth: 0, imgHeight: 0, imageModal : false, loading : false };
     this.url = "";
     this.image = null;
   }
 
   onImgUrlChange = (url) => {
 		new Promise(resolve => {
-			this.setState({url : url});
+			this.setState({url : url, loading : true});
       resolve();
 		})
 		.then( () => {
@@ -55,6 +55,7 @@ class LoadImage extends Component {
 
   imageNotFound = () => {
     this.image = null;
+    this.setState({loading : false});
     alert("not valid url");
   }
 
@@ -82,6 +83,7 @@ class LoadImage extends Component {
       imgWidth: this.image.width,
       imgHeight: this.image.height,
       imageModal : true,
+      loading : false,
     })
     console.log("loading finish")
 
@@ -211,10 +213,11 @@ class LoadImage extends Component {
           handleSubmit = {this.handleSubmit}
           urlImageChange = {this.urlImageChange}
           url = {this.state.url}
-          imgUrl = {this.url}>
+          imgUrl = {this.url}
+          loading = {this.state.loading}>
           {this.showPreviewImg()}
          </Uploadfile>,
-      2: <ImageList onImgUrlChange = {this.onImgUrlChange}>
+      2: <ImageList onImgUrlChange = {this.onImgUrlChange} loading = {this.state.loading}>
           {this.showPreviewImg()}
          </ImageList>
     }

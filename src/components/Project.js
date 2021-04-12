@@ -13,7 +13,9 @@ class Project extends Component {
       search: '',
       projects : [],
       project_length : 20,
-      scroll: true
+      scroll: true,
+      sort : 0, 
+      last : '', // 마지막으로 로드 된 데이터
     }
     this.canvas = null;
     this.limit = 20;
@@ -31,10 +33,14 @@ class Project extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({id : this.props.id, 
+      body: JSON.stringify({
+        id : this.props.id, 
         search : this.state.search,
         limit : this.limit,
-        offset : this.offset})
+        offset : this.offset,
+        sort : this.state.sort,
+        last : this.state.sort > 1 ? this.state.last.create_date : this.state.last.title
+      })
     })
     .then((res) => res.json())
     .then((data) => {
@@ -43,9 +49,9 @@ class Project extends Component {
           this.setState({scroll: false});
           return;
         }
-        this.offset = this.offset + this.limit;
+        this.offset = data.result[data.result.length - 1].idx;
         let projects = this.state.projects.concat(data.result);
-        this.setState({projects : projects, project_length: projects.length});
+        this.setState({projects : projects, project_length: projects.length, last : data.result[data.result.length - 1]});
       }
       else{
         alert(i18next.t('Project.Error'));
@@ -212,37 +218,60 @@ class Project extends Component {
 
   projectSort = (event) => {
     let option = event.target.getAttribute('option');
-    if(option === '0') {
-      this.setState({projects : this.state.projects.sort((o1, o2) => {
-        return o1.title - o2.title;
-      })});
-    }
-    else if(option === '1') {
-      this.setState({projects: this.state.projects.sort((o1, o2) => {
-        return o2.title - o1.title;
-      })});
-    }
-    else if(option === '2') {
-      this.setState({projects: this.state.projects.sort((o1, o2) => {
-        return o1.create_date - o2.create_date;
-      })});
-    }
-    else if(option === '3') {
-      this.setState({projects: this.state.projects.sort((o1, o2) => {
-        return o2.create_date - o1.create_date;
-      })});
-    }
+
+    // if(option === '0') {
+    //   this.setState({projects : this.state.projects.sort((o1, o2) => {
+    //     return o1.title > o2.title ? 1 : -1;
+    //   })});
+    // }
+    // else if(option === '1') {
+    //   this.setState({projects: this.state.projects.sort((o1, o2) => {
+    //     return o2.title > o1.title ? 1 : -1;
+    //   })});
+    // }
+    // else if(option === '2') {
+    //   this.setState({projects: this.state.projects.sort((o1, o2) => {
+    //     return o1.create_date > o2.create_date ? 1 : -1;
+    //   })});
+    // }
+    // else if(option === '3') {
+    //   this.setState({projects: this.state.projects.sort((o1, o2) => {
+    //     return o2.create_date > o1.create_date ? 1 : -1;
+    //   })});
+    // }
+
+    new Promise((resolve, reject) => {
+      let past_option = this.state.sort;
+
+      if(option >=0 && option <= 3){
+        if(past_option != option){
+          this.setState({sort : parseInt(option), last : '', projects : [], scroll: true });
+          this.offset = 0;
+        }
+        else{
+          this.setState({sort : parseInt(option)});
+        }
+        resolve();
+      }
+      else{
+        reject();
+      }
+    })
+    .then(() => this.getProjects())
+    .catch((err) => { alert(err); })
+    
   }
- 
+
   render() {
     return (
       <div>
+        {/* <p>{this.state.last.title} {this.state.last.create_date}</p> */}
         <h2>{i18next.t('Project.Project')}</h2>
         <button delete = "all" onClick={this.checkDelete}><i delete = "all" className="fas fa-times-circle fa-4x"></i></button>
-        <button option = "0" onClick= {this.projectSort}> {i18next.t('Project.Title')} 오름 </button>
-        <button option = "1" onClick= {this.projectSort}> {i18next.t('Project.Title')} 내림 </button>
-        <button option = "2" onClick= {this.projectSort}> {i18next.t('Project.Date')} 오름 </button>
-        <button option = "3" onClick= {this.projectSort}> {i18next.t('Project.Date')} 내림 </button>
+        <button className = "proejct-sort-button" option = "0" onClick= {this.projectSort}> {i18next.t('Project.Title')} 오름 </button>
+        <button className = "proejct-sort-button" option = "1" onClick= {this.projectSort}> {i18next.t('Project.Title')} 내림 </button>
+        <button className = "proejct-sort-button" option = "2" onClick= {this.projectSort}> {i18next.t('Project.Date')} 오름 </button>
+        <button className = "proejct-sort-button" option = "3" onClick= {this.projectSort}> {i18next.t('Project.Date')} 내림 </button>
         <div className="project-search">
           <div className="project-search-form">
             <form onSubmit={this.handleSubmit}>

@@ -5,7 +5,7 @@ const {Database} = require('../../../database/index');
 exports.save = (req, res) => {
   const database = new Database();
   const {title, id, data} = req.body;
-  console.log(data);
+  // console.log(data);
   let date = moment().format('YYYY-MM-DD HH:mm:ss');
   let check_query = `SELECT idx, size FROM USERS WHERE userid = "${id}";`;
   let user_idx;
@@ -203,13 +203,21 @@ exports.update = (req, res) => {
 
 exports.get = (req, res) => {
   const database = new Database();
-  const {id, search, limit, offset} = req.body;
+  const {id, search, limit, offset, sort, last} = req.body;
   let check_query = `SELECT idx FROM USERS WHERE userid = "${id}";`;
-  let search_option = search.length !== 0 ? `AND title LIKE '%${search}%'` : ``;
+  let search_option = search.length !== 0 ? `title LIKE '%${search}%' AND ` : ``;
+  let scroll_option = infi_scroll(last, sort, offset);
+  let sort_option = sortlist[sort];
+
+  // let test_query = `SELECT * FROM PROJECTS WHERE ` + search_option + `useridx = 3 AND ` + scroll_option + sort_option +` LIMIT ${limit} ;`;
+      
+  // console.log(test_query)
 
   const get = (result) => {
     if(result[0]) {
-      let get_query = `SELECT * FROM PROJECTS WHERE useridx = ${result[0].idx} ` + search_option +` LIMIT ${limit} OFFSET ${offset};`;
+      // let get_query = `SELECT * FROM PROJECTS WHERE useridx = ${result[0].idx} ` + search_option +` LIMIT ${limit} OFFSET ${offset};`;
+      let get_query = `SELECT * FROM PROJECTS WHERE ` + search_option + `useridx = 3 ` + scroll_option + sort_option +` LIMIT ${limit} ;`;
+      console.log(get_query)
       database.query(get_query)
       .then(respond)
       .catch(onError);
@@ -252,7 +260,6 @@ exports.get = (req, res) => {
 exports.delete = (req, res) => {
   const database = new Database();
   const { id, prj_idx } = req.body;
-  let date = moment().format('YYYY-MM-DD HH:mm:ss');
   let check_query = `SELECT idx, size FROM USERS WHERE userid = "${id}";`;
   let delete_size;
   let user_idx;
@@ -348,7 +355,6 @@ exports.delete = (req, res) => {
 exports.deleteall = (req, res) => {
   const database = new Database();
   const { id } = req.body;
-  let date = moment().format('YYYY-MM-DD HH:mm:ss');
   let check_query = `SELECT idx FROM USERS WHERE userid = "${id}";`;
   let user_idx;
 
@@ -421,3 +427,39 @@ exports.deleteall = (req, res) => {
     .catch(onError)
   })
 }
+
+const sortlist = [
+  'ORDER BY TITLE ASC',
+  'ORDER BY TITLE DESC',
+  'ORDER BY create_date ASC',
+  'ORDER BY create_date DESC',
+]
+
+function getTimeStamp(timeSource) {
+  let dateObj = new Date(timeSource);
+  let timeString = dateObj.toLocaleString("en-US", {timeZone: "Asia/Seoul"});
+  let timeString_KR = dateObj.toLocaleString("ko-KR", {timeZone: "Asia/Seoul"});
+  console.log(timeString)
+  return dateObj;
+}
+
+
+function infi_scroll(last, sort, offset){
+  if(last == undefined){
+    return '';
+  }
+  else{
+    switch(sort){
+      case 0:
+        return 'AND title > "'+ last +'" or (title ="' + last +'" and idx >'+ offset +') ';
+      case 1:
+        return 'AND title < "'+ last +'" or (title ="' + last +'" and idx >'+ offset +') ';
+      case 2:
+        return 'AND create_date > "'+ last +'" or (create_date ="' + last +'" and idx >'+ offset +') ';
+      case 3:
+        return 'AND create_date < "'+ last +'" or (create_date ="' + last +'" and idx >'+ offset +') ';
+      default:
+        return '';
+    }
+  }
+} 

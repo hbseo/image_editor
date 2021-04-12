@@ -5,7 +5,8 @@ import Newproject from './New_project';
 import LoadImage from './LoadImage';
 import Withdrawal from './Withdrawal';
 import '../css/Main.scss';
-import checkUserLanguage from './helper/CheckLang'
+import checkUserLanguage from './helper/CheckLang';
+import Loading from './ui/Loading';
 import { withTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
@@ -123,14 +124,7 @@ class Main extends Component {
                 <p className="site-title-p">image-editor</p>
               </div>
               <button onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
-              {/* <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button> */}
               <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
-              {/* <button className='dropdown-btn'>{t('Main.Load Image')}</button> */}
-              {/* <div className='dropdown-container'>
-                <button onClick={this.changeTab} tab='1'>{t('Main.Upload File')}</button>
-                <button onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
-                <button onClick={this.changeTab} tab='3'>{t('Main.Signin')}</button>
-              </div> */}
               <LoadImage tab = '1'/>
               {this.state.login_state ? 
               <div>
