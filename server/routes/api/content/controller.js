@@ -216,7 +216,7 @@ exports.get = (req, res) => {
   const get = (result) => {
     if(result[0]) {
       // let get_query = `SELECT * FROM PROJECTS WHERE useridx = ${result[0].idx} ` + search_option +` LIMIT ${limit} OFFSET ${offset};`;
-      let get_query = `SELECT * FROM PROJECTS WHERE ` + search_option + `useridx = 3 ` + scroll_option + sort_option +` LIMIT ${limit} ;`;
+      let get_query = `SELECT * FROM PROJECTS WHERE ` + search_option + `useridx = ${result[0].idx} ` + scroll_option + sort_option +` LIMIT ${limit} ;`;
       console.log(get_query)
       database.query(get_query)
       .then(respond)
