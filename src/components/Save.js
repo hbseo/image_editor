@@ -144,27 +144,20 @@ class Save extends Component {
                   </div> : null
                 }
               </div>
-
-              {/* {user_name === '' ? 
-                <div className = "bottom-div">
-                  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
+              {user_name === '' ? 
+                <div className="bottom-div">
+                  <div className="not-registerd">
+                    <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
+                  </div>
                 </div> :
-                <div className = "bottom-div">
-                  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
-                  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save as')}</button>
-                  <button id="save-server" onClick = {this.updateHandler} disabled = {!this.props.isSaved}>{i18next.t('Save.Save on server')}</button>
+                <div className="bottom-div">
+                  <div className="registered">
+                    <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
+                    <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save as')}</button>
+                    <button id="save-server" onClick = {this.updateHandler} disabled = {!this.props.isSaved}>{i18next.t('Save.Save on server')}</button>
+                  </div>
                 </div>
-              } */}
-              <div className="bottom-div">
-                <div className="not-registerd">
-                  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
-                </div>
-                <div className="registered">
-                  <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>
-                  <button id="save-rename" onClick = {this.saveHandler} disabled = {this.state.saveState}>{i18next.t('Save.Save as')}</button>
-                  <button id="save-server" onClick = {this.updateHandler} disabled = {!this.props.isSaved}>{i18next.t('Save.Save on server')}</button>
-                </div>
-              </div>
+              }
 						</div>
 					</div> : null }
 			</div>
