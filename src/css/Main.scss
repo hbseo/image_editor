@@ -105,7 +105,6 @@
 	// padding-top: 100px;
   }
   
-  .sidenav button,
   .dropdown-btn {
 	padding: 6px 8px 6px 16px;
 	text-decoration: none;
@@ -140,12 +139,40 @@
 	background-color: #262626;
 	padding-left: 8px;
   }
+
+  .sidenav-button {
+	padding: 6px 8px 6px 16px;
+	text-decoration: none;
+	font-size: 20px;
+	color: #9E9E9E;
+	display: block;
+	border: none;
+	background: none;
+	width: 100%;
+	text-align: left;
+	outline: none;
+	transition: background-color 0.2s linear, color 0.2s linear, transform 0.2s ease;
+  }
+
+  .sidenav-button-active { 
+	padding: 6px 8px 6px 16px;
+	text-decoration: none;
+	font-size: 20px;
+	color: #9E9E9E;
+	display: block;
+	border: none;
+	background-color :#021c1e;
+	width: 100%;
+	text-align: left;
+	outline: none;
+	transition: background-color 0.2s linear, color 0.2s linear, transform 0.2s ease;
+  }
   
   .sidenav-button:hover,
   .dropdown-btn:hover {
 	color: #f1f1f1;
 	background-color: #3f3f3f;
-	transform: translateX(40px)
+	transform: translateX(10px)
   }
 
   .right{

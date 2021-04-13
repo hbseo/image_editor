@@ -123,12 +123,12 @@ class Main extends Component {
               <div className="site-title">
                 <p className="site-title-p">image-editor</p>
               </div>
-              <button className = "sidenav-button" onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
-              <button className = "sidenav-button" onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
+              <button className = {this.state.tab == 0 ?  "sidenav-button-active" : "sidenav-button"} onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
+              <button className = {this.state.tab == 2 ?  "sidenav-button-active" : "sidenav-button"} onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
               <LoadImage tab = '1'/>
               {this.state.login_state ? 
               <div>
-                <div className='dropdown-btn3'>
+                <div className = {this.state.tab == 4 ?  "sidenav-button-active" : "sidenav-button"}>
                   <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
                 </div> 
                 <div className='sidenav-user'>

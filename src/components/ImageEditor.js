@@ -257,6 +257,10 @@ class ImageEditor extends Component {
         this.pasteObject();
       }
     }
+    // ctrl + z
+    if((metaKey || ctrlKey) && keyCode === 90) {
+      this.undo();
+    }
 
     if(keyCode === 37) { // handle Left key
       event.preventDefault();
