@@ -1034,8 +1034,8 @@ class ImageEditor extends Component {
     this.action['Crop'].cropCanvas(off);
   }
 
-  cropEndCanvas = () => {
-    this.action['Crop'].cropEndCanvas();
+  cropEndCanvas = (img) => {
+    this.action['Crop'].cropEndCanvas(img);
   }
 
   handleCropCanvasSizeChange = (value) => {
