@@ -157,6 +157,10 @@
         border-radius: 5px;
       }
 
+      .rangefilter:checked ~ label{
+        color : red;
+      }
+
       label{
         opacity: 1;
         transition-property: opacity;

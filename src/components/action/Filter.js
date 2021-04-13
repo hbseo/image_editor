@@ -3,6 +3,7 @@ import { Ink } from '../filters/glfx/ink.js'
 import { Vignette } from '../filters/glfx/vignette.js'
 import { ZoomBlur } from '../filters/glfx/zoomblur.js'
 import { Vibrance } from '../filters/glfx/vibrance.js'
+import { hueSaturation } from '../filters/glfx/hueSaturation.js'
 import { Denoise } from '../filters/glfx/denoise.js'
 import { fabric } from 'fabric';
 
@@ -176,6 +177,14 @@ class Filter extends Action {
         case 'gamma':
           obj.filters[25] = checked && (new fabric.Image.filters.Gamma({
             gamma : [parseFloat(value.r), parseFloat(value.g), parseFloat(value.b)]
+          }));
+          break;
+        case 'huesaturation':
+          obj.filters[26] = checked && (new hueSaturation({
+            hueSaturation_matrix : {
+              hue : 0,
+              saturation : value
+            }
           }));
           break;
         case 'opacity':
