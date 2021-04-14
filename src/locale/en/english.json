@@ -1,6 +1,7 @@
 {
     "hello": "hello",
     "icon add" : "Icon Add",
+    "login_expired" : "Login time expired",
 
     "Change_Password" : {
         "Change Password" : "Change Password",

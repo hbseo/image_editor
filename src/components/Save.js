@@ -13,6 +13,20 @@ class Save extends Component {
       saveState : true // true이면 저장 불가능, false이면 저장 가능
     };
     this.err = false;
+    this.loginstat = false;
+  }
+  componentDidUpdate() {
+    fetch('/auth/check', {
+      method: 'GET'
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.msg === "not login") this.loginstat = false;
+      else this.loginstat = true;
+    })
+    .catch(() => {
+      alert(i18next.t('Project.Error'));
+    })
   }
 
   changeFormat = () => {
@@ -144,7 +158,7 @@ class Save extends Component {
                   </div> : null
                 }
               </div>
-              {user_name === '' ? 
+              {user_name === '' && !this.loginstat ? 
                 <div className="bottom-div">
                   <div className="not-registerd">
                     <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>

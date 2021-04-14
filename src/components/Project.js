@@ -57,6 +57,11 @@ class Project extends Component {
         this.setState({projects : projects, project_length: projects.length, scroll: data.result.length === this.limit});
       }
       else{
+        if(data.msg === "not login") {
+          alert(i18next.t("login_expired"));
+          window.location.replace('/');
+          return;
+        }
         alert(i18next.t('Project.Error'));
       }
     })
@@ -164,6 +169,11 @@ class Project extends Component {
         this.setState({project_length: this.state.projects.length, scroll: bool});
       }
       else{
+        if(data.msg === "not login") {
+          alert(i18next.t("login_expired"));
+          window.location.replace('/');
+          return;
+        }
         alert(i18next.t('Project.Error'));
       }
     })
@@ -188,6 +198,11 @@ class Project extends Component {
         this.setState({projects: [], project_length: 0, scroll:false});
       }
       else{
+        if(data.msg === "not login") {
+          alert(i18next.t("login_expired"));
+          window.location.replace('/');
+          return;
+        }
         alert(i18next.t('Project.Error'));
       }
     })
@@ -239,6 +254,23 @@ class Project extends Component {
     .catch((err) => { alert(err); })
   }
 
+  loginCheck = () => {
+    fetch('/auth/check', {
+      method: 'GET'
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.msg === "not login") {
+        alert(i18next.t("login_expired"));
+        window.location.replace('/');
+        return;
+      }
+    })
+    .catch(() => {
+      alert(i18next.t('Project.Error'));
+    })
+  }
+
   render() {
     return (
       <div>
@@ -271,7 +303,7 @@ class Project extends Component {
             {this.state.projects.map((prj) =>
               <div className="project-div" key={prj.idx}>
                 <div className="project-img">
-                  <Link 
+                  <Link onClick={this.loginCheck}
                   to={{
                     pathname: '/edit',
                     save : true,
