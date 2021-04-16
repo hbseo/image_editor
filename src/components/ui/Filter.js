@@ -36,6 +36,8 @@ export default withTranslation()(class Filter extends Component{
         b : 1,
       },
       hueSaturation : 0,
+      tiltshift : 0,
+      hexagonalpixelate : 10,
       openrange : 0,
       opacity : 1,
       filtermenu : false, // true = open
@@ -79,6 +81,8 @@ export default withTranslation()(class Filter extends Component{
       ret['blendcolor'] = image.filters[24] ? { color : image.filters[24].color , alpha : image.filters[24].alpha, mode : image.filters[24].mode} : { color : prevState.blendcolor.color , mode : 'add', alpha : 0};
       ret['gamma'] = image.filters[25] ? { r : image.filters[25].gamma[0] , g : image.filters[25].gamma[1], b : image.filters[25].gamma[2]} : { r : 1, g : 1, b : 1 };
       ret['huesaturation'] = image.filters[26] ? Number(image.filters[26].hueSaturation_matrix.saturation) : 0;
+      ret['tiltshift'] = image.filters[27] ? Number(image.filters[27].tiltshift_matrix.blurRadius) : 0;
+      ret['hexagonalpixelate'] = image.filters[28] ? Number(image.filters[28].hexagonal_matrix.scale) : 10;
       ret['opacity'] = image.opacity;
       // console.log("prevstate ",prevState.removecolor)
       return ret;
@@ -805,6 +809,48 @@ export default withTranslation()(class Filter extends Component{
                   />
                   <div className="range-value">
                     {this.state.huesaturation}
+                  </div>
+                </div>
+                
+                <div className="range-onoff">
+                  <input type='checkbox' id="tiltshift-checkbox" className='rangefilter' onClick={this.filterObject} filter='tiltshift' value={this.state.tiltshift || 0}/>
+                  <label htmlFor="tiltshift-checkbox">{i18next.t('ui/filter.Tiltshift')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('tiltshift')}>
+                  <input
+                    type='range'
+                    className='filter'
+                    id='tiltshift'
+                    min='0'
+                    max='50'
+                    name='tiltshift'
+                    step='1'
+                    value={this.state.tiltshift || 0}
+                    onChange={this.handleFilterChange} filter='tiltshift'
+                  />
+                  <div className="range-value">
+                    {this.state.tiltshift}
+                  </div>
+                </div>
+
+                <div className="range-onoff">
+                  <input type='checkbox' id="hexagonalpixelate-checkbox" className='rangefilter' onClick={this.filterObject} filter='hexagonalpixelate' value={this.state.hexagonalpixelate || 10}/>
+                  <label htmlFor="hexagonalpixelate-checkbox">{i18next.t('ui/filter.HexagonalPixelate')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('hexagonalpixelate')}>
+                  <input
+                    type='range'
+                    className='filter'
+                    id='hexagonalpixelate'
+                    min='10'
+                    max='100'
+                    name='hexagonalpixelate'
+                    step='1'
+                    value={this.state.hexagonalpixelate || 10}
+                    onChange={this.handleFilterChange} filter='hexagonalpixelate'
+                  />
+                  <div className="range-value">
+                    {this.state.hexagonalpixelate}
                   </div>
                 </div>
 

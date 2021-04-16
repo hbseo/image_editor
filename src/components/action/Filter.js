@@ -5,6 +5,8 @@ import { ZoomBlur } from '../filters/glfx/zoomblur.js'
 import { Vibrance } from '../filters/glfx/vibrance.js'
 import { hueSaturation } from '../filters/glfx/hueSaturation.js'
 import { Denoise } from '../filters/glfx/denoise.js'
+import { HexagonalPixelate } from '../filters/glfx/hexagonalPixelate.js' 
+import { TiltShift } from '../filters/glfx/tiltshift.js' 
 import { fabric } from 'fabric';
 
 class Filter extends Action {
@@ -184,6 +186,42 @@ class Filter extends Action {
             hueSaturation_matrix : {
               hue : 0,
               saturation : value
+            }
+          }));
+          break;
+        case 'tiltshift':
+          // var endX = 1;
+          // var endY = obj.height / 2;
+          // var startX = obj.width - 1;
+          // var startY = obj.height / 2;
+
+          var startX = obj.width / 4;
+          var startY =  obj.height / 2;
+          var endX = obj.width / 4 * 3;
+          var endY = obj.height / 2;
+
+
+          var dx = endX - startX;
+          var dy = endY - startY;
+          var d = Math.sqrt(dx * dx + dy * dy);
+          obj.filters[27] = checked && (new TiltShift({  
+            tiltshift_matrix : {
+              blurRadius: value,
+              gradientRadius: 150,
+              start: [startX, startY],
+              end: [endX, endY],
+              delta: [dx / d, dy / d],
+              texSize: [obj.width, obj.height]
+            }
+          }));
+          break;
+        case 'hexagonalpixelate':
+          obj.filters[28] = checked && (new HexagonalPixelate({
+            hexagonal_matrix : {
+              center : [obj.width / 2, obj.height / 2],
+              scale : value,
+              width: obj.width,
+              height : obj.height
             }
           }));
           break;
