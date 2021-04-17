@@ -162,7 +162,9 @@
 
     "Upload_file" : {
         "Preview" : "Preview",
-        "Load local image" : "Load local image"
+        "Load local image" : "Load local image",
+        "Load URL image" : "Load URL image",
+        "Load" : "Load"
     },
 
     "ui/canvas" : {

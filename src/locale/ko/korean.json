@@ -162,7 +162,9 @@
 
     "Upload_file" : {
         "Preview" : "미리보기",
-        "Load local image" : "내 컴퓨터에서 이미지 불러오기"
+        "Load local image" : "이미지 불러오기",
+        "Load URL image" : "URL 불러오기",
+        "Load" : "로드"
     },
 
     "ui/canvas" : {

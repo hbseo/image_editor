@@ -98,11 +98,12 @@
   }
   
   .sidenav {
-	// height: 50%;
-	width: 20vmin;
+	width: 200px;
 	background-color: #111;
 	overflow-x: hidden;
-	// padding-top: 100px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
   }
   
   .dropdown-btn {
@@ -140,40 +141,186 @@
 	padding-left: 8px;
   }
 
-  .sidenav-button {
-	padding: 6px 8px 6px 16px;
-	text-decoration: none;
-	font-size: 20px;
-	color: #9E9E9E;
-	display: block;
-	border: none;
-	background: none;
-	width: 100%;
-	text-align: left;
-	outline: none;
-	transition: background-color 0.2s linear, color 0.2s linear, transform 0.2s ease;
+  .add-image-menu{
+	  width: 100%;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  align-items: center;
+
+	  button{
+		  margin-bottom: 15px;
+	  }
   }
 
-  .sidenav-button-active { 
-	padding: 6px 8px 6px 16px;
-	text-decoration: none;
-	font-size: 20px;
-	color: #9E9E9E;
+  .sidenav-button {
+	position: relative;
 	display: block;
-	border: none;
-	background-color :#021c1e;
-	width: 100%;
-	text-align: left;
-	outline: none;
-	transition: background-color 0.2s linear, color 0.2s linear, transform 0.2s ease;
+	padding: 4px 0;
+	color: hsla(0,0%,100%,.6);
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: 0.5s;
+	width: 50%;
+
+	&::after {
+	  position: absolute;
+	  content: "";
+	  top: 100%;
+	  left: 0;
+	  width: 100%;
+	  height: 2px;
+	  background: #3498db;
+	  transform: scaleX(0);
+	  transform-origin: right;
+	  transition: transform 0.5s;
+	}
+
+	&:hover {
+		color: #EAEAEA;
+	}
+
+	&:hover::after {
+	  transform: scaleX(1);
+	  transform-origin: left;
+	}
   }
-  
-  .sidenav-button:hover,
-  .dropdown-btn:hover {
-	color: #f1f1f1;
-	background-color: #3f3f3f;
-	transform: translateX(10px)
+
+  .sidenav-button-active{
+	position: relative;
+	display: block;
+	padding: 4px 0;
+	color: #EAEAEA;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: 0.5s;
+	width: 50%;
+
+	&::after {
+	  position: absolute;
+	  content: "";
+	  top: 100%;
+	  left: 0;
+	  width: 100%;
+	  height: 2px;
+	  background: #3498db;
+	  transform: scaleX(0);
+	  transform-origin: right;
+	  transition: transform 0.5s;
+	}
+
+	&:hover {
+		color: #EAEAEA;
+	}
+
+	&:hover::after {
+	  transform: scaleX(1);
+	  transform-origin: left;
+	}
   }
+
+  .main-load-image{
+	  width: 100%;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  
+	  .local{
+		  width: 100%;
+		  display: flex;
+		  justify-content: center;
+
+		  .input-file-button{
+			  width: 80%;
+			  height: 30px;
+			  text-align: center;
+			  line-height: 30px;
+			  color: white;
+			  background-color: #3498db;
+			  border-radius: 4.5px;
+			  opacity: .85;
+			  transition: all .15s linear;
+		  }
+
+		  .input-file-button:hover{
+			  opacity: 1;
+			  cursor: pointer;
+		  }
+
+		  margin-bottom: 15px;
+	  }
+
+	  .url{
+		  width: 100%;
+		  display: flex;
+		  flex-direction: column;
+		  justify-content: center;
+		  align-items: center;
+
+		  .url-open-button{
+			width: 80%;
+			height: 30px;
+			text-align: center;
+			line-height: 30px;
+			color: white;
+			background-color: #3498db;
+			border-radius: 4.5px;
+			opacity: .85;
+			transition: all .15s linear;
+			margin-bottom: 15px;
+		  }
+
+		  .url-open-button:hover{
+			opacity: 1;
+			cursor: pointer;
+		}
+
+		#imgload{
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			.input-url{
+				background-color: #323232;
+				color: hsla(0,0%,100%,.6);
+				caret-color: white;
+				width: 150px;
+				height: 25px;
+				border: 1.5px solid #111;
+				border-radius: 2.5px;
+				transition: all .15s linear;
+				margin-bottom: 15px;
+			}
+
+			.input-url:hover{
+				border: 1.5px solid #3498db;
+			}
+
+			.input-url:focus{
+				border: 1.5px solid #3498db;
+			}
+
+			.url-submit-button{
+				width: 80%;
+				height: 30px;
+				text-align: center;
+				line-height: 30px;
+				color: white;
+				background-color: #3498db;
+				border-radius: 4.5px;
+				opacity: .85;
+				transition: all .15s linear;
+				margin-bottom: 15px;
+			}
+
+			.url-submit-button:hover{
+				opacity: 1;
+				cursor: pointer;
+			}
+		}
+	  }
+  }
+
 
   .right{
 	  position: fixed;
