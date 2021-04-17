@@ -183,6 +183,7 @@
     "ui/effect" : {
         "Effect" : "효과",
         "Blur" : "블러",
+        "ShadowColor" : "그림자 색상",
         "OffsetY" : "세로 위치",
         "OffsetX" : "가로 위치",
         "Stroke" : "외곽선",

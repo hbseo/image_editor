@@ -183,6 +183,7 @@
     "ui/effect" : {
         "Effect" : "Effect",
         "Blur" : "Blur",
+        "ShadowColor" : "Shadow Color",
         "OffsetY" : "Offset Y",
         "OffsetX" : "Offset X",
         "Stroke" : "Stroke",
