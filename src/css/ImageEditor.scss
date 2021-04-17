@@ -108,6 +108,14 @@ ul {
   align-items: center;
 }
 
+.closed-editor {
+  width: calc(100vw - 70px);
+
+  .editor-nav {
+    width: calc(100vw - 70px);
+  }
+}
+
 .editor-nav {
   width: calc(100vw - 350px);
   display: flex;
