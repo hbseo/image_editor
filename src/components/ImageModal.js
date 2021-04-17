@@ -13,7 +13,7 @@ class ImageModal extends Component {
 		return(
 			<div>
         {open ? 
-        <div className = "modal">
+        <div className = "newimage-modal">
           <div className = "image-modal">
             <div className="top-div">
 							<div className="headline">{i18next.t('ImageModal.New')}</div>

@@ -35,6 +35,9 @@ export default withTranslation()(class Filter extends Component{
         g : 1,
         b : 1,
       },
+      hueSaturation : 0,
+      tiltshift : 0,
+      hexagonalpixelate : 10,
       openrange : 0,
       opacity : 1,
       filtermenu : false, // true = open
@@ -77,13 +80,16 @@ export default withTranslation()(class Filter extends Component{
       ret['removecolor'] = image.filters[23] ? { color : image.filters[23].color , distance : image.filters[23].distance} : { color : prevState.removecolor.color , distance : 0};
       ret['blendcolor'] = image.filters[24] ? { color : image.filters[24].color , alpha : image.filters[24].alpha, mode : image.filters[24].mode} : { color : prevState.blendcolor.color , mode : 'add', alpha : 0};
       ret['gamma'] = image.filters[25] ? { r : image.filters[25].gamma[0] , g : image.filters[25].gamma[1], b : image.filters[25].gamma[2]} : { r : 1, g : 1, b : 1 };
+      ret['huesaturation'] = image.filters[26] ? Number(image.filters[26].hueSaturation_matrix.saturation) : 0;
+      ret['tiltshift'] = image.filters[27] ? Number(image.filters[27].tiltshift_matrix.blurRadius) : 0;
+      ret['hexagonalpixelate'] = image.filters[28] ? Number(image.filters[28].hexagonal_matrix.scale) : 10;
       ret['opacity'] = image.opacity;
       // console.log("prevstate ",prevState.removecolor)
       return ret;
     }
     return null;
   }
-
+  
   documentUpdate = () => {
     if(this.props.object.type === 'image'){
       switchTools('filter', 'rangefilter', false);
@@ -123,12 +129,49 @@ export default withTranslation()(class Filter extends Component{
     if(this.state.adjustmenu){
       for(let i=10; i<filterList.length; i++){
         document.getElementById(filterList[i].toLowerCase()).disabled = !$("input:checkbox[id='"+filterList[i].toLowerCase()+"-checkbox']").is(":checked")
+        if(filterList[i] === "Gamma"){
+          document.getElementById("gamma-g").disabled = !$("input:checkbox[id='"+filterList[i].toLowerCase()+"-checkbox']").is(":checked");
+          document.getElementById("gamma-b").disabled = !$("input:checkbox[id='"+filterList[i].toLowerCase()+"-checkbox']").is(":checked")
+        }
       }
       // document.getElementById('brightness').disabled = !$("input:checkbox[id='brightness-checkbox']").is(":checked")
     }
+  }
 
-    //test
-    // console.log(image.filters)
+  
+  filterObject = (event) => {
+    if(event.target.checked){
+      //open range
+      this.setState({ openrange : event.target.getAttribute('filter')})
+    }
+    else{
+      //close range
+      this.setState({ openrange : false})
+    }
+    this.props.filterObject(event);
+  }
+
+  //this.filterObject 대신 사용하는 함수 : value 전달위해 : 체크박스 함수에 사용
+  filterObjectforValue = (event) => {
+    if(event.target.checked){
+      this.setState({ openrange : event.target.getAttribute('filter')})
+    }
+    else{
+      this.setState({ openrange : false})
+    }
+    let option = event.target.getAttribute('filter')
+    switch(option){
+      case 'removecolor':
+        this.props.filterValueObject('removecolor', event.target.checked, this.state.removecolor );
+        break;
+      case 'blendcolor':
+        this.props.filterValueObject('blendcolor', event.target.checked, this.state.blendcolor )
+        break;
+      case 'gamma':
+        this.props.filterValueObject('gamma', event.target.checked, this.state.gamma )
+        break;
+      default :
+    }
   }
 
   handleFilterChange = (event) => {
@@ -143,19 +186,6 @@ export default withTranslation()(class Filter extends Component{
     .then(() => {
       this.props.rangeFilterObject(filterOption, checked, value);
     })
-  }
-
-  changeMenu = (event) => {
-    let option = event.target.getAttribute('option');
-    if(option === 'filter'){
-      this.setState({filtermenu : true, adjustmenu : false})
-    }
-    else if (option === 'adjust') {
-      this.setState({filtermenu : false, adjustmenu : true})
-    }
-    else {
-      this.setState({filtermenu : false, adjustmenu : false})
-    }
   }
 
   //removecolor range 함수에 사용. value가 오브젝트 형태인것만 빼면 특별한 건 없음.
@@ -240,40 +270,12 @@ export default withTranslation()(class Filter extends Component{
     let checked = $("input:checkbox[id='"+ filterOption +"-checkbox']").is(":checked");
     new Promise((resolve) => {
       this.setState({ gamma : value });
-      console.log(filterOption, checked, value)
+      // console.log(filterOption, checked, value)
       resolve();
     })
     .then(() => {
       this.props.rangeFilterObject(filterOption, checked, value);
     })
-  }
-  //this.props.filterObject 대신 사용하는 함수 : value 전달위해 : 체크박스 함수에 사용
-  filterObjectforValue = (event) => {
-    let option = event.target.getAttribute('filter')
-    switch(option){
-      case 'removecolor':
-        this.props.filterValueObject('removecolor', event.target.checked, this.state.removecolor );
-        break;
-      case 'blendcolor':
-        this.props.filterValueObject('blendcolor', event.target.checked, this.state.blendcolor )
-        break;
-      case 'gamma':
-        this.props.filterValueObject('gamma', event.target.checked, this.state.gamma )
-        break;
-      default :
-    }
-  }
-
-  removeColorObject = (event) => {
-    this.props.filterValueObject('removecolor', event.target.checked, this.state.removecolor )
-  }
-
-  blendColorObject = (event) => {
-    this.props.filterValueObject('blendcolor', event.target.checked, this.state.blendcolor )
-  }
-
-  gammaObject = (event) => {
-    this.props.filterValueObject('gamma', event.target.checked, this.state.gamma )
   }
 
   //removecolor color 함수에 사용. 색상이 변경되면, 체크여부 확인 후, 현재 distance와 함께 필터 적용.
@@ -311,16 +313,17 @@ export default withTranslation()(class Filter extends Component{
     })
   }
 
-  filterObject = (event) => {
-    if(event.target.checked){
-      //open range
-      this.setState({ openrange : event.target.getAttribute('filter')})
+  changeMenu = (event) => {
+    let option = event.target.getAttribute('option');
+    if(option === 'filter'){
+      this.setState({filtermenu : true, adjustmenu : false})
     }
-    else{
-      //close range
-      this.setState({ openrange : false})
+    else if (option === 'adjust') {
+      this.setState({filtermenu : false, adjustmenu : true})
     }
-    this.props.filterObject(event);
+    else {
+      this.setState({filtermenu : false, adjustmenu : false})
+    }
   }
 
   changeRange = (event) => {
@@ -675,7 +678,7 @@ export default withTranslation()(class Filter extends Component{
                     max='50'
                     name='denoise'
                     step='1'
-                    value={this.state.denoise || 50}
+                    value={this.state.denoise || 0}
                     onChange={this.handleFilterChange} filter='denoise'
                   />
                   <div className="range-value">
@@ -683,11 +686,11 @@ export default withTranslation()(class Filter extends Component{
                   </div>
                 </div>
                 
-                <div>이 아래로 수정 필요</div>
-
-                <div>{i18next.t('ui/filter.RemoveColor')}</div>
-                <input type='checkbox' id="removecolor-checkbox" className='rangefilter' onClick={this.removeColorObject} filter='removecolor'/>
-                <div className="range-box">
+                <div className="range-onoff">
+                  <input type='checkbox' id="removecolor-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='removecolor'/>
+                  <label htmlFor="removecolor-checkbox">{i18next.t('ui/filter.RemoveColor')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('removecolor')}>
                   <input type="color" id="colorSource" value={this.state.removecolor.color} onChange = { this.setRemoveColor}/>
                   <input
                     type='range'
@@ -700,14 +703,18 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.removecolor.distance || 0}
                     onChange={ this.handleRemoveColorChange } filter='removecolor'
                   />
-                  {/* <label id="hue-value">{this.state.hue}</label> */}
-                  {/* {this.props.object.type === 'image' && this.props.object.filters[21] ? this.props.object.filters[21].rotation : 0 } */}
+                  <div className="range-value">
+                    {this.state.removecolor.distance}
+                  </div>
                 </div>
-                <div>{i18next.t('ui/filter.BlendColor')}</div>
-                <input type='checkbox' id="blendcolor-checkbox" className='rangefilter' onClick={this.blendColorObject} filter='blendcolor'/>
-                <div className="range-box">
+
+                <div className="range-onoff">
+                  <input type='checkbox' id="blendcolor-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='blendcolor'/>
+                  <label htmlFor="blendcolor-checkbox">{i18next.t('ui/filter.BlendColor')}</label>
+                </div>
+                <div className="range-box"  style = {this.rangeStyle('blendcolor')}>
                   <input type="color" id="colorSource" value={this.state.blendcolor.color} onChange = { this.setBlendColor }/>
-                  <select className='rangefilter' id="blend-mode" name="blend-mode" onChange = {this.handleBlendModeChange} value = {this.state.blendcolor.mode}>
+                  <select className='rangefilter-select' id="blend-mode" name="blend-mode" onChange = {this.handleBlendModeChange} value = {this.state.blendcolor.mode}>
                     <option value="add">Add</option>
                     <option value="diff">Diff</option>
                     <option value="subtract">Subtract</option>
@@ -730,12 +737,16 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.blendcolor.alpha || 0}
                     onChange={ this.handleBlendColorChange } filter='blendcolor'
                   />
-                  {/* <label id="hue-value">{this.state.hue}</label> */}
-                  {/* {this.props.object.type === 'image' && this.props.object.filters[21] ? this.props.object.filters[21].rotation : 0 } */}
+                  <div className="range-value">
+                    {this.state.blendcolor.alpha}
+                  </div>
                 </div>
-                <div>{i18next.t('ui/filter.Gamma')}</div>
-                <input type='checkbox' id="gamma-checkbox" className='rangefilter' onClick={this.gammaObject} filter='gamma'/>
-                <div className="range-box">
+
+                <div className="range-onoff">
+                  <input type='checkbox' id="gamma-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='gamma'/>
+                  <label htmlFor="gamma-checkbox">{i18next.t('ui/filter.Gamma')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('gamma')}>
                   <input
                     type='range'
                     className='filter'
@@ -747,6 +758,9 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.gamma.r || 1}
                     onChange={ this.handleGammaChange } filter='gamma'
                   />
+                  <div className="range-value">
+                    {this.state.gamma.r}
+                  </div>
                   <input
                     type='range'
                     className='filter'
@@ -758,6 +772,9 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.gamma.g || 1}
                     onChange={ this.handleGammaChange } filter='gamma'
                   />
+                  <div className="range-value">
+                    {this.state.gamma.g}
+                  </div>
                   <input
                     type='range'
                     className='filter'
@@ -769,9 +786,74 @@ export default withTranslation()(class Filter extends Component{
                     value={this.state.gamma.b || 1}
                     onChange={ this.handleGammaChange } filter='gamma'
                   />
-                  {/* <label id="hue-value">{this.state.hue}</label> */}
-                  {/* {this.props.object.type === 'image' && this.props.object.filters[21] ? this.props.object.filters[21].rotation : 0 } */}
+                  <div className="range-value">
+                    {this.state.gamma.b}
+                  </div>
                 </div>
+
+                <div className="range-onoff">
+                  <input type='checkbox' id="huesaturation-checkbox" className='rangefilter' onClick={this.filterObject} filter='huesaturation' value={this.state.huesaturation || 0}/>
+                  <label htmlFor="huesaturation-checkbox">{i18next.t('ui/filter.Huesaturation')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('huesaturation')}>
+                  <input
+                    type='range'
+                    className='filter'
+                    id='huesaturation'
+                    min='-1'
+                    max='1'
+                    name='huesaturation'
+                    step='0.1'
+                    value={this.state.huesaturation || 0}
+                    onChange={this.handleFilterChange} filter='huesaturation'
+                  />
+                  <div className="range-value">
+                    {this.state.huesaturation}
+                  </div>
+                </div>
+                
+                <div className="range-onoff">
+                  <input type='checkbox' id="tiltshift-checkbox" className='rangefilter' onClick={this.filterObject} filter='tiltshift' value={this.state.tiltshift || 0}/>
+                  <label htmlFor="tiltshift-checkbox">{i18next.t('ui/filter.Tiltshift')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('tiltshift')}>
+                  <input
+                    type='range'
+                    className='filter'
+                    id='tiltshift'
+                    min='0'
+                    max='50'
+                    name='tiltshift'
+                    step='1'
+                    value={this.state.tiltshift || 0}
+                    onChange={this.handleFilterChange} filter='tiltshift'
+                  />
+                  <div className="range-value">
+                    {this.state.tiltshift}
+                  </div>
+                </div>
+
+                <div className="range-onoff">
+                  <input type='checkbox' id="hexagonalpixelate-checkbox" className='rangefilter' onClick={this.filterObject} filter='hexagonalpixelate' value={this.state.hexagonalpixelate || 10}/>
+                  <label htmlFor="hexagonalpixelate-checkbox">{i18next.t('ui/filter.HexagonalPixelate')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('hexagonalpixelate')}>
+                  <input
+                    type='range'
+                    className='filter'
+                    id='hexagonalpixelate'
+                    min='10'
+                    max='100'
+                    name='hexagonalpixelate'
+                    step='1'
+                    value={this.state.hexagonalpixelate || 10}
+                    onChange={this.handleFilterChange} filter='hexagonalpixelate'
+                  />
+                  <div className="range-value">
+                    {this.state.hexagonalpixelate}
+                  </div>
+                </div>
+
                 <div>{i18next.t('ui/filter.Opacity')}</div>
                 <div className="range-box">
                   <input

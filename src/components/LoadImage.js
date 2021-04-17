@@ -193,11 +193,14 @@ class LoadImage extends Component {
                   }}>
                     <img id="preview" src={this.url} alt="preview" ></img>
                 </Link>
+              </div>
+              <div className="preview-middle">
+                <a href={this.url} target="_blank">크게보기(번역필요)</a>
                 <p>{this.state.width}X{this.state.height}</p>
               </div>
               <div className="preview-bottom">
                 <input type="range" name="imgRatio" id="imgRatio" value={this.state.imgRatio} onChange={this.handleImageSizeChange} min="5" max="200" step="1" />
-                <p>{this.state.imgRatio}</p>
+                <p>{this.state.imgRatio} %</p>
               </div>
             </div>
         </ImageModal>

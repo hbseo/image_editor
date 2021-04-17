@@ -115,7 +115,7 @@ class Save extends Component {
 		return(
 			<div>
 				{open ?
-				  <div className = "modal">
+				  <div className = "save-modal">
 						<div className = "saveModal">
               <div className="top-div">
 							  <div className="headline">{i18next.t('Save.Save')} {user_name} {this.props.prj_idx} </div>

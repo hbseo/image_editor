@@ -137,6 +137,7 @@ class Crop extends Action {
     .then((data) => {
       canvas.remove(activeObject);
       canvas.remove(this._cropzone);
+      this._cropzone = null;
       this.deleteEvent();
       this.saveState("image crop")
       data.applyFilters();
@@ -239,7 +240,7 @@ class Crop extends Action {
     canvas.on('mouse:down', this.cropCanvasEvent);
   }
 
-  cropEndCanvas = () => {
+  cropEndCanvas = (img) => {
     if(this._cropzone === null || this.getCanvas() === null) {
       return;
     }
@@ -263,9 +264,18 @@ class Crop extends Action {
     }
     this.deleteEvent();
     this.saveState('canvas crop');
+    this._cropzone = null;
     canvas.setHeight(cropRect.height);
     canvas.setWidth(cropRect.width);
     canvas.calcOffset();
+
+    if(img && canvas.backgroundImage) {
+      canvas.backgroundImage.left = 0;
+      canvas.backgroundImage.top = 0;
+      canvas.backgroundImage.scaleX = canvas.width / canvas.backgroundImage.width;
+      canvas.backgroundImage.scaleY = canvas.height / canvas.backgroundImage.height;
+    }
+
     canvas.renderAll();
   }
 

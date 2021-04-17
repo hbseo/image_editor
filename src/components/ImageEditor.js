@@ -257,6 +257,10 @@ class ImageEditor extends Component {
         this.pasteObject();
       }
     }
+    // ctrl + z
+    if((metaKey || ctrlKey) && keyCode === 90) {
+      this.undo();
+    }
 
     if(keyCode === 37) { // handle Left key
       event.preventDefault();
@@ -1034,8 +1038,8 @@ class ImageEditor extends Component {
     this.action['Crop'].cropCanvas(off);
   }
 
-  cropEndCanvas = () => {
-    this.action['Crop'].cropEndCanvas();
+  cropEndCanvas = (img) => {
+    this.action['Crop'].cropEndCanvas(img);
   }
 
   handleCropCanvasSizeChange = (value) => {

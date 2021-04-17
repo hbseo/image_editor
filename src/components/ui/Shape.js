@@ -97,8 +97,8 @@ export default withTranslation()(class Shape extends Component {
             name="endAngle" 
             min='0' 
             max='360' 
-            step = '0' 
-            value = {this.props.object.endAngle * 180 / Math.PI}
+            step = '1' 
+            value = {this.props.object && this.props.object.type ==='circle' ? (this.props.object.endAngle * 180 / Math.PI).toFixed(3) : 0} 
             disabled = {this.props.object.type ==='circle' ? false : true }
             onChange = {this.handleEndAngleChange}/>{i18next.t('ui/shape.Degree')}
           </div>

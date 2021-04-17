@@ -48,7 +48,7 @@ export default withTranslation()(class Canvas extends Component {
 
   cropEndCanvas = () => {
     this.setState({displayCropCanvas: false});
-    this.props.cropEndCanvas();
+    this.props.cropEndCanvas(document.getElementById("cropfit").checked);
   }
 
   offdisplayCropCanvas = () => {
@@ -73,7 +73,7 @@ export default withTranslation()(class Canvas extends Component {
     this.setState({ color : change });
     this.props.changeBackgroundColor(change);
   }
-
+  
   render() {
     return (
       <div className="sub">
@@ -109,6 +109,7 @@ export default withTranslation()(class Canvas extends Component {
                   />
                 </div>
                 <button onClick={this.cropEndCanvas}>{i18next.t('ui/canvas.CropEndCanvas')}</button>
+                <input type="checkbox" id="cropfit" /><label htmlFor="cropfit">이미지 줄이기(번역할거)</label>
               </div>
               : null
             }
