@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {convertRGB, HEXtoRGBA } from '../helper/ConverRGB';
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
+import { ObjectIcon } from '../const/consts';
+import '../../css/ui/Effect.scss';
+
 export default withTranslation()(class Effect extends Component {
   constructor(props){
     super(props);
@@ -130,32 +133,32 @@ export default withTranslation()(class Effect extends Component {
           {i18next.t('ui/effect.Effect')} ( {this.props.object.type} )
         </div>
         <div className="sub-effect">
-          <div>
-            <input id = "shadow_toggle" type="checkbox" onClick = {this.toggleShadow}></input>
-            <label htmlFor='shadow'>
-              <span>{i18next.t('ui/effect.Blur')} </span>
-              <input
-                type='range'
-                className='shadow'
-                id='shadow'
-                min='1'
-                max='100'
-                name='blur'
-                step='1'
-                value={this.state.blur}
-                onChange={this.handleShadowChange}/>
-              <span>{i18next.t('ui/effect.OffsetY')} </span>
-              <input
-                type='range'
-                className='shadow'
-                id='shadow'
-                min='-100'
-                max='100'
-                name='offsetY'
-                step='1'
-                value={this.state.offsetY}
-                onChange={this.handleShadowChange}/>
-              <span>{i18next.t('ui/effect.OffsetX')} </span>
+          <div className="shadow-box">
+            <div className="shadow-checkbox">
+              <div>
+                <label className="mycheckbox path">
+                  <input id = "shadow_toggle" type="checkbox" onClick = {this.toggleShadow}></input>
+                    <svg viewBox="0 0 21 21">
+                      <path d={ObjectIcon.checkbox}></path>
+                    </svg>
+                </label>
+                {i18next.t('ui/effect.Blur')}
+              </div>
+              <label htmlFor='shadow'>
+                <input
+                  type='range'
+                  className='shadow'
+                  id='shadow'
+                  min='1'
+                  max='100'
+                  name='blur'
+                  step='1'
+                  value={this.state.blur}
+                  onChange={this.handleShadowChange}/>
+              </label>
+            </div>
+            <div className="shadow-offset">
+              {i18next.t('ui/effect.OffsetX')}
               <input
                 type='range'
                 className='shadow'
@@ -166,40 +169,49 @@ export default withTranslation()(class Effect extends Component {
                 step='1'
                 value={this.state.offsetX}
                 onChange={this.handleShadowChange}/>
-            </label>
-
-            <div className="color-picker">            
-              <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
-              <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
-            </div>
-            
-            <div className="stroke">
-              <label htmlFor="stroke">{i18next.t('ui/effect.Stroke')} </label>
+              {i18next.t('ui/effect.OffsetY')}
               <input
                 type='range'
-                className='stroke'
-                name='stroke'
-                min='0'
+                className='shadow'
+                id='shadow'
+                min='-100'
                 max='100'
+                name='offsetY'
                 step='1'
-                value={ this.props.object.strokeWidth ? this.props.object.strokeWidth : 0}
-                disabled = { (this.props.object.type === 'group' || this.props.object.type === 'activeSelection' || this.props.object.type === 'not active' || this.props.object.type === 'line' ) ? true : false }
-                onChange={this.handleStrokeWidthChange}
-              />
+                value={this.state.offsetY}
+                onChange={this.handleShadowChange}/>
             </div>
-
-            
-            
-            <div className="option-title">{i18next.t('ui/effect.StrokeColor')} </div>
-            
-            <div className="color-picker">            
-              <input type="color" id="colorSource" value={this.state.hexstrokeColor} onChange = { this.handleStrokeColorChange}/>
-              <input type="range" value = {this.state.strokeColor.a} min='0' max='1' step='0.01' onChange = {this.handleStrokeOpacityChange} />
+          </div>
+          <div className="shadow-color">
+            {i18next.t('ui/effect.ShadowColor')}
+            <div>   
+              <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+              <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
             </div>
-            
+          </div>         
+          <div className="stroke">
+            <label htmlFor="stroke">{i18next.t('ui/effect.Stroke')} </label>
+            <input
+              type='range'
+              className='stroke'
+              name='stroke'
+              min='0'
+              max='100'
+              step='1'
+              value={ this.props.object.strokeWidth ? this.props.object.strokeWidth : 0}
+              disabled = { (this.props.object.type === 'group' || this.props.object.type === 'activeSelection' || this.props.object.type === 'not active' || this.props.object.type === 'line' ) ? true : false }
+              onChange={this.handleStrokeWidthChange}
+            />
+          </div>          
+          <div className="stroke-color">            
+            {i18next.t('ui/effect.StrokeColor')}
             <div>
-              <button onClick = { this.handlePipette }>{i18next.t('ui/effect.Pipette')}</button>
+              <input type="range" value = {this.state.strokeColor.a} min='0' max='1' step='0.01' onChange = {this.handleStrokeOpacityChange} />
+              <input type="color" id="colorSource" value={this.state.hexstrokeColor} onChange = { this.handleStrokeColorChange}/>
             </div>
+          </div>
+          <div>
+            <button onClick = { this.handlePipette }>{i18next.t('ui/effect.Pipette')}</button>
           </div>
         </div>
       </div>
