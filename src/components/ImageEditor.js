@@ -1496,7 +1496,7 @@ class ImageEditor extends Component {
         >
         </SideNav>
 
-        <div className="editor" id='editor'>
+        <div className={this.state.tab === 99 ? "closed-editor" : "editor"} id='editor'>
           <Draggable
             boutnds="editor">
             <div className="popup">
