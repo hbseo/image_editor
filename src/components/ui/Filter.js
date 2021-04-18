@@ -977,8 +977,18 @@ export default withTranslation()(class Filter extends Component{
                   </div>
                 </div>
 
-                <div>{i18next.t('ui/filter.Opacity')}</div>
-                <div className="range-box">
+
+                <div className="range-onoff">
+                  <input className="range-onoff-button" id="opacity-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='opacity'/>
+                  <label htmlFor="opacity-onoff-checkbox">{i18next.t('ui/filter.Opacity')}</label>
+                </div>
+                <div className="range-box" style = {this.rangeStyle('opacity')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="opacity-checkbox" className='rangefilter' onClick={this.filterObject} filter='opacity' value={this.state.opacity || 10}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -991,7 +1001,9 @@ export default withTranslation()(class Filter extends Component{
                     onChange={this.handleFilterChange} filter='opacity'
                     disabled = {this.props.object.type === 'image' ? false : true}
                   />
-                  <label id="opacity-value">{this.state.opacity}</label>
+                  <div className="range-value">
+                    {this.state.opacity}
+                  </div>
                   {/* {this.props.object.type === 'image' ? this.props.object.opacity : 0 } */}
                 </div>
               </div>
