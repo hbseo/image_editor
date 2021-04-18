@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import switchTools from '../helper/SwitchTools';
 import '../../css/ui/Filter.scss';
-import {filterList} from '../const/consts';
+import {filterList, ObjectIcon} from '../const/consts';
 import { CSSTransition } from 'react-transition-group';
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
@@ -148,6 +148,7 @@ export default withTranslation()(class Filter extends Component{
       //close range
       this.setState({ openrange : false})
     }
+    console.log(this.state.openrange);
     this.props.filterObject(event);
   }
 
@@ -327,7 +328,16 @@ export default withTranslation()(class Filter extends Component{
   }
 
   changeRange = (event) => {
-    this.setState({ openrange : event.target.getAttribute('filter')})
+
+    if(event.target.checked){
+      //open range
+      this.setState({ openrange : event.target.getAttribute('filter')})
+    }
+    else{
+      //close range
+      this.setState({ openrange : false})
+    }
+    console.log(this.state.openrange);
   }
 
   rangeStyle = (option) => {
@@ -401,11 +411,16 @@ export default withTranslation()(class Filter extends Component{
             <CSSTransition in = {this.state.adjustmenu} timeout={200} classNames="my-node" unmountOnExit >
               <div className="adjust-options">
                 <div className="range-onoff">
-                  <input type='checkbox' id="grayscale-checkbox" className='rangefilter' onClick={this.filterObject} filter='grayscale' value={this.state.grayscale|| 0}/>
-                  <label htmlFor="grayscale-checkbox">{i18next.t('ui/filter.Grey')}</label>
+                  <input className="range-onoff-button" id="grayscale-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='grayscale'/>
+                  <label htmlFor="grayscale-onoff-checkbox">{i18next.t('ui/filter.Grey')}</label>
                 </div>
-                {/* <div onClick = {this.changeRange} filter='grayscale'> {this.state.grayscale}</div> */}
                 <div className="range-box" style = {this.rangeStyle('grayscale')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="grayscale-checkbox" className='rangefilter' onClick={this.filterObject} filter='grayscale' value={this.state.grayscale|| 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -424,10 +439,16 @@ export default withTranslation()(class Filter extends Component{
               
                 {/* <div onClick = {this.changeRange} filter='brightness'>{i18next.t('ui/filter.Brightness')} {this.state.brightness}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="brightness-checkbox" className='rangefilter' onClick={this.filterObject} filter='brightness' value={this.state.brightness || 0}/>
-                  <label htmlFor="brightness-checkbox">{i18next.t('ui/filter.Brightness')}</label>
+                  <input className="range-onoff-button" id="brightness-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='brightness'/>
+                  <label htmlFor="brightness-onoff-checkbox">{i18next.t('ui/filter.Brightness')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('brightness')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="brightness-checkbox" className='rangefilter' onClick={this.filterObject} filter='brightness' value={this.state.brightness || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -446,10 +467,16 @@ export default withTranslation()(class Filter extends Component{
                
                 {/* <div onClick = {this.changeRange} filter='contrast'>{i18next.t('ui/filter.Contrast')} {this.state.contrast}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="contrast-checkbox" className='rangefilter' onClick={this.filterObject} filter='contrast' value={this.state.contrast || 0}/>
-                  <label htmlFor="contrast-checkbox">{i18next.t('ui/filter.Contrast')}</label>
+                  <input className="range-onoff-button" id="contrast-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='contrast'/>
+                  <label htmlFor="contrast-onoff-checkbox">{i18next.t('ui/filter.Contrast')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('contrast')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="contrast-checkbox" className='rangefilter' onClick={this.filterObject} filter='contrast' value={this.state.contrast || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -468,10 +495,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='pixelate'>{i18next.t('ui/filter.Pixelate')} {this.state.pixelate}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="pixelate-checkbox" className='rangefilter' onClick={this.filterObject} filter='pixelate' value={this.state.pixelate || 0}/>
-                  <label htmlFor="pixelate-checkbox">{i18next.t('ui/filter.Pixelate')}</label>
+                  <input className="range-onoff-button" id="pixelate-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='pixelate'/>
+                  <label htmlFor="pixelate-onoff-checkbox">{i18next.t('ui/filter.Pixelate')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('pixelate')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="pixelate-checkbox" className='rangefilter' onClick={this.filterObject} filter='pixelate' value={this.state.pixelate || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -490,10 +523,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='blur'>{i18next.t('ui/filter.Blur')} {this.state.blur}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="blur-checkbox" className='rangefilter' onClick={this.filterObject} filter='blur' value={this.state.blur || 0}/>
-                  <label htmlFor="blur-checkbox">{i18next.t('ui/filter.Blur')}</label>
+                  <input className="range-onoff-button" id="blur-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='blur'/>
+                  <label htmlFor="blur-onoff-checkbox">{i18next.t('ui/filter.Blur')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('blur')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="blur-checkbox" className='rangefilter' onClick={this.filterObject} filter='blur' value={this.state.blur || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -512,10 +551,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='noise'>{i18next.t('ui/filter.Noise')} {this.state.noise}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="noise-checkbox" className='rangefilter' onClick={this.filterObject} filter='noise' value={this.state.noise || 0}/>
-                  <label htmlFor="noise-checkbox">{i18next.t('ui/filter.Noise')}</label>
+                  <input className="range-onoff-button" id="noise-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='noise'/>
+                  <label htmlFor="noise-onoff-checkbox">{i18next.t('ui/filter.Noise')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('noise')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="noise-checkbox" className='rangefilter' onClick={this.filterObject} filter='noise' value={this.state.noise || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -534,10 +579,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='saturation'>{i18next.t('ui/filter.Saturation')} {this.state.saturation}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="saturation-checkbox" className='rangefilter' onClick={this.filterObject} filter='saturation' value={this.state.saturation || 0}/>
-                  <label htmlFor="saturation-checkbox">{i18next.t('ui/filter.Saturation')}</label>
+                  <input className="range-onoff-button" id="saturation-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='saturation'/>
+                  <label htmlFor="saturation-onoff-checkbox">{i18next.t('ui/filter.Saturation')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('saturation')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="saturation-checkbox" className='rangefilter' onClick={this.filterObject} filter='saturation' value={this.state.saturation || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -556,10 +607,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='huerotation'>{i18next.t('ui/filter.Hue')} {this.state.hue}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="huerotation-checkbox" className='rangefilter' onClick={this.filterObject} filter='huerotation' value={this.state.hue || 0}/>
-                  <label htmlFor="huerotation-checkbox">{i18next.t('ui/filter.Hue')}</label>
+                  <input className="range-onoff-button" id="hue-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='hue'/>
+                  <label htmlFor="hue-onoff-checkbox">{i18next.t('ui/filter.Hue')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('huerotation')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="huerotation-checkbox" className='rangefilter' onClick={this.filterObject} filter='huerotation' value={this.state.hue || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -578,10 +635,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='ink'>{i18next.t('ui/filter.Ink')} {this.state.ink}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="ink-checkbox" className='rangefilter' onClick={this.filterObject} filter='ink' value={this.state.ink  || 0}/>
-                  <label htmlFor="ink-checkbox">{i18next.t('ui/filter.Ink')}</label>
+                  <input className="range-onoff-button" id="ink-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='ink'/>
+                  <label htmlFor="ink-onoff-checkbox">{i18next.t('ui/filter.Ink')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('ink')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="ink-checkbox" className='rangefilter' onClick={this.filterObject} filter='ink' value={this.state.ink  || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -600,10 +663,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='vignette'>{i18next.t('ui/filter.Vignette')} {this.state.vignette}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="vignette-checkbox" className='rangefilter' onClick={this.filterObject} filter='vignette' value={this.state.vignette || 0}/>
-                  <label htmlFor="vignette-checkbox">{i18next.t('ui/filter.Vignette')}</label>
+                  <input className="range-onoff-button" id="vignette-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='vignette'/>
+                  <label htmlFor="vignette-onoff-checkbox">{i18next.t('ui/filter.Vignette')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('vignette')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="vignette-checkbox" className='rangefilter' onClick={this.filterObject} filter='vignette' value={this.state.vignette || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -622,10 +691,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='zoomblur'>{i18next.t('ui/filter.Zoomblur')} {this.state.zoomblur}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="zoomblur-checkbox" className='rangefilter' onClick={this.filterObject} filter='zoomblur' value={this.state.zoomblur || 0}/>
-                  <label htmlFor="zoomblur-checkbox">{i18next.t('ui/filter.Zoomblur')}</label>
+                  <input className="range-onoff-button" id="zoomblur-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='zoomblur'/>
+                  <label htmlFor="zoomblur-onoff-checkbox">{i18next.t('ui/filter.Zoomblur')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('zoomblur')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="zoomblur-checkbox" className='rangefilter' onClick={this.filterObject} filter='zoomblur' value={this.state.zoomblur || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -644,10 +719,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='vibrance'>{i18next.t('ui/filter.Vibrance')} {this.state.vibrance}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="vibrance-checkbox" className='rangefilter' onClick={this.filterObject} filter='vibrance' value={this.state.vibrance || 0}/>
-                  <label htmlFor="vibrance-checkbox">{i18next.t('ui/filter.Vibrance')}</label>
+                  <input className="range-onoff-button" id="vibrance-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='vibrance'/>
+                  <label htmlFor="vibrance-onoff-checkbox">{i18next.t('ui/filter.Vibrance')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('vibrance')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="vibrance-checkbox" className='rangefilter' onClick={this.filterObject} filter='vibrance' value={this.state.vibrance || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -666,10 +747,16 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='denoise'>{i18next.t('ui/filter.Denoise')} {this.state.denoise}</div> */}
                 <div className="range-onoff">
-                  <input type='checkbox' id="denoise-checkbox" className='rangefilter' onClick={this.filterObject} filter='denoise' value={this.state.denoise || 0}/>
-                  <label htmlFor="denoise-checkbox">{i18next.t('ui/filter.Denoise')}</label>
+                  <input className="range-onoff-button" id="denoise-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='denoise'/>
+                  <label htmlFor="denoise-onoff-checkbox">{i18next.t('ui/filter.Denoise')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('denoise')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="denoise-checkbox" className='rangefilter' onClick={this.filterObject} filter='denoise' value={this.state.denoise || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -687,10 +774,16 @@ export default withTranslation()(class Filter extends Component{
                 </div>
                 
                 <div className="range-onoff">
-                  <input type='checkbox' id="removecolor-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='removecolor'/>
-                  <label htmlFor="removecolor-checkbox">{i18next.t('ui/filter.RemoveColor')}</label>
+                  <input className="range-onoff-button" id="removecolor-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='removecolor'/>
+                  <label htmlFor="removecolor-onoff-checkbox">{i18next.t('ui/filter.RemoveColor')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('removecolor')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="removecolor-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='removecolor'/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input type="color" id="colorSource" value={this.state.removecolor.color} onChange = { this.setRemoveColor}/>
                   <input
                     type='range'
@@ -709,10 +802,16 @@ export default withTranslation()(class Filter extends Component{
                 </div>
 
                 <div className="range-onoff">
-                  <input type='checkbox' id="blendcolor-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='blendcolor'/>
-                  <label htmlFor="blendcolor-checkbox">{i18next.t('ui/filter.BlendColor')}</label>
+                  <input className="range-onoff-button" id="blendcolor-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='blendcolor'/>
+                  <label htmlFor="blendcolor-onoff-checkbox">{i18next.t('ui/filter.BlendColor')}</label>
                 </div>
                 <div className="range-box"  style = {this.rangeStyle('blendcolor')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="blendcolor-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='blendcolor'/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input type="color" id="colorSource" value={this.state.blendcolor.color} onChange = { this.setBlendColor }/>
                   <select className='rangefilter-select' id="blend-mode" name="blend-mode" onChange = {this.handleBlendModeChange} value = {this.state.blendcolor.mode}>
                     <option value="add">Add</option>
@@ -743,10 +842,16 @@ export default withTranslation()(class Filter extends Component{
                 </div>
 
                 <div className="range-onoff">
-                  <input type='checkbox' id="gamma-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='gamma'/>
-                  <label htmlFor="gamma-checkbox">{i18next.t('ui/filter.Gamma')}</label>
+                  <input className="range-onoff-button" id="gamma-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='gamma'/>
+                  <label htmlFor="gamma-onoff-checkbox">{i18next.t('ui/filter.Gamma')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('gamma')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="gamma-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='gamma'/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -792,10 +897,16 @@ export default withTranslation()(class Filter extends Component{
                 </div>
 
                 <div className="range-onoff">
-                  <input type='checkbox' id="huesaturation-checkbox" className='rangefilter' onClick={this.filterObject} filter='huesaturation' value={this.state.huesaturation || 0}/>
-                  <label htmlFor="huesaturation-checkbox">{i18next.t('ui/filter.Huesaturation')}</label>
+                  <input className="range-onoff-button" id="huesaturation-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='huesaturation'/>
+                  <label htmlFor="huesaturation-onoff-checkbox">{i18next.t('ui/filter.Hue/Saturation')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('huesaturation')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="huesaturation-checkbox" className='rangefilter' onClick={this.filterObject} filter='huesaturation' value={this.state.huesaturation || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -813,10 +924,16 @@ export default withTranslation()(class Filter extends Component{
                 </div>
                 
                 <div className="range-onoff">
-                  <input type='checkbox' id="tiltshift-checkbox" className='rangefilter' onClick={this.filterObject} filter='tiltshift' value={this.state.tiltshift || 0}/>
-                  <label htmlFor="tiltshift-checkbox">{i18next.t('ui/filter.Tiltshift')}</label>
+                  <input className="range-onoff-button" id="tiltshift-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='tiltshift'/>
+                  <label htmlFor="tiltshift-onoff-checkbox">{i18next.t('ui/filter.Tiltshift')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('tiltshift')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="tiltshift-checkbox" className='rangefilter' onClick={this.filterObject} filter='tiltshift' value={this.state.tiltshift || 0}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'
@@ -834,10 +951,16 @@ export default withTranslation()(class Filter extends Component{
                 </div>
 
                 <div className="range-onoff">
-                  <input type='checkbox' id="hexagonalpixelate-checkbox" className='rangefilter' onClick={this.filterObject} filter='hexagonalpixelate' value={this.state.hexagonalpixelate || 10}/>
-                  <label htmlFor="hexagonalpixelate-checkbox">{i18next.t('ui/filter.HexagonalPixelate')}</label>
+                  <input className="range-onoff-button" id="hexagonalpixelate-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='hexagonalpixelate'/>
+                  <label htmlFor="hexagonalpixelate-onoff-checkbox">{i18next.t('ui/filter.HexagonalPixelate')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('hexagonalpixelate')}>
+                  <label className="mycheckbox path">
+                    <input type='checkbox' id="hexagonalpixelate-checkbox" className='rangefilter' onClick={this.filterObject} filter='hexagonalpixelate' value={this.state.hexagonalpixelate || 10}/>
+                      <svg viewBox="0 0 21 21">
+                        <path d={ObjectIcon.checkbox}></path>
+                      </svg>
+                  </label>
                   <input
                     type='range'
                     className='filter'

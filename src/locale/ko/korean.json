@@ -213,7 +213,7 @@
         "Blur" : "흐림 효과",
         "Noise" : "노이즈",
         "Saturation" : "채도",
-        "Hue" : "Hue",
+        "Hue" : "색상",
         "RemoveColor" : "색 제거",
         "Ink" : "잉크 효과",
         "Vignette" : "비네팅",
@@ -222,6 +222,9 @@
         "Denoise" : "노이즈 제거",
         "BlendColor" : "색 혼합",
         "Gamma" : "감마",
+        "Hue/Saturation" : "색상/채도",
+        "Tiltshift" : "틸트-시프트",
+        "HexagonalPixelate" : "육각형 픽셀화",
         "Opacity" : "투명도",
         "Glfx" : "glfx",
         "Close" : "닫기"
