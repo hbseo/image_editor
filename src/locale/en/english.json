@@ -222,6 +222,9 @@
         "Denoise" : "Denoise",
         "BlendColor" : "BlendColor",
         "Gamma" : "Gamma",
+        "Hue/Saturation" : "Hue/Saturation",
+        "Tiltshift" : "Tilt-shift",
+        "HexagonalPixelate" : "Hexagonal Pixelate",
         "Opacity" : "Opacity",
         "Glfx" : "glfx",
         "Close" : "Close"
