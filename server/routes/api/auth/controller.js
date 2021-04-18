@@ -98,7 +98,7 @@ exports.login = (req, res) => {
           },
           secretObj.secret,
           {
-            expiresIn: '1h'
+            expiresIn: '3h'
           },
           (error, token) => {
             if (error) reject(error);
@@ -117,7 +117,7 @@ exports.login = (req, res) => {
   }
 
   const respond = (token) => {
-    res.cookie('token', token, {maxAge: 1000*60*60});
+    res.cookie('token', token, {maxAge: 1000*60*60*3});
     res.status(200).json({
       msg: 'login success'
     });

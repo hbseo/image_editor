@@ -33,6 +33,11 @@ class Withdrawal extends Component {
         window.location.replace('/');
       }
       else {
+        if(data.msg === "not login") {
+          alert(i18next.t("login_expired"));
+          window.location.replace('/');
+          return;
+        }
         alert("비밀번호가 틀렸습니다.");
       }
     })
