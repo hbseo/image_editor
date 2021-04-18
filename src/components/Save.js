@@ -13,6 +13,7 @@ class Save extends Component {
       saveState : true // true이면 저장 불가능, false이면 저장 가능
     };
     this.err = false;
+    this.loginstat = false;
   }
 
   changeFormat = () => {
@@ -109,9 +110,9 @@ class Save extends Component {
   }
 
   render(){
-    const { open, close, size, user_name } = this.props;
+    const { open, close, user_name } = this.props;
     // if(this.props.user_name === ""){this.err = true;}
-    let imageSize = <label className="canvas-size">{size().x} X {size().y}</label>
+    // let imageSize = <label className="canvas-size">{size().x} X {size().y}</label>
 		return(
 			<div>
 				{open ?
@@ -144,7 +145,7 @@ class Save extends Component {
                   </div> : null
                 }
               </div>
-              {user_name === '' ? 
+              {user_name === '' && !this.loginstat ? 
                 <div className="bottom-div">
                   <div className="not-registerd">
                     <button id="save-local" onClick = {this.imageHandler} disabled = {this.state.saveState}>{i18next.t('Save.Saveimage')}</button>

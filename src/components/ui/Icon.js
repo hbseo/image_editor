@@ -85,7 +85,9 @@ export default withTranslation()(class Icon extends Component {
             <button className="far fa-user" onClick={this.addIcon} type = "icon_man"></button>
             <button className="fab fa-facebook-f" onClick={this.addIcon} type = "icon_facebook"></button>
             <button className="fab fa-apple" onClick={this.addIcon} type = "icon_apple"></button>
-            
+            <button className="fas fa-question" onClick={this.addIcon} type = "icon_question"></button>
+            <button className="fas fa-exclamation" onClick={this.addIcon} type = "icon_exclamation"></button>
+            <button className="fas fa-thumbs-up" onClick={this.addIcon} type = "icon_thumbs_up"></button>
           </div>
           <div className="option-title">{i18next.t('ui/icon.Color')}</div>
           <div className="color-picker">            

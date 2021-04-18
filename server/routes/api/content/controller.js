@@ -203,20 +203,14 @@ exports.update = (req, res) => {
 
 exports.get = (req, res) => {
   const database = new Database();
-  const {id, search, limit, offset, sort, last} = req.body;
+  const {id, search, limit, offset, sort} = req.body;
   let check_query = `SELECT idx FROM USERS WHERE userid = "${id}";`;
   let search_option = search.length !== 0 ? `title LIKE '%${search}%' AND ` : ``;
-  let scroll_option = infi_scroll(last, sort, offset);
   let sort_option = sortlist[sort];
-
-  // let test_query = `SELECT * FROM PROJECTS WHERE ` + search_option + `useridx = 3 AND ` + scroll_option + sort_option +` LIMIT ${limit} ;`;
-      
-  // console.log(test_query)
 
   const get = (result) => {
     if(result[0]) {
-      // let get_query = `SELECT * FROM PROJECTS WHERE useridx = ${result[0].idx} ` + search_option +` LIMIT ${limit} OFFSET ${offset};`;
-      let get_query = `SELECT * FROM PROJECTS WHERE ` + search_option + `useridx = ${result[0].idx} ` + scroll_option + sort_option +` LIMIT ${limit} ;`;
+      let get_query = `SELECT * FROM PROJECTS WHERE ${search_option} useridx = ${result[0].idx} ${sort_option} LIMIT ${limit} OFFSET ${offset};`;
       console.log(get_query)
       database.query(get_query)
       .then(respond)
@@ -263,7 +257,7 @@ exports.delete = (req, res) => {
   let check_query = `SELECT idx, size FROM USERS WHERE userid = "${id}";`;
   let delete_size;
   let user_idx;
-  let user_size; // user size ( total )
+  // let user_size; // user size ( total )
 
   const deletepj = (result) => {
     if(result[0]) {
@@ -284,7 +278,7 @@ exports.delete = (req, res) => {
   const checkSize = (result) => {
     if(result[0]){
       user_idx = result[0].idx;
-      user_size = result[0].size;
+      // user_size = result[0].size;
       let size_query = `SELECT length(project_data) AS len FROM PROJECTS WHERE idx = ${prj_idx};`;
       database.query(size_query)
       .then(deletepj)
@@ -434,32 +428,3 @@ const sortlist = [
   'ORDER BY create_date ASC',
   'ORDER BY create_date DESC',
 ]
-
-function getTimeStamp(timeSource) {
-  let dateObj = new Date(timeSource);
-  let timeString = dateObj.toLocaleString("en-US", {timeZone: "Asia/Seoul"});
-  let timeString_KR = dateObj.toLocaleString("ko-KR", {timeZone: "Asia/Seoul"});
-  console.log(timeString)
-  return dateObj;
-}
-
-
-function infi_scroll(last, sort, offset){
-  if(last == undefined){
-    return '';
-  }
-  else{
-    switch(sort){
-      case 0:
-        return 'AND title > "'+ last +'" or (title ="' + last +'" and idx >'+ offset +') ';
-      case 1:
-        return 'AND title < "'+ last +'" or (title ="' + last +'" and idx >'+ offset +') ';
-      case 2:
-        return 'AND create_date > "'+ last +'" or (create_date ="' + last +'" and idx >'+ offset +') ';
-      case 3:
-        return 'AND create_date < "'+ last +'" or (create_date ="' + last +'" and idx >'+ offset +') ';
-      default:
-        return '';
-    }
-  }
-} 
