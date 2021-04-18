@@ -831,7 +831,17 @@ class ImageEditor extends Component {
   
 
   openSaveModal = () => {
-    this.setState({openSave : true})
+    fetch('/auth/check', {
+      method: 'GET'
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.msg === "not login") this.setState({openSave : true, user_name: ''});
+      else this.setState({openSave : true});
+    })
+    .catch(() => {
+      alert(i18next.t('Project.Error'));
+    })
   }
 
   closeSaveModal = () => {

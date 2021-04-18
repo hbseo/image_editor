@@ -15,19 +15,6 @@ class Save extends Component {
     this.err = false;
     this.loginstat = false;
   }
-  componentDidUpdate() {
-    fetch('/auth/check', {
-      method: 'GET'
-    })
-    .then((res) => res.json())
-    .then((data) => {
-      if(data.msg === "not login") this.loginstat = false;
-      else this.loginstat = true;
-    })
-    .catch(() => {
-      alert(i18next.t('Project.Error'));
-    })
-  }
 
   changeFormat = () => {
     let format = $('input[name=format]:checked').val()
@@ -123,9 +110,9 @@ class Save extends Component {
   }
 
   render(){
-    const { open, close, size, user_name } = this.props;
+    const { open, close, user_name } = this.props;
     // if(this.props.user_name === ""){this.err = true;}
-    let imageSize = <label className="canvas-size">{size().x} X {size().y}</label>
+    // let imageSize = <label className="canvas-size">{size().x} X {size().y}</label>
 		return(
 			<div>
 				{open ?

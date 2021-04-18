@@ -26,7 +26,7 @@ class Main extends Component {
   componentDidMount(){
     this.getCheck();
   }
-
+  
   changeTab = (event) => {
     this.setState({tab : parseInt(event.target.getAttribute('tab'), 10)});
   }
