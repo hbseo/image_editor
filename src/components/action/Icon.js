@@ -13,6 +13,7 @@ class Icon extends Action {
   addIcon = (options) => {
     let canvas = this.getCanvas();
     let icon = this._createIcon(iconList[options.type]);
+    console.log(options);
     let canvas_area = document;
     
     canvas.defaultCursor = 'pointer';
