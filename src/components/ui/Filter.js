@@ -607,7 +607,7 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='huerotation'>{i18next.t('ui/filter.Hue')} {this.state.hue}</div> */}
                 <div className="range-onoff">
-                  <input className="range-onoff-button" id="hue-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='hue'/>
+                  <input className="range-onoff-button" id="hue-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='huerotation'/>
                   <label htmlFor="hue-onoff-checkbox">{i18next.t('ui/filter.Hue')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('huerotation')}>
