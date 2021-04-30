@@ -89,15 +89,17 @@ class Project extends Component {
   }
 
   fromJsontoPng = (json, idx) => {
-    this.canvas.loadFromJSON(json, () => {
+    // this.canvas.clear();
+    // this.canvas.loadFromJSON(json, () => {
       // this.canvas.renderAll();
       // console.log(idx , document.getElementById(idx))
       // console.log(this.canvas.backgroundImage); // 밖에다 두면 backgrounImage를 null로 인식함... 이유? 콜백함수라서 img 태그가 다 load되고 나서 불러와지기 때문
-      if(document.getElementById(idx)){
-        document.getElementById(idx).src = this.canvas.toDataURL({format : 'png'});
-        this.canvas.clear();
-      }
-    })
+      // if(document.getElementById(idx)){
+        // document.getElementById(idx).src = this.canvas.toDataURL({format : 'png'});
+        // this.canvas.clear();
+      // }
+    // })
+    this.canvas.loadFromJSON(json);
     return this.canvas.toDataURL({format : 'png'});
   }
 
@@ -319,7 +321,7 @@ class Project extends Component {
                 <div className="project-title">
                   <p>{prj.title}</p>
                   <p> {
-                  `${new Date(prj.create_date).getMonth()}/${new Date(prj.create_date).getDate()}
+                  `${new Date(prj.create_date).getMonth()+1}/${new Date(prj.create_date).getDate()}
                   ${new Date(prj.create_date).getFullYear()} ${new Date(prj.create_date).getHours()}:
                   ${new Date(prj.create_date).getMinutes()}`
                   } </p>
