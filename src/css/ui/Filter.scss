@@ -1,6 +1,5 @@
-.sub-filtersmenu{
-
-  .option-title{
+.sub-filtersmenu {
+  .option-title {
     font-size: 17px;
     margin: 3%;
   }
@@ -18,7 +17,7 @@
   }
 }
 
-.filter-options{
+.filter-options {
   width: 100%;
   height: 100%;
   display: flex;
@@ -26,19 +25,19 @@
   justify-content: center;
   padding-right: 10%;
 
-  div{
+  div {
     margin: 3%;
     width: 200px;
     height: 100px;
 
-    input[type="checkbox"]{
+    input[type="checkbox"] {
       display: none;
     }
-  
-    input[type="checkbox"] + label{
+
+    input[type="checkbox"] + label {
       width: 100%;
       height: 100%;
-      background-color: #E6E6E6;
+      background-color: #e6e6e6;
       cursor: pointer;
       display: flex;
       justify-content: center;
@@ -46,19 +45,19 @@
       border-radius: 5px;
     }
 
-    input[type="checkbox"]:disabled + label{
+    input[type="checkbox"]:disabled + label {
       // color: #000;
     }
 
-    input[type="checkbox"]:disabled + label:hover{
+    input[type="checkbox"]:disabled + label:hover {
       // color: red;
     }
 
-    input[type="checkbox"]:enabled + label:hover{
+    input[type="checkbox"]:enabled + label:hover {
       opacity: 0.8;
     }
 
-    .label-filter-icon{
+    .label-filter-icon {
       color: white;
       font-size: 14px;
       opacity: 1;
@@ -67,71 +66,71 @@
     }
   }
 
-  #label-filter-grey{
+  #label-filter-grey {
     background-image: url(../img/filter/grey.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 
-  #label-filter-invert{
+  #label-filter-invert {
     background-image: url(../img/filter/invert.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 
-  #label-filter-brownie{
+  #label-filter-brownie {
     background-image: url(../img/filter/brownie.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 
-  #label-filter-technicolor{
+  #label-filter-technicolor {
     background-image: url(../img/filter/technicolor.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 
-  #label-filter-polaroid{
+  #label-filter-polaroid {
     background-image: url(../img/filter/polaroid.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 
-  #label-filter-blackwhite{
+  #label-filter-blackwhite {
     background-image: url(../img/filter/blackwhite.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 
-  #label-filter-vintage{
+  #label-filter-vintage {
     background-image: url(../img/filter/vintage.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 
-  #label-filter-sepia{
+  #label-filter-sepia {
     background-image: url(../img/filter/sepia.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 
-  #label-filter-kodachrome{
+  #label-filter-kodachrome {
     background-image: url(../img/filter/kodachrome.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 
-  #label-filter-emboss{
+  #label-filter-emboss {
     background-image: url(../img/filter/emboss.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
 }
 
-.adjust-box{
+.adjust-box {
   padding: 0% 5% 0% 5%;
 
-  .adjust-options{
+  .adjust-options {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -139,17 +138,17 @@
     margin-top: 10px;
     width: 100%;
     height: 100%;
-  
-    .range-onoff{
+
+    .range-onoff {
       margin-bottom: 10px;
       width: 200px;
       height: 35px;
 
-      .range-onoff-button{
+      .range-onoff-button {
         display: none;
       }
 
-      .range-onoff-button ~ label{
+      .range-onoff-button ~ label {
         display: inline-block;
         width: 100%;
         height: 100%;
@@ -160,107 +159,131 @@
         border-radius: 5px;
       }
 
-      label{
-        transition: all .25s linear;
+      label {
+        transition: all 0.25s linear;
       }
 
-      label:hover{
+      label:hover {
         background-color: rgba(204, 204, 204, 1);
       }
 
-      .range-onoff-button:checked ~ label{
+      .range-onoff-button:checked ~ label {
         background-color: rgba(52, 152, 219, 0.5);
         color: white;
       }
     }
-  
-    .range-box{
+
+    .range-box {
       width: 200px;
       display: flex;
       justify-content: space-around;
       align-items: center;
 
-      .rangefilter{
+      .rangefilter {
         width: 10%;
       }
 
       .mycheckbox {
-            --background: #fff;
-            --border: #D1D6EE;
-            --border-hover: #BBC1E1;
-            --border-active: #365AFC;
-            --tick: #fff;
-            position: relative;
-            input,
-            svg {
-                width: 21px;
-                height: 21px;
-                display: block;
-            }
-            input {
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                position: relative;
-                outline: none;
-                background: var(--background);
-                border: none;
-                margin: 0;
-                margin-right: 5px;
-                padding: 0;
-                cursor: pointer;
-                border-radius: 4px;
-                transition: box-shadow .3s;
-                box-shadow: inset 0 0 0 var(--s, 1px) var(--b, var(--border));
-                &:hover {
-                    --s: 2px;
-                    --b: var(--border-hover);
-                }
-                &:checked {
-                    --b: var(--border-active);
-                }
-            }
-            svg {
-                pointer-events: none;
-                fill: none;
-                stroke-width: 2px;
-                stroke-linecap: round;
-                stroke-linejoin: round;
-                stroke: var(--stroke, var(--border-active));
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 21px;
-                height: 21px;
-                transform: scale(var(--scale, 1)) translateZ(0);
-            }
-            &.path {
-                input {
-                    &:checked {
-                        --s: 2px;
-                        transition-delay: .4s;
-                        & + svg {
-                            --a: 16.1 86.12;
-                            --o: 102.22;
-                        }
-                    }
-                }
-                svg {
-                    stroke-dasharray: var(--a, 86.12);
-                    stroke-dashoffset: var(--o, 86.12);
-                    transition: stroke-dasharray .6s, stroke-dashoffset .6s;
-                }
-            }
+        --background: #fff;
+        --border: #d1d6ee;
+        --border-hover: #bbc1e1;
+        --border-active: #365afc;
+        --tick: #fff;
+        position: relative;
+        input,
+        svg {
+          width: 21px;
+          height: 21px;
+          display: block;
         }
-  
-      .filter{
+        input {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          position: relative;
+          outline: none;
+          background: var(--background);
+          border: none;
+          margin: 0;
+          margin-right: 5px;
+          padding: 0;
+          cursor: pointer;
+          border-radius: 4px;
+          transition: box-shadow 0.3s;
+          box-shadow: inset 0 0 0 var(--s, 1px) var(--b, var(--border));
+          &:hover {
+            --s: 2px;
+            --b: var(--border-hover);
+          }
+          &:checked {
+            --b: var(--border-active);
+          }
+        }
+        svg {
+          pointer-events: none;
+          fill: none;
+          stroke-width: 2px;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          stroke: var(--stroke, var(--border-active));
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 21px;
+          height: 21px;
+          transform: scale(var(--scale, 1)) translateZ(0);
+        }
+        &.path {
+          input {
+            &:checked {
+              --s: 2px;
+              transition-delay: 0.4s;
+              & + svg {
+                --a: 16.1 86.12;
+                --o: 102.22;
+              }
+            }
+          }
+          svg {
+            stroke-dasharray: var(--a, 86.12);
+            stroke-dashoffset: var(--o, 86.12);
+            transition: stroke-dasharray 0.6s, stroke-dashoffset 0.6s;
+          }
+        }
+      }
+
+      .filter {
         width: 70%;
         height: 20px;
       }
 
-      .range-value{
+      .range-value {
         width: 50px;
         height: 20px;
         text-align: center;
+      }
+    }
+
+    #gamma-box {
+      label {
+        width: 15%;
+      }
+
+      .gamma-range-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 85%;
+      }
+
+      .range-with-value {
+        display: flex;
+        justify-content: space-between;
+        line-height: 40px;
+
+        .filter {
+          width: 80%;
+        }
       }
     }
   }
@@ -269,22 +292,22 @@
 .my-node-enter {
   // max-height: 0px;
   opacity: 0;
-  -webkit-transition : opacity 0.5s ease;
+  -webkit-transition: opacity 0.5s ease;
   overflow: hidden;
 }
 .my-node-enter-active {
   // height : auto;
   // max-height: 100px;
-  opacity : 1;
+  opacity: 1;
 }
 
 .my-node-exit {
   // max-height: 100px;
-  opacity : 1;
-  -webkit-transition : opacity 0.5s ease;
+  opacity: 1;
+  -webkit-transition: opacity 0.5s ease;
 }
 .my-node-exit-active {
   max-height: 0px;
-  opacity : 0;
+  opacity: 0;
   overflow: hidden;
 }

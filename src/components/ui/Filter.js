@@ -845,54 +845,56 @@ export default withTranslation()(class Filter extends Component{
                   <input className="range-onoff-button" id="gamma-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='gamma'/>
                   <label htmlFor="gamma-onoff-checkbox">{i18next.t('ui/filter.Gamma')}</label>
                 </div>
-                <div className="range-box" style = {this.rangeStyle('gamma')}>
+                <div className="range-box" id="gamma-box" style = {this.rangeStyle('gamma')}>
                   <label className="mycheckbox path">
                     <input type='checkbox' id="gamma-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='gamma'/>
                       <svg viewBox="0 0 21 21">
                         <path d={ObjectIcon.checkbox}></path>
                       </svg>
                   </label>
-                  <input
-                    type='range'
-                    className='filter'
-                    id='gamma'
-                    min='0.2'
-                    max='2.2'
-                    name='gamma'
-                    step='0.01'
-                    value={this.state.gamma.r || 1}
-                    onChange={ this.handleGammaChange } filter='gamma'
-                  />
-                  <div className="range-value">
-                    {this.state.gamma.r}
-                  </div>
-                  <input
-                    type='range'
-                    className='filter'
-                    id='gamma-g'
-                    min='0.2'
-                    max='2.2'
-                    name='gamma'
-                    step='0.01'
-                    value={this.state.gamma.g || 1}
-                    onChange={ this.handleGammaChange } filter='gamma'
-                  />
-                  <div className="range-value">
-                    {this.state.gamma.g}
-                  </div>
-                  <input
-                    type='range'
-                    className='filter'
-                    id='gamma-b'
-                    min='0.2'
-                    max='2.2'
-                    name='gamma'
-                    step='0.01'
-                    value={this.state.gamma.b || 1}
-                    onChange={ this.handleGammaChange } filter='gamma'
-                  />
-                  <div className="range-value">
-                    {this.state.gamma.b}
+                  <div className="gamma-range-box">
+										<div className="range-with-value">
+											<input
+													type='range'
+													className='filter'
+													id='gamma'
+													min='0.2'
+													max='2.2'
+													name='gamma'
+													step='0.01'
+													value={this.state.gamma.r || 1}
+													onChange={ this.handleGammaChange } filter='gamma'
+											/>
+											{this.state.gamma.r}
+										</div>
+										<div className="range-with-value">
+											<input
+													type='range'
+													className='filter'
+													id='gamma-g'
+													min='0.2'
+													max='2.2'
+													name='gamma'
+													step='0.01'
+													value={this.state.gamma.g || 1}
+													onChange={ this.handleGammaChange } filter='gamma'
+											/>
+										{this.state.gamma.g}
+										</div>
+										<div className="range-with-value">
+											<input
+													type='range'
+													className='filter'
+													id='gamma-b'
+													min='0.2'
+													max='2.2'
+													name='gamma'
+													step='0.01'
+													value={this.state.gamma.b || 1}
+													onChange={ this.handleGammaChange } filter='gamma'
+											/>
+                      {this.state.gamma.b}
+										</div>
                   </div>
                 </div>
 
