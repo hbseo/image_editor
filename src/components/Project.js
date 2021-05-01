@@ -278,11 +278,15 @@ class Project extends Component {
       <div className="project-main">
         {/* <p>{this.state.last.title} {this.state.last.create_date}</p> */}
         <h2>{i18next.t('Project.Project')}</h2>
-        <button delete = "all" onClick={this.checkDelete}><i delete = "all" className="fas fa-times-circle fa-4x"></i></button>
-        <button className = "proejct-sort-button" option = "0" onClick= {this.projectSort}> {i18next.t('Project.Title')} 오름 </button>
-        <button className = "proejct-sort-button" option = "1" onClick= {this.projectSort}> {i18next.t('Project.Title')} 내림 </button>
-        <button className = "proejct-sort-button" option = "2" onClick= {this.projectSort}> {i18next.t('Project.Date')} 오름 </button>
-        <button className = "proejct-sort-button" option = "3" onClick= {this.projectSort}> {i18next.t('Project.Date')} 내림 </button>
+        <div className="project-button-box">
+            <div className="sort-button-box">
+                <button className = "proejct-sort-button" option = "0" onClick= {this.projectSort}> {i18next.t('Project.Title')} ↑ </button>
+                <button className = "proejct-sort-button" option = "1" onClick= {this.projectSort}> {i18next.t('Project.Title')} ↓ </button>
+                <button className = "proejct-sort-button" option = "2" onClick= {this.projectSort}> {i18next.t('Project.Date')} ↑ </button>
+                <button className = "proejct-sort-button" option = "3" onClick= {this.projectSort}> {i18next.t('Project.Date')} ↓ </button>
+            </div>
+            <button delete = "all" onClick={this.checkDelete}><i delete = "all" className="fas fa-times-circle fa-4x"></i></button>
+        </div>
         <div className="project-search">
           <div className="project-search-form">
             <form onSubmit={this.handleSubmit}>
