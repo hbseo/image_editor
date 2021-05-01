@@ -156,6 +156,7 @@
         cursor: pointer;
         text-align: center;
         line-height: 35px;
+        border: 1px solid #eeeeee;
         border-radius: 5px;
       }
 
@@ -169,7 +170,9 @@
 
       .range-onoff-button:checked ~ label {
         background-color: rgba(52, 152, 219, 0.5);
-        color: white;
+        color: #b235db;
+        border: 1px solid rgba(52, 152, 219, 1);
+        font-weight: bold;
       }
     }
 
