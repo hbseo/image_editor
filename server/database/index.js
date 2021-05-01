@@ -34,7 +34,7 @@ class Pool {
     return new Promise((resolve, reject) => {
       this.pool.getConnection((err, connection) => {
         if (err) reject(err);
-        console.log("MySQL pool connected: threadId " + connection.threadId);
+        // console.log("MySQL pool connected: threadId " + connection.threadId);
         resolve(connection);
       });
     });
@@ -52,7 +52,7 @@ class Pool {
   release = (connection) => {
     return new Promise((resolve, reject) => {
       // if (err) reject(err);
-      console.log("MySQL pool released: threadId " + connection.threadId);
+      // console.log("MySQL pool released: threadId " + connection.threadId);
       resolve(connection.release());
     });
   }
