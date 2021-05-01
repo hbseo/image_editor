@@ -127,9 +127,8 @@ class Main extends Component {
                 <button className = {this.state.tab == 0 ?  "sidenav-button-active" : "sidenav-button"} onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
                 <button className = {this.state.tab == 2 ?  "sidenav-button-active" : "sidenav-button"} onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
               </div>
-              <LoadImage tab = '1'/>
               {this.state.login_state ? 
-              <div>
+              <div className="side-project-button">
                 <div className = {this.state.tab == 4 ?  "sidenav-button-active" : "sidenav-button"}>
                   <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
                 </div> 
@@ -138,6 +137,7 @@ class Main extends Component {
                 </div>
               </div> : null
               }
+            <LoadImage tab = '1'/>
             </div>
             <div className='inner'>
               {tab[this.state.tab]}
