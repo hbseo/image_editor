@@ -1,66 +1,62 @@
-.project-search{
-    margin: 3%;
-    padding: 3%;
-    border-radius: 10px;
-    background-color: #eeeeee;
-    flex-direction: row;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
+.project-main {
+  overflow-y: auto;
+}
+
+.project-search {
+  margin: 3%;
+  padding: 3%;
+  border-radius: 10px;
+  background-color: #eeeeee;
+  flex-direction: row;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
 }
 
 .proejct-sort-button {
-    padding : 5px;
-    border: 3px solid black;
+  padding: 5px;
+  border: 3px solid black;
 }
 
-#project-list{
+#project-list {
+  // position: relative;
+  margin: 3%;
+  padding: 3%;
+  border-radius: 10px;
+  background-color: #eeeeee;
+  flex-direction: row;
+  display: flex;
+  flex-wrap: wrap;
+
+  .project-div {
     // position: relative;
-    margin: 3%;
-    padding: 3%;
+    display: inline-flex;
+    margin: 5px;
+    flex-direction: column;
+    vertical-align: bottom;
+    justify-content: center;
+    background-color: #d3d3d3;
     border-radius: 10px;
-    background-color: #eeeeee;
-    flex-direction: row;
-    display: flex;
-    flex-wrap: wrap;
+    padding: 12px;
+    // align-items:center;
+    // width: auto;
+    // height: 200px;
 
-    .project-div{
-        // position: relative;
-        display: inline-flex;
-        margin : 5px;
-        flex-direction: column;
-        vertical-align: bottom;
-        justify-content:center;
-        background-color: #d3d3d3;
-        border-radius: 10px;
-        padding : 12px;
-        // align-items:center;
-        // width: auto;
-        // height: 200px;
-
-
-        .project-img {
-            justify-content:center; 
-            position: relative;
-            .project-thumb{
-                margin: auto;
-                // border : 3px solid black;
-            }
-        }
-
-        .project-title{
-            // position: absolute;\
-            color: black;
-            justify-self: end;
-            display: block;
-            text-align : center;
-        }
-
-
+    .project-img {
+      justify-content: center;
+      position: relative;
+      .project-thumb {
+        margin: auto;
+        // border : 3px solid black;
+      }
     }
 
-    
-
-
-
+    .project-title {
+      // position: absolute;\
+      color: black;
+      justify-self: end;
+      display: block;
+      text-align: center;
+    }
+  }
 }

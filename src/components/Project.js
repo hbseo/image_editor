@@ -275,7 +275,7 @@ class Project extends Component {
 
   render() {
     return (
-      <div>
+      <div className="project-main">
         {/* <p>{this.state.last.title} {this.state.last.create_date}</p> */}
         <h2>{i18next.t('Project.Project')}</h2>
         <button delete = "all" onClick={this.checkDelete}><i delete = "all" className="fas fa-times-circle fa-4x"></i></button>
