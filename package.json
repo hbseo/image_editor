@@ -7,6 +7,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "body-parser": "^1.19.0",
+    "concurrently": "^6.0.2",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "fabric": "^4.1.0",
@@ -42,7 +43,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve": "node ./server/app"
+    "serve": "node ./server/app",
+    "dev": "concurrently \" npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "nodemon ./server/app.js",
+    "dev:client": "npm start",
+    "heroku-postbuild": "npm install && npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"

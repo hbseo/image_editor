@@ -37,5 +37,13 @@ app.listen(port, () => {
     console.log(`express is running on ${port}`);
 })
 
+// react static file
+app.use(express.static(path.join(__dirname, '../build')));
+
+// router setting
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'../build/index.html'));
+});
+
 
 // connection.end();
