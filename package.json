@@ -45,9 +45,8 @@
     "eject": "react-scripts eject",
     "serve": "node ./server/app",
     "dev": "concurrently \" npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "nodemon ./server/app.js",
-    "dev:client": "npm start",
-    "heroku-postbuild": "npm install && npm run build"
+    "dev:server": "node ./server/app.js",
+    "dev:client": "npm start"
   },
   "eslintConfig": {
     "extends": "react-app"
