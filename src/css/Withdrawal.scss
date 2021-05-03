@@ -3,13 +3,55 @@
   justify-content: center;
   align-items: center;
   z-index: 1;
+
   .withdrawal {
     width: 350px;
-    height: 450px;
+    height: 250px;
     background-color: white;
     border: 1px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
+
+
+    .top-div{
+      text-align: center;
+      padding : 30px 10px 10px 10px;
+    }
+
+    .middle-div {
+      text-align: center;
+      padding : 40px 10px 10px 10px;
+      
+      .input-pw {
+        padding : auto;
+        height: 24px;
+        width : 70%;
+        text-align: center;
+        font-size: 17px;
+        border: 1px solid black;
+        transition: border 0.1s linear;
+      }
+
+      .input-pw:focus {
+        border: 5px solid #85bdd6;
+        border-radius: 5px;
+      }
+    }
+
+    .bottom-div {
+      margin: auto 3% 3% 3%;
+      padding: 12px 0px 12px 12px;
+      display: flex;
+      justify-content: space-around;
+
+      button {
+        transition: background-color 0.15s linear;
+        padding : 10px 30px 10px 30px;
+      }
+      button:hover {
+        background-color: #E6E6E6;
+      }
+    }
   }
 }

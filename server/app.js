@@ -3,7 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
+const path = require('path');
 // load configuration
 const port = process.env.PORT || 8000;
 const config = require('./config/jwt')
@@ -26,6 +26,13 @@ app.use(cookieParser());
 // print the request log on console
 app.use(morgan('dev'));
 
+app.use(express.static(path.join(__dirname, '../build')))
+// app.get('*', (req,res) => {
+//     res.sendFile(path.join(__dirname, '../build/index.html'))
+// })
+// app.post('*', (req,res) => {
+//     res.sendFile(path.join(__dirname, '../build/index.html'))
+// })
 // set the secret key variable for jwt
 app.set('jwt-secret', config.secret);
 
