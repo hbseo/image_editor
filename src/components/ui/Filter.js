@@ -17,7 +17,7 @@ export default withTranslation()(class Filter extends Component{
       blur : 0,
       noise : 0,
       saturation : 0,
-      hue : 0,
+      huerotation : 0,
       ink : 0,
       removecolor : { color : "#ffffff", distance : 0},
       vignette : 0,
@@ -38,7 +38,7 @@ export default withTranslation()(class Filter extends Component{
       hueSaturation : 0,
       tiltshift : 0,
       hexagonalpixelate : 10,
-      openrange : 0,
+      openrange : false,
       opacity : 1,
       filtermenu : false, // true = open
       adjustmenu : false,
@@ -71,7 +71,7 @@ export default withTranslation()(class Filter extends Component{
       ret['blur'] = image.filters[14] ? Number(image.filters[14].blur) : 0;
       ret['noise'] = image.filters[15] ? Number(image.filters[15].noise) : 0;
       ret['saturation'] = image.filters[16] ? Number(image.filters[16].saturation) : 0;
-      ret['hue'] = image.filters[17] ? Number(image.filters[17].rotation) : 0;
+      ret['huerotation'] = image.filters[17] ? Number(image.filters[17].rotation) : 0;
       ret['ink'] = image.filters[18] ? Number(image.filters[18].ink_matrix.ink) : 0;
       ret['vignette'] = image.filters[19] ? Number(image.filters[19].vignette_matrix.amount) : 0;
       ret['zoomblur'] = image.filters[20] ? Number(image.filters[20].zoomblur_matrix.strength) : 0;
@@ -122,8 +122,11 @@ export default withTranslation()(class Filter extends Component{
     }
 
     let list2 = document.getElementsByClassName("rangefilter")
+    let list2_onoff = document.getElementsByClassName("range-onoff-button")
+
     for(let i=0; i<list2.length; i++){
       list2[i].checked = image.filters[i+10];
+      list2_onoff[i].checked = list2[i].checked
     }
 
     if(this.state.adjustmenu){
@@ -140,26 +143,12 @@ export default withTranslation()(class Filter extends Component{
 
   
   filterObject = (event) => {
-    if(event.target.checked){
-      //open range
-      this.setState({ openrange : event.target.getAttribute('filter')})
-    }
-    else{
-      //close range
-      this.setState({ openrange : false})
-    }
-    console.log(this.state.openrange);
     this.props.filterObject(event);
   }
 
   //this.filterObject 대신 사용하는 함수 : value 전달위해 : 체크박스 함수에 사용
   filterObjectforValue = (event) => {
-    if(event.target.checked){
-      this.setState({ openrange : event.target.getAttribute('filter')})
-    }
-    else{
-      this.setState({ openrange : false})
-    }
+
     let option = event.target.getAttribute('filter')
     switch(option){
       case 'removecolor':
@@ -328,14 +317,43 @@ export default withTranslation()(class Filter extends Component{
   }
 
   changeRange = (event) => {
-
     if(event.target.checked){
+      // 이전에 열었던 필터가 활성화 되지 않았다면, off 해준다.
+      if(this.state.openrange != false && !document.getElementById(this.state.openrange + "-checkbox").checked){
+        console.log(this.state.openrange + "-checkbox", "이 필터는 닫힌다")
+        document.getElementById(this.state.openrange + "-onoff-checkbox").checked = false
+      }
       //open range
       this.setState({ openrange : event.target.getAttribute('filter')})
     }
     else{
-      //close range
-      this.setState({ openrange : false})
+      // 지금 누른게 활성화 되있다면, off 해주지 않는다
+      if(this.state.openrange != false && document.getElementById( event.target.getAttribute('filter') + "-checkbox").checked){
+
+        //이전에 열었던 건 활성화 여부 확인 후 off 여부 결정
+        if(this.state.openrange != false && !document.getElementById(this.state.openrange + "-checkbox").checked){
+          document.getElementById(this.state.openrange + "-onoff-checkbox").checked = false
+        }
+
+        //off하지 않는다.
+        console.log('not off')
+        document.getElementById(event.target.getAttribute('filter') + "-onoff-checkbox").checked = true
+
+        // 열어준다
+        this.setState({ openrange :  event.target.getAttribute('filter')})
+      }
+
+      // 초기 상태에서 체크되어 있는거 연다.
+      else if ( this.state.openrange == false && document.getElementById( event.target.getAttribute('filter') + "-checkbox").checked){
+        this.setState({ openrange :  event.target.getAttribute('filter')})
+      }
+
+      else{
+        //close range
+        console.log('close range')
+        this.setState({ openrange : false})
+      }
+
     }
     console.log(this.state.openrange);
   }
@@ -607,12 +625,12 @@ export default withTranslation()(class Filter extends Component{
 
                 {/* <div onClick = {this.changeRange} filter='huerotation'>{i18next.t('ui/filter.Hue')} {this.state.hue}</div> */}
                 <div className="range-onoff">
-                  <input className="range-onoff-button" id="hue-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='huerotation'/>
-                  <label htmlFor="hue-onoff-checkbox">{i18next.t('ui/filter.Hue')}</label>
+                  <input className="range-onoff-button" id="huerotation-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='huerotation'/>
+                  <label htmlFor="huerotation-onoff-checkbox">{i18next.t('ui/filter.Hue')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('huerotation')}>
                   <label className="mycheckbox path">
-                    <input type='checkbox' id="huerotation-checkbox" className='rangefilter' onClick={this.filterObject} filter='huerotation' value={this.state.hue || 0}/>
+                    <input type='checkbox' id="huerotation-checkbox" className='rangefilter' onClick={this.filterObject} filter='huerotation' value={this.state.huerotation || 0}/>
                       <svg viewBox="0 0 21 21">
                         <path d={ObjectIcon.checkbox}></path>
                       </svg>
@@ -625,11 +643,11 @@ export default withTranslation()(class Filter extends Component{
                     max='1'
                     name='huerotation'
                     step='0.01'
-                    value={this.state.hue || 1}
+                    value={this.state.huerotation || 1}
                     onChange={this.handleFilterChange} filter='huerotation'
                   />
                   <div className="range-value">
-                    {this.state.hue}
+                    {this.state.huerotation}
                   </div>
                 </div>
 
@@ -925,7 +943,7 @@ export default withTranslation()(class Filter extends Component{
                   </div>
                 </div>
                 
-                <div className="range-onoff">
+                {/* <div className="range-onoff">
                   <input className="range-onoff-button" id="tiltshift-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='tiltshift'/>
                   <label htmlFor="tiltshift-onoff-checkbox">{i18next.t('ui/filter.Tiltshift')}</label>
                 </div>
@@ -950,9 +968,9 @@ export default withTranslation()(class Filter extends Component{
                   <div className="range-value">
                     {this.state.tiltshift}
                   </div>
-                </div>
+                </div> */}
 
-                <div className="range-onoff">
+                {/* <div className="range-onoff">
                   <input className="range-onoff-button" id="hexagonalpixelate-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='hexagonalpixelate'/>
                   <label htmlFor="hexagonalpixelate-onoff-checkbox">{i18next.t('ui/filter.HexagonalPixelate')}</label>
                 </div>
@@ -977,7 +995,7 @@ export default withTranslation()(class Filter extends Component{
                   <div className="range-value">
                     {this.state.hexagonalpixelate}
                   </div>
-                </div>
+                </div> */}
 
 
                 <div className="range-onoff">
@@ -1006,7 +1024,6 @@ export default withTranslation()(class Filter extends Component{
                   <div className="range-value">
                     {this.state.opacity}
                   </div>
-                  {/* {this.props.object.type === 'image' ? this.props.object.opacity : 0 } */}
                 </div>
               </div>
             </CSSTransition>

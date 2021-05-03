@@ -33,7 +33,10 @@ export const fontList = ['Arial', 'Times New Roman', 'Helvetica', 'Courier New',
 'Copperplate'];
 
 export const filterList = ['Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome','Convolute', 'Convolute', 
-'Grayscale', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation', 'Ink', 'Vignette', 'ZoomBlur', 'Vibrance', 'Denoise', 'RemoveColor', 'BlendColor', 'Gamma', 'hueSaturation', 'TiltShift', 'hexagonalPixelate'];
+'Grayscale', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation', 'Ink', 'Vignette', 'ZoomBlur', 'Vibrance', 'Denoise', 'RemoveColor', 'BlendColor', 'Gamma', 'hueSaturation'];
+
+// export const filterList = ['Invert', 'Brownie', 'Technicolor', 'Polaroid', 'BlackWhite', 'Vintage', 'Sepia', 'Kodachrome','Convolute', 'Convolute', 
+// 'Grayscale', 'Brightness', 'Contrast', 'Pixelate', 'Blur', 'Noise', 'Saturation', 'HueRotation', 'Ink', 'Vignette', 'ZoomBlur', 'Vibrance', 'Denoise', 'RemoveColor', 'BlendColor', 'Gamma', 'hueSaturation', 'TiltShift', 'hexagonalPixelate'];
 
 
 export const ObjectIcon = {
