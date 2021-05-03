@@ -75,23 +75,23 @@ class SignIn extends Component {
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" type='submit'>
                   {i18next.t('SignIn.Signin')}
-                </button>
+                  </button>
+                </div>
+                <div className="container-login100-form-btn">
+                  <Link to={{
+                    pathname: '/register'
+                  }}><div className="register-button">
+                      {i18next.t('SignIn.Create your Account')}
+                    {/* <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true" /> */}
+                    </div></Link>
                 </div>
                 <div className="text-center p-t-12">
                   <span className="txt1">
-                  {i18next.t('SignIn.Forgot')}
+                  {/* {i18next.t('SignIn.Forgot')} */}
                 </span>
                   <a className="txt2" href="/find">
                   {i18next.t('SignIn.Username / Password?')}
                 </a>
-                </div>
-                <div className="text-center p-t-136">
-                  <Link to={{
-                    pathname: '/register'
-                  }}><div className="txt2 was-a">
-                      {i18next.t('SignIn.Create your Account')}
-                    <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true" />
-                    </div></Link>
                 </div>
               </form>
             </div>

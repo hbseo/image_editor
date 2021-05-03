@@ -206,7 +206,7 @@ class SignUp extends Component {
 
   render() {
     let duptag = null;
-    this.id_style = {border: '0px solid #ff4c4c'};
+    this.id_style = {border: '1px solid white'};
     if(this.state.id !== '') {
       if(this.state.idDupCheck !== null && !this.state.idDupCheck) {
         duptag = <div className = 'duptag' >아이디 중복</div>
