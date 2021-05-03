@@ -42,18 +42,6 @@ export default class Tools extends Component {
           <div>
               <button onClick={this.props.openSaveModal}><h2>save</h2></button>
           </div>
-          <div>
-            <button onClick={this.props.exportCanvas}> 캔버스 export </button>
-            <div className="file-input-group">
-              <label className="input-file-button" htmlFor="_file">캔버스 import</label>
-              <input name="file" type='file' id='_file' onChange={this.props.importCanvas} accept="json" style={{ display: 'none' }}></input>
-            </div>
-          </div>
-          <div>
-            <input id="grid-snap" type="checkbox" onClick={this.props.onClickSnap}/><label htmlFor = "grid-snap">그리드 스냅 옵션</label>
-            <input id="grid-show" type="checkbox" onClick={this.props.onClickGrid}/><label  htmlFor = "grid-show">그리드 on/off</label>
-            <input id="object-snap" type="checkbox" onClick={this.props.onClickObjectSnap}/><label  htmlFor ="object-snap"> 오브젝트 스냅 옵션</label>
-          </div>
           
           <button onClick = {this.handleInfo} style={{color : 'black', backgroundColor : 'skyblue'}}>내부 정보 열고닫기</button>
           { this.state.info ? 

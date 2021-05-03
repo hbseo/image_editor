@@ -319,7 +319,7 @@ export default withTranslation()(class Filter extends Component{
   changeRange = (event) => {
     if(event.target.checked){
       // 이전에 열었던 필터가 활성화 되지 않았다면, off 해준다.
-      if(this.state.openrange != false && !document.getElementById(this.state.openrange + "-checkbox").checked){
+      if(this.state.openrange !== false && !document.getElementById(this.state.openrange + "-checkbox").checked){
         console.log(this.state.openrange + "-checkbox", "이 필터는 닫힌다")
         document.getElementById(this.state.openrange + "-onoff-checkbox").checked = false
       }
@@ -328,10 +328,10 @@ export default withTranslation()(class Filter extends Component{
     }
     else{
       // 지금 누른게 활성화 되있다면, off 해주지 않는다
-      if(this.state.openrange != false && document.getElementById( event.target.getAttribute('filter') + "-checkbox").checked){
+      if(this.state.openrange !== false && document.getElementById( event.target.getAttribute('filter') + "-checkbox").checked){
 
         //이전에 열었던 건 활성화 여부 확인 후 off 여부 결정
-        if(this.state.openrange != false && !document.getElementById(this.state.openrange + "-checkbox").checked){
+        if(this.state.openrange !== false && !document.getElementById(this.state.openrange + "-checkbox").checked){
           document.getElementById(this.state.openrange + "-onoff-checkbox").checked = false
         }
 
@@ -344,7 +344,7 @@ export default withTranslation()(class Filter extends Component{
       }
 
       // 초기 상태에서 체크되어 있는거 연다.
-      else if ( this.state.openrange == false && document.getElementById( event.target.getAttribute('filter') + "-checkbox").checked){
+      else if ( this.state.openrange === false && document.getElementById( event.target.getAttribute('filter') + "-checkbox").checked){
         this.setState({ openrange :  event.target.getAttribute('filter')})
       }
 

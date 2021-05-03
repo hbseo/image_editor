@@ -173,7 +173,13 @@
         "ResetCanvas" : "리셋 캔버스",
         "CropCanvas" : "캔버스 자르기 시작",
         "CropEndCanvas" : "자르기 완료",
-        "CanvasColor" : "캔버스 배경색"
+        "CanvasColor" : "캔버스 배경색",
+        "Beta" : "베타 기능",
+        "CanvasExport" : "캔버스 로컬파일 저장",
+        "CanvasImport" : "캔버스 불러오기",
+        "GridSnap" : "스냅",
+        "GridShow" : "그리드",
+        "ObjectSnap" : "오브젝트 스냅"
     },
 
     "ui/draw" : {

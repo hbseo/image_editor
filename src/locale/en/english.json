@@ -173,7 +173,13 @@
         "ResetCanvas" : "Reset Canvas",
         "CropCanvas" : "Start Crop",
         "CropEndCanvas" : "End Crop",
-        "CanvasColor" : "Canvas BackgroundColor"
+        "CanvasColor" : "Canvas BackgroundColor",
+        "Beta" : "Beta",
+        "CanvasExport" : "Export a Canvas",
+        "CanvasImport" : "Import a Canvas",
+        "GridSnap" : "Snap",
+        "GridShow" : "Grid",
+        "ObjectSnap" : "Object Snap"
     },
 
     "ui/draw" : {

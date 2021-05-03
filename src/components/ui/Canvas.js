@@ -22,13 +22,21 @@ export default withTranslation()(class Canvas extends Component {
 
   componentDidMount() {
     // console.log('Canvas UI Mount');
+    this.canvasUpdate();
   }
   componentDidUpdate() {
     // console.log('Canvas UI Update');
+    this.canvasUpdate();
   }
   componentWillUnmount() {
     this.props.cropEndCanvas();
     // console.log('Canvas UI Unmount');
+  }
+
+  canvasUpdate = () => {
+    document.getElementById("grid-show").checked = this.props.gridOn;
+    document.getElementById("grid-snap").checked = this.props.snapOn;
+    document.getElementById("object-snap").checked = this.props.objectSnapOn;
   }
 
   handleChange = (event) => {
@@ -119,6 +127,21 @@ export default withTranslation()(class Canvas extends Component {
             <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
             <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
           </div>
+
+          <div>
+            <button onClick={this.props.exportCanvas}> {i18next.t('ui/canvas.CanvasExport')} </button>
+            <div className="file-input-group">
+              <label className="input-file-button" htmlFor="_file">{i18next.t('ui/canvas.CanvasImport')}</label>
+              <input name="file" type='file' id='_file' onChange={this.props.localImportCanvas} accept=".json" style={{ display: 'none' }}></input>
+            </div>
+          </div>
+          <div>
+            {i18next.t('ui/canvas.Beta')}
+            <input id="grid-snap" type="checkbox" onClick={this.props.onClickSnap}/><label htmlFor = "grid-snap">{i18next.t('ui/canvas.GridSnap')}</label>
+            <input id="grid-show" type="checkbox" onClick={this.props.onClickGrid}/><label  htmlFor = "grid-show">{i18next.t('ui/canvas.GridShow')}</label>
+            <input id="object-snap" type="checkbox" onClick={this.props.onClickObjectSnap}/><label  htmlFor ="object-snap"> {i18next.t('ui/canvas.ObjectSnap')}</label>
+          </div>
+
         </div>
       </div>
     );

@@ -109,6 +109,8 @@ class ImageEditor extends Component {
     this.grid = null;
     this.gridOn = false;
 
+    this.snapOn = false;
+    this.objectSnapOn = false;
     //keyEvent
     this.shift = false;
 
@@ -1038,10 +1040,12 @@ class ImageEditor extends Component {
 
   onClickSnap = (event) => {
     this.action['Snap'].onClickSnap(event);
+    this.snapOn = event.target.checked;
   }
 
   onClickObjectSnap = (event) => {
     this.action['Snap'].onClickObjectSnap(event);
+    this.objectSnapOn = event.target.checked;
   }
 
   cropCanvas = (off) => {
@@ -1187,6 +1191,24 @@ class ImageEditor extends Component {
       })
     }
     reader.readAsText(file);
+  }
+
+  localImportCanvas = (event) => {
+    new Promise((resolve) => {
+      this.importCanvas(event.target.files[0], resolve);
+    })
+    .then(() => {
+      this._createDomEvent();
+      this._createCanvasEvent();
+      this.currentState = this._canvas.toDatalessJSON();
+      this.currentState.width = this._canvas.width;
+      this.currentState.height = this._canvas.height;
+      this.currentState.backFilter = [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+      this.currentState.action = "initilize";
+      this.currentState.id = 0;
+      this.firstState = this.currentState;
+      this.action['Grid'].makeGrid();
+    })
   }
 
   changeToKorean = () => {
@@ -1462,11 +1484,6 @@ class ImageEditor extends Component {
           addImage={this.addImage} 
           objectInfo = {this.objectInfo} 
           openSaveModal = {this.openSaveModal} 
-          onClickSnap={this.onClickSnap}
-          onClickGrid={this.onClickGrid}
-          onClickObjectSnap={this.onClickObjectSnap}
-          exportCanvas = {this.exportCanvas}
-          importCanvas = {this.importCanvas}
           getCanvasInfo = {this.getCanvasInfo}
           getCanvasBackinfo = {this.getCanvasBackinfo}
           isSaved = {this.state.isSaved}
@@ -1486,6 +1503,14 @@ class ImageEditor extends Component {
           handleCropCanvasSizeChange = {this.handleCropCanvasSizeChange}
           changeBackgroundColor = {this.changeBackgroundColor}
           setCropCanvasSize = {this.setCropCanvasSize}
+          exportCanvas = {this.exportCanvas}
+          localImportCanvas = {this.localImportCanvas}
+          onClickSnap={this.onClickSnap}
+          onClickGrid={this.onClickGrid}
+          onClickObjectSnap={this.onClickObjectSnap}
+          gridOn = {this.gridOn}
+          snapOn = {this.snapOn}
+          objectSnapOn = {this.objectSnapOn}
         />,
       10: <EffectUI 
           object={this.state.activeObject} 
