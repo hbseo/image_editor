@@ -3,18 +3,19 @@ import ImageList from './ImageList';
 import Uploadfile from './Upload_file';
 import ImageModal from './ImageModal';
 import { Link } from 'react-router-dom';
-
+import unsplash from './helper/UnspalshAPI';
 class LoadImage extends Component {
   constructor(props) {
     super(props);
-    this.state = { width: 5, height: 5, url: "", submit: false, imgRatio: 100, imgWidth: 0, imgHeight: 0, imageModal : false, loading : false };
+    this.state = { width: 5, height: 5, url: "", submit: false, imgRatio: 100, imgWidth: 0, imgHeight: 0, imageModal : false, loading : false, unsplash : false, data : null };
     this.url = "";
     this.image = null;
+
   }
 
-  onImgUrlChange = (url) => {
+  onImgUrlChange = (url, data) => {
 		new Promise(resolve => {
-			this.setState({url : url, loading : true});
+			this.setState({url : url, loading : true, unsplash : true, data : data});
       resolve();
 		})
 		.then( () => {
@@ -24,6 +25,9 @@ class LoadImage extends Component {
 
   handleSubmit = (event) => {
     if (event) { event.preventDefault(); }
+    if ( this.state.unsplash ){
+      unsplash.photos.trackDownload({ downloadLocation: this.state.data.dl });
+    }
     this.url = this.state.url;
     this.setState({ url: "", submit: false, width: 0, height: 0, imgRatio: 100 });
     this.image = new Image();
@@ -103,7 +107,7 @@ class LoadImage extends Component {
       tempCanvas.width = imgObj.naturalWidth;
       tempCtx.drawImage(imgObj, 0, 0);
       var dataURL = tempCanvas.toDataURL();
-      this.setState({url : dataURL})
+      this.setState({url : dataURL, unsplash : false, data : null})
       this.handleSubmit();
     }
 
@@ -197,6 +201,11 @@ class LoadImage extends Component {
               <div className="preview-middle">
                 <a href={this.url} target="_blank">크게보기(번역필요)</a>
                 <p>{this.state.width}X{this.state.height}</p>
+                { this.state.unsplash ? 
+                <div>
+                  {/* <p>{this.state.data.dl}</p> */}
+                  <p>Photo by <a href={this.state.data.user_link + "?utm_source=ImageEditor_(react)&utm_medium=referral"} target = "_blank">{this.state.data.user}</a> on <a href="https://unsplash.com/?utm_source=ImageEditor_(react)&utm_medium=referral">Unsplash</a></p>
+                </div> : null}
               </div>
               <div className="preview-bottom">
                 <input type="range" name="imgRatio" id="imgRatio" value={this.state.imgRatio} onChange={this.handleImageSizeChange} min="5" max="200" step="1" />

@@ -16,7 +16,8 @@ class Login extends Component {
 
   getCheck = () => {
     fetch('/auth/check', {
-      method: 'GET'
+      method: 'GET',
+      headers : { 'Cache-Control' : 'no-cache' }
     })
     .then((res) => res.json())
     .then((data) => {

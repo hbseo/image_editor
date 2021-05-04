@@ -30,7 +30,11 @@ class ImageList extends Component {
         regular : { x:0, y:0},
         small : { x:0, y:0},
         thumb : { x:0, y:0},
-
+      },
+      imageData : {
+        user : '',
+        user_link : '',
+        download_location : '',
       }
     }
   }
@@ -58,7 +62,8 @@ class ImageList extends Component {
     if(imagelist['errors']){ alert(i18next.t('ImageList.Showimage errors')); return null;}
     const listitem = imagelist.map((image) =>
       <div className="image-list-box" key={image.id} >
-        <img className="image-list-img" key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small} full-width = {image.width} />
+        <img className="image-list-img" key={image.id} user={image.user.name} links = {image.user.links.html} dl = {image.links.download_location} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small} full-width = {image.width} />
+        <p className="image-list-img-p" >{image.user.name}</p>
         {/* <a href = {image.urls.regular} target="_blank">{image.description}</a> */}
       </div>
       // ursl뒤에 raw, small, regular, full 등의 따라 사이즈 조절
@@ -72,6 +77,9 @@ class ImageList extends Component {
     new Promise((resolve) => {
       this.setState({
         url : true,
+        user : event.target.getAttribute('user'),
+        user_link : event.target.getAttribute('links'),
+        download_location : event.target.getAttribute('dl'),
         image : {
           full : event.target.getAttribute('full'),
           raw : event.target.getAttribute('raw'),
@@ -90,7 +98,9 @@ class ImageList extends Component {
 
   onClickImg = (event) => {
     console.log('loading start')
-    this.props.onImgUrlChange(event.target.getAttribute('url'));
+    this.props.onImgUrlChange(event.target.getAttribute('url'), {user : this.state.user, user_link : this.state.user_link, dl : this.state.download_location });
+    // this.props.onImgUrlChange(event.target.getAttribute('url'), {user : this.state.user, user_link : this.state.user_link, links : {download_location : this.state.download_location} });
+
   }
 
   handleSubmit = (event) => {

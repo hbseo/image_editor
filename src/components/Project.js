@@ -96,7 +96,7 @@ class Project extends Component {
       // console.log(this.canvas.backgroundImage); // 밖에다 두면 backgrounImage를 null로 인식함... 이유? 콜백함수라서 img 태그가 다 load되고 나서 불러와지기 때문
       if(document.getElementById(idx)){
         document.getElementById(idx).src = this.canvas.toDataURL({format : 'png'});
-        // this.canvas.clear();
+        this.canvas.clear();
       }
     })
     return this.canvas.toDataURL({format : 'png'});
@@ -257,7 +257,8 @@ class Project extends Component {
 
   loginCheck = () => {
     fetch('/auth/check', {
-      method: 'GET'
+      method: 'GET',
+      headers : { 'Cache-control' : 'no-cache' }
     })
     .then((res) => res.json())
     .then((data) => {

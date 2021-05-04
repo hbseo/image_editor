@@ -176,42 +176,66 @@ button, input[type="submit"], input[type="number"]{
         flex-direction: row;
         flex-wrap: wrap;
         vertical-align: bottom;
+        position : relative;
 
         .image-list-box {
             margin : 0.15%;
             background-color: #d3d3d3;
             border-radius: 10px;
             padding : 12px;
+            position : relative;
+            // display: flex;
+            // flex-direction: row;
+
             // justify-content: center;
             // position: relative;
             flex-grow : 1;
             min-width: 120px;
             max-width: 195px;
             // height : 18vh;
+
+            .image-list-img {
+                object-fit: contain;
+                width: 100%;
+                height: 100%;
+
+                background: repeating-linear-gradient(
+                    45deg,
+                    rgba(0, 0, 0, 0.2),
+                    rgba(0, 0, 0, 0.2) 5px,
+                    rgba(0, 0, 0, 0.3) 5px,
+                    rgba(0, 0, 0, 0.3) 10px);
+
+                max-height: 200px;
+                outline: solid 0px #021c1e;
+                transition: outline 0.1s linear;
+            }
+            .image-list-img:hover {
+                outline-width: 5px;
+                cursor: pointer;
+                background-color: #aaaaaa;
+            }
+
+            .image-list-img:hover + .image-list-img-p {
+                display: flex;
+                // visibility: collapse;
+                color : white;
+            }
+
+            .image-list-img-p {
+                position : absolute;
+                background-color: #595959d0;
+                padding : 2px 7px 2px 2px;
+                color : white;
+                display : none;
+                top : 10px;
+                pointer-events: none;
+                font-size: 13px;
+                // visibility: hidden;
+            }
     
         }
 
-        .image-list-img {
-            object-fit: contain;
-            width: 100%;
-            height: 100%;
-
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(0, 0, 0, 0.2),
-                rgba(0, 0, 0, 0.2) 5px,
-                rgba(0, 0, 0, 0.3) 5px,
-                rgba(0, 0, 0, 0.3) 10px);
-
-            max-height: 200px;
-            outline: solid 0px #021c1e;
-            transition: outline 0.1s linear;
-        }
-        .image-list-img:hover {
-            outline-width: 5px;
-            cursor: pointer;
-            background-color: #aaaaaa;
-        }
 
     }
 
