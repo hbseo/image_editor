@@ -33,7 +33,7 @@ class Save extends Component {
     }
 
     var json = this.props.canvas;
-    console.log(this.props.canvas)
+    // console.log(this.props.canvas)
     fetch('/content/save', {
       method: 'POST',
       headers: {
@@ -43,10 +43,11 @@ class Save extends Component {
     })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       if(data.success && data.prj_idx !== -1){
         alert(i18next.t('Save.Save') + ' ' + i18next.t('Save.Success'));
         this.props.getCheckSave(data.prj_idx);
+        this.props.close();
       }
       else{
         alert(i18next.t('Save.Error on server'));
@@ -72,8 +73,9 @@ class Save extends Component {
       .then((res) => res.json())
       .then((data) => {
         if(data.success){
-          console.log(data);
+          // console.log(data);
           alert(i18next.t('Save.Update') + ' '+ i18next.t('Save.Success'));
+          this.props.closeSaveModal();
         }
         else{
           alert(i18next.t('Save.Error'))
@@ -107,6 +109,7 @@ class Save extends Component {
   imageHandler = () => {
     this.props.save(this.state.title);
     this.setState({title : "", saveState : true});
+    this.props.close();
   }
 
   render(){

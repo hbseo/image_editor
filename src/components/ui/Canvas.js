@@ -81,6 +81,15 @@ export default withTranslation()(class Canvas extends Component {
     this.setState({ color : change });
     this.props.changeBackgroundColor(change);
   }
+
+  openHiddenMenu = () => {
+    document.getElementById("hidden-menu").style = null;
+
+  }
+
+  closeHiddenMenu = () => {
+    document.getElementById("hidden-menu").style.setProperty("display", "none");
+  }
   
   render() {
     return (
@@ -140,6 +149,12 @@ export default withTranslation()(class Canvas extends Component {
             <input id="grid-snap" type="checkbox" onClick={this.props.onClickSnap}/><label htmlFor = "grid-snap">{i18next.t('ui/canvas.GridSnap')}</label>
             <input id="grid-show" type="checkbox" onClick={this.props.onClickGrid}/><label  htmlFor = "grid-show">{i18next.t('ui/canvas.GridShow')}</label>
             <input id="object-snap" type="checkbox" onClick={this.props.onClickObjectSnap}/><label  htmlFor ="object-snap"> {i18next.t('ui/canvas.ObjectSnap')}</label>
+          </div>
+
+          <div>
+            <button onClick = {this.openHiddenMenu}>히든 메뉴 열기</button>
+            <button onClick = {this.closeHiddenMenu}>히든 메뉴 닫기</button>
+
           </div>
 
         </div>

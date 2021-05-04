@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
 import '../css/UploadFile.scss';
+import Loading from './ui/Loading';
 
 class Upload_file extends Component {
   constructor(props) {
@@ -38,7 +39,9 @@ class Upload_file extends Component {
         <div style={{color : 'black'}}>
           {this.props.children}
         </div>
+        <Loading open = {this.props.loading}/>
       </div>
+      
     )
   }
 }

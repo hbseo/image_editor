@@ -90,7 +90,7 @@ class ImageEditor extends Component {
 
     // redo undo
     this.lock = false;
-    this.currentState = { width: null, height: null, action : 'constructor', backFilter : [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false] };
+    this.currentState = { width: null, height: null, action : 'construt', backFilter : [false, false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false] };
     this.stateStack = [];
     this.redoStack = [];
     this.firstState = null;
@@ -137,7 +137,8 @@ class ImageEditor extends Component {
     if(this._openProject){
       new Promise((resolve) => {
         // this.importCanvas(JSON.parse(this._project_d ata), resolve);
-        this.importCanvas(this._project_data, resolve);
+        this.makeImportCanvas();
+        this.importCanvas(this._project_data  , resolve);
       })
       .then(() => {
         this._createDomEvent();
@@ -1125,25 +1126,25 @@ class ImageEditor extends Component {
     a.click();
   }
 
+  makeImportCanvas = () => {
+    this._canvas = new fabric.Canvas('canvas', {
+      preserveObjectStacking: true,
+      height: 100,
+      width: 100,
+      backgroundColor: 'grey',
+      uniformScaling: false, // When true, objects can be transformed by one side
+      imageSmoothingEnabled : false,
+      fireRightClick: true,
+    });
+  }
+
   importCanvas = (data, resolve) => {
     // let file = event.target.files[0];
     const file = new Blob([data], {type:"application/json"});
-    // console.log(file)
     let json;
     var reader = new FileReader();
     reader.onload = (event) => {
       json = JSON.parse(event.target.result);
-      this._canvas = new fabric.Canvas('canvas', {
-        preserveObjectStacking: true,
-        height: 100,
-        width: 100,
-        backgroundColor: 'grey',
-        uniformScaling: false, // When true, objects can be transformed by one side
-        imageSmoothingEnabled : false,
-        fireRightClick: true,
-      });
-
-      // console.log(json);
 
       this._canvas.loadFromJSON(json, () => {
         this.isDragging = false;
@@ -1191,9 +1192,8 @@ class ImageEditor extends Component {
         this._canvas.setWidth( json.width ? json.width : 800 );
         this._canvas.setHeight( json.height ? json.height : 600 );
         this._canvas.calcOffset();
-
-        this._canvas.renderAll()
-        this.forceUpdate(); // for undo/redo stack
+        this._canvas.renderAll();
+        this.getCheck();
         resolve();
       })
     }
@@ -1202,9 +1202,24 @@ class ImageEditor extends Component {
 
   localImportCanvas = (event) => {
     new Promise((resolve) => {
+      this._canvas.clear();
       this.importCanvas(event.target.files[0], resolve);
     })
     .then(() => {
+      //reset state
+      this.setState({
+        canvasView : { x: 0, y: 0},
+        activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
+        zoom : 1,
+        openSave : false,
+        tab : 0,
+        user_name : '',
+        isSaved : false,
+        prj_idx : -1, 
+        imgStatus : false, 
+        activePopupTab: 0,
+      })
+      
       this._createDomEvent();
       this._createCanvasEvent();
       this.currentState = this._canvas.toDatalessJSON();
@@ -1215,6 +1230,8 @@ class ImageEditor extends Component {
       this.currentState.id = 0;
       this.firstState = this.currentState;
       this.action['Grid'].makeGrid();
+      this.forceUpdate(); // for showUndo/Redo Stack
+      this.action['Draw'].setBrush(); // Canvas Required
     })
   }
 
@@ -1338,6 +1355,9 @@ class ImageEditor extends Component {
           Current state : {i18next.t(this.currentState.action)}
         </div>
       )
+    }
+    else{
+      return null;
     }
   }
 

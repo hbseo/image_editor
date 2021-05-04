@@ -95,6 +95,8 @@ class LoadImage extends Component {
 
   urlImageChange = (event) => {
     if (event) { event.preventDefault(); }
+    console.log('url img loading start')
+		this.setState({loading : true, unsplash : false });
 
     let imgObj = new Image();
 
@@ -129,6 +131,9 @@ class LoadImage extends Component {
     // .then(() => {
     //   this.handleSubmit();
     // })
+    console.log('file loading start')
+		this.setState({loading : true, unsplash : false });
+
     let file = event.target.files[0];
     event.target.value = null;
     let imgObj = new Image();

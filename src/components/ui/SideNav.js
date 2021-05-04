@@ -31,9 +31,6 @@ export default withTranslation()(function SideNav(props) {
           <button className={props.tab === 7 ? "nav-bar-button-active" : "nav-bar-button"} style = {props.stylelang} type="button" onClick={props.changeTab} alt="draw" tab="7">{i18next.t('ui/sidenav.Draw')}</button>
         </li>
         <li>
-          <button className={props.tab === 8 ? "nav-bar-button-active" : "nav-bar-button"} style = {props.stylelang} type="button" onClick={props.changeTab} alt="others" tab="8">{i18next.t('ui/sidenav.Others')}</button>
-        </li>
-        <li>
           <button className={props.tab === 9 ? "nav-bar-button-active" : "nav-bar-button"} style = {props.stylelang} type="button" onClick={props.changeTab} alt="canvas" tab="9">{i18next.t('ui/sidenav.Canvas')}</button>
         </li>
         <li>
@@ -41,6 +38,9 @@ export default withTranslation()(function SideNav(props) {
         </li>
         <li>
           <button className={props.tab === 99 ? "nav-bar-button-active" : "nav-bar-button"} style = {props.stylelang} type="button" onClick={props.changeTab} alt="close" tab="99">{i18next.t('ui/sidenav.Close')}</button>
+        </li>
+        <li>
+          <button id = "hidden-menu" className={"nav-bar-button2"} style = { { display : 'none'}} type="button" onClick={props.changeTab} alt="others" tab="8">{i18next.t('ui/sidenav.Others')}</button>
         </li>
       </ul>
       {props.UI[props.tab]}
