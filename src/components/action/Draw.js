@@ -23,12 +23,24 @@ class Draw extends Action {
     return this.brush[type];
   }
 
+  checkBrush = () => {
+    for(let i = 0 ; i < this.brush.length ; i++ ) {
+      if(this.brush[i].canvas === null || this.brush[i].canvas === undefined){
+        return false;
+      }
+    }
+    return true;
+  }
+
   openDrawing = () => {
     const canvas = this.getCanvas();
-    if(canvas){
+    if(canvas || this.checkBrush()){
       canvas.isDrawingMode = true;
       canvas.freeDrawingCursor = 'crosshair';
       canvas.freeDrawingBrush.width = 10;
+    }
+    else{
+      alert('Brush Error')
     }
   }
 

@@ -150,6 +150,8 @@ class ImageEditor extends Component {
           this.currentState.id = 0;
           this.firstState = this.currentState;
           this.action['Grid'].makeGrid();
+          this.forceUpdate(); // for showUndo/Redo Stack
+          this.action['Draw'].setBrush(); // Canvas Required
       })
     }
     else{
@@ -189,8 +191,10 @@ class ImageEditor extends Component {
           this.currentState.action = "initilize";
           this.currentState.id = 0;
           this.firstState = this.currentState;
-          this.action['Grid'].makeGrid();
-          this.forceUpdate(); // canvas size error
+          this.action['Grid'].makeGrid(); // canvas size error
+          this.forceUpdate(); // for showUndo/Redo Stack
+          this.action['Draw'].setBrush(); // Canvas Required
+
         })
         .catch(() => {
           this.props.history.push('/');
@@ -217,10 +221,10 @@ class ImageEditor extends Component {
         this.currentState.id = 0;
         this.firstState = this.currentState;
         this.action['Grid'].makeGrid();
+        this.forceUpdate(); // for showUndo/Redo Stack
+        this.action['Draw'].setBrush(); // Canvas Required
       }
     }
-    this.forceUpdate(); // for showUndo/Redo Stack
-    this.action['Draw'].setBrush(); // Canvas Required
     this.getCheck();
   }
   
@@ -603,6 +607,8 @@ class ImageEditor extends Component {
   }
 
   saveState = debounce((action) => {
+    if(!this._canvas) { return ;}
+
     if(this.dotoggle && !this.lock) {
       if(this.stateStack.length === this.stackMaxSize) {
         this.stateStack.shift();
