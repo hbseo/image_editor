@@ -25,7 +25,10 @@ class Loading extends Component {
 				{open === true ?
 				  <div className = "modal">
 						<div className = "loadingModal">
-              				<h1>{i18next.t('ui/loading.Loading')}</h1>
+              <div className = "loadingModal-content">
+                <i className="fas fa-spinner fa-spin"></i>
+                <p className = "loading-text">{i18next.t('ui/loading.Loading')}</p>
+              </div>
 						</div>
 					</div> : null }
 			</div>

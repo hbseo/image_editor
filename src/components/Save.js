@@ -122,7 +122,7 @@ class Save extends Component {
 				  <div className = "save-modal">
 						<div className = "saveModal">
               <div className="top-div">
-							  <div className="headline">{i18next.t('Save.Save')} {user_name} {this.props.prj_idx} </div>
+							  <div className="headline">{i18next.t('Save.Save')}</div>
                 <button className="close" onClick = {close}>{i18next.t('Save.Close')}</button>
               </div>
               <div className="title-container">

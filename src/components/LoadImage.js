@@ -115,6 +115,7 @@ class LoadImage extends Component {
 
     imgObj.onerror = () => {
       alert('image load error');
+      this.setState({loading : false});
       console.log('fail');
     }
 
@@ -153,6 +154,7 @@ class LoadImage extends Component {
 
     imgObj.onerror = () => {
       alert('image load error');
+      this.setState({loading : false});
       console.log('fail');
     }
 
