@@ -31,11 +31,11 @@ class ImageList extends Component {
         small : { x:0, y:0},
         thumb : { x:0, y:0},
       },
-      imageData : {
-        user : '',
-        user_link : '',
-        download_location : '',
-      }
+      
+      user : '',
+      user_link : '',
+      download_location : '',
+
     }
   }
 
@@ -102,11 +102,6 @@ class ImageList extends Component {
     // this.props.onImgUrlChange(event.target.getAttribute('url'), {user : this.state.user, user_link : this.state.user_link, links : {download_location : this.state.download_location} });
 
   }
-
-  handleSubmit = (event) => {
-		if(event){ event.preventDefault(); }
-    this.getImage();
-	}
 
 	imageNotFound = () => {
 

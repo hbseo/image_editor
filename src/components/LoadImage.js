@@ -4,6 +4,8 @@ import Uploadfile from './Upload_file';
 import ImageModal from './ImageModal';
 import { Link } from 'react-router-dom';
 import unsplash from './helper/UnspalshAPI';
+import { unSplashAppName } from './const/consts' 
+
 class LoadImage extends Component {
   constructor(props) {
     super(props);
@@ -211,7 +213,8 @@ class LoadImage extends Component {
                 { this.state.unsplash ? 
                 <div>
                   {/* <p>{this.state.data.dl}</p> */}
-                  <p>Photo by <a href={this.state.data.user_link + "?utm_source=ImageEditor_(react)&utm_medium=referral"} target = "_blank">{this.state.data.user}</a> on <a href="https://unsplash.com/?utm_source=ImageEditor_(react)&utm_medium=referral">Unsplash</a></p>
+                  <p>Photo by <a href={this.state.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">{this.state.user}</a> on <a href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">Unsplash</a></p>
+                  
                 </div> : null}
               </div>
               <div className="preview-bottom">

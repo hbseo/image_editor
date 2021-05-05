@@ -5,6 +5,8 @@ import { getSearchImage} from '../helper/GetImage';
 import imgerror from '../../css/img/imgerror.svg';
 import ImageModal from '../ImageModal';
 import '../../css/ui/ImageMini.scss';
+import unsplash from '../helper/UnspalshAPI';
+import { unSplashAppName } from '../const/consts' 
 
 class ImageMini extends Component {
   constructor(props) {
@@ -29,7 +31,11 @@ class ImageMini extends Component {
         small : { x:0, y:0},
         thumb : { x:0, y:0},
       },
-      openModal : false
+      openModal : false,
+      user : '',
+      user_link : '',
+      download_location : '',
+
     }
   }
 
@@ -46,7 +52,7 @@ class ImageMini extends Component {
     if(imagelist['errors']){ alert(i18next.t('ImageList.Showimage errors')); return null;}
     const listitem = imagelist.map((image) =>
       <div className="mini-image-list-box" key={image.id} >
-        <img className="image-list-img" key={image.id} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small}/>
+        <img className="image-list-img" key={image.id} user={image.user.name} links = {image.user.links.html} dl = {image.links.download_location} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small} full-width = {image.width} />
       </div>
     );
     return (
@@ -63,6 +69,9 @@ class ImageMini extends Component {
       this.setState({
         url : true,
         openModal : true,
+        user : event.target.getAttribute('user'),
+        user_link : event.target.getAttribute('links'),
+        download_location : event.target.getAttribute('dl'),
         image : {
           full : event.target.getAttribute('full'),
           raw : event.target.getAttribute('raw'),
@@ -78,10 +87,9 @@ class ImageMini extends Component {
   }
 
   onClickImg = (event) => {
-    console.log(event.target.getAttribute('url'));
+    unsplash.photos.trackDownload({ downloadLocation: this.state.download_location });
     this.props.addImage(event.target.getAttribute('url'));
     this.setState({openModal : false});
-
     // this.props.onImgUrlChange(event.target.getAttribute('url'));
   }
 
@@ -97,7 +105,7 @@ class ImageMini extends Component {
   }
 
 	imageNotFound = () => {
-
+    alert('not found');
   }
   
   getImageSize = () => {
@@ -122,6 +130,7 @@ class ImageMini extends Component {
 
   imageSizeVersion = () => {
     let image = this.state.image;
+    console.log("test")
     if(!image){
       return(
         <div id="image-list-size-none">
@@ -132,6 +141,8 @@ class ImageMini extends Component {
     else{
       return (
         <ImageModal open={this.state.openModal} close = {this.closeModal}>
+          <p>Photo by <a href={this.state.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">{this.state.user}</a> on <a href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">Unsplash</a></p>
+
           <div id="mini-image-list" >
             <div className="mini-image-list-box">
               <img className="image-list-img" src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}/>
