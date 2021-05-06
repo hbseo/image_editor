@@ -53,6 +53,7 @@ class ImageMini extends Component {
     const listitem = imagelist.map((image) =>
       <div className="mini-image-list-box" key={image.id} >
         <img className="image-list-img" key={image.id} user={image.user.name} links = {image.user.links.html} dl = {image.links.download_location} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small} full-width = {image.width} />
+        <p className="image-list-img-p" >{image.user.name}</p>
       </div>
     );
     return (
