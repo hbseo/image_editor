@@ -195,6 +195,13 @@ exports.changeUserPassword = (req, res) => {
   }
 
   const check = (data) => {
+    let oldPassword = crypto.pbkdf2Sync(new_password, data.salt, 100000, 64, 'sha512').toString('base64');
+    if(data.dbPassword === oldPassword) {
+      res.status(200).json({
+        msg: 'fail'
+      });
+      return;
+    }
     let hashPassword = crypto.pbkdf2Sync(current_password, data.salt, 100000, 64, 'sha512').toString('base64');
     if(data.dbPassword === hashPassword) {
       let salt = crypto.randomBytes(64).toString('base64');
