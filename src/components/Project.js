@@ -10,7 +10,6 @@ class Project extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: '',
       projects : [],
       project_length : 20,
       scroll: true,
@@ -20,6 +19,7 @@ class Project extends Component {
     this.limit = 20;
     this.offset = 0;
     this.update = false;
+    this.input = React.createRef();
   }
 
   componentDidMount(){
@@ -35,7 +35,7 @@ class Project extends Component {
       },
       body: JSON.stringify({
         id : this.props.id, 
-        search : this.state.search,
+        search : this.input.current.value,
         limit : this.limit,
         offset : this.offset,
         sort : this.state.sort
@@ -89,14 +89,14 @@ class Project extends Component {
   }
 
   fromJsontoPng = (json, idx) => {
-    // this.canvas.clear();
+    this.canvas.clear();
     this.canvas.loadFromJSON(json, () => {
       // this.canvas.renderAll();
       // console.log(idx , document.getElementById(idx))
       // console.log(this.canvas.backgroundImage); // 밖에다 두면 backgrounImage를 null로 인식함... 이유? 콜백함수라서 img 태그가 다 load되고 나서 불러와지기 때문
       if(document.getElementById(idx)){
         document.getElementById(idx).src = this.canvas.toDataURL({format : 'png'});
-        this.canvas.clear();
+        // this.canvas.clear();
       }
     })
     return this.canvas.toDataURL({format : 'png'});
@@ -290,7 +290,7 @@ class Project extends Component {
         <div className="project-search">
           <div className="project-search-form">
             <form onSubmit={this.handleSubmit}>
-              {i18next.t('Project.Title')} <input name="search" value={this.state.search} onChange={this.handleSearchChange} />
+              {i18next.t('Project.Title')} <input name="search" ref={this.input}  />
               <input type="submit" value="Submit" />
             </form>
           </div>
