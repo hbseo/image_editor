@@ -37,6 +37,17 @@ class Change_password extends Component {
     else this.setState({password_highlight: false});
   }
 
+  swtichSubmit = () => {
+    let pattern_pass = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}/;
+    if(this.state.current_password.match(pattern_pass) && this.state.new_password.match(pattern_pass)
+    && this.state.confirm_password.match(pattern_pass)) {
+      document.getElementById("confirm").disabled = false;
+    }
+    else {
+      document.getElementById("confirm").disabled = true;
+    }
+  }
+
   change_passwordHandler = (e) => {
     const { name, value } = e.target;
     new Promise((resolve) => {
@@ -45,6 +56,7 @@ class Change_password extends Component {
     })
     .then(() => {
       if(name === "new_password") this.validateInput();
+      this.swtichSubmit();
     })
   }
   validateInput = () => {
@@ -88,6 +100,7 @@ class Change_password extends Component {
     e.preventDefault();
     let pattern_pass = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}/;
     if(!this.state.new_password.match(pattern_pass)) return;
+    if(!this.state.confirm_password.match(pattern_pass)) return;
     const {current_password, new_password} = this.state;
     const id = this.id;
     if(!this.validatePassword()) {
@@ -164,7 +177,7 @@ class Change_password extends Component {
                   </span>
                 </div>
                 <div className="container-login100-form-btn">
-                  <button className="login100-form-btn" id="confirm" onClick={this.change_passwordClickHandler}>
+                  <button className="login100-form-btn" id="confirm" disabled={true} onClick={this.change_passwordClickHandler}>
                     {i18next.t('Change_password.Confirm')}
                 </button>
                 </div>

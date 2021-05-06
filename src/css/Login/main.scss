@@ -133,6 +133,11 @@
     cursor: pointer;
   }
 
+  button[disabled] {
+    cursor: default;
+    background: #333333;
+  }
+
   iframe {
     border: none !important;
   }
@@ -951,6 +956,10 @@
 }
 
 .Change_password, .Find_password {
+  #confirm[disabled] {
+    cursor: default;
+    background: #333333;
+  }
   .wrap-login100 {
     width: 25%;
     padding: 50px 60px 33px 60px;

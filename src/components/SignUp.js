@@ -31,6 +31,17 @@ class SignUp extends Component {
     document.removeEventListener("mouseup", this.findHighlightTag);
     document.removeEventListener("keyup", this.findHighlightTag);
   }
+  swtichSubmit = () => {
+    let pattern_id = /(?=.*\d)(?=.*[a-z]).{8,20}/;
+    let pattern_pass = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}/;
+    if(this.state.id.match(pattern_id) && this.state.password.match(pattern_pass)
+    && this.state.passwordConfirm.match(pattern_pass) && this.choose !== null && this.state.answer !== '') {
+      document.getElementById("register-btn").disabled = false;
+    }
+    else {
+      document.getElementById("register-btn").disabled = true;
+    }
+  }
   findHighlightTag = () => {
     const id = document.activeElement.id;
     if(id === "id" || id === "password") {
@@ -67,6 +78,7 @@ class SignUp extends Component {
       if(name === 'id') {
         this.registerDupHandler(value);
       }
+      this.swtichSubmit();
     })
   }
   validatePassword = () => {
@@ -138,9 +150,6 @@ class SignUp extends Component {
 
   registerClickHandler = (e) => {
     e.preventDefault();
-    let pattern_id = /(?=.*\d)(?=.*[a-z]).{8,20}/;
-    let pattern_pass = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}/;
-    if(!this.state.id.match(pattern_id) || !this.state.password.match(pattern_pass)) return;
     if(!this.validatePassword()) {
       alert('아이디 중복 또는 옮바르지 않은 비밀번호');
       return;
@@ -315,7 +324,7 @@ class SignUp extends Component {
                   </span>
                 </div>
                 <div className="container-login100-form-btn">
-                  <button className="login100-form-btn" type='submit'>
+                  <button className="login100-form-btn" id="register-btn" type='submit' disabled={true}>
                     Register
                 </button>
                 </div>
