@@ -4,7 +4,9 @@ import Uploadfile from './Upload_file';
 import ImageModal from './ImageModal';
 import { Link } from 'react-router-dom';
 import unsplash from './helper/UnspalshAPI';
-import { unSplashAppName } from './const/consts' 
+import { unSplashAppName } from './const/consts';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 
 class LoadImage extends Component {
   constructor(props) {
@@ -62,7 +64,7 @@ class LoadImage extends Component {
   imageNotFound = () => {
     this.image = null;
     this.setState({loading : false});
-    alert("not valid url");
+    alert(i18next.t("LoadImage.Invalid Url"));
   }
 
   imageFound = () => {
@@ -116,7 +118,7 @@ class LoadImage extends Component {
     }
 
     imgObj.onerror = () => {
-      alert('image load error');
+      alert(i18next.t("LoadImage.Load Error"));
       this.setState({loading : false});
       console.log('fail');
     }
@@ -155,7 +157,7 @@ class LoadImage extends Component {
     }
 
     imgObj.onerror = () => {
-      alert('image load error');
+      alert(i18next.t("LoadImage.Load Error"));
       this.setState({loading : false});
       console.log('fail');
     }
@@ -208,7 +210,7 @@ class LoadImage extends Component {
                 </Link>
               </div>
               <div className="preview-middle">
-                <a href={this.url} target="_blank">크게보기(번역필요)</a>
+                <a href={this.url} target="_blank">{i18next.t("LoadImage.Enlarge")}</a>
                 <p>{this.state.width}X{this.state.height}</p>
                 { this.state.unsplash ? 
                 <div>
@@ -249,7 +251,7 @@ class LoadImage extends Component {
   }
 }
 
-export default LoadImage;
+export default withTranslation()(LoadImage);
 
 /*
 backup

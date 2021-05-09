@@ -28,7 +28,7 @@ class Withdrawal extends Component {
     .then((res) => res.json())
     .then((data) => {
       if(data.msg === 'success') {
-        alert("성공적으로 탈퇴되었습니다.");
+        alert(i18next.t("Withdrawal.Success"));
         this.props.close();
         window.location.replace('/');
       }
@@ -38,12 +38,12 @@ class Withdrawal extends Component {
           window.location.replace('/');
           return;
         }
-        alert("비밀번호가 틀렸습니다.");
+        alert(i18next.t("Withdrawal.Wrong"));
       }
     })
     .catch((error) => {
       console.log(error);
-      alert("오류 발생;")
+      alert(i18next.t("Withdrawal.Error"))
     })
   }
   render(){
@@ -51,7 +51,7 @@ class Withdrawal extends Component {
       <div className='modal'>
         <div className='withdrawal'>
           <div className="top-div">
-            탈퇴하시려면 비밀번호를 입력해 주세요.
+            {i18next.t("Withdrawl.Input Password")}
           </div>
           <div className="middle-div">
             <input 
@@ -65,8 +65,8 @@ class Withdrawal extends Component {
           </div>
 
           <div className="bottom-div">
-            <button className="confirm" onClick={this.withdrawalHandler}>확인</button>
-            <button className="cancel" onClick={this.props.close}>취소</button>
+            <button className="confirm" onClick={this.withdrawalHandler}>{i18next.t("Withdrawal.Confirm")}</button>
+            <button className="cancel" onClick={this.props.close}>{i18next.t("Withdrawl.Cancel")}</button>
           </div>
           
         </div>

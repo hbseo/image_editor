@@ -151,15 +151,15 @@ class SignUp extends Component {
   registerClickHandler = (e) => {
     e.preventDefault();
     if(!this.validatePassword()) {
-      alert('아이디 중복 또는 옮바르지 않은 비밀번호');
+      alert(i18next.t("SignUp.Dup"));
       return;
     }
     if(this.choose === null) {
-      alert('질문을 선택해 주세요.');
+      alert(i18next.t("SignUp.Select"));
       return;
     }
     if(this.state.answer === '') {
-      alert('답변을 작성해 주세요.');
+      alert(i18next.t("SignUp.Answer"));
       return;
     }
     if (this.state.idDupCheck) {
@@ -175,20 +175,20 @@ class SignUp extends Component {
         .then((res) => res.json())
         .then((data) => {
           if (data.msg === 'success') {
-            alert('회원가입 성공');
+            alert(i18next.t("SignUp.Success"));
             window.location.replace('/login'); 
           }
           else {
-            alert('회원가입 실패');
+            alert(i18next.t("SignUp.Fail"));
           }
         })
         .catch((error) => {
           console.log(error);
-          alert('error');
+          alert(i18next.t("SignUp.Error"));
         })
     }
     else {
-      alert('아이디 중복 또는 옮바르지 않은 비밀번호');
+      alert(i18next.t("SignUp.Dup"));
     }
   }
   registerDupHandler = debounce(async(id) => {
@@ -218,7 +218,7 @@ class SignUp extends Component {
     this.id_style = {border: '1px solid white'};
     if(this.state.id !== '') {
       if(this.state.idDupCheck !== null && !this.state.idDupCheck) {
-        duptag = <div className = 'duptag' >아이디 중복</div>
+        duptag = <div className = 'duptag' >{i18next.t("SignUp.DupID")}</div>
         this.id_style = {border: '5px solid #ff4c4c'}
       }
     }
@@ -229,7 +229,7 @@ class SignUp extends Component {
             <div className="wrap-login100">
               <form className="login100-form validate-form" onSubmit={this.registerClickHandler}>
                 <span className="login100-form-title">
-                  Member Register
+                  {i18next.t("SignUp.Member Register")}
               </span>
                 <div className="wrap-input100 validate-input" data-validate='ID is required'>
                   {duptag}
@@ -241,9 +241,9 @@ class SignUp extends Component {
 
                   <CSSTransition in = {this.state.id_highlight} timeout={200} classNames="validCheck" unmountOnExit >
                     <div className="validateId">
-                      <p className="invalid" id="letter_id"><b>소문자</b></p>
-                      <p className="invalid" id="number_id"><b>숫자</b></p>
-                      <p className="invalid" id="length_id"><b>최소길이 8</b></p>
+                      <p className="invalid" id="letter_id"><b>{i18next.t("SignUp.Lower Case")}</b></p>
+                      <p className="invalid" id="number_id"><b>{i18next.t("SignUp.Number")}</b></p>
+                      <p className="invalid" id="length_id"><b>{i18next.t("SignUp.Minimum Length")}</b></p>
                     </div>
                   </CSSTransition>
                 </div>
@@ -255,10 +255,10 @@ class SignUp extends Component {
                   </span>
                   <CSSTransition in = {this.state.password_hightlight} timeout={200} classNames="validCheck" unmountOnExit >
                     <div className="validatePass">
-                      <p className="invalid" id="letter_pass"><b>소문자</b></p>
-                      <p className="invalid" id="capital_pass"><b>대문자</b></p>
-                      <p className="invalid" id="number_pass"><b>숫자</b></p>
-                      <p className="invalid" id="length_pass"><b>최소길이 8</b></p>
+                      <p className="invalid" id="letter_pass"><b>{i18next.t("SignUp.Lower Case")}</b></p>
+                      <p className="invalid" id="capital_pass"><b>{i18next.t("SignUp.Upper Case")}</b></p>
+                      <p className="invalid" id="number_pass"><b>{i18next.t("SignUp.Number")}</b></p>
+                      <p className="invalid" id="length_pass"><b>{i18next.t("SignUp.Minimum Length")}</b></p>
                     </div>
                   </CSSTransition>
                 </div>
@@ -274,7 +274,7 @@ class SignUp extends Component {
                     <input type="checkbox" id="options-view-button" />
                     <div id="select-button" className="brd">
                       <div id="selected-value">
-                        <span>원하는 질문을 선택하세요.</span>
+                        <span>{i18next.t("SignUp.Select")}</span>
                       </div>
                       <div id="chevrons">
                         <i className="fa fa-chevron-up" />
@@ -285,32 +285,32 @@ class SignUp extends Component {
                       <div className="option">
                         <input className="s-c top" type="radio" name="choose" defaultValue="1" onChange={this.registerHandler} />
                         <input className="s-c bottom" type="radio" name="choose" defaultValue="1"  onChange={this.registerHandler}/>
-                        <span className="label">가장 기억에 남는 추억의 장소</span>
-                        <span className="opt-val">가장 기억에 남는 추억의 장소</span>
+                        <span className="label">{i18next.t("SignUp.Place")}</span>
+                        <span className="opt-val">{i18next.t("SignUp.Place")}</span>
                       </div>
                       <div className="option">
                         <input className="s-c top" type="radio" name="choose" defaultValue="2"  onChange={this.registerHandler}/>
                         <input className="s-c bottom" type="radio" name="choose" defaultValue="2"  onChange={this.registerHandler}/>
-                        <span className="label">다시 태어나면 되고 싶은 것</span>
-                        <span className="opt-val">다시 태어나면 되고 싶은 것</span>
+                        <span className="label">{i18next.t("SignUp.To be")}</span>
+                        <span className="opt-val">{i18next.t("SignUp.To be")}</span>
                       </div>
                       <div className="option">
                         <input className="s-c top" type="radio" name="choose" defaultValue="3" onChange={this.registerHandler} />
                         <input className="s-c bottom" type="radio" name="choose" defaultValue="3"  onChange={this.registerHandler}/>
-                        <span className="label">나의 보물 제1호</span>
-                        <span className="opt-val">나의 보물 제1호</span>
+                        <span className="label">{i18next.t("SignUp.Treasure")}</span>
+                        <span className="opt-val">{i18next.t("SignUp.Treasure")}</span>
                       </div>
                       <div className="option">
                         <input className="s-c top" type="radio" name="choose" defaultValue="4"  onChange={this.registerHandler}/>
                         <input className="s-c bottom" type="radio" name="choose" defaultValue="4"  onChange={this.registerHandler}/>
-                        <span className="label">나의 좌우명</span>
-                        <span className="opt-val">나의 좌우명</span>
+                        <span className="label">{i18next.t("SignUp.Motto")}</span>
+                        <span className="opt-val">{i18next.t("SignUp.Motto")}</span>
                       </div>
                       <div className="option">
                         <input className="s-c top" type="radio" name="choose" defaultValue="5" onChange={this.registerHandler} />
                         <input className="s-c bottom" type="radio" name="choose" defaultValue="5"  onChange={this.registerHandler}/>
-                        <span className="label">내가 존경하는 인물</span>
-                        <span className="opt-val">내가 존경하는 인물</span>
+                        <span className="label">{i18next.t("SignUp.Respect")}</span>
+                        <span className="opt-val">{i18next.t("SignUp.Respect")}</span>
                       </div>
                       <div id="option-bg" />
                     </div>
@@ -325,14 +325,14 @@ class SignUp extends Component {
                 </div>
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" id="register-btn" type='submit' disabled={true}>
-                    Register
+                    {i18next.t("SignUp.Register")}
                 </button>
                 </div>
                 <div className="text-center p-t-136">
                   <Link to={{
                     pathname: '/login',
                   }}><div className="txt2 was-a">
-                      Login your Account
+                      {i18next.t("SignUp.Login your Account")}
                     <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true" />
                     </div></Link>
                 </div>

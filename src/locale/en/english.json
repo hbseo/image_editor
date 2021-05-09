@@ -9,23 +9,26 @@
         "Cancel" : "Cancel",
         "notMatchPW" : "Password Not Match",
         "PWsuccess" : "Change Success",
-        "PWfail" : "Fail"
+        "PWfail" : "Fail",
+        "Lower Case": "lower case",
+        "Upper Case": "upper case",
+        "Minimum Length" : "minimum length is 8",
+        "Number": "number"
     },
 
 
     "Find_Password" : {
-        "test1" : "아이디를 입력해 주세요",
-        "test2" : "답변을 입력해 주세요",
-        "test3" : "질문을 선택해 주세요.",
-        "test4" : "임시 비밀번호 : ",
-        "test5" : "Wrong Input",
-        "test6" : "Find Password",
-        "test7" : "원하는 질문을 선택하세요.",
-        "test8" : "가장 기억에 남는 추억의 장소",
-        "test9" : "다시 태어나면 되고 싶은 것",
-        "test10" : "나의 보물 제1호",
-        "test11" : "나의 좌우명",
-        "test12" : "내가 존경하는 인물",
+        "Input Id" : "Please enter your ID",
+        "Answer" : "Please answer the question",
+        "Choose" : "Please choose the question",
+        "Temp" : "Temporary password : ",
+        "Wrong" : "Wrong Input",
+        "Find" : "Find Password",
+        "Place" : "The most memorable place of memories",
+        "To be" : "What I want to be when I'm born again",
+        "Treasure" : "My Treasure No. 1",
+        "Motto" : "My motto",
+        "Respect" : "A person I admire",
         "Confirm" : "Confirm",
         "Cancel" : "Cancel"
     },
@@ -41,6 +44,14 @@
         "Zoom" : "zoom",
         "Home" : "Home",
         "LeavePage" : "Are you sure you're leaveing?"
+    },
+
+    "ImageFilter" : {
+        "Load Error" : "Image load error",
+        "Make" : "To make mapfile : closer is bright, far is dark",
+        "Image" : "Image",
+        "MapFile" : "Mapfile",
+        "Generate" : "Generate"
     },
 
     "ImageList" : {
@@ -59,7 +70,9 @@
     },
 
     "LoadImage" : {
-        
+        "Invalid Url" : "Invalid url",
+        "Load Error" : "Image load error",
+        "Enlarge" : "enlarge"
     },
 
     "Login" : {
@@ -142,23 +155,26 @@
     },
 
     "SignUp" : {
-        "test1" : "아이디 중복 또는 옮바르지 않은 비밀번호",
-        "test2" : "질문을 선택해 주세요",
-        "test3" : "답변을 작성해 주세요",
-        "test4" : "원하는 질문을 선택하세요",
-        "test8" : "가장 기억에 남는 추억의 장소",
-        "test9" : "다시 태어나면 되고 싶은 것",
-        "test10" : "나의 보물 제1호",
-        "test11" : "나의 좌우명",
-        "test12" : "내가 존경하는 인물",
+        "Dup" : "Invalid ID or Password",
+        "Select" : "Please choose the question",
+        "Answer" : "Please answer the question",
+        "Place" : "The most memorable place of memories",
+        "To be" : "What I want to be when I'm born again",
+        "Treasure" : "My Treasure No. 1",
+        "Motto" : "My motto",
+        "Respect" : "A person I admire",
         "DupID" : "ID is invalid or already taken",
         "Signup" : "Sign up",
-        "Success" : "Success",
-        "Fail" : "Fail",
+        "Success" : "Register success",
+        "Fail" : "Register Fail",
         "Error" : "Error",
         "Member Register" : "Member Register",
         "Register" : "Register",
-        "Login your Account" : "Login your Account"
+        "Login your Account" : "Login your Account",
+        "Lower Case": "lower case",
+        "Upper Case": "upper case",
+        "Minimum Length" : "minimum length is 8",
+        "Number": "number"
     },
 
     "Upload_file" : {
@@ -166,6 +182,15 @@
         "Load local image" : "Load local image",
         "Load URL image" : "Load URL image",
         "Load" : "Load"
+    },
+
+    "Withdrawal" : {
+        "Success" : "Withdrawn successfully",
+        "Wrong" : "Wrong password",
+        "Error" : "Error",
+        "Input Pasword" : "Please enter your password",
+        "Confirm" : "Confirm",
+        "Cancel" : "Cancel"
     },
 
     "ui/canvas" : {

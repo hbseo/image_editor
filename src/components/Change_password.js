@@ -104,7 +104,7 @@ class Change_password extends Component {
     const {current_password, new_password} = this.state;
     const id = this.id;
     if(!this.validatePassword()) {
-      alert(i18next.t('Change_password.notMatchPW'));
+      alert(i18next.t('Change_Password.notMatchPW'));
       return;
     }
     if(this.id) {
@@ -118,7 +118,7 @@ class Change_password extends Component {
       .then((res) => res.json())
       .then((data) => {
         if(data.msg === 'success') {
-          alert(i18next.t('Change_password.PWsuccess'));
+          alert(i18next.t('Change_Password.PWsuccess'));
           window.location.replace('/');
         }
         else {
@@ -127,7 +127,7 @@ class Change_password extends Component {
             window.location.replace('/');
             return;
           }
-          alert(i18next.t('Change_password.PWfail'));
+          alert(i18next.t('Change_Password.PWfail'));
         }
       })
       .catch((error) => {
@@ -145,7 +145,7 @@ class Change_password extends Component {
             <div className="wrap-login100">
               <form className="login100-form validate-form">
                 <span className="login100-form-title">
-                  {i18next.t('Change_password.Change Password')}
+                  {i18next.t('Change_Password.Change Password')}
               </span>
                 <div className="wrap-input100 validate-input" data-validate="Password is required">
                   <input className="input100" type="password" name="current_password" placeholder="Current password" value={this.state.current_password} onChange={this.change_passwordHandler}/>
@@ -162,10 +162,10 @@ class Change_password extends Component {
                   </span>
                   <CSSTransition in ={this.state.password_highlight} timeout={200} classNames="validCheck" unmountOnExit>
                   <div className="validatePass">
-                    <p className="invalid" id="letter_pass"><b>소문자</b></p>
-                    <p className="invalid" id="capital_pass"><b>대문자</b></p>
-                    <p className="invalid" id="number_pass"><b>숫자</b></p>
-                    <p className="invalid" id="length_pass"><b>최소길이 8</b></p>
+                    <p className="invalid" id="letter_pass"><b>{i18next.t("Change_Password.Lower Case")}</b></p>
+                    <p className="invalid" id="capital_pass"><b>{i18next.t("Change_Password.Upper Case")}</b></p>
+                    <p className="invalid" id="number_pass"><b>{i18next.t("Change_Password.Number")}</b></p>
+                    <p className="invalid" id="length_pass"><b>{i18next.t("Change_Password.Minimum Length")}</b></p>
                   </div>
                   </CSSTransition>
                 </div>
@@ -178,12 +178,12 @@ class Change_password extends Component {
                 </div>
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" id="confirm" disabled={true} onClick={this.change_passwordClickHandler}>
-                    {i18next.t('Change_password.Confirm')}
+                    {i18next.t('Change_Password.Confirm')}
                 </button>
                 </div>
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" id="cancel" onClick={() => this.props.history.push('/')}>
-                    {i18next.t('Change_password.Cancel')}
+                    {i18next.t('Change_Password.Cancel')}
                 </button>
                 </div>
               </form>

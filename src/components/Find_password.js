@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import i18next from "../locale/i18n";
+import { withTranslation } from "react-i18next";
 
 class Find_password extends Component {
   constructor(props) {
@@ -22,15 +24,15 @@ class Find_password extends Component {
   findClickHandler = (e) => {
     e.preventDefault();
     if(this.state.id === '') {
-      alert('아이디를 입력해 주세요.');
+      alert(i18next.t("Find_Password.Input Id"));
       return;
     }
     if(this.state.answer === '') {
-      alert('답변을 입력해 주세요.');
+      alert(i18next.t("Find_Password.Answer"));
       return;
     }
     if(this.question === null) {
-      alert('질문을 선택해 주세요.');
+      alert(i18next.t("Find_Password.Choose"));
       return;
     }
     const {id, answer} = this.state;
@@ -45,11 +47,11 @@ class Find_password extends Component {
     .then((res) => res.json())
     .then((data) => {
       if(data.msg === 'success') {
-        alert('임시 비밀번호: '+data.password);
+        alert(`${i18next.t("Find_Password.Temp")}: `+data.password);
         window.location.replace('/');
       }
       else{
-        alert('잘못된 입력');
+        alert(i18next.t("Find_Password.Wrong"));
       }
     })
     .catch((error) => {
@@ -65,7 +67,7 @@ class Find_password extends Component {
             <div className="wrap-login100">
               <form className="login100-form validate-form">
                 <span className="login100-form-title">
-                  비밀번호 찾기
+                  {i18next.t("Find_Password.Find")}
               </span>
                 <div className="wrap-input100 validate-input" data-validate="ID is required">
                   <input className="input100" type="text" name="id" placeholder="ID" value={this.state.id} onChange={this.findHandler} />
@@ -79,7 +81,7 @@ class Find_password extends Component {
                     <input type="checkbox" id="options-view-button" />
                     <div id="select-button" className="brd">
                       <div id="selected-value">
-                        <span>원하는 질문을 선택하세요.</span>
+                        <span>{i18next.t("Find_Password.Choose")}</span>
                       </div>
                       <div id="chevrons">
                         <i className="fa fa-chevron-up" />
@@ -90,32 +92,32 @@ class Find_password extends Component {
                       <div className="option">
                         <input className="s-c top" type="radio" name="question" defaultValue="1" onChange={this.findHandler} />
                         <input className="s-c bottom" type="radio" name="question" defaultValue="1" onChange={this.findHandler} />
-                        <span className="label">가장 기억에 남는 추억의 장소</span>
-                        <span className="opt-val">가장 기억에 남는 추억의 장소</span>
+                        <span className="label">{i18next.t("Find_Password.Place")}</span>
+                        <span className="opt-val">{i18next.t("Find_Password.Place")}</span>
                       </div>
                       <div className="option">
                         <input className="s-c top" type="radio" name="question" defaultValue="2" onChange={this.findHandler} />
                         <input className="s-c bottom" type="radio" name="question" defaultValue="2" onChange={this.findHandler} />
-                        <span className="label">다시 태어나면 되고 싶은 것</span>
-                        <span className="opt-val">다시 태어나면 되고 싶은 것</span>
+                        <span className="label">{i18next.t("Find_Password.To be")}</span>
+                        <span className="opt-val">{i18next.t("Find_Password.To be")}</span>
                       </div>
                       <div className="option">
                         <input className="s-c top" type="radio" name="question" defaultValue="3" onChange={this.findHandler} />
                         <input className="s-c bottom" type="radio" name="question" defaultValue="3" onChange={this.findHandler} />
-                        <span className="label">나의 보물 제1호</span>
-                        <span className="opt-val">나의 보물 제1호</span>
+                        <span className="label">{i18next.t("Find_Password.Treasure")}</span>
+                        <span className="opt-val">{i18next.t("Find_Password.Treasure")}</span>
                       </div>
                       <div className="option">
                         <input className="s-c top" type="radio" name="question" defaultValue="4" onChange={this.findHandler} />
                         <input className="s-c bottom" type="radio" name="question" defaultValue="4" onChange={this.findHandler} />
-                        <span className="label">나의 좌우명</span>
-                        <span className="opt-val">나의 좌우명</span>
+                        <span className="label">{i18next.t("Find_Password.Motto")}</span>
+                        <span className="opt-val">{i18next.t("Find_Password.Motto")}</span>
                       </div>
                       <div className="option">
                         <input className="s-c top" type="radio" name="question" defaultValue="5" onChange={this.findHandler} />
                         <input className="s-c bottom" type="radio" name="question" defaultValue="5" onChange={this.findHandler} />
-                        <span className="label">내가 존경하는 인물</span>
-                        <span className="opt-val">내가 존경하는 인물</span>
+                        <span className="label">{i18next.t("Find_Password.Respect")}</span>
+                        <span className="opt-val">{i18next.t("Find_Password.Respect")}</span>
                       </div>
                       <div id="option-bg" />
                     </div>
@@ -130,12 +132,12 @@ class Find_password extends Component {
                 </div>
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" id="confirm" onClick={this.findClickHandler}>
-                    확인
+                    {i18next.t("Find_Password.Confirm")}
                 </button>
                 </div>
                 <div className="container-login100-form-btn">
                   <button className="login100-form-btn" id="cancel" onClick={() => this.props.history.push('/')}>
-                    취소
+                    {i18next.t("Find_Password.Cancel")}
                 </button>
                 </div>
               </form>
@@ -147,4 +149,4 @@ class Find_password extends Component {
   }
 }
 
-export default Find_password;
+export default withTranslation()(Find_password);

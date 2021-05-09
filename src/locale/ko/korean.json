@@ -9,23 +9,26 @@
         "Cancel" : "취소",
         "notMatchPW" : "두 비밀번호가 서로 다름",
         "PWsuccess" : "변경 성공",
-        "PWfail" : "변경 실패"
+        "PWfail" : "변경 실패",
+        "Lower Case": "소문자",
+        "Upper Case": "대문자",
+        "Minimum Length" : "최소길이 8",
+        "Number": "숫자"
     },
 
 
     "Find_Password" : {
-        "test1" : "아이디를 입력해 주세요",
-        "test2" : "답변을 입력해 주세요",
-        "test3" : "질문을 선택해 주세요.",
-        "test4" : "임시 비밀번호",
-        "test5" : "잘못된 입력",
-        "test6" : "비밀번호 찾기",
-        "test7" : "원하는 질문을 선택하세요.",
-        "test8" : "가장 기억에 남는 추억의 장소",
-        "test9" : "다시 태어나면 되고 싶은 것",
-        "test10" : "나의 보물 제1호",
-        "test11" : "나의 좌우명",
-        "test12" : "내가 존경하는 인물",
+        "Input Id" : "아이디를 입력해 주세요",
+        "Answer" : "답변을 입력해 주세요",
+        "Choose" : "질문을 선택해 주세요.",
+        "Temp" : "임시 비밀번호",
+        "Wrong" : "잘못된 입력",
+        "Find" : "비밀번호 찾기",
+        "Place" : "가장 기억에 남는 추억의 장소",
+        "To be" : "다시 태어나면 되고 싶은 것",
+        "Treasure" : "나의 보물 제1호",
+        "Motto" : "나의 좌우명",
+        "Respect" : "내가 존경하는 인물",
         "Confirm" : "확인",
         "Cancel" : "취소"
     },
@@ -41,6 +44,14 @@
         "Zoom" : "확대",
         "Home" : "홈 화면",
         "LeavePage" : "페이지를 떠나시겠습니까?"
+    },
+
+    "ImageFilter" : {
+        "Load Error" : "이미지 불러오기 오류",
+        "Make" : "맵파일 만드는 방법 : 가까이 있는건 밝게 멀리 있는건 어둡게",
+        "Image" : "이미지",
+        "MapFile" : "맵파일",
+        "Generate" : "생성"
     },
 
     "ImageList" : {
@@ -59,7 +70,9 @@
     },
 
     "LoadImage" : {
-        
+        "Invalid Url": "유효하지 않은 URL",
+        "Load Error" : "이미지 불러오기 오류",
+        "Enlarge" : "크게보기"
     },
 
     "Login" : {
@@ -142,23 +155,26 @@
     },
 
     "SignUp" : {
-        "test1" : "아이디 중복 또는 옮바르지 않은 비밀번호",
-        "test2" : "질문을 선택해 주세요",
-        "test3" : "답변을 작성해 주세요",
-        "test4" : "원하는 질문을 선택하세요",
-        "test8" : "가장 기억에 남는 추억의 장소",
-        "test9" : "다시 태어나면 되고 싶은 것",
-        "test10" : "나의 보물 제1호",
-        "test11" : "나의 좌우명",
-        "test12" : "내가 존경하는 인물",
+        "Dup" : "아이디 중복 또는 옮바르지 않은 비밀번호",
+        "Select" : "질문을 선택해 주세요",
+        "Answer" : "답변을 작성해 주세요",
+        "Place" : "가장 기억에 남는 추억의 장소",
+        "To be" : "다시 태어나면 되고 싶은 것",
+        "Treasure" : "나의 보물 제1호",
+        "Motto" : "나의 좌우명",
+        "Respect" : "내가 존경하는 인물",
         "DupID" : "아이디 중복",
         "Signup" : "회원가입",
-        "Success" : "성공",
-        "Fail" : "실패",
+        "Success" : "회원가입 성공",
+        "Fail" : "회원가입 실패",
         "Error" : "에러",
         "Member Register" : "회원 등록",
         "Register" : "등록",
-        "Login your Account" : "로그인 하세요"
+        "Login your Account" : "로그인 하세요",
+        "Lower Case": "소문자",
+        "Upper Case": "대문자",
+        "Minimum Length" : "최소길이 8",
+        "Number": "숫자"
     },
 
     "Upload_file" : {
@@ -166,6 +182,15 @@
         "Load local image" : "이미지 불러오기",
         "Load URL image" : "URL 불러오기",
         "Load" : "로드"
+    },
+
+    "Withdrawal" : {
+        "Success" : "성공적으로 탈퇴되었습니다",
+        "Wrong" : "비밀번호가 틀렸습니다",
+        "Error" : "에러",
+        "Input Password" : "탈퇴하시려면 비밀번호를 입력해 주세요",
+        "Confirm" : "확인",
+        "Cancel" : "취소"
     },
 
     "ui/canvas" : {

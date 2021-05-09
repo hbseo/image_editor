@@ -1,3 +1,4 @@
+import i18next from "../locale/i18n";
 import React, { Component } from 'react';
 import { withTranslation } from "react-i18next";
 import { generate3dPhoto } from './helper/generate3dPhoto';
@@ -36,7 +37,7 @@ class ImageFilter extends Component {
     }
 
     imgObj.onerror = () => {
-      alert('image load error');
+      alert(i18next.t("ImageFilter.Load Error"));
       console.log('fail');
     }
 
@@ -63,7 +64,7 @@ class ImageFilter extends Component {
     }
 
     imgObj.onerror = () => {
-      alert('image load error');
+      alert(i18next.t("ImageFilter.Load Error"));
       console.log('fail');
     }
 
@@ -94,10 +95,10 @@ class ImageFilter extends Component {
     return (
       <div>
         <div>
-          <h1>맵파일 만드는 법 : 가까이 있는건 밝게, 멀리있는건 어둡게</h1>
-          <input type='file' onChange={this.imgSubmit} accept='image/*' />이미지
-          <input type='file' onChange={this.mapSubmit} accept='image/*' />맵파일
-          <button onClick={this.generate}>생성</button>
+          <h1>{i18next.t("ImageFilter.Make")}</h1>
+          <input type='file' onChange={this.imgSubmit} accept='image/*' />{i18next.t("ImageFilter.Image")}
+          <input type='file' onChange={this.mapSubmit} accept='image/*' />{i18next.t("ImageFilter.MapFile")}
+          <button onClick={this.generate}>{i18next.t("ImageFilter.Generate")}</button>
         
         </div>
 
