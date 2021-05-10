@@ -122,7 +122,7 @@ class Main extends Component {
           <div className="main-box">
             <div className='sidenav'>
               <div className="site-title">
-                <p className="site-title-p">image-editor</p>
+                {/* <p className="site-title-p">image-editor</p> */}
               </div>
               <div className="add-image-menu">
                 <button className = {this.state.tab == 0 ?  "sidenav-button-active" : "sidenav-button"} onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>

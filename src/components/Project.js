@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Loading from './ui/Loading';
 import '../css/Project.scss';
 
 class Project extends Component {
@@ -13,7 +14,8 @@ class Project extends Component {
       projects : [],
       project_length : 20,
       scroll: true,
-      sort : 0
+      sort : 0,
+      loading : false
     }
     this.canvas = null;
     this.limit = 20;
@@ -28,6 +30,7 @@ class Project extends Component {
 
   getProjects = () => {
     if(this.props.id === '') { return; }
+    this.setState({loading : true})
     fetch('/content/get', {
       method: 'POST',
       headers: {
@@ -43,6 +46,7 @@ class Project extends Component {
     })
     .then((res) => res.json())
     .then((data) => {
+      this.setState({loading : false})
       if(data.success){
         if(data.result.length === 0) {
           this.setState({scroll: false});
@@ -67,6 +71,7 @@ class Project extends Component {
     })
     .catch(() => {
       alert(i18next.t('Project.Error'));
+      this.setState({loading : false})
     })
   }
 
@@ -89,14 +94,10 @@ class Project extends Component {
   }
 
   fromJsontoPng = (json, idx) => {
-    this.canvas.clear();
     this.canvas.loadFromJSON(json, () => {
-      // this.canvas.renderAll();
-      // console.log(idx , document.getElementById(idx))
-      // console.log(this.canvas.backgroundImage); // 밖에다 두면 backgrounImage를 null로 인식함... 이유? 콜백함수라서 img 태그가 다 load되고 나서 불러와지기 때문
       if(document.getElementById(idx)){
         document.getElementById(idx).src = this.canvas.toDataURL({format : 'png'});
-        // this.canvas.clear();
+        this.canvas.clear();
       }
     })
     return this.canvas.toDataURL({format : 'png'});
@@ -335,6 +336,7 @@ class Project extends Component {
             )}
           </InfiniteScroll>
         </div>
+        <Loading open = {this.state.loading}/>
       </div>
     )
   }

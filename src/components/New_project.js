@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
 import '../css/New_project.scss';
+import debounce from 'lodash/debounce';
 
 class New_project extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {width: 500, height: 500}
+    this.state = {width: 500, height: 500, input : false}
   }
 
   renderLink = (width, height) => {
@@ -31,8 +32,29 @@ class New_project extends Component {
 
   handleChange = (event) => {
     const {name, value} = event.target;
-    this.setState({[name]: value});
+    new Promise((resolve) => {
+      this.setState({[name]: value});
+      resolve()
+    })
+    .then(() => {
+      this.sizeCheck();
+    })
   }
+
+  sizeCheck = debounce(() => {
+    if(this.state.width < 10){
+      this.setState({width : 10})
+    }
+    if(this.state.width > 5000){
+      this.setState({width : 5000})
+    }
+    if(this.state.height < 10){
+      this.setState({height : 10})
+    }
+    if(this.state.height > 5000){
+      this.setState({height : 5000})
+    }
+  }, 400)
 
   render() {
     return (
@@ -83,11 +105,11 @@ class New_project extends Component {
           <div className="direct-input-button">
             <div className="input-group">
               <label htmlFor="width">{i18next.t('New_Project.Width')}</label>
-              <input type="number" name="width" value={this.state.width} onChange={this.handleChange} min="5" />
+              <input type="number" name="width" value={this.state.width} onChange={this.handleChange} min="10" max="5000"/>
             </div>
             <div className="input-group">
               <label htmlFor="height">{i18next.t('New_Project.Height')}</label>
-              <input type="number" name="height" value={this.state.height} onChange={this.handleChange} min="5" />
+              <input type="number" name="height" value={this.state.height} onChange={this.handleChange} min="10" max="5000"/>
             </div>
           </div>
           {this.renderLink(this.state.width, this.state.height)}
