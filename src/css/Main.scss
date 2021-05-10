@@ -88,8 +88,11 @@
 }
 
 .topnav {
-  height: 5vmin;
-  background-color: #021c1e;
+  height: 7vh;
+  background-color: black;
+  flex-direction: column;
+  justify-content: center;
+  display: flex;
 }
 
 .site-title {
@@ -98,7 +101,8 @@
 }
 
 .site-title-p {
-  padding-top: 10px;
+  position: relative;
+  align-self: center;
   font-size: 20px;
   color: white;
   text-align: center;
@@ -111,7 +115,7 @@
 
 .sidenav {
   width: 200px;
-  background-color: #111;
+  background-color: black;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
@@ -348,10 +352,10 @@
   position: fixed;
   top: 0;
   right: 0;
-  margin: 1%;
+  margin: 0;
   margin-top: 0px;
-  width: 8vmin;
-  height: 4vmin;
+  width: 10vmin;
+  height: 6.8vh;
   text-align: center;
 
   .rightbtn {
@@ -360,8 +364,8 @@
     color: white;
     cursor: pointer;
     border-radius: 5px;
-    background-color: #021c1e;
-    padding: 5px;
+    background-color: black;
+    padding: 0;
     font-size: 1.1em;
     transition: background-color 0.2s linear;
   }
