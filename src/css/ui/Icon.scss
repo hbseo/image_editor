@@ -13,16 +13,45 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-around;
-    }
-  
-    .icon button{
-      width: 75px;
-      height: 75px;
-      border-radius: 5px;
-    }
+
+      .icon_div{
+        position: relative;
+        flex-direction: column;
+
+        .icon_svg {
+          pointer-events: none;
+          width : 30px;
+        }
+
+        button{
+          width: 75px;
+          height: 75px;
+          border-radius: 5px;
+        }
+
+        button:hover{
+          background-color: #DFDFDF;
+        }
+          
+        button:hover + .attribute {
+          display: flex;
+        }
     
-    .icon button:hover{
-      background-color: #DFDFDF;
+        .attribute {
+          display: none;
+          padding : 0.9px;
+          border-radius: 5px;
+          left : 0%;
+          top : 0%;
+          background-color: #56565654;
+          color : white;
+          position : absolute;
+          pointer-events: none;
+        }
+
+      }
+
+
     }
   
     .color-picker{
