@@ -2,47 +2,92 @@
   overflow-y: auto;
 }
 
+.project-header {
+  width: 100%;
+  height: 50px;
+  font-size: 1.5em;
+  margin: 2%;
+}
+
 .project-button-box {
   display: flex;
   margin: 2%;
+  justify-content: space-between;
   align-items: center;
+  height: 40px;
 
   .sort-button-box {
     display: flex;
+
+    .proejct-sort-button {
+      padding: 0px 10px 0px 10px;
+      border-right: 1px solid black;
+      width: 150px;
+      height: 20px;
+    }
+
+    .proejct-sort-button:nth-child(3) {
+      width: 100px;
+    }
+
+    .proejct-sort-button:nth-child(4) {
+      border-right: none;
+      width: 100px;
+    }
+
+    .proejct-sort-button:hover {
+      text-decoration: underline;
+    }
   }
 
-  button {
-    margin-left: auto;
+  #delete-all {
+    border: 1px solid #ff6961;
+    width: 80px;
+    height: 40px;
+    border-radius: 5px;
+    transition-property: background-color color;
+    transition: 0.2s linear;
+  }
+
+  #delete-all:hover {
+    background-color: #ff6961;
+    color: white;
   }
 }
 
 .project-search {
-  margin: 2%;
-  padding: 2%;
-  border-radius: 10px;
+  padding: 1%;
+  border-radius: 5px;
   background-color: #eeeeee;
-  flex-direction: row;
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-}
+  width: 30%;
+  height: 100%;
 
-.proejct-sort-button {
-  padding: 0px 10px 0px 10px;
-  border-right: 1px solid black;
-  width: 100px;
-  height: 20px;
-}
+  .search {
+    margin-left: 10px;
+    width: 150px;
+    height: 20px;
+  }
 
-.proejct-sort-button:nth-child(4) {
-  border-right: none;
+  input[type="submit"] {
+    margin-left: 100px;
+    width: 80px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #ff6961;
+    transition: 0.3s;
+  }
+
+  input[type="submit"]:hover {
+    opacity: 0.8;
+  }
 }
 
 #project-list {
   // position: relative;
   margin: 2%;
   padding: 2%;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: #eeeeee;
   flex-direction: row;
   display: flex;
@@ -55,7 +100,7 @@
     vertical-align: bottom;
     justify-content: center;
     background-color: #d3d3d3;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 12px;
 
     .project-img {
