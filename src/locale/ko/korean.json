@@ -111,7 +111,7 @@
     },
 
     "Project" : {
-        "Title" : "이름",
+        "Title" : "프로젝트 이름",
         "Search" : "검색어",
         "Project" : "프로젝트",
         "Date" : "날짜",
@@ -119,6 +119,7 @@
         "User" : "유저",
         "Error" : "오류",
         "PlzSignin" : "로그인 필요",
+        "Delete all" : "모두 삭제",
         "Deletecheck" : "프로젝트를 삭제하시겠습니까?",
         "Deleteallcheck" : "모든 프로젝트를 삭제하시겠습니까?",
         "Cancel" : "취소"

@@ -111,7 +111,7 @@
     },
 
     "Project" : {
-        "Title" : "Title",
+        "Title" : "Project Title",
         "Search" : "Search",
         "Project" : "Project",
         "Date" : "Date",
@@ -119,6 +119,7 @@
         "User" : "User",
         "Error" : "Error",
         "PlzSignin" : "Need to Sign in",
+        "Delete all" : "Delete all",
         "Deletecheck" : "Are you sure you want to delete the project?",
         "Deleteallcheck" : "Are you sure you want to delete ALL projects",
         "Cancel" : "Cancel"
