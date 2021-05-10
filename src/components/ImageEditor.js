@@ -1579,10 +1579,10 @@ class ImageEditor extends Component {
                 <button onClick = {this.redo}>{i18next.t('ImageEditor.Redo')}</button>
             </div>
             <div className="save">
-                <button onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
             </div>
-            <div className="more">
-                <button onClick = { this.returnToHome }>{i18next.t('ImageEditor.Home')}</button>
+            <div className="save-more">
+                <button id="save" onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
+                <button id="more" onClick = { this.returnToHome }>{i18next.t('ImageEditor.Home')}</button>
             </div>
           </div>
           <div className="real" >
