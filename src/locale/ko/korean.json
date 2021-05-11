@@ -1,6 +1,7 @@
 {
     "hello": "hello",
     "icon add" : "아이콘 추가",
+    "text add" : "텍스트 추가",
     "login_expired" : "로그인 시간만료",
 
     "Change_Password" : {

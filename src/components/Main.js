@@ -6,7 +6,6 @@ import LoadImage from './LoadImage';
 import Withdrawal from './Withdrawal';
 import '../css/Main.scss';
 import checkUserLanguage from './helper/CheckLang';
-import Loading from './ui/Loading';
 import { withTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";

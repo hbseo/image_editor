@@ -54,8 +54,9 @@ class Save extends Component {
       }
 
     })
-    .catch(() => {
+    .catch((error) => {
       alert(i18next.t('Save.Error'));
+      console.log(error)
     })
   }
 
@@ -75,14 +76,15 @@ class Save extends Component {
         if(data.success){
           // console.log(data);
           alert(i18next.t('Save.Update') + ' '+ i18next.t('Save.Success'));
-          this.props.closeSaveModal();
+          this.props.close();
         }
         else{
           alert(i18next.t('Save.Error'))
         }
       })
-      .catch(() => {
+      .catch((error) => {
         alert(i18next.t('Save.Error'));
+        console.log(error)
       })
     }
     else{

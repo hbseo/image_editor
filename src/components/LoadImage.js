@@ -69,17 +69,21 @@ class LoadImage extends Component {
 
   imageFound = () => {
     // document.getElementById("imgRatio").disabled = false;
-    var ratio = 1;
+    var ratio = 100;
+    var originWidth = this.image.width;
+    var originHeight = this.image.height; 
     if (this.image.width > 2048 || this.image.height > 2048) {
       if (this.image.width > this.image.height) {
         ratio = 2048 / this.image.width
         this.image.width = 2048;
         this.image.height *= ratio
+        ratio *= 100;
       }
       else {
         ratio = 2048 / this.image.height
         this.image.height = 2048
         this.image.width *= ratio
+        ratio *= 100;
       }
     }
     this.setState({
@@ -87,9 +91,9 @@ class LoadImage extends Component {
       width: this.image.width,
       height: this.image.height,
       // imgRatio: ratio * 100,
-      imgRatio: 100,
-      imgWidth: this.image.width,
-      imgHeight: this.image.height,
+      imgRatio: ratio,
+      imgWidth: originWidth,
+      imgHeight: originHeight,
       imageModal : true,
       loading : false,
     })
@@ -173,7 +177,6 @@ class LoadImage extends Component {
       let ratio = event.target.value;
       let width = Math.round(this.state.imgWidth * (event.target.value / 100));
       let height = Math.round(this.state.imgHeight * (event.target.value / 100));
-
       if (width > 2048 || height > 2048) {
         return;
       }

@@ -226,16 +226,51 @@ ul {
   background-color: #ececec;
 }
 
-.real {
+.editor-main{
+  overflow-x: hidden;
+  overflow-y: hidden;
+  width: 100%;
+  height : 100%;
+
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  // flex-direction: column;
+  // justify-content: center;
   align-items: center;
-  width: 95%;
-  height: 95%;
-  overflow-x: auto;
-  overflow-y: auto;
+  background: repeating-linear-gradient(90deg, #444, #444 10px, #888 0, #888 20px);
+
+
+  .real {
+    // height : 100vh;
+    height : 100%;
+    width: 100%;
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: hidden;  
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    .canvas-container {
+      // width : 100%;
+      // height : 100%;
+      // left : 0;
+      // position: relative;
+      // justify-content: center;
+      // overflow: auto;
+      // top : 0;
+      
+      .canvas {
+        // top : 0;
+        // overflow: auto;
+      
+      }
+      .upper-canvas{
+        // overflow: auto;
+      }
+    }
+  }
 }
+
 
 .popup {
   position: absolute;
