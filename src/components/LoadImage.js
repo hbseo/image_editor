@@ -14,6 +14,7 @@ class LoadImage extends Component {
     this.state = { width: 5, height: 5, url: "", submit: false, imgRatio: 100, imgWidth: 0, imgHeight: 0, imageModal : false, loading : false, unsplash : false, data : null };
     this.url = "";
     this.image = null;
+    this.filter = true;
 
   }
 
@@ -73,6 +74,7 @@ class LoadImage extends Component {
     var originWidth = this.image.width;
     var originHeight = this.image.height; 
     if (this.image.width > 2048 || this.image.height > 2048) {
+      this.filter = false;
       if (this.image.width > this.image.height) {
         ratio = 2048 / this.image.width
         this.image.width = 2048;
@@ -85,6 +87,9 @@ class LoadImage extends Component {
         this.image.width *= ratio
         ratio *= 100;
       }
+    }
+    else{
+      this.filter = true;
     }
     this.setState({
       submit: true,
@@ -220,6 +225,10 @@ class LoadImage extends Component {
                   {/* <p>{this.state.data.dl}</p> */}
                   <p>Photo by <a href={this.state.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">{this.state.user}</a> on <a href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">Unsplash</a></p>
                   
+                </div> : null}
+                { !this.filter ?
+                <div>
+                  필터 적용 불가
                 </div> : null}
               </div>
               <div className="preview-bottom">
