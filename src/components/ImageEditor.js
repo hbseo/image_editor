@@ -1476,13 +1476,25 @@ class ImageEditor extends Component {
     const maxHeight = document.getElementsByClassName('editor-main')[0].clientHeight
     const maxWidth = document.getElementsByClassName('editor-main')[0].clientWidth
     let zoomScale = 1;
-    // console.log(this._canvas.height * zoomScale, maxHeight, maxWidth)
+    // console.log(this._canvas.width, maxWidth, maxHeight)
     while(this._canvas.height * zoomScale > maxHeight){
       zoomScale -= 0.05;
     }
     if(this._canvas.height * zoomScale <= maxHeight){
       // document.getElementById('canvas').style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
       // document.getElementsByClassName('upper-canvas')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      console.log('height resize')
+      document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      this.setState({ scaleZoom: zoomScale })
+    }
+
+    while(this._canvas.width * zoomScale > maxWidth){
+      zoomScale -= 0.05;
+    }
+    if(this._canvas.width * zoomScale <= maxWidth){
+      // document.getElementById('canvas').style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      // document.getElementsByClassName('upper-canvas')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      console.log('width resize')
       document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
       this.setState({ scaleZoom: zoomScale })
     }
@@ -1492,7 +1504,7 @@ class ImageEditor extends Component {
   checkCanvasSize = () => {
     const maxHeight = document.getElementsByClassName('real')[0].clientHeight
     const maxWidth = document.getElementsByClassName('real')[0].clientWidth
-
+    // this.resizeScale();
     // console.log(maxHeight, maxWidth)
   }
 
