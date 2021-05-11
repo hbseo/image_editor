@@ -19,7 +19,7 @@ class Main extends Component {
       id : '',
       withdrawalModal: false
     }
-    i18next.changeLanguage(checkUserLanguage());
+    // i18next.changeLanguage(checkUserLanguage());
   }
 
   componentDidMount(){
@@ -78,20 +78,6 @@ class Main extends Component {
 
   withdrawalHandler = () => {
 
-  }
-
-  checkUserLanguage = () => {
-    if(navigator){
-      let lang = navigator.language || navigator.userLanguage;
-      switch(lang){
-        case 'ko-KR':
-          i18next.changeLanguage('ko');
-          break;
-        default:
-          i18next.changeLanguage('en');
-          break;
-      }
-    }
   }
 
   changeToKorean = () => {

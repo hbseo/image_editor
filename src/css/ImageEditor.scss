@@ -250,6 +250,8 @@ ul {
     justify-content: center;
     align-items: center;
     // flex-wrap: wrap;
+    // position : absolute;
+    left : 5vw;
     
     .canvas-container {
     // flex-grow: 1;
@@ -263,7 +265,8 @@ ul {
       // overflow: auto;
       // top : 0;
       
-      .canvas {
+      #canvas {
+        position : relative;
         // top : 0;
         // overflow: auto;
       

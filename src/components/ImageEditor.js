@@ -580,7 +580,7 @@ class ImageEditor extends Component {
     document.removeEventListener('mousedown',this._onMouseDownEvent)
     document.removeEventListener('keyup',this._onShiftKeyUpEvent)
     document.removeEventListener('mouseup',this._onMouseUpEvent)
-    window.addEventListener('resize', this.checkCanvasSize , true);
+    window.removeEventListener('resize', this.checkCanvasSize , true);
   }
 
   addKeyDownEvent = () => {
