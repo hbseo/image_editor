@@ -12,7 +12,12 @@ class ObjectAction extends Action {
     if(obj){
       // obj.set('shadow', new fabric.Shadow( {color:'black', blur:30, offsetX:10, offsetY:10, opacity:0}));
       obj.set('shadow', new fabric.Shadow( {color: option.color , blur : option.blur, offsetX : option.offsetX, offsetY : option.offsetY, opacity : option.opacity}));
-      this.saveState('set shadow')
+      if(obj.type === "path") {
+        if(obj.fill === null) this.saveState('set shadow drawing');
+        else this.saveState('set shadow path')
+      }
+      else if(obj.type === "group") this.saveState('set shadow drawing');
+      else this.saveState('set shadow ' + obj.type);
     }
     canvas.renderAll();
   }
@@ -22,7 +27,12 @@ class ObjectAction extends Action {
     let obj = this.getActiveObject();
     if(obj){
       obj.set('shadow', null);
-      this.saveState('remove shadow')
+      if(obj.type === "path") {
+        if(obj.fill === null) this.saveState('remove shadow draw');
+        else this.saveState('remove shadow path')
+      }
+      else if(obj.type === "group") this.saveState('remove shadow draw');
+      else this.saveState('remove shadow ' + obj.type);
       canvas.renderAll();
     }
   }
@@ -164,7 +174,13 @@ class ObjectAction extends Action {
       }
       activeObject.setCoords();
       canvas.renderAll();
-      this.saveState(activeObject.type + ' moved using a keyboard')
+
+      if(activeObject.type === "path") {
+        if(activeObject.fill === null) this.saveState('drawing moved using a keyboard');
+        else this.saveState('icon moved using a keyboard');
+      }
+      else if(activeObject.type === "group") this.saveState('drawing moved using a keyboard');
+      else this.saveState(activeObject.type + ' moved using a keyboard');
     }   
   }
 }

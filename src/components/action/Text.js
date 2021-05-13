@@ -96,7 +96,7 @@ class Text extends Action {
           break;
         default:
       }
-      this.saveState('Text modified : ' + option);
+      this.saveState('Text modified ' + option);
       canvas.renderAll();
     }
   }

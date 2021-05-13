@@ -552,7 +552,13 @@ class ImageEditor extends Component {
   */
   _movedObjectSave = (event) => {
     if(event.target.type !== 'Cropzone'){
-      this.saveState(event.target.type + ' : move');
+      let obj = event.target;
+      if(obj.type === "path") {
+        if(obj.fill === null) this.saveState('drawing moved');
+        else this.saveState('path moved')
+      }
+      else if(obj.type === "group") this.saveState('drawing moved');
+      else this.saveState(obj.type + " moved");
     }
   }
 
