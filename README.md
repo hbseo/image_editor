@@ -10,14 +10,12 @@
 ![node](https://img.shields.io/node/v/fabric)
 
 ## Introduction  
----  
 Our project is an image editor that runs on a web browser written by Javascript.  
 We used some references  
 * An image editor based on [Fabric.js](https://github.com/fabricjs/fabric.js).  
 * Some parts of code are from [ToastUI Image Editor](https://github.com/nhn/tui.image-editor) and [glfx.js](https://github.com/evanw/glfx.js)
 
 ## Overview  
----  
 * __Save and Load__ - Save current project as JPG or PNG. Also, Load from image.  
 * __User ID__ - Manage projects using individual ID. Use mysql as Database. There are two tables USERS table and PROJECTS table.  
 * __Main page__ - You can create or load a project of any size.  
@@ -30,7 +28,6 @@ We used some references
 ![](https://via.placeholder.com/150)  
 
 ## How to start  
----
 Before launching the below code open mysql and set [config](https://github.com/hbseo/image_editor/tree/master/server/config).   
 You can start editor by executing following command.  
 * client  
@@ -47,7 +44,6 @@ Server is running on 8000 port.
 Dependency conflicts may happen.  
 
 ## Structure  
----
 <details>
   <summary>Details</summary>
 
@@ -204,11 +200,9 @@ Dependency conflicts may happen.
 
 
 ## Contributor  
----
 [Hyeon Beom Seo](https://github.com/hbseo)  
 [Ju Kyung Yoon](https://github.com/JuKyYoon)[![time tracker](https://wakatime.com/badge/github/hbseo/image_editor.svg)](https://wakatime.com/badge/github/hbseo/image_editor)   
 [Se Myeong Lee](https://github.com/3people)  
 
 ## Bug Report  
----  
 If you find a bug. please report to us posting [issues](https://github.com/hbseo/image_editor/issues) on GitHub.
