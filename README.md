@@ -44,158 +44,158 @@ Server is running on 8000 port.
 Dependency conflicts may happen.  
 
 ## Structure  
-<details>
-  <summary>Details</summary>
+<details><summary>Details</summary>
 
-  <div markdown="1">
-    image_editor
-    │───README.md   
+```
+image_editor
+│───README.md   
+│
+└───public
+│   │───index.html
+│   │
+│   └───image
+│       └───.svg
+│
+└───src
+│   │───index.js
+│   │───Route.js
+│   │
+│   └───css
+│   │   │───Error.scss
+│   │   │───ImageEditor.scss
+│   │   │───ImageList.scss
+│   │   │───Loading.scss
+│   │   │───Main.scss
+│   │   │───New_project.scss
+│   │   │───Save.scss
+│   │   │───UploadFIle.scss
+│   │   │
+│   │   └───Login
+│   │   │   │───font-awesome.min.scss
+│   │   │   │───main.scss
+│   │   │   │───util.scss
+│   │   │   └───fonts
+│   │   │   
+│   │   └───ui
+│   │       │───Draw.scss
+│   │       │───Filter.scss
+│   │       │───History.scss
+│   │       │───Icon.scss
+│   │       │───Image.scss
+│   │       │───Rotation.scss
+│   │       │───Shape.scss
+│   │       └───Text.scss
+│   │
+│   └───locale
+│   │   │───i18n.js
+│   │   │
+│   │   │───ko
+│   │   │   └───korean.json
+│   │   │
+│   │   └───en
+│   │       └───english.json
+│   │
+│   └───components
+│       │───Change_password.js
+│       │───Error.js
+|       |───Find_password.js
+│       │───ImageEditor.js
+│       │───ImageList.js
+│       │───LoadImage.js
+│       │───Login.js
+│       │───Main.js
+│       │───New_project.js
+│       │───Project.js
+│       │───Save.js
+│       │───SignIn.js
+│       │───SignUp.js
+│       │───Upload_file.js
+│       │    
+│       └─── action
+│       │     │───Action.js
+│       │     │───Clip.js
+│       │     │───Crop.js
+│       │     │───Delete.js
+│       │     │───Draw.js
+│       │     │───Fill.js
+│       │     │───Filter.js
+│       │     │───Flip.js
+│       │     │───Icon.js
+│       │     │───Image.js
+│       │     │───Line.js
+│       │     │───ObjectAction.js
+│       │     │───Rotation.js
+│       │     │───Shape.js
+│       │     └───Text.js
+│       │
+│       └─── const
+│       │     └───consts.js
+│       │
+│       └─── extension
+│       │     │───Extension.js
+│       │     │───Grid.js
+│       │     │───Layers.js
+│       │     │───Pipette.js
+│       │     │───Snap.js
+│       │     └───Util.js
+│       │   
+│       └─── filters
+|       │    └─── glfx
+│       │          │───denoise.js
+│       │          │───hexagonalPixelate.js
+│       │          │───ink.js
+│       │          │───vibrance.js
+│       │          │───vignette.js
+│       │          └───zoomblur.js
+│       │
+│       └─── helper
+│       │     │───Brush.js
+│       │     │───ConverRGB.js
+│       │     │───originImage.js
+│       │     │───Resize.js
+│       │     └───SwithTools.js
+│       │
+│       └─── ui
+│             │───Canvas.js
+│             │───Draw.js
+│             │───Effect.js
+│             │───Filter.js
+│             │───History.js
+│             │───Icon.js
+│             │───Image.js
+│             │───Loading.js
+│             │───Object.js
+│             │───Rotation.js
+│             │───Shape.js
+│             │───SideNav.js
+│             │───Text.js
+│             └───Tools.js
+│                                               
+└───server
+    │─── app.js
     │
-    └───public
-    │   │───index.html
-    │   │
-    │   └───image
-    │       └───.svg
+    │─── config
+    │     │───db-config.json
+    │     │───jwt.js
+    │     └───user.sql
     │
-    └───src
-    │   │───index.js
-    │   │───Route.js
-    │   │
-    │   └───css
-    │   │   │───Error.scss
-    │   │   │───ImageEditor.scss
-    │   │   │───ImageList.scss
-    │   │   │───Loading.scss
-    │   │   │───Main.scss
-    │   │   │───New_project.scss
-    │   │   │───Save.scss
-    │   │   │───UploadFIle.scss
-    │   │   │
-    │   │   └───Login
-    │   │   │   │───font-awesome.min.scss
-    │   │   │   │───main.scss
-    │   │   │   │───util.scss
-    │   │   │   └───fonts
-    │   │   │   
-    │   │   └───ui
-    │   │       │───Draw.scss
-    │   │       │───Filter.scss
-    │   │       │───History.scss
-    │   │       │───Icon.scss
-    │   │       │───Image.scss
-    │   │       │───Rotation.scss
-    │   │       │───Shape.scss
-    │   │       └───Text.scss
-    │   │
-    │   └───locale
-    │   │   │───i18n.js
-    │   │   │
-    │   │   │───ko
-    │   │   │   └───korean.json
-    │   │   │
-    │   │   └───en
-    │   │       └───english.json
-    │   │
-    │   └───components
-    │       │───Change_password.js
-    │       │───Error.js
-    |       |───Find_password.js
-    │       │───ImageEditor.js
-    │       │───ImageList.js
-    │       │───LoadImage.js
-    │       │───Login.js
-    │       │───Main.js
-    │       │───New_project.js
-    │       │───Project.js
-    │       │───Save.js
-    │       │───SignIn.js
-    │       │───SignUp.js
-    │       │───Upload_file.js
-    │       │    
-    │       └─── action
-    │       │     │───Action.js
-    │       │     │───Clip.js
-    │       │     │───Crop.js
-    │       │     │───Delete.js
-    │       │     │───Draw.js
-    │       │     │───Fill.js
-    │       │     │───Filter.js
-    │       │     │───Flip.js
-    │       │     │───Icon.js
-    │       │     │───Image.js
-    │       │     │───Line.js
-    │       │     │───ObjectAction.js
-    │       │     │───Rotation.js
-    │       │     │───Shape.js
-    │       │     └───Text.js
-    │       │
-    │       └─── const
-    │       │     └───consts.js
-    │       │
-    │       └─── extension
-    │       │     │───Extension.js
-    │       │     │───Grid.js
-    │       │     │───Layers.js
-    │       │     │───Pipette.js
-    │       │     │───Snap.js
-    │       │     └───Util.js
-    │       │   
-    │       └─── filters
-    |       │    └─── glfx
-    │       │          │───denoise.js
-    │       │          │───hexagonalPixelate.js
-    │       │          │───ink.js
-    │       │          │───vibrance.js
-    │       │          │───vignette.js
-    │       │          └───zoomblur.js
-    │       │
-    │       └─── helper
-    │       │     │───Brush.js
-    │       │     │───ConverRGB.js
-    │       │     │───originImage.js
-    │       │     │───Resize.js
-    │       │     └───SwithTools.js
-    │       │
-    │       └─── ui
-    │             │───Canvas.js
-    │             │───Draw.js
-    │             │───Effect.js
-    │             │───Filter.js
-    │             │───History.js
-    │             │───Icon.js
-    │             │───Image.js
-    │             │───Loading.js
-    │             │───Object.js
-    │             │───Rotation.js
-    │             │───Shape.js
-    │             │───SideNav.js
-    │             │───Text.js
-    │             └───Tools.js
-    │                                               
-    └───server
-        │─── app.js
-        │
-        │─── config
-        │     │───db-config.json
-        │     │───jwt.js
-        │     └───user.sql
-        │
-        │─── database
-        │     └───index.js
-        │
-        │─── middlewares
-        │     └───auth.js
-        │
-        └─── routes
-              └───api
-                  │───auth
-                  │   │───controller.js 
-                  │   └───index.js
-                  │
-                  └───content
-                      │───controller.js 
-                      └───index.js
-  </div>
+    │─── database
+    │     └───index.js
+    │
+    │─── middlewares
+    │     └───auth.js
+    │
+    └─── routes
+          └───api
+              │───auth
+              │   │───controller.js 
+              │   └───index.js
+              │
+              └───content
+                  │───controller.js 
+                  └───index.js
+```
+
 </details>
 
 
