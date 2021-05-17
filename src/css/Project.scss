@@ -57,21 +57,21 @@
 }
 
 .project-search {
-  padding: 1%;
   border-radius: 5px;
   background-color: #eeeeee;
   display: flex;
-  width: 30%;
+  width: 350px;
   height: 100%;
+  padding: 5px;
 
   .search {
     margin-left: 10px;
+    margin-right: 10px;
     width: 150px;
     height: 20px;
   }
 
   input[type="submit"] {
-    margin-left: 100px;
     width: 80px;
     height: 40px;
     border-radius: 5px;
