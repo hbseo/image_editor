@@ -305,6 +305,7 @@ class Project extends Component {
             scrollableTarget="project-list">
             {this.state.projects.map((prj) =>
               <div className="project-div" key={prj.idx}>
+                <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
                 <div className="project-img">
                   <Link onClick={this.loginCheck}
                   to={{
@@ -326,7 +327,6 @@ class Project extends Component {
                   ${new Date(prj.create_date).getFullYear()} ${new Date(prj.create_date).getHours()}:
                   ${new Date(prj.create_date).getMinutes()}`
                   } </p>
-                  <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
                 </div>
               </div>
             )}
