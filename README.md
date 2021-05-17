@@ -5,28 +5,46 @@
   </p>
 </p>
 
-## Introduction
-An image editor based on [Fabric.js](https://github.com/fabricjs/fabric.js).  
-and Some parts of code are from [ToastUI Image Editor](https://github.com/nhn/tui.image-editor) and [glfx.js](https://github.com/evanw/glfx.js)
-
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hbseo/image_editor/blob/master/LICENSE) 
 [![version](https://img.shields.io/badge/react-16.13.1-blue)](https://reactjs.org/)
 ![node](https://img.shields.io/node/v/fabric)
-## How to start
+
+## Introduction  
+Our project is an image editor that runs on a web browser written by Javascript.  
+We used some references  
+* An image editor based on [Fabric.js](https://github.com/fabricjs/fabric.js).  
+* Some parts of code are from [ToastUI Image Editor](https://github.com/nhn/tui.image-editor) and [glfx.js](https://github.com/evanw/glfx.js)
+
+## Overview  
+* __Save and Load__ - Save current project as JPG or PNG. Also, Load from image.  
+* __User ID__ - Manage projects using individual ID. Use mysql as Database. There are two tables USERS table and PROJECTS table.  
+* __Main page__ - You can create or load a project of any size.  
+![](https://via.placeholder.com/150)  
+* __Editor page__ - Edit your project using tools.  
+![](https://via.placeholder.com/150)  
+* __Get image__ - You can search under any title to use the image.  
+![](https://via.placeholder.com/150)  
+* __Load project__ - View projects when login.  
+![](https://via.placeholder.com/150)  
+
+## How to start  
+Before launching the below code open mysql and set [config](https://github.com/hbseo/image_editor/tree/master/server/config).   
+You can start editor by executing following command.  
+* client  
 ```
 npm install
 npm run start
 ```
-Dependency conflicts may happen.
+* server  
+```
+npm ./server/app
+```  
+And then access it by using a browser. [http://localhost:8080](http://localhost:8080)  
+Server is running on 8000 port.  
+Dependency conflicts may happen.  
 
-## Contributor
-[Hyeon Beom Seo](https://github.com/hbseo)  
-[Ju Kyung Yoon](https://github.com/JuKyYoon)[![time tracker](https://wakatime.com/badge/github/hbseo/image_editor.svg)](https://wakatime.com/badge/github/hbseo/image_editor)   
-[Se Myeong Lee](https://github.com/3people)  
-
-## Features
-
-## Constructor
+## Structure  
+<details><summary>Details</summary>
 
 ```
 image_editor
@@ -176,21 +194,15 @@ image_editor
               └───content
                   │───controller.js 
                   └───index.js
-
 ```
 
-> npm run start
+</details>
 
-client port number 8080
 
----
+## Contributor  
+[Hyeon Beom Seo](https://github.com/hbseo)  
+[Ju Kyung Yoon](https://github.com/JuKyYoon)[![time tracker](https://wakatime.com/badge/github/hbseo/image_editor.svg)](https://wakatime.com/badge/github/hbseo/image_editor)   
+[Se Myeong Lee](https://github.com/3people)  
 
->` /server `
->  node app
-
-server port number 8000
-
----
-
-### server/config/db-config.json
-### server/config/user.sql
+## Bug Report  
+If you find a bug. please report to us posting [issues](https://github.com/hbseo/image_editor/issues) on GitHub.

@@ -54,8 +54,9 @@ class Save extends Component {
       }
 
     })
-    .catch(() => {
+    .catch((error) => {
       alert(i18next.t('Save.Error'));
+      console.log(error)
     })
   }
 
@@ -75,14 +76,15 @@ class Save extends Component {
         if(data.success){
           // console.log(data);
           alert(i18next.t('Save.Update') + ' '+ i18next.t('Save.Success'));
-          this.props.closeSaveModal();
+          this.props.close();
         }
         else{
           alert(i18next.t('Save.Error'))
         }
       })
-      .catch(() => {
+      .catch((error) => {
         alert(i18next.t('Save.Error'));
+        console.log(error)
       })
     }
     else{
@@ -92,7 +94,10 @@ class Save extends Component {
 
   handleTitleChange = (event) => {
     new Promise((resolve) => {
-      this.setState({ title : event.target.value});
+      let pattern = /[^a-zA-Z-_0-9]/g;
+      let value = event.target.value;
+      if(value.length > 0 && value.match(pattern)) value = value.replace(pattern, "");
+      this.setState({ title : value});
       resolve();
     })
     .then(() => {
@@ -126,7 +131,7 @@ class Save extends Component {
                 <button className="close" onClick = {close}>{i18next.t('Save.Close')}</button>
               </div>
               <div className="title-container">
-					      <input type="text" placeholder=" " className="title-input" id="title-id" name="title-name" value={this.state.title} onChange = {this.handleTitleChange}/>
+					      <input type="text" placeholder=" " className="title-input" id="title-id" name="title-name" maxLength="25" value={this.state.title} onChange = {this.handleTitleChange}/>
                 <label className="title-placeholder" htmlFor="title-name">{i18next.t('Save.Title')}</label>
               </div>
               <div className="content">

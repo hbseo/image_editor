@@ -9,8 +9,10 @@
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "fabric": "^4.1.0",
     "i18next": "^19.9.2",
+    "i18next-browser-languagedetector": "^6.1.1",
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
@@ -35,7 +37,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "react-switch": "^5.0.1",
-    "sass": "^1.32.12",
+    "sass": "^1.32.13",
     "unsplash-js": "^7.0.0"
   },
   "scripts": {

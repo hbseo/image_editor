@@ -25,7 +25,14 @@ class Delete extends Action {
           break;
         default :
           canvas.remove(obj);
-          this.saveState('delete '+ obj.type);
+          console.log(obj);
+          console.log(obj.type);
+          if(obj.type === "path") {
+            if(obj.fill === null) this.saveState('delete draw');
+            else this.saveState('delete path')
+          }
+          else if(obj.type === "group") this.saveState('delete draw');
+          else this.saveState('delete ' + obj.type);
       }
       canvas.renderAll();
     }

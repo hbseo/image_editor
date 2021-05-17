@@ -32,7 +32,12 @@ class Shape extends Action {
       })
       this.updateObject();
       this.getCanvas().renderAll();
-      this.saveState('Stroke set', this.getActiveObject().type);
+      if(shape.type === "path") {
+        if(shape.fill === null) this.saveState('Stroke set draw');
+        else this.saveState('Stroke set path')
+      }
+      else if(shape.type === "group") this.saveState('Stroke set draw');
+      else this.saveState('Stroke set ' + shape.type);
     }
   }
 
@@ -43,7 +48,13 @@ class Shape extends Action {
       activeObject.set({
         stroke: convertRGB(color)
       })
-      this.saveState('Stroke color change', activeObject.type);
+      let shape = activeObject;
+      if(shape.type === "path") {
+        if(shape.fill === null) this.saveState('Stroke color change draw');
+        else this.saveState('Stroke color change path')
+      }
+      else if(shape.type === "group") this.saveState('Stroke color change draw');
+      else this.saveState('Stroke color change ' + shape.type);
       canvas.renderAll();
     }
   }

@@ -51,6 +51,7 @@ class ImageEditor extends Component {
       canvasView : { x: 0, y: 0},
       activeObject : { type : 'not active', width : 0, height : 0, scaleX : 0, scaleY : 0, angle : 0},
       zoom : 1,
+      scaleZoom : 1,
       openSave : false, // save Modal 여는 용도
       tab : 0, // 사이드 NavBar 탭 번호
       user_name : '', // 로그인 되어있는 유저 id
@@ -79,14 +80,6 @@ class ImageEditor extends Component {
     this.selection = true;
     
     this.cropImg = null;
-    this.cropCanvasState = {
-      left : 0,
-      top : 0,
-      scaleX : 0,
-      scaleY : 0,
-      width : 0,
-      height : 0
-    };
 
     // redo undo
     this.lock = false;
@@ -195,7 +188,7 @@ class ImageEditor extends Component {
           this.action['Grid'].makeGrid(); // canvas size error
           this.forceUpdate(); // for showUndo/Redo Stack
           this.action['Draw'].setBrush(); // Canvas Required
-
+          this.resizeScale();
         })
         .catch(() => {
           this.props.history.push('/');
@@ -224,6 +217,7 @@ class ImageEditor extends Component {
         this.action['Grid'].makeGrid();
         this.forceUpdate(); // for showUndo/Redo Stack
         this.action['Draw'].setBrush(); // Canvas Required
+        this.resizeScale();
       }
     }
     this.getCheck();
@@ -340,6 +334,8 @@ class ImageEditor extends Component {
     document.addEventListener('mousedown',this._onMouseDownEvent)
     document.addEventListener('keydown',this._onShiftKeydownEvent)
     document.addEventListener('keyup',this._onShiftKeyUpEvent)
+    
+    window.addEventListener('resize', this.checkCanvasSize , true);
   }
 
 
@@ -382,18 +378,19 @@ class ImageEditor extends Component {
         // else if(vpt[4] < -this._canvas.getWidth()){
         //   vpt[4] =  -this._canvas.getWidth();
         // }
-      //   else if (vpt[4] < this._canvas.getWidth() - 1000 * zoom) {
-      //     vpt[4] = this._canvas.getWidth() - 1000 * zoom;
-      //   }
+        else if (vpt[4] < this._canvas.getWidth() - this._canvas.width * zoom) {
+          vpt[4] = this._canvas.getWidth() - this._canvas.width * zoom;
+        }
         if (vpt[5] >= 0) {
           vpt[5] = 0;
-        } 
-      //   else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
-      //     vpt[5] = this._canvas.getHeight() - 1000 * zoom;
-      //   }
+        }
+        // else if(vpt[5] < -this._canvas.getHeight()){
+        //   vpt[5] =  -this._canvas.getHeight();
+        // }
+        else if (vpt[5] < this._canvas.getHeight() - this._canvas.height * zoom) {
+          vpt[5] = this._canvas.getHeight() - this._canvas.height * zoom;
+        }
       }
-      // console.log(vpt[4], vpt[5])
-
       this.setState({ canvasView : { x : vpt[4], y : vpt[5] }})
       this._canvas.renderAll();
       this.lastPosX = e.clientX;
@@ -419,31 +416,37 @@ class ImageEditor extends Component {
   * @private
   */
   _canvasZoomEvent = (event) => {
-    if(event.e.altKey){
+    if(true){
       var delta = event.e.deltaY; 
       var zoom = this._canvas.getZoom (); 
       zoom *= 0.999 ** delta; 
-      if (zoom> 5) zoom = 5 ; 
+      if (zoom> 4) zoom = 4 ; 
       if (zoom < 1) zoom = 1; 
       this._canvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
       let vpt = this._canvas.viewportTransform;
       event.e.preventDefault (); 
       event.e.stopPropagation (); 
-      // if (zoom < 400 / 1000) {
-      //   vpt[4] = 200 - 1000 * zoom / 2;
-      //   vpt[5] = 200 - 1000 * zoom / 2;
-      // } else {
-      //   if (vpt[4] >= 0) {
-      //     vpt[4] = 0;
-      //   } else if (vpt[4] < this._canvas.getWidth() - 1000  * zoom) {
-      //     vpt[4] = this._canvas.getWidth() - 1000 * zoom;
-      //   }
-      //   if (vpt[5] >= 0) {
-      //     vpt[5] = 0;
-      //   } else if (vpt[5] < this._canvas.getHeight() - 1000 * zoom) {
-      //     vpt[5] = this._canvas.getHeight()  * zoom;
-      //   }
-      // }
+      if (zoom < 400 / 1000) {
+        vpt[4] = 200 - 1000 * zoom / 2;
+        vpt[5] = 200 - 1000 * zoom / 2;
+      } 
+      else {
+        if (vpt[4] >= 0) {
+          vpt[4] = 0;
+        } 
+        else if (vpt[4] < this._canvas.getWidth() - this._canvas.width  * zoom) {
+          vpt[4] = this._canvas.getWidth() - this._canvas.width * zoom;
+        }
+        if (vpt[5] >= 0) {
+          vpt[5] = 0;
+        } 
+        else if (vpt[5] < this._canvas.getHeight() - this._canvas.height * zoom) {
+          vpt[5] = this._canvas.getHeight() - this._canvas.height * zoom;
+        }
+      }
+      if(vpt[4]>0){
+        console.log(vpt[4], vpt[5])
+      }
       this.setState({zoom : zoom , canvasView : { x : vpt[4], y : vpt[5] }});
     }
   }
@@ -462,11 +465,13 @@ class ImageEditor extends Component {
   }
 
   _onCanvasZoom = () => {
-    this._canvas.on('mouse:wheel', this._canvasZoomEvent);    
+    // this._canvas.on('mouse:wheel', this._canvasZoomEvent);    
+    this._canvas.on('mouse:wheel', this.canvasZoom);       
   }
 
   _offCanvasZoom = () => {
-    this._canvas.off('mouse:wheel', this._canvasZoomEvent);    
+    // this._canvas.off('mouse:wheel', this._canvasZoomEvent);   
+    this._canvas.off('mouse:wheel', this.canvasZoomIn);       
   }
 
 
@@ -547,7 +552,13 @@ class ImageEditor extends Component {
   */
   _movedObjectSave = (event) => {
     if(event.target.type !== 'Cropzone'){
-      this.saveState(event.target.type + ' : move');
+      let obj = event.target;
+      if(obj.type === "path") {
+        if(obj.fill === null) this.saveState('drawing moved');
+        else this.saveState('path moved')
+      }
+      else if(obj.type === "group") this.saveState('drawing moved');
+      else this.saveState(obj.type + " moved");
     }
   }
 
@@ -575,6 +586,7 @@ class ImageEditor extends Component {
     document.removeEventListener('mousedown',this._onMouseDownEvent)
     document.removeEventListener('keyup',this._onShiftKeyUpEvent)
     document.removeEventListener('mouseup',this._onMouseUpEvent)
+    window.removeEventListener('resize', this.checkCanvasSize , true);
   }
 
   addKeyDownEvent = () => {
@@ -1150,14 +1162,7 @@ class ImageEditor extends Component {
         this.isDragging = false;
         this.selection = true;
         this.cropImg = null;
-        this.cropCanvasState = {
-          left : 0,
-          top : 0,
-          scaleX : 0,
-          scaleY : 0,
-          width : 0,
-          height : 0
-        };
+
         // redo undo
         this.lock = false;
         this.stateStack = [];
@@ -1165,9 +1170,6 @@ class ImageEditor extends Component {
         this.firstState = null;
         this.stackMaxSize = 50;
         this.state_id = 1;
-        this.undoCanvasSize = [];
-        this.redoCanvasSize = [];
-        this.currentCanvasSize = {width: null, height: null};
         this.dotoggle = true;
 
         this.lastPosX = 0;
@@ -1187,7 +1189,6 @@ class ImageEditor extends Component {
         this.currentState.height = json.height ? json.height : 600;
         this.currentState.id = 0;
         this.firstState = this.currentState;
-        this.currentCanvasSize = {width: this._canvas.width, height: this._canvas.height};
 
         this._canvas.setWidth( json.width ? json.width : 800 );
         this._canvas.setHeight( json.height ? json.height : 600 );
@@ -1232,6 +1233,7 @@ class ImageEditor extends Component {
       this.action['Grid'].makeGrid();
       this.forceUpdate(); // for showUndo/Redo Stack
       this.action['Draw'].setBrush(); // Canvas Required
+      this.resizeScale();
     })
   }
 
@@ -1265,7 +1267,7 @@ class ImageEditor extends Component {
   }
 
   showPointer = (event) => {
-    console.log(this._canvas.getPointer(event, false));
+    console.log(event, this._canvas.getPointer(event, false));
   }
 
   getCanvasEventInfo = () => {
@@ -1412,6 +1414,106 @@ class ImageEditor extends Component {
     if(window.confirm(i18next.t('ImageEditor.LeavePage'))) window.location.replace('/');
   }
 
+  canvasZoom = (event) => {
+    if(event.e.wheelDelta > 0){ // wheel up
+      this.canvasZoomIn(event)
+    }
+    else{
+      this.canvasZoomOut(event);
+    }
+  }
+
+  canvasZoomIn = (event) => {
+    // event.preventDefault();
+    const zoomScale = this.state.scaleZoom + 0.05;
+    const maxHeight = document.getElementsByClassName('editor-main')[0].clientHeight
+    const maxWidth = document.getElementsByClassName('editor-main')[0].clientWidth
+
+    //캔버스 확대 기능 안 쓰고 그냥 확대함. 문제는 마우스로 이동 불가능. 스크롤바로만 이동 가능. 스크롤바 때문에 어려워짐...
+    // 초반에 만들어지는 real크기만 어떻게 좀 하면.... 그러면 scale 영향 받을거 같은디.
+    // document.getElementById('canvas').style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+    // document.getElementsByClassName('upper-canvas')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+    // if(zoomScale < 2.5){
+    //   document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+    //   this.setState({ scaleZoom: this.state.scaleZoom + 0.05 })
+    // }
+
+
+
+    //캔버스 기능 씀. 문제는.. 스크롤바가 없다는 것.
+    if(this._canvas.width * zoomScale < maxWidth && this._canvas.height * zoomScale < maxHeight){
+      // document.getElementById('canvas').style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      // document.getElementsByClassName('upper-canvas')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      this.setState({ scaleZoom: this.state.scaleZoom + 0.05 })
+    }
+    else{
+      // console.log('pointer bug')
+      // this._canvasZoomEvent(event);
+    }
+
+  }
+
+  canvasZoomOut = (event) => {
+    const zoomScale = this.state.scaleZoom - 0.05;
+    const maxHeight = document.getElementsByClassName('editor-main')[0].clientHeight
+    const maxWidth = document.getElementsByClassName('editor-main')[0].clientWidth
+    // if(zoomScale > 0.1){
+    //   document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+    //   this.setState({ scaleZoom: this.state.scaleZoom - 0.05 })
+    // }
+
+
+    // canvas와 upper-canvas를 scale 할건가, 아님 canvas-container만 scale 할건가. scale은 부모 기준으로 되기 때문에 둘 중 하나만 가능
+    if(this.state.zoom > 1){
+      this._canvasZoomEvent(event);
+    }
+    else if(this._canvas.width * zoomScale > 100 && this._canvas.height * zoomScale > 100 && zoomScale > 0.1){
+      // document.getElementById('canvas').style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      // document.getElementsByClassName('upper-canvas')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      this.setState({ scaleZoom: this.state.scaleZoom - 0.05 })
+    }
+
+  }
+
+  resizeScale = () => {
+    // 일단은 캔버스가 클 때만 작동.
+    const maxHeight = document.getElementsByClassName('editor-main')[0].clientHeight
+    const maxWidth = document.getElementsByClassName('editor-main')[0].clientWidth
+    let zoomScale = 1;
+    // console.log(this._canvas.width, maxWidth, maxHeight)
+    while(this._canvas.height * zoomScale > maxHeight){
+      zoomScale -= 0.05;
+    }
+    if(this._canvas.height * zoomScale <= maxHeight){
+      // document.getElementById('canvas').style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      // document.getElementsByClassName('upper-canvas')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      console.log('height resize')
+      document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      this.setState({ scaleZoom: zoomScale })
+    }
+
+    while(this._canvas.width * zoomScale > maxWidth){
+      zoomScale -= 0.05;
+    }
+    if(this._canvas.width * zoomScale <= maxWidth){
+      // document.getElementById('canvas').style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      // document.getElementsByClassName('upper-canvas')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      console.log('width resize')
+      document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
+      this.setState({ scaleZoom: zoomScale })
+    }
+  }
+
+
+  checkCanvasSize = () => {
+    const maxHeight = document.getElementsByClassName('real')[0].clientHeight
+    const maxWidth = document.getElementsByClassName('real')[0].clientWidth
+    // this.resizeScale();
+    // console.log(maxHeight, maxWidth)
+  }
+
   render() {
     if(i18next.language === 'ko'){
       this.stylelang = this.kostyle;
@@ -1443,6 +1545,7 @@ class ImageEditor extends Component {
       2: <div className="canvas-info">
           <div>{i18next.t('ImageEditor.Zoom')} : {this.state.zoom}</div>
           <div>{this._canvas ? this._canvas.width : 0} X {this._canvas ? this._canvas.height : 0}</div>
+          <div>{((this.state.scaleZoom + this.state.zoom - 1) * 100).toFixed(1)}%</div>
         </div>,
     }
     const tab = {
@@ -1583,11 +1686,16 @@ class ImageEditor extends Component {
             <div className="save-more">
                 <button id="save" onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
                 <button id="more" onClick = { this.returnToHome }>{i18next.t('ImageEditor.Home')}</button>
+                <input type="checkbox" onClick={this.getMousePointInfo} />
+
             </div>
           </div>
-          <div className="real" >
-            <canvas id='canvas' tabIndex='0'></canvas>
+          <div className="editor-main">
+            <div className="real" >
+              <canvas id='canvas' tabIndex='0'></canvas>
+            </div>
           </div>
+
         </div>
         <Save 
           open = {this.state.openSave} 

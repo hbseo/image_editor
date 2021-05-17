@@ -6,7 +6,6 @@ import LoadImage from './LoadImage';
 import Withdrawal from './Withdrawal';
 import '../css/Main.scss';
 import checkUserLanguage from './helper/CheckLang';
-import Loading from './ui/Loading';
 import { withTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
@@ -20,7 +19,7 @@ class Main extends Component {
       id : '',
       withdrawalModal: false
     }
-    i18next.changeLanguage(checkUserLanguage());
+    // i18next.changeLanguage(checkUserLanguage());
   }
 
   componentDidMount(){
@@ -79,20 +78,6 @@ class Main extends Component {
 
   withdrawalHandler = () => {
 
-  }
-
-  checkUserLanguage = () => {
-    if(navigator){
-      let lang = navigator.language || navigator.userLanguage;
-      switch(lang){
-        case 'ko-KR':
-          i18next.changeLanguage('ko');
-          break;
-        default:
-          i18next.changeLanguage('en');
-          break;
-      }
-    }
   }
 
   changeToKorean = () => {
