@@ -1,98 +1,234 @@
-.canvas-menu{
+.canvas-menu {
+  display: flex;
+  flex-direction: column;
+
+  .option-title {
+    font-size: 17px;
+    margin: 3%;
+  }
+
+  .canvas-crop {
     display: flex;
+    justify-content: center;
     flex-direction: column;
+    align-items: center;
 
-    .option-title{
-        font-size: 17px;
-        margin: 3%;
+    button {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      background-color: #e6e6e6;
+      border: 1px solid #d4d4d4;
+      border-radius: 5px;
+      width: 150px;
+      height: 30px;
     }
-    
 
-    .canvas-crop{
+    button:hover {
+      background-color: #d9d9d9;
+    }
+
+    .crop-button {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      width: 50%;
+    }
+
+    .crop-box {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+
+      button {
+        margin-top: 15px;
+      }
+
+      input {
+        background-color: #eeeeee;
+        border-bottom: 1px solid #d9d9d9;
+        width: 80px;
+        height: 20px;
+      }
+
+      input:hover {
+        border-bottom: 1px solid black;
+        transition: 0.5s;
+      }
+
+      input:focus {
+        border-bottom: 1px solid black !important;
+      }
+
+      .crop-size-input {
         display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
+        width: 70%;
+        justify-content: space-around;
 
-        button{
-            margin-top: 5px;
-            margin-bottom: 5px;
-            background-color: #E6E6E6;
-            border: 1px solid #D4D4D4;
-            border-radius: 5px;
-            width: 150px;
-            height: 30px;
+        div {
+          margin-top: 5px;
         }
+      }
+    }
+  }
 
-        button:hover{
-            background-color: #D9D9D9;
-        }
+  .canvas-reset {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 
-        .crop-button{
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            width: 50%;
-        }
-
-        .crop-box{
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-            margin-bottom: 10px;
-
-            button{
-                margin-top: 15px;
-            }
-
-            input{
-                background-color: #EEEEEE;
-                border-bottom: 1px solid #D9D9D9;
-                width: 80px;
-                height: 20px;
-            }
-            
-            input:hover{
-                border-bottom: 1px solid black;
-                transition: .5s;
-            }
-            
-            input:focus{
-                border-bottom: 1px solid black !important;
-            }
-
-            .crop-size-input{
-                display: flex;
-                width: 70%;
-                justify-content: space-around;
-
-                div{
-                    margin-top: 5px;
-                }
-            }
-        }
+    button {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      background-color: #eeeeee;
+      border: 1px solid #d4d4d4;
+      border-radius: 5px;
+      width: 150px;
+      height: 30px;
     }
 
-    .canvas-reset{
-        width: 100%;
-        display: flex;
-        justify-content: center;
-
-        button{
-            margin-top: 5px;
-            margin-bottom: 5px;
-            background-color: #EEEEEE;
-            border: 1px solid #D4D4D4;
-            border-radius: 5px;
-            width: 150px;
-            height: 30px;
-        }
-    
-        button:hover{
-            background-color: #D9D9D9;
-        }
+    button:hover {
+      background-color: #d9d9d9;
     }
+  }
+}
+
+.canvas-export-import {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  button {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #e6e6e6;
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+    width: 150px;
+    height: 30px;
+  }
+
+  button:hover {
+    background-color: #d9d9d9;
+  }
+
+  .file-input-group {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #e6e6e6;
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+    width: 150px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .file-input-group:hover {
+    background-color: #d9d9d9;
+  }
+}
+
+.canvas-beta {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+
+  .beta-checkbox {
+    display: flex;
+    margin-bottom: 15px;
+    width: 50%;
+    margin: 5%;
+  }
+
+  .mycheckbox {
+    --background: #fff;
+    --border: #d1d6ee;
+    --border-hover: #bbc1e1;
+    --border-active: #365afc;
+    --tick: #fff;
+    position: relative;
+    margin-right: 10px;
+    input,
+    svg {
+      width: 21px;
+      height: 21px;
+      display: block;
+    }
+    input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      position: relative;
+      outline: none;
+      background: var(--background);
+      border: none;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: box-shadow 0.3s;
+      box-shadow: inset 0 0 0 var(--s, 1px) var(--b, var(--border));
+      &:hover {
+        --s: 2px;
+        --b: var(--border-hover);
+      }
+      &:checked {
+        --b: var(--border-active);
+      }
+    }
+    svg {
+      pointer-events: none;
+      fill: none;
+      stroke-width: 2px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke: var(--stroke, var(--border-active));
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 21px;
+      height: 21px;
+      transform: scale(var(--scale, 1)) translateZ(0);
+    }
+    &.path {
+      input {
+        &:checked {
+          --s: 2px;
+          transition-delay: 0.4s;
+          & + svg {
+            --a: 16.1 86.12;
+            --o: 102.22;
+          }
+        }
+      }
+      svg {
+        stroke-dasharray: var(--a, 86.12);
+        stroke-dashoffset: var(--o, 86.12);
+        transition: stroke-dasharray 0.6s, stroke-dashoffset 0.6s;
+      }
+    }
+  }
+}
+
+.hidden {
+  display: flex;
+  justify-content: space-around;
+
+  button {
+    width: 120px;
+    height: 30px;
+    border-radius: 3px;
+    transition: 0.5s;
+  }
+
+  button:hover {
+    background-color: #7868e6;
+    color: #e4fbff;
+  }
 }
