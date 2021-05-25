@@ -1,26 +1,25 @@
-.sub-filters{
+.sub-filters {
+  .option-title {
+    font-size: 17px;
+    margin: 3%;
+  }
 
-    .option-title{
-      font-size: 17px;
-      margin: 3%;
-    }
-  
-    .select-brush{
-      margin: 3%;
-      display: flex;
-      flex-direction: column;
-    }
-  
-    .select-width{
-      margin: 3%;
-    }
-  
-    .color-picker{
-      margin: 3%;
-  
-  
+  .select-brush {
+    margin: 3%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .select-width {
+    margin: 5%;
+    display: flex;
+    justify-content: center;
+
+    #width {
+      width: 80%;
     }
   }
+}
 
 .brush_ul img {
   display: flex;
@@ -29,13 +28,13 @@
   margin-bottom: 5px;
   border: 1px solid black;
   cursor: pointer;
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
 }
 
 .brush_ul {
-  position:absolute;
+  position: absolute;
   z-index: 1;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   list-style-type: none;
   overflow-x: hidden;
   overflow-y: scroll;
