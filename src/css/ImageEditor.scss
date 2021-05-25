@@ -355,10 +355,14 @@ ul {
     }
   }
 
+  .popup-tab:hover {
+    cursor: pointer;
+  }
+
   .popup-content {
     overflow-x: hidden;
     overflow-y: auto;
-    background-color: white;
+    background-color: #f8f5f1;
     padding: 5%;
   }
 }
