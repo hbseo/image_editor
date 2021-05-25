@@ -33,7 +33,7 @@ class SignIn extends Component {
       if(data.msg === 'login success') {
         alert(i18next.t('SignIn.Signin') + ' ' + i18next.t('SignIn.Success'));
         try {
-          window.location.replace('/'); 
+          window.location.replace('/main'); 
         } catch (error) {
           console.log('d');
           console.log(error);

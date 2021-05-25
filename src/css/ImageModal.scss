@@ -60,18 +60,17 @@ $label-padding: $title-container-padding !default;
             margin-top : 10px;
             height : 28vh;
             max-height: 350px;
-            // justify-content: center;
             .preview-box {
                 // background-color: red;
 
-                margin : 10px;
+                margin : auto;
                 border-radius: 10px;
                 padding : 12px;
                 // position: relative;
                 flex-grow : 1;
                 min-width: 100px;
                 max-width: 200px;
-
+                
                 min-height : 130px;
                 max-height : 200px;
 
@@ -96,6 +95,16 @@ $label-padding: $title-container-padding !default;
                 text-align: center;
                 margin : 10px;
                 // font-size : 15px;
+
+                .user_name{
+                    font-weight: 700;
+                    text-decoration: underline;
+                    // background-color: red;
+                }
+                .unsplash_link{
+                    font-weight: 700;
+                    text-decoration: underline;
+                }
             }
 
             .preview-bottom{

@@ -71,4 +71,4 @@ export const textIcon = {
   alignRight: "M 2 4 L 2 6 L 48 6 L 48 4 L 2 4 z M 16 14 L 16 16 L 48 16 L 48 14 L 16 14 z M 2 24 L 2 26 L 48 26 L 48 24 L 2 24 z M 16 34 L 16 36 L 48 36 L 48 34 L 16 34 z M 2 44 L 2 46 L 48 46 L 48 44 L 2 44 z",
 }
 
-export const unSplashAppName = "ImageEditor_(react)";
+export const unSplashAppName = "Fract";

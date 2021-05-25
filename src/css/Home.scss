@@ -1,0 +1,26 @@
+.home-div {
+    .home-top-div {
+        margin : auto;
+        padding : auto;
+
+        .home-top-div-name{
+            text-align: center;
+            font-size: 4em;
+        }
+
+        .home-top-div-start{
+            text-align: center;
+            
+
+            button {
+                font-size: 3em;
+                background-color: red;
+            }
+        }
+    }
+    
+    .home-container {
+
+    }
+}
+

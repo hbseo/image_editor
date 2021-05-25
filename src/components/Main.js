@@ -102,7 +102,7 @@ class Main extends Component {
       <div>
         <div className='Main'>
           <div className='topnav'>
-            <p className="site-title-p">Image Editor</p>
+            <a className="site-title-p" href="/home">Image Editor</a>
           </div>
           <div className="main-box">
             <div className='sidenav'>

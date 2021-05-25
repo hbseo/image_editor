@@ -223,7 +223,7 @@ class LoadImage extends Component {
                 { this.state.unsplash ? 
                 <div>
                   {/* <p>{this.state.data.dl}</p> */}
-                  <p>Photo by <a href={this.state.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">{this.state.user}</a> on <a href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">Unsplash</a></p>
+                  <p>Photo by <a className="user_name" href={this.state.data.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">{this.state.data.user}</a> on <a className="unsplash_link" href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">Unsplash</a></p>
                   
                 </div> : null}
                 { !this.filter ?
