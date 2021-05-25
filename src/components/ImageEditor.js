@@ -1250,7 +1250,9 @@ class ImageEditor extends Component {
   }
 
   getCanvasBackinfo = () => {
-    alert(this._canvas.backgroundImage.width +' '+ this._canvas.backgroundImage.height +' '+ this._canvas.backgroundImage.scaleX + ' ' + this._canvas.backgroundImage.scaleY)
+    if(this._canvas.backgroundImage){
+      alert(this._canvas.backgroundImage.width +' '+ this._canvas.backgroundImage.height +' '+ this._canvas.backgroundImage.scaleX + ' ' + this._canvas.backgroundImage.scaleY)
+    }
   }
 
   getCanvasBackgroundInfo = () => {
@@ -1417,6 +1419,16 @@ class ImageEditor extends Component {
   canvasZoom = (event) => {
     if(event.e.wheelDelta > 0){ // wheel up
       this.canvasZoomIn(event)
+    }
+    else{
+      this.canvasZoomOut(event);
+    }
+  }
+
+  buttonCanvasZoom = (event) => {
+    const option = event.target.getAttribute('option');
+    if(option === "in"){
+      this.canvasZoomIn(event);
     }
     else{
       this.canvasZoomOut(event);
@@ -1680,14 +1692,16 @@ class ImageEditor extends Component {
             <div className="do">
                 <button onClick = {this.undo}>{i18next.t('ImageEditor.Undo')}</button>
                 <button onClick = {this.redo}>{i18next.t('ImageEditor.Redo')}</button>
+                <button onClick = {this.buttonCanvasZoom} option = "in">+</button>
+                <button onClick = {this.buttonCanvasZoom} option = "out">-</button>
+
             </div>
             <div className="save">
             </div>
             <div className="save-more">
                 <button id="save" onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
                 <button id="more" onClick = { this.returnToHome }>{i18next.t('ImageEditor.Home')}</button>
-                <input type="checkbox" onClick={this.getMousePointInfo} />
-
+                {/* <input type="checkbox" onClick={this.getMousePointInfo} /> */}
             </div>
           </div>
           <div className="editor-main">

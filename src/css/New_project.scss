@@ -8,8 +8,13 @@
     margin: 1% 1% 1% 3%;
     font-size: 1.3em;
     font-weight: bold;
-    text-align: center;
-    width: 10vw;
+    text-align: left;
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+    padding : 1%;
+
+    // width: 10vw;
   }
 
   .canvas-list-div {
@@ -48,11 +53,13 @@
     width: 15vmin;
     height: 15vmin;
     padding: 0;
-    transition: box-shadow 0.1s linear;
+    transition: border 0.1s linear;
   }
 
   .new-link:hover {
-    box-shadow: 0 0 4pt 2pt #021c1e;
+    border : 6px solid #3498db;
+    border-radius: 5px;
+    // box-shadow: 10px 5px 0pt 2pt #3498db;
   }
 
   .new-project-input {
