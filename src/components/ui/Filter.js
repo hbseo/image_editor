@@ -375,8 +375,8 @@ export default withTranslation()(class Filter extends Component{
         </div>
         <div className="sub-filtersmenu">
           <div className="filter-title-open">
-            <div className="option-title" option="filter" onClick = {this.changeMenu}>{i18next.t('ui/filter.Filters')}</div>
-            <div className="option-title" option="adjust" onClick = {this.changeMenu}>{i18next.t('ui/filter.Adjust')}</div>
+            <div className={this.state.filtermenu ? "option-title-opened" : "option-title"} option="filter" onClick = {this.changeMenu}>{i18next.t('ui/filter.Filters')}&#9660;</div>
+            <div className={this.state.adjustmenu ? "option-title-opened" : "option-title"} option="adjust" onClick = {this.changeMenu}>{i18next.t('ui/filter.Adjust')}&#9660;</div>
             <div className="option-title" option="cancel" onClick = {this.changeMenu}>{i18next.t('ui/filter.Close')}</div>
           </div>
           <div className="filter-box">
