@@ -168,7 +168,7 @@ class ImageEditor extends Component {
             preserveObjectStacking: true,
             height: this._canvasSize.height,
             width: this._canvasSize.width,
-            backgroundColor: 'grey',
+            // backgroundColor: 'grey',
             backgroundImage : this._backgroundImage,
             uniformScaling: false, // When true, objects can be transformed by one side
             imageSmoothingEnabled : false,
