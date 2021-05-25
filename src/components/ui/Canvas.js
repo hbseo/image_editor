@@ -3,6 +3,7 @@ import i18next from "../../locale/i18n";
 import '../../css/ui/Canvas.scss';
 import { withTranslation } from "react-i18next";
 import { HEXtoRGBA } from '../helper/ConverRGB';
+import { ObjectIcon } from '../const/consts';
 
 export default withTranslation()(class Canvas extends Component {
   constructor(props) {
@@ -137,26 +138,43 @@ export default withTranslation()(class Canvas extends Component {
             <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
           </div>
 
-          <div>
+          <div className="option-title">{i18next.t('ui/canvas.CanvasEtc')}</div>
+          <div className="canvas-export-import">
             <button onClick={this.props.exportCanvas}> {i18next.t('ui/canvas.CanvasExport')} </button>
             <div className="file-input-group">
               <label className="input-file-button" htmlFor="_file">{i18next.t('ui/canvas.CanvasImport')}</label>
               <input name="file" type='file' id='_file' onChange={this.props.localImportCanvas} accept=".json" style={{ display: 'none' }}></input>
             </div>
           </div>
-          <div>
-            {i18next.t('ui/canvas.Beta')}
-            <input id="grid-snap" type="checkbox" onClick={this.props.onClickSnap}/><label htmlFor = "grid-snap">{i18next.t('ui/canvas.GridSnap')}</label>
-            <input id="grid-show" type="checkbox" onClick={this.props.onClickGrid}/><label  htmlFor = "grid-show">{i18next.t('ui/canvas.GridShow')}</label>
-            <input id="object-snap" type="checkbox" onClick={this.props.onClickObjectSnap}/><label  htmlFor ="object-snap"> {i18next.t('ui/canvas.ObjectSnap')}</label>
+
+          <div className="option-title">{i18next.t('ui/canvas.Beta')}</div>
+          <div className="canvas-beta">
+              <div className="beta-checkbox">
+                  <label className="mycheckbox path">
+                      <input id="grid-snap" type="checkbox" onClick={this.props.onClickSnap}/>
+                      <svg viewBox="0 0 21 21"><path d={ObjectIcon.checkbox}></path></svg>
+                  </label>
+                  {i18next.t('ui/canvas.GridSnap')}
+              </div>
+              <div className="beta-checkbox">
+                  <label className="mycheckbox path">
+                    <input id="grid-show" type="checkbox" onClick={this.props.onClickGrid}/>
+                    <svg viewBox="0 0 21 21"><path d={ObjectIcon.checkbox}></path></svg>
+                  </label>
+                  {i18next.t('ui/canvas.GridShow')}
+              </div>
+              <div className="beta-checkbox">
+                <label className="mycheckbox path">
+                    <input id="object-snap" type="checkbox" onClick={this.props.onClickObjectSnap}/>
+                    <svg viewBox="0 0 21 21"><path d={ObjectIcon.checkbox}></path></svg>
+                </label>
+                {i18next.t('ui/canvas.ObjectSnap')}
+              </div>
+              <div className="hidden">
+                <button onClick = {this.openHiddenMenu}>히든 메뉴 열기</button>
+                <button onClick = {this.closeHiddenMenu}>히든 메뉴 닫기</button>
+              </div>
           </div>
-
-          <div>
-            <button onClick = {this.openHiddenMenu}>히든 메뉴 열기</button>
-            <button onClick = {this.closeHiddenMenu}>히든 메뉴 닫기</button>
-
-          </div>
-
         </div>
       </div>
     );

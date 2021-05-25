@@ -370,6 +370,7 @@
         "CropCanvas" : "Start Crop",
         "CropEndCanvas" : "End Crop",
         "CanvasColor" : "Canvas BackgroundColor",
+        "CanvasEtc" : "Etc",
         "Beta" : "Beta",
         "CanvasExport" : "Export a Canvas",
         "CanvasImport" : "Import a Canvas",

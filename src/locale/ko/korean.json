@@ -361,6 +361,7 @@
         "CropCanvas" : "캔버스 자르기 시작",
         "CropEndCanvas" : "자르기 완료",
         "CanvasColor" : "캔버스 배경색",
+        "CanvasEtc" : "기타 기능",
         "Beta" : "베타 기능",
         "CanvasExport" : "캔버스 로컬파일 저장",
         "CanvasImport" : "캔버스 불러오기",
