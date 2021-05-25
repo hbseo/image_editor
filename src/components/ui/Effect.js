@@ -184,9 +184,9 @@ export default withTranslation()(class Effect extends Component {
           </div>
           <div className="shadow-color">
             {i18next.t('ui/effect.ShadowColor')}
-            <div>   
-              <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
-              <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
+            <div className="color-picker">
+                <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
+                <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
             </div>
           </div>         
           <div className="stroke">
@@ -205,9 +205,9 @@ export default withTranslation()(class Effect extends Component {
           </div>          
           <div className="stroke-color">            
             {i18next.t('ui/effect.StrokeColor')}
-            <div>
+            <div className="color-picker">
+                <input type="color" id="colorSource" value={this.state.hexstrokeColor} onChange = { this.handleStrokeColorChange}/>
               <input type="range" value = {this.state.strokeColor.a} min='0' max='1' step='0.01' onChange = {this.handleStrokeOpacityChange} />
-              <input type="color" id="colorSource" value={this.state.hexstrokeColor} onChange = { this.handleStrokeColorChange}/>
             </div>
           </div>
           <div>
