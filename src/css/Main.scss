@@ -1,4 +1,3 @@
-/* cyrillic-ext */
 @font-face {
   font-family: "Roboto";
   font-style: normal;
@@ -74,25 +73,71 @@
     U+FEFF, U+FFFD;
 }
 
-* {
-  font-family: "Roboto", sans-serif;
-  margin: 0;
-  padding: 0;
-}
 
-.Main {
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-}
-
-.topnav {
-  height: 40px;
+.topnav{
   background-color: black;
-  flex-direction: column;
-  justify-content: center;
+  height: 7vh;
   display: flex;
+  flex-direction: column;
+  
+  .site-title-a {
+    padding-top : 10px;
+    color : white;
+    font-size: 2.5vh;
+    text-align: center;
+
+  }
+
+  .site-title-p {
+    font-size: 1.5vh;
+  }
+
+  .right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 0;
+    margin-top: 0px;
+    height: 7vh;
+    width: 15vmin;
+    color : black;
+    text-align: center;
+  
+    .rightbtn {
+      width: 100%;
+      height : 100%;
+      color: white;
+      cursor: pointer;
+      background-color: black;
+      padding: 0;
+      font-size: 1.1em;
+      transition: background-color 0.2s linear;
+    }
+  
+    .rightbtn:hover {
+      background-color: #043c40;
+    }
+  
+    .right-dropdown {
+      display: none;
+  
+      button {
+        border-radius: 5px;
+        background-color: #fafafa;
+        width: 15vmin;
+        padding: 5%;
+      }
+  
+      button:hover {
+        color: #365afc;
+      }
+    }
+  }
+  
+  .right:hover .right-dropdown {
+    display: block;
+    background-color: #f9f9f9;
+  }
 }
 
 .site-title {
@@ -116,6 +161,10 @@
 .sidenav {
   width: 200px;
   background-color: black;
+  margin-left : 20px;
+  margin-top : 20px;
+  margin-bottom: 5vh;
+  border-radius: 25px;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
@@ -238,6 +287,16 @@
   }
 }
 
+@media screen and (max-width: 700px) {
+  .sidenav-button-active{
+    font-size: 2.8vw;
+  }
+
+  .sidenav-button{
+    font-size: 2.8vw;
+  }
+}
+
 .side-project-button {
   display: flex;
   justify-content: center;
@@ -346,52 +405,6 @@
       }
     }
   }
-}
-
-.right {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin: 0;
-  margin-top: 0px;
-  width: 15vmin;
-  height: 40px;
-  text-align: center;
-
-  .rightbtn {
-    width: 100%;
-    height: 40px;
-    color: white;
-    cursor: pointer;
-    background-color: black;
-    padding: 0;
-    font-size: 1.1em;
-    transition: background-color 0.2s linear;
-  }
-
-  .rightbtn:hover {
-    background-color: #043c40;
-  }
-
-  .right-dropdown {
-    display: none;
-
-    button {
-      border-radius: 5px;
-      background-color: #fafafa;
-      width: 15vmin;
-      padding: 5%;
-    }
-
-    button:hover {
-      color: #365afc;
-    }
-  }
-}
-
-.right:hover .right-dropdown {
-  display: block;
-  background-color: #f9f9f9;
 }
 
 .inner {

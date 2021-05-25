@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import '../../css/ui/Tools.scss';
 export default class Tools extends Component {
   constructor(props){
     super(props);
@@ -30,17 +31,14 @@ export default class Tools extends Component {
         <div className="sub-title">
             Tools
         </div>
-        <div className="sub-filters">
+        <div className="sub-tools-menu">
           <div>
-              <button onClick={this.addImage}><h2>테스트용 이미지 추가</h2></button>
+              <button onClick={this.props.objectInfo}>오브젝트 정보 출력</button>
+              <button onClick={this.props.getCanvasInfo}>캔버스 출력</button>
+              <button onClick={this.props.getCanvasBackinfo}>캔버스 배경 크기</button>
           </div>
           <div>
-              <button onClick={this.props.objectInfo}><h2>오브젝트 정보 출력</h2></button>
-              <button onClick={this.props.getCanvasInfo}><h2>캔버스 출력</h2></button>
-              <button onClick={this.props.getCanvasBackinfo}><h2>캔버스 배경 크기</h2></button>
-          </div>
-          <div>
-              <button onClick={this.props.openSaveModal}><h2>save</h2></button>
+              <button onClick={this.props.openSaveModal}>save</button>
           </div>
           
           <button onClick = {this.handleInfo} style={{color : 'black', backgroundColor : 'skyblue'}}>내부 정보 열고닫기</button>
@@ -49,10 +47,10 @@ export default class Tools extends Component {
               <div style={ {color : 'red', padding : '10px'}}>
               {this.props.object.type !== 'not active' ? 
                 <div>
-                  <p>오브젝트 left : {this.props.object.left}</p>
-                  <p>오브젝트 top : {this.props.object.top}</p>
-                  <p>오브젝트 scaleX : {this.props.object.scaleX}</p>
-                  <p>오브젝트 scaleY : {this.props.object.scaleY}</p>
+                  <p>object left : {this.props.object.left}</p>
+                  <p>object top : {this.props.object.top}</p>
+                  <p>object scaleX : {this.props.object.scaleX}</p>
+                  <p>object scaleY : {this.props.object.scaleY}</p>
 
                   <p> left : {this.props.object.aCoords.tl.x} </p>
                   <p> right : {this.props.object.aCoords.br.x} </p>

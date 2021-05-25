@@ -102,7 +102,33 @@ class Main extends Component {
       <div>
         <div className='Main'>
           <div className='topnav'>
-            <a className="site-title-p" href="/home">Image Editor</a>
+            <a className="site-title-a" href="/">FRACT</a>
+            <p className="site-title-p" href="/">Image Editor</p>
+
+            <div className='right'>
+              <button className='rightbtn'><i className="fas fa-bars"></i></button>
+              {this.state.login_state ? 
+              <div className='right-dropdown'>
+                <button onClick={this.logoutClickHandler}>{i18next.t('Main.Signout')}</button>
+                <Link to={{
+                  pathname: `/ChangePassword/${this.state.id}`,
+                }}><button>{i18next.t('Login.ChangePW')}</button></Link>
+                {/* <button>{i18next.t('Main.Delete account')}</button> */}
+                <button onClick={this.withdrawalModalHandler}>{i18next.t('Main.Delete account')}</button>
+                <button onClick = {this.changeToEnglish}>English</button>
+                <button onClick = {this.changeToKorean}>한글</button>
+              </div> :
+              <div className='right-dropdown'>
+                <Link to={{
+                  pathname: '/login',
+                }}><button>{i18next.t('Main.Signin')}</button></Link>
+                <Link to={{
+                  pathname: '/register',
+                }}><button>{i18next.t('Main.Signup')}</button></Link>
+                <button onClick = {this.changeToEnglish}>English</button>
+                <button onClick = {this.changeToKorean}>한글</button>
+              </div> }
+            </div>
           </div>
           <div className="main-box">
             <div className='sidenav'>
@@ -130,30 +156,7 @@ class Main extends Component {
             </div>
           </div>
         </div>
-        <div className='right'>
-          <button className='rightbtn'><i className="fas fa-bars"></i></button>
-          {this.state.login_state ? 
-          <div className='right-dropdown'>
-            <button onClick={this.logoutClickHandler}>{i18next.t('Main.Signout')}</button>
-            <Link to={{
-              pathname: `/ChangePassword/${this.state.id}`,
-            }}><button>{i18next.t('Login.ChangePW')}</button></Link>
-            {/* <button>{i18next.t('Main.Delete account')}</button> */}
-            <button onClick={this.withdrawalModalHandler}>{i18next.t('Main.Delete account')}</button>
-            <button onClick = {this.changeToEnglish}>English</button>
-            <button onClick = {this.changeToKorean}>한글</button>
-          </div> :
-          <div className='right-dropdown'>
-            <Link to={{
-              pathname: '/login',
-            }}><button>{i18next.t('Main.Signin')}</button></Link>
-            <Link to={{
-              pathname: '/register',
-            }}><button>{i18next.t('Main.Signup')}</button></Link>
-            <button onClick = {this.changeToEnglish}>English</button>
-            <button onClick = {this.changeToKorean}>한글</button>
-          </div> }
-        </div>
+        
         {this.state.withdrawalModal ?
           <Withdrawal id={this.state.id} close={this.withdrawalModalHandler}></Withdrawal>:
           null
