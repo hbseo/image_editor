@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withTranslation } from "react-i18next";
+import { Link } from 'react-router-dom';
 import '../css/Home.scss';
 
 class Home extends Component {
@@ -11,23 +12,69 @@ class Home extends Component {
             <h1>FRACT</h1>
           </div>
           <div className="home-top-div-start">
-            <button>
-              <a href="/main">START</a>
-            </button>
+            <a className="start-button" href="/main">Start →</a>
+
+            
           </div>
         </div>
         <div className="home-container">
-          <section id = "test1">
-            <div className="test1-test">
-              <div id="test1-title">
+          <section className = "container" id = "first-section">
+            <div className="section-maindiv">
+              <div className="section-title">
                 <h1>Make Your Image More Beautiful</h1>
               </div>
-              <img src="/image/home1.png" alt="none"></img>
+
+              <div className="section-main">
+                <div className = "section-text">
+                  <h1>뭔가 있어보이는 설명</h1>
+                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                </div>
+                <div className = "section-image">
+                  <img id="first-img" src="/image/home1.png" alt="none"></img>
+                </div>
+              </div>
             </div>
-            
           </section>
-          <section id = "test2">bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</section>
-          <section id = "test3">cccccccccccccccccccccccccccccccccccc</section>
+
+          <section className = "container" id = "second-section">
+            <div className="section-maindiv">
+              <div className="section-title">
+                <h1>그냥 있어보이는 말</h1>
+              </div>
+              <div className="section-main">
+                <div className = "section-image">
+                  <img id="first-img" src="/image/home1.png" alt="none"></img>
+                </div>
+                <div className = "section-text">
+                  <h1>뭔가 있어보이는 설명</h1>
+                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className = "container" id = "third-section">
+            <div className="section-maindiv">
+              <div className="section-title">
+                <h1>하하하하 호호호호</h1>
+              </div>
+              <div className="section-main-col">
+                <div className = "section-image">
+                  <img id="first-img" src="/image/home1.png" alt="none"></img>
+                </div>
+                <div className = "section-text">
+                  <h1>뭔가 있어보이는 설명</h1>
+                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                </div>
+              </div>
+            </div>
+          </section>
         </div>        
       </div>
     )

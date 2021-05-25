@@ -1,25 +1,156 @@
 .home-div {
+    // overflow: visible;
+    overflow: auto;
+    height : 100vh;
+
     .home-top-div {
         margin : auto;
-        padding : auto;
+        // padding : auto;
 
         .home-top-div-name{
             text-align: center;
             font-size: 4em;
+            height : 14vh;
+            display: inline;
         }
 
         .home-top-div-start{
             text-align: center;
-            
+            height : 2vh;
+            width : 100%;
+            margin-top : 30px;
+            margin-bottom : 20px;
 
-            button {
-                font-size: 3em;
-                background-color: red;
+
+            .start-button {
+                // font-size: 2vh;
+                height : 2vh;
+
+                font-weight: 700;
+                padding : 15px 55px 15px 55px;
+                background-color: grey;
+                transition : all 150ms linear;
+                border-radius: 20px;
+            }
+
+            .start-button:hover {
+                background-color: blue;
+                color : white;
             }
         }
     }
     
     .home-container {
+
+        .container {
+            margin : 1vw;
+            
+            .section-maindiv{
+                padding : 1.8vh;
+                text-align: center;
+
+                .section-title {
+                    margin : 1vw;
+                }
+
+                .section-main{
+                    display: flex;
+                    margin : auto;
+                    flex-direction: row;
+                    justify-content: center;
+                    height : 40vw;
+                    max-height : 400px;
+
+                    .section-text{
+                        // background-color: red;
+                        padding : 3vw;
+                        width : 250px;
+
+                        h1{
+                            padding : 13px;
+                        }
+                    }
+                    .section-image {
+                        // background-color: green;
+                        text-align: center;
+                        
+                        display:flex; 
+                        justify-content:center; 
+                        align-items:center;
+
+
+                        #first-img{
+                            padding : 30px;
+                            max-width:100%; 
+                            max-height:100%;
+                            border-radius: 40px;
+                            // min-width : 280px;
+                            // width : 20vw;
+                            // height : auto;
+                        }
+                    }
+                }
+
+                .section-main-col{
+                    display: flex;
+                    margin : auto;
+                    flex-direction: column;
+                    justify-content: center;
+                    width : 60vw;
+                    max-width : 1000px;
+
+                    .section-text{
+                        // background-color: red;
+                        // padding : 3vw;
+                        height : 250px;
+
+                        h1{
+                            padding : 13px;
+                        }
+                    }
+                    .section-image {
+                        // background-color: green;
+                        text-align: center;
+                        display:flex; 
+                        justify-content:center; 
+                        align-items:center;
+                        
+
+
+                        #first-img{
+                            padding : 30px;
+                            max-width:100%; 
+                            max-height:100%;
+                            border-radius: 40px;
+                            // min-width : 280px;
+                            // width : 20vw;
+                            // height : auto;
+                        }
+                    }
+
+                }
+
+
+            }
+
+
+        }
+
+        #first-section {
+            // background-color: blue;
+
+        }
+        #second-section {
+            
+            // background-color: red;
+
+            
+        }
+
+        #third-section {
+            // background-color: green;
+
+        }
 
     }
 }
