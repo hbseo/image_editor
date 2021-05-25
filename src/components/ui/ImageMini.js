@@ -142,26 +142,61 @@ class ImageMini extends Component {
     else{
       return (
         <ImageModal open={this.state.openModal} close = {this.closeModal}>
-          <p>Photo by <a href={this.state.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">{this.state.user}</a> on <a href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">Unsplash</a></p>
+          <div className="mini-image-modal-div">
+            <div className="mini-image-preview">
+              <img className="preview-img" src = {image.small} url={image.full} alt="." onClick={this.onClickImg}/>
+            </div>
 
-          <div id="mini-image-list" >
-            <div className="mini-image-list-box">
-              <img className="image-list-img" src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}/>
-              <div className="image-list-text">full: {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}</div>
+            <div id="modal-miniimage-list" >
+              <div className="modal-miniimage-list-img">
+                <i className="far fa-images fa-4x" url={image.regular} onClick={this.onClickImg}></i>
+                <div>{this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}</div>
+              </div>
+              <div className="modal-miniimage-list-img">
+                <i className="far fa-images fa-4x" url={image.small} onClick={this.onClickImg}></i>
+                <div>{this.state.imageSize.small.x} X {this.state.imageSize.small.y}</div>
+              </div>
+              <div className="modal-miniimage-list-img">
+                <i className="far fa-images fa-4x" url={image.thumb} onClick={this.onClickImg}></i>
+                <div>{this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
+              </div>
             </div>
-            <div className="mini-image-list-box">
-              <img className="image-list-img" src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg} />
-              <div className="image-list-text">regular: {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}</div>
+            {/* <ul>
+              <li>
+                <img className="image-list-img" src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}/>
+                <div>full: {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}</div>
+              </li>
+              <li>
+                <img className="image-list-img" src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg} />
+                <div>regular: {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}</div>
+              </li>
+              <li>
+                <img className="image-list-img" src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg} />
+                <div>small: {this.state.imageSize.small.x} X {this.state.imageSize.small.y}</div>
+              </li>
+              <li>
+                <img className="image-list-img" src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg} />
+                <div>thumb: {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
+              </li>
+            </ul> */}
+            {/* <div className="modal-miniimage-list-box">
+              <img className="modal-miniimage-list-img" src = {image.thumb} url={image.full} alt="." onClick={this.onClickImg}/>
+              <div className="modal-miniimage-list-text">full: {this.state.imageSize.full.x} X  {this.state.imageSize.full.y}</div>
             </div>
-            <div className="mini-image-list-box">
-              <img className="image-list-img" src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg} />
-              <div className="image-list-text">small: {this.state.imageSize.small.x} X {this.state.imageSize.small.y}</div>
+            <div className="modal-miniimage-list-box">
+              <img className="modal-miniimage-list-img" src = {image.thumb} url={image.regular} alt="." onClick={this.onClickImg} />
+              <div className="modal-miniimage-list-text">regular: {this.state.imageSize.regular.x} X  {this.state.imageSize.regular.y}</div>
             </div>
-            <div className="mini-image-list-box">
-              <img className="image-list-img" src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg} />
-              <div className="image-list-text">thumb: {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
+            <div className="modal-miniimage-list-box">
+              <img className="modal-miniimage-list-img" src = {image.thumb} url={image.small} alt="." onClick={this.onClickImg} />
+              <div className="modal-miniimage-list-text">small: {this.state.imageSize.small.x} X {this.state.imageSize.small.y}</div>
             </div>
+            <div className="modal-miniimage-list-box">
+              <img className="modal-miniimage-list-img" src = {image.thumb} url={image.thumb} alt="." onClick={this.onClickImg} />
+              <div className="modal-miniimage-list-text">thumb: {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
+            </div> */}
           </div>
+          <p className="photo-tag">Photo by <a href={this.state.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">{this.state.user}</a> on <a href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">Unsplash</a></p>
         </ImageModal>
       )
     }

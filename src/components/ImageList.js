@@ -52,7 +52,7 @@ class ImageList extends Component {
     event.preventDefault();
     this.getImage();
   }
-  
+
   searchChange = (event) => {
     let change_state = {};
     change_state[event.target.name] = event.target.value;
@@ -138,8 +138,6 @@ class ImageList extends Component {
       )
     }
     else{
-      console.log(this.scrollBot)
-      // this.scrollBot.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
       this.scrollBot.current.scrollTop = this.scrollBot.current.scrollHeight
 
       return (
