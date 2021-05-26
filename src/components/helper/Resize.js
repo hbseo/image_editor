@@ -1,5 +1,3 @@
-const { functionsIn } = require("lodash-es");
-
 function shapeScalingResizeEvent(canvas, pointer, obj){
   let width = Math.abs(obj.left - pointer.x);
   let height = Math.abs(obj.top - pointer.y);
@@ -90,39 +88,19 @@ function adjustOriginToCenter  (shape) {
 
 
 function adjustBackgroundImage (img) {
-  console.log(img.width)
-  const width = img.width
-  const height = img.height
-  let ratio = img.height / img.width
-  console.log(ratio)
-  const rotatedWidth = 800
-  const rotatedHeight = ratio * rotatedWidth
-
+  // console.log(img.width)
+  // const width = img.width
+  // const height = img.height
+  // let ratio = img.height / img.width
+  // console.log(ratio)
+  // const rotatedWidth = 800
+  // const rotatedHeight = ratio * rotatedWidth
+  // console.log(img.getBoundingRect())
   // img.set({
   //   width : rotatedWidth,
   //   height : rotatedHeight
   // })
 }
-
-// function adjustCanvasDimension() {
-//   const canvasImage = this.canvasImage.scale(1);
-//   const {width, height} = canvasImage.getBoundingRect();
-//   const maxDimension = this._calcMaxDimension(width, height);
-
-//   this.setCanvasCssDimension({
-//       width: '100%',
-//       height: '100%', // Set height '' for IE9
-//       'max-width': `${maxDimension.width}px`,
-//       'max-height': `${maxDimension.height}px`
-//   });
-
-//   this.setCanvasBackstoreDimension({
-//       width,
-//       height
-//   });
-//   this._canvas.centerObject(canvasImage);
-// }
-
 
 module.exports = {
   resize(canvas, event, obj){

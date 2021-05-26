@@ -86,6 +86,7 @@
       height: 34px;
       width: 23px;
       cursor: pointer;
+      color : white;
     }
 
     input[type="number"]:disabled {
@@ -124,7 +125,7 @@
         }
 
         svg {
-          color : #688eff;
+          fill : #688eff;
           width: 50%;
           height: 50%;
         }
@@ -132,6 +133,9 @@
 
       label:hover {
         background-color: #84a3ff;
+        svg {
+          fill : white;
+        }
       }
     }
 
@@ -152,6 +156,7 @@
         }
 
         svg {
+          fill : #ababab;
           width: 50%;
           height: 50%;
         }
@@ -358,7 +363,7 @@
   input[type="checkbox"] + label {
     width: 7vmin;
     height: 7vmin;
-    background-color: #e6e6e6;
+    background-color: #688eff;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -367,12 +372,17 @@
   }
 
   input[type="checkbox"] + label:hover {
-    background-color: #d9d9d9;
+    background-color: #97b1ff;
   }
 
-  input[type="checkbox"]:disabled + label:hover {
+  input[type="checkbox"]:disabled + label {
+    color : #ababab;
     background-color: #e6e6e6;
   }
+
+  // input[type="checkbox"]:disabled + label:hover {
+  //   background-color: #688eff;
+  // }
 
   input[type="checkbox"]:checked + label {
     background-color: #365afc;
@@ -412,7 +422,8 @@
 
   .fontfamily-button {
     background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #ababab;
+    color : #ababab;
     border-radius: 5px;
     width: 160px;
     height: 30px;
