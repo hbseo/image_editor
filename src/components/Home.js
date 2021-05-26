@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withTranslation } from "react-i18next";
-import { Link } from 'react-router-dom';
 import '../css/Home.scss';
 
 class Home extends Component {
@@ -75,7 +74,16 @@ class Home extends Component {
               </div>
             </div>
           </section>
-        </div>        
+        </div>
+        <footer>
+          <ul>
+            <li><a href="https://github.com/hbseo/image_editor">Github</a></li>
+            <li><a href="https://trello.com/b/INAP59Dv/image-editor">Trello</a></li>
+            <li><a href="/helper">Helper</a></li>
+            <li><a href="https://www.hanyang.ac.kr/web/eng/erica-campus1">Hanyang Erica</a></li>
+          </ul>
+          <p>Hanyang</p>
+        </footer>        
       </div>
     )
   }

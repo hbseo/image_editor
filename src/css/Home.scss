@@ -1,6 +1,7 @@
 .home-div {
     // overflow: visible;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x : hidden;
     height : 100vh;
 
     .home-top-div {
@@ -152,6 +153,28 @@
 
         }
 
+    }
+
+    footer {
+        text-align: center;
+
+        ul {
+            list-style-type: none;
+            // float : left ;
+        }
+
+        li {
+            display: inline-block;
+            text-decoration: underline;
+            margin : 2em;
+            font-size: 1em;
+        }
+
+        p {
+            font-size : 4em;
+            margin-bottom : 50px;
+            
+        }
     }
 }
 

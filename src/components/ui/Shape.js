@@ -115,9 +115,10 @@ export default withTranslation()(class Shape extends Component {
             <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
             <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
           </div>
-          <div>
+          <div>{this.state.color.a}</div>
+          {/* <div>
             <button onClick = { this.handlePipette }>{i18next.t('ui/shape.Pipette')}</button>
-          </div>
+          </div> */}
         </div>
       </div>
     );

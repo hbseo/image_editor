@@ -12,12 +12,12 @@ export default withTranslation()(class Canvas extends Component {
       cropCanvasSize: { width: 0, height: 0 },
       displayCropCanvas: false,
       color: {
-        r: '255',
-        g: '255',
-        b: '255',
+        r: '128',
+        g: '128',
+        b: '128',
         a: '1',
       },
-      hexcolor : '#ffffff'
+      hexcolor : '#808080'
     };
   }
 
@@ -137,6 +137,7 @@ export default withTranslation()(class Canvas extends Component {
             <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
             <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
           </div>
+          <div>{this.state.color.a}</div>
 
           <div className="option-title">{i18next.t('ui/canvas.CanvasEtc')}</div>
           <div className="canvas-export-import">
