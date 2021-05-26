@@ -1,5 +1,6 @@
 import Action from './Action';
 import { fabric } from 'fabric';
+import ResizeHelper from '../helper/Resize';
 
 class Crop extends Action {
   constructor(App) {
@@ -270,10 +271,11 @@ class Crop extends Action {
     canvas.calcOffset();
 
     if(img && canvas.backgroundImage) {
-      canvas.backgroundImage.left = 0;
-      canvas.backgroundImage.top = 0;
+      canvas.backgroundImage.left = canvas.width / 2;
+      canvas.backgroundImage.top = canvas.height / 2;;
       canvas.backgroundImage.scaleX = canvas.width / canvas.backgroundImage.width;
       canvas.backgroundImage.scaleY = canvas.height / canvas.backgroundImage.height;
+      ResizeHelper.adjustBackgroundImage(canvas.backgroundImage)
     }
 
     canvas.renderAll();

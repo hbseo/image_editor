@@ -18,8 +18,8 @@
   padding: 5%;
 
   button {
-    background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    background-color: #688eff;
+    border: 1px solid #688eff;
     border-radius: 5px;
     width: 160px;
     height: 30px;
@@ -27,7 +27,7 @@
   }
 
   button:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
   }
 }
 
@@ -124,13 +124,14 @@
         }
 
         svg {
+          color : #688eff;
           width: 50%;
           height: 50%;
         }
       }
 
       label:hover {
-        background-color: #d9d9d9;
+        background-color: #84a3ff;
       }
     }
 
@@ -169,7 +170,7 @@
   .bold {
     width: 50px;
     height: 50px;
-    background-color: #e6e6e6;
+    background-color: #688eff;
     border-radius: 5px;
 
     label {
@@ -191,7 +192,11 @@
   }
 
   .bold:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
+
+    label {
+      cursor : pointer;
+    }
 
     svg {
       fill: #365afc;
@@ -225,7 +230,7 @@
   .italic {
     width: 50px;
     height: 50px;
-    background-color: #e6e6e6;
+    background-color: #688eff;
     border-radius: 5px;
 
     label {
@@ -247,7 +252,10 @@
   }
 
   .italic:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
+    label {
+      cursor : pointer;
+    }
   }
 
   .italic:hover svg {
@@ -280,7 +288,7 @@
   .underline {
     width: 50px;
     height: 50px;
-    background-color: #e6e6e6;
+    background-color: #688eff;
     border-radius: 5px;
 
     label {
@@ -302,7 +310,10 @@
   }
 
   .underline:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
+    label {
+      cursor : pointer;
+    }
   }
 
   .underline:hover svg {
@@ -377,8 +388,8 @@
   align-items: center;
 
   .fontfamily-button {
-    background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    background-color: #688eff;
+    border: 1px solid #688eff;
     border-radius: 5px;
     width: 160px;
     height: 30px;

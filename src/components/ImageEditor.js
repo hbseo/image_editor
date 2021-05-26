@@ -152,8 +152,8 @@ class ImageEditor extends Component {
       if(this._canvasImageUrl){
         this.loadImage(
           this._canvasImageUrl,
-          {x : 0, y : 0}, 
-          {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
+          {x : this._canvasSize.width / 2, y : this._canvasSize.height / 2}, 
+          {originX : "center", originY : "center", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
         )
         .then((img) => {
           this._backgroundImage = img;
@@ -1605,7 +1605,7 @@ class ImageEditor extends Component {
           scaleXChange = {this.scaleXChange}
           scaleYChange = {this.scaleYChange}
           />,
-      5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
+      5: <RotationUI object={this.state.activeObject} getBackgroundImage = {this.getBackgroundImage} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
       6: <ShapeUI 
           object={this.state.activeObject} 
           addShape={this.addShape} 
