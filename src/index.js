@@ -22,7 +22,7 @@ ReactDOM.render(
 			<Route exact path="/edit" component={ImageEditor} />
 			<Route exact path="/filter" component={ImageFilter} />
 			<Route exact path="/" component={Home} />
-      <Route exact path="/helper" component={Helper} />
+      <Route path="/helper" component={Helper} />
       {/* <Route exact path="/login" component={SignIn} /> */}
       {/* <Route exact path="/register" component={SignUp} /> */}
       {/* <Route exact path="/ChangePassword/:id" component={ChangePassword} /> */}
