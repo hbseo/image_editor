@@ -72,10 +72,12 @@
     U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
     U+FEFF, U+FFFD;
 }
+.Main {
+  background-color: #222b36;
 
-
+}
 .topnav{
-  background-color: black;
+  background-color: #171c24;
   height: 7vh;
   display: flex;
   flex-direction: column;
@@ -100,7 +102,7 @@
     margin-top: 0px;
     height: 7vh;
     width: 15vmin;
-    color : black;
+    color : #171c24;
     text-align: center;
   
     .rightbtn {
@@ -108,7 +110,7 @@
       height : 100%;
       color: white;
       cursor: pointer;
-      background-color: black;
+      background-color: #171c24;
       padding: 0;
       font-size: 1.1em;
       transition: background-color 0.2s linear;
@@ -160,7 +162,7 @@
 
 .sidenav {
   width: 200px;
-  background-color: black;
+  background-color: #171c24;
   margin-left : 20px;
   margin-top : 20px;
   margin-bottom: 5vh;
