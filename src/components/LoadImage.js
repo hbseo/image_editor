@@ -41,18 +41,6 @@ class LoadImage extends Component {
     this.image.src = this.url;
   }
 
-  // handleUrlSubmit = (event) => {
-  //   if (event) { event.preventDefault(); }
-  //   this.url = 'https://cors-anywhere.herokuapp.com/' + this.state.url;
-  //   console.log(this.url); 
-  //   this.setState({ url: "", submit: false, width: 0, height: 0, imgRatio: 100 });
-  //   this.image = new Image();
-  //   this.image.crossOrigin = "";
-  //   this.image.onload = this.imageFound;
-  //   this.image.onerror = this.imageNotFound;
-  //   this.image.src = this.url;
-  // }
-
   handleChange = (event) => {
     // document.getElementById("imgRatio").disabled = true;
     let change_state = {};
@@ -218,12 +206,12 @@ class LoadImage extends Component {
                 </Link>
               </div>
               <div className="preview-middle">
-                <a href={this.url} target="_blank">{i18next.t("LoadImage.Enlarge")}</a>
+                <a href={this.url} target="_blank" rel="noreferrer">{i18next.t("LoadImage.Enlarge")}</a>
                 <p>{this.state.width}X{this.state.height}</p>
                 { this.state.unsplash ? 
                 <div>
                   {/* <p>{this.state.data.dl}</p> */}
-                  <p>Photo by <a className="user_name" href={this.state.data.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">{this.state.data.user}</a> on <a className="unsplash_link" href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">Unsplash</a></p>
+                  <p>Photo by <a className="user_name" href={this.state.data.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank" rel="noreferrer">{this.state.data.user}</a> on <a className="unsplash_link" href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank" rel="noreferrer">Unsplash</a></p>
                   
                 </div> : null}
                 { !this.filter ?

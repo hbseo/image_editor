@@ -1451,7 +1451,6 @@ class ImageEditor extends Component {
     // }
 
 
-
     //캔버스 기능 씀. 문제는.. 스크롤바가 없다는 것.
     if(this._canvas.width * zoomScale < maxWidth && this._canvas.height * zoomScale < maxHeight){
       // document.getElementById('canvas').style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
@@ -1468,8 +1467,8 @@ class ImageEditor extends Component {
 
   canvasZoomOut = (event) => {
     const zoomScale = this.state.scaleZoom - 0.05;
-    const maxHeight = document.getElementsByClassName('editor-main')[0].clientHeight
-    const maxWidth = document.getElementsByClassName('editor-main')[0].clientWidth
+    // const maxHeight = document.getElementsByClassName('editor-main')[0].clientHeight
+    // const maxWidth = document.getElementsByClassName('editor-main')[0].clientWidth
     // if(zoomScale > 0.1){
     //   document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
     //   this.setState({ scaleZoom: this.state.scaleZoom - 0.05 })
@@ -1516,15 +1515,17 @@ class ImageEditor extends Component {
       document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
       this.setState({ scaleZoom: zoomScale })
     }
+
+    document.getElementById("canvas").style["position"] = "static"
   }
 
 
-  checkCanvasSize = () => {
-    const maxHeight = document.getElementsByClassName('real')[0].clientHeight
-    const maxWidth = document.getElementsByClassName('real')[0].clientWidth
-    // this.resizeScale();
-    // console.log(maxHeight, maxWidth)
-  }
+  // checkCanvasSize = () => {
+  //   const maxHeight = document.getElementsByClassName('real')[0].clientHeight
+  //   const maxWidth = document.getElementsByClassName('real')[0].clientWidth
+  //   // this.resizeScale();
+  //   // console.log(maxHeight, maxWidth)
+  // }
 
   render() {
     if(i18next.language === 'ko'){

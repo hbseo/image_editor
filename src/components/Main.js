@@ -5,7 +5,7 @@ import Newproject from './New_project';
 import LoadImage from './LoadImage';
 import Withdrawal from './Withdrawal';
 import '../css/Main.scss';
-import checkUserLanguage from './helper/CheckLang';
+// import checkUserLanguage from './helper/CheckLang';
 import { withTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
@@ -136,12 +136,12 @@ class Main extends Component {
                 {/* <p className="site-title-p">image-editor</p> */}
               </div>
               <div className="add-image-menu">
-                <button className = {this.state.tab == 0 ?  "sidenav-button-active" : "sidenav-button"} onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
-                <button className = {this.state.tab == 2 ?  "sidenav-button-active" : "sidenav-button"} onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
+                <button className = {this.state.tab === 0 ?  "sidenav-button-active" : "sidenav-button"} onClick={this.changeTab} tab='0'>{t('Main.New Project')}</button>
+                <button className = {this.state.tab === 2 ?  "sidenav-button-active" : "sidenav-button"} onClick={this.changeTab} tab='2'>{t('Main.More Image')}</button>
               </div>
               {this.state.login_state ? 
               <div className="side-project-button">
-                <div className = {this.state.tab == 4 ?  "sidenav-button-active" : "sidenav-button"}>
+                <div className = {this.state.tab === 4 ?  "sidenav-button-active" : "sidenav-button"} >
                   <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
                 </div> 
                 <div className='sidenav-user'>

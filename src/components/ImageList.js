@@ -1,4 +1,4 @@
-import React, { Component , useRef} from 'react';
+import React, { Component } from 'react';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
 import {randomWord} from './const/consts';

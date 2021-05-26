@@ -196,7 +196,7 @@ class ImageMini extends Component {
               <div className="modal-miniimage-list-text">thumb: {this.state.imageSize.thumb.x} X {this.state.imageSize.thumb.y}</div>
             </div> */}
           </div>
-          <p className="photo-tag">Photo by <a href={this.state.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">{this.state.user}</a> on <a href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank">Unsplash</a></p>
+          <p className="photo-tag">Photo by <a href={this.state.user_link + "?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank" rel="noreferrer">{this.state.user}</a> on <a href={"https://unsplash.com/?utm_source=" + unSplashAppName + "&utm_medium=referral"} target = "_blank" rel="noreferrer">Unsplash</a></p>
         </ImageModal>
       )
     }
