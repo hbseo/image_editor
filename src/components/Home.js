@@ -20,15 +20,14 @@ class Home extends Component {
           <section className = "container" id = "first-section">
             <div className="section-maindiv">
               <div className="section-title">
-                <h1>Make Your Image More Beautiful</h1>
+                <h1>Image Edit</h1>
               </div>
 
               <div className="section-main">
                 <div className = "section-text">
-                  <h1>뭔가 있어보이는 설명</h1>
-                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
-                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
-                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                  <h1>Simple and Powerful</h1>
+                  If you need or want a Simple image editing, A big, heavy editor is unnecessary.
+                  Our Editor is Simple and Fast. Try Cropping Images, Adding a Letter, etc.
                 </div>
                 <div className = "section-image">
                   <img id="first-img" src="/image/home1.png" alt="none"></img>
@@ -40,17 +39,17 @@ class Home extends Component {
           <section className = "container" id = "second-section">
             <div className="section-maindiv">
               <div className="section-title">
-                <h1>그냥 있어보이는 말</h1>
+                <h1>Make Your Image More Beautiful</h1>
               </div>
               <div className="section-main">
                 <div className = "section-image">
                   <img id="first-img" src="/image/home1.png" alt="none"></img>
                 </div>
                 <div className = "section-text">
-                  <h1>뭔가 있어보이는 설명</h1>
-                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
-                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
-                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                  <h1>Image Filter</h1>
+                  Apply the effect to the Image with a simple button click.
+                  Brightness, Contrast, Blur
+                  FRACT provides 20+ filters.
                 </div>
               </div>
             </div>
@@ -59,21 +58,40 @@ class Home extends Component {
           <section className = "container" id = "third-section">
             <div className="section-maindiv">
               <div className="section-title">
-                <h1>하하하하 호호호호</h1>
+                <h1>Save and Load</h1>
               </div>
               <div className="section-main-col">
                 <div className = "section-image">
                   <img id="first-img" src="/image/home1.png" alt="none"></img>
                 </div>
                 <div className = "section-text">
-                  <h1>뭔가 있어보이는 설명</h1>
-                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
-                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
-                  필터에 대한 거 어쩌구 저쩌구필터에 대한 거 어쩌구 저쩌구
+                  <h1>Save a Image or Your Work</h1>
+                  Save the image or your work at any time you want. 
+                  If you don't want to sign up, You can export your work to a file.
+                  Once you sign up, You can save your work on a server.
                 </div>
               </div>
             </div>
           </section>
+
+          <section className = "container" id = "fourth-section">
+            <div className="section-maindiv">
+              <div className="section-title">
+                <h1>뭐쓰지</h1>
+              </div>
+
+              <div className="section-main">
+                <div className = "section-text">
+                  <h1>ㅇㅇㅇㅇㅇㅇㅇ</h1>
+                  쓸거 없음
+                </div>
+                <div className = "section-image">
+                  <img id="first-img" src="/image/home1.png" alt="none"></img>
+                </div>
+              </div>
+            </div>
+          </section>
+
         </div>
         <footer>
           <ul>
