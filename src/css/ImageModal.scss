@@ -27,6 +27,14 @@ $label-padding: $title-container-padding !default;
         display: flex;
         flex-direction: column;
 
+        input[type="range"] {
+            height: 30px;
+            -webkit-appearance: none;
+            margin: 10px 0;
+            width: 100%;
+            background-color: #EEEEEE;
+        }
+
         .top-div {
             padding: 3%;
             display: flex;
