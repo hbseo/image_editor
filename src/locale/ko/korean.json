@@ -204,7 +204,8 @@
         "More" : "더 보기",
         "Zoom" : "확대",
         "Home" : "홈 화면",
-        "LeavePage" : "페이지를 떠나시겠습니까?"
+        "LeavePage" : "페이지를 떠나시겠습니까?",
+        "Download" : "다운로드"
     },
 
     "ImageFilter" : {

@@ -17,12 +17,12 @@ class Rotation extends Action {
       this.updateObject();
       canvas.renderAll();
     }
-    else if (this.getBackgroundImage()){
+    else if (this.getBackgroundImage() && ( angle % 90 === 0)){
       let img = this.getBackgroundImage()
       img.set({
         angle: (angle + img.angle)% 360,
       });
-      ResizeHelper.adjustBackgroundImage(img);
+      ResizeHelper.exchangeBackgroundSize(canvas, angle);
       this.saveState('angle change');
       this.updateObject();
       canvas.renderAll();
@@ -41,12 +41,12 @@ class Rotation extends Action {
       this.updateObject();
       canvas.renderAll();
     }
-    else if (this.getBackgroundImage()){
+    else if (this.getBackgroundImage() && ( angle % 90 === 0)){
       let img = this.getBackgroundImage()
       img.set({
         angle: angle % 360,
       });
-      ResizeHelper.adjustBackgroundImage(img);
+      ResizeHelper.exchangeBackgroundSize(canvas, angle);
       this.saveState('angle set');
       this.updateObject();
       canvas.renderAll();

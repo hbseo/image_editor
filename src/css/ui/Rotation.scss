@@ -84,7 +84,7 @@
   }
   
   .rotate-input input{
-    background-color: #EEEEEE;
+    background-color: #222b36;
     border-bottom: 1px solid #D9D9D9;
     width: 7vmin;
     height: 3vmin;
@@ -92,10 +92,10 @@
   }
   
   .rotate-input input:hover{
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid white;
     transition: .5s;
   }
   
   .rotate-input input:focus{
-    border-bottom: 1px solid black !important;
+    border-bottom: 1px solid white !important;
   }

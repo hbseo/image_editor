@@ -144,7 +144,7 @@ class ImageMini extends Component {
         <ImageModal open={this.state.openModal} close = {this.closeModal}>
           <div className="mini-image-modal-div">
             <div className="mini-image-preview">
-              <img className="preview-img" src = {image.small} url={image.full} alt="." onClick={this.onClickImg}/>
+              <img className="preview-img" src = {image.small} url={image.full} alt="." />
             </div>
 
             <div id="modal-miniimage-list" >

@@ -102,6 +102,18 @@ function adjustBackgroundImage (img) {
   // })
 }
 
+function exchangeBackgroundSize(canvas, angle) {
+  if(angle === 90 || angle === 270){
+    // console.log(angle)
+    // const originWidth = canvas.width
+    // const originHeight = canvas.height
+  
+    // canvas.setWidth(originHeight)
+    // canvas.setHeight(originWidth)
+  }
+
+}
+
 module.exports = {
   resize(canvas, event, obj){
     const pointer = canvas.getPointer(event, false);
@@ -114,5 +126,8 @@ module.exports = {
   },
   adjustBackgroundImage(img){
     adjustBackgroundImage(img)
+  },
+  exchangeBackgroundSize(canvas,angle){
+    exchangeBackgroundSize(canvas, angle)
   }
 }

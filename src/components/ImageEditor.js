@@ -962,6 +962,10 @@ class ImageEditor extends Component {
     this.action['Image'].saveImage(title);
   }
 
+  downloadImage = () => {
+    this.action['Image'].saveImage("image");
+  }
+
   addImage = (url) => {
     this.action['Image'].addImage(url);
   }
@@ -1700,6 +1704,7 @@ class ImageEditor extends Component {
             <div className="save">
             </div>
             <div className="save-more">
+                <button id="save" onClick={this.downloadImage} >{i18next.t('ImageEditor.Download')}</button>
                 <button id="save" onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
                 <button id="more" onClick = { this.returnToHome }>{i18next.t('ImageEditor.Home')}</button>
                 {/* <input type="checkbox" onClick={this.getMousePointInfo} /> */}

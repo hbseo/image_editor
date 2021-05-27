@@ -77,13 +77,13 @@ class Home extends Component {
           <section className = "container" id = "fourth-section">
             <div className="section-maindiv">
               <div className="section-title">
-                <h1>뭐쓰지</h1>
+                <h1>No Login, No </h1>
               </div>
 
               <div className="section-main">
                 <div className = "section-text">
-                  <h1>ㅇㅇㅇㅇㅇㅇㅇ</h1>
-                  쓸거 없음
+                  <h1>Without Login, You can use all features</h1>
+                  dddddd
                 </div>
                 <div className = "section-image">
                   <img id="first-img" src="/image/home1.png" alt="none"></img>
