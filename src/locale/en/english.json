@@ -371,6 +371,7 @@
         "CropCanvas" : "Start Crop",
         "CropEndCanvas" : "End Crop",
         "CanvasColor" : "Canvas BackgroundColor",
+        "Color opacity" : "Color opacity",
         "CanvasEtc" : "Etc",
         "Beta" : "Beta",
         "CanvasExport" : "Export a Canvas",
@@ -384,13 +385,15 @@
         "Draw" : "Draw",
         "Brush type" : "Brush Type",
         "Width" : "Brush Width",
-        "Line Color" : "Brush Color"
+        "Line Color" : "Brush Color",
+        "Color opacity" : "색 투명도"
     },
 
     "ui/effect" : {
         "Effect" : "Effect",
         "Blur" : "Blur",
         "ShadowColor" : "Shadow Color",
+        "Color opacity" : "Color opacity",
         "OffsetY" : "Offset Y",
         "OffsetX" : "Offset X",
         "Stroke" : "Stroke",
@@ -525,6 +528,7 @@
         "Text background" : "Text background",
         "Active" : "Active",
         "Text color" : "Text color",
+        "Text opacity" : "Color opacity",
         "Text bg color" : "Text Background color",
         "Pipette" : "Pipette",
         "Font family" : "Font Family"

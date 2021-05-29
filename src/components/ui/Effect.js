@@ -185,9 +185,12 @@ export default withTranslation()(class Effect extends Component {
           <div className="shadow-color">
             {i18next.t('ui/effect.ShadowColor')}
             <div className="color-picker">
-                <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
+                <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange }/>
+                <div className="cp-rangebox">
+                    <div>{i18next.t('ui/effect.Color opacity')}: {this.state.color.a}</div>
                 <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
             </div>
+          </div>
           </div>         
           <div className="stroke">
             <label htmlFor="stroke">{i18next.t('ui/effect.Stroke')} </label>
