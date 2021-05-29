@@ -5,6 +5,7 @@ import i18next from "../locale/i18n";
 import { debounce } from 'lodash';
 import Draggable from 'react-draggable';
 import { Prompt } from 'react-router-dom';
+import { linkIcon } from './const/consts';
 
 import '../css/ImageEditor.scss'
 import Save from './Save';
@@ -1334,20 +1335,27 @@ class ImageEditor extends Component {
   showUndoStack = () => {
     // const { t } = useTranslation();
     const listitem = this.stateStack.map((state) =>
-      <p style = {{color : 'black'}} key= {state.id} className="undo_stack" number = {state.id} onClick = {this.onclickUndoStack} >{state.id} : {i18next.t(state.action)}</p>
+    <div className="stack-box">
+        <div style = {{color : 'black'}} key= {state.id} className="undo-stack" number = {state.id} onClick = {this.onclickUndoStack} >
+            {state.id + 1} : {i18next.t(state.action)}
+        </div>
+        <div className="link-image">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <path d={linkIcon.link} />
+            </svg>
+        </div>
+    </div>
     );
     return(
-      <div style={{color : 'black'}}>
-        <ol>
+      <div>
           {listitem}
-        </ol>
       </div>
     )
   }
 
   showRedoStack = () => {
     const listitem = this.redoStack.map((state) =>
-      <p style = {{color : '#820000'}} key = {state.id} className="redo_stack" number = {state.id} onClick = {this.onclickRedoStack}>{state.id} : {i18next.t(state.action)}</p>
+      <p style = {{color : '#820000'}} key = {state.id} className="redo-stack" number = {state.id} onClick = {this.onclickRedoStack}>{state.id} : {i18next.t(state.action)}</p>
     );
     return(
       <div>
