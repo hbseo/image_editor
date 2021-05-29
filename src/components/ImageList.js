@@ -10,6 +10,7 @@ import '../css/ImageList.scss';
 class ImageList extends Component {
   constructor(props) {
     super(props);
+    this.scrollBot = React.createRef();
 
     this.state = {
       random_count : 10,
@@ -35,7 +36,6 @@ class ImageList extends Component {
       user : '',
       user_link : '',
       download_location : '',
-
     }
   }
 
@@ -52,6 +52,7 @@ class ImageList extends Component {
     event.preventDefault();
     this.getImage();
   }
+
   searchChange = (event) => {
     let change_state = {};
     change_state[event.target.name] = event.target.value;
@@ -129,7 +130,6 @@ class ImageList extends Component {
 
   imageSizeVersion = () => {
     let image = this.state.image;
-
     if(!image){
       return(
         <div id="image-list-size-none">
@@ -138,6 +138,8 @@ class ImageList extends Component {
       )
     }
     else{
+      this.scrollBot.current.scrollTop = this.scrollBot.current.scrollHeight
+
       return (
         <div id="image-list-size" >
           <ul>
@@ -169,9 +171,14 @@ class ImageList extends Component {
     this.setState(change_state);
   }
 
+  scrollTop = () => {
+    this.scrollBot.current.scrollTop = 0
+  }
+
   render() {
     return (
-      <div className="more-image-main">
+      <div className="more-image-main" ref={this.scrollBot}>
+        <button className="topscroll-button" onClick = {this.scrollTop}>↑</button>
         <div className="more-image-search">
           <div className="search-image">
             <div className="option-title">{i18next.t('ImageList.Search random image')} {this.state.search}</div>

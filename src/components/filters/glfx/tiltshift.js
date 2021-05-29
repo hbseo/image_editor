@@ -64,9 +64,9 @@ filters.TiltShift = createClass(filters.BaseFilter, /** @lends fabric.Image.filt
   },
 
   applyTo2d: function(options) {
-    var imageData = options.imageData,
-        data = imageData.data, i,
-        len = data.length;
+    // var imageData = options.imageData,
+    //     data = imageData.data, i,
+    //     len = data.length;
   },
 
   applyToWebGL: function(options){
@@ -88,12 +88,13 @@ filters.TiltShift = createClass(filters.BaseFilter, /** @lends fabric.Image.filt
   
       gl.uniform1f(shader.uniformLocations.blurRadius, this.tiltshift_matrix.blurRadius);
       gl.uniform1f(shader.uniformLocations.gradientRadius, this.tiltshift_matrix.gradientRadius);
-      if(i == 0){
+      if(i === 0){
         gl.uniform2fv(shader.uniformLocations.delta, this.tiltshift_matrix.delta); 
       }
       else{
         gl.uniform2fv(shader.uniformLocations.delta, [-this.tiltshift_matrix.delta[1], this.tiltshift_matrix.delta[0]]);
       }
+
       gl.uniform2fv(shader.uniformLocations.start, this.tiltshift_matrix.start); 
       gl.uniform2fv(shader.uniformLocations.end, this.tiltshift_matrix.end); 
       gl.uniform2fv(shader.uniformLocations.texSize, this.tiltshift_matrix.texSize); // max size 
@@ -129,6 +130,5 @@ filters.TiltShift = createClass(filters.BaseFilter, /** @lends fabric.Image.filt
   // },
 
 });
-
-fabric.Image.filters.TiltShift .fromObject = fabric.Image.filters.BaseFilter.fromObject;
+fabric.Image.filters.TiltShift.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 export const TiltShift  = filters.TiltShift

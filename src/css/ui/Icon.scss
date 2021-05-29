@@ -20,7 +20,8 @@
 
         .icon_svg {
           pointer-events: none;
-          width : 30px;
+          width : 50px;
+          fill : white;
         }
 
         button{
@@ -30,7 +31,7 @@
         }
 
         button:hover{
-          background-color: #DFDFDF;
+          background-color: #222b36;
         }
           
         button:hover + .attribute {

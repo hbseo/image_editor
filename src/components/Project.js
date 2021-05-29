@@ -103,52 +103,6 @@ class Project extends Component {
     return this.canvas.toDataURL({format : 'png'});
   }
 
-  // showProjects = () => {
-  //   if(this.props.login){
-  //     let listitem = null;
-  //     if(this.state.projects.length > 0) {
-  //       listitem = this.state.projects.map((prj) =>
-  //         <div className="project-div" key={prj.idx}>
-  //           <div className="project-img">
-  //             <Link 
-  //             to={{
-  //               pathname: '/edit',
-  //               save : true,
-  //               project_data : prj.project_data,
-  //               project_idx : prj.idx,
-  //               state: {
-  //                 width: 500,
-  //                 height: 400,
-  //               }
-  //             }}><img className="project-thumb" id={prj.idx} src = {this.fromJsontoPng(prj.project_data, prj.idx)} width="auto" height="200px" alt="none" onClick = {this.openProject}/>
-  //             </Link>
-  //           </div>
-  //           <div className="project-title">
-  //             <p>{prj.title}</p>
-  //             {/* <p> {prj.create_date} </p> */}
-  //             <button idx= {prj.idx} delete="one" onClick={this.checkDelete}>X</button>
-  //           </div>
-  //         </div>
-  //       );
-  //     }
-  //     this.setState({project_list : listitem})
-  //     // return(
-  //     //   <div id="project-list">
-  //     //     {listitem}  
-  //     //   </div>
-  //     // );
-  //   }
-  //   else{
-  //     // return(
-  //     //   <div id="project-list">
-  //     //     <div className="project-div">
-  //     //       {i18next.t('Project.PlzSignin')}
-  //     //     </div>
-  //     //   </div>
-  //     // )
-  //   }
-  // }
-
   deleteProject = (event) => {
     let idx = event.target.getAttribute('idx');
     if(this.props.id === '' || isNaN(idx)) { return; }
@@ -208,8 +162,8 @@ class Project extends Component {
         alert(i18next.t('Project.Error'));
       }
     })
-    .catch(() => {
-      alert(i18next.t('Project.Error'));
+    .catch((err) => {
+      alert("i18next.t('Project.Error')");
     })
   }
 
@@ -289,7 +243,8 @@ class Project extends Component {
             <div className="project-search">
                 <div className="project-search-form">
                     <form onSubmit={this.handleSubmit}>
-                        {i18next.t('Project.Title')} <input className="search" name="search" ref={this.input}  />
+                        <label className="search-title">{i18next.t('Project.Title')} </label>
+                        <input className="search" name="search" ref={this.input}  />
                         <input type="submit" value="Search" />
                     </form>
                 </div>
@@ -323,8 +278,8 @@ class Project extends Component {
                 <div className="project-title">
                   <p>{prj.title}</p>
                   <p> {
-                  `${new Date(prj.create_date).getMonth()+1}/${new Date(prj.create_date).getDate()}
-                  ${new Date(prj.create_date).getFullYear()} ${new Date(prj.create_date).getHours()}:
+                  `${new Date(prj.create_date).getMonth()+1}/${new Date(prj.create_date).getDate()}/${new Date(prj.create_date).getFullYear()} 
+                  ${new Date(prj.create_date).getHours()}:
                   ${new Date(prj.create_date).getMinutes()}`
                   } </p>
                 </div>

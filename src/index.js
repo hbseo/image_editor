@@ -6,6 +6,7 @@ import Main from './components/Main';
 import ImageEditor from './components/ImageEditor';
 import ImageFilter from './components/ImageFilter';
 import Home from './components/Home';
+import Helper from './components/Helper';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import ChangePassword from './components/Change_password';
@@ -21,6 +22,7 @@ ReactDOM.render(
 			<Route exact path="/edit" component={ImageEditor} />
 			<Route exact path="/filter" component={ImageFilter} />
 			<Route exact path="/" component={Home} />
+      <Route path="/helper" component={Helper} />
       {/* <Route exact path="/login" component={SignIn} /> */}
       {/* <Route exact path="/register" component={SignUp} /> */}
       {/* <Route exact path="/ChangePassword/:id" component={ChangePassword} /> */}

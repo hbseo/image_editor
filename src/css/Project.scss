@@ -8,6 +8,13 @@
   height: 50px;
   font-size: 1.5em;
   margin: 2%;
+  background-color: #171c24;
+  border-radius : 5px;
+  color: white;
+  font-weight: bold;
+  text-align: left;
+  padding : 15px 20px 0px 20px;
+  // display: flex;
 }
 
 .project-button-box {
@@ -15,7 +22,10 @@
   margin: 2%;
   justify-content: space-between;
   align-items: center;
-  height: 40px;
+  height: 80px;
+  background-color: #171c24;
+  color : white;
+  border-radius: 5px;
 
   .sort-button-box {
     display: flex;
@@ -48,6 +58,7 @@
     border-radius: 5px;
     transition-property: background-color color;
     transition: 0.2s linear;
+    margin-right : 1%;
   }
 
   #delete-all:hover {
@@ -58,16 +69,20 @@
 
 .project-search {
   border-radius: 5px;
-  background-color: #eeeeee;
+  background-color: #222b36;
   display: flex;
-  width: 350px;
-  height: 100%;
+  width: 400px;
+  min-width : 350px;
+  // height: 100%;
   padding: 5px;
-
+  .search-title {
+    margin-left : 10px;
+  }
   .search {
-    margin-left: 10px;
+    margin-left: 20px;
     margin-right: 10px;
-    width: 150px;
+    width: 8vw;
+    max-width : 160px;
     height: 20px;
   }
 
@@ -75,7 +90,7 @@
     width: 80px;
     height: 40px;
     border-radius: 5px;
-    background-color: #ff6961;
+    background-color: #688eff;
     transition: 0.3s;
   }
 
@@ -89,7 +104,7 @@
   margin: 2%;
   padding: 2%;
   border-radius: 5px;
-  background-color: #eeeeee;
+  background-color: #171c24;
   flex-direction: row;
   display: flex;
   flex-wrap: wrap;
@@ -100,7 +115,14 @@
     flex-direction: column;
     vertical-align: bottom;
     justify-content: center;
-    background-color: #d3d3d3;
+    background: repeating-linear-gradient(
+          45deg,
+          rgba(0, 0, 0, 0.2),
+          rgba(0, 0, 0, 0.2) 5px,
+          rgba(0, 0, 0, 0.3) 5px,
+          rgba(0, 0, 0, 0.3) 10px
+    );
+    color : white;
     padding: 12px;
     position: relative;
 
@@ -124,11 +146,11 @@
 
       .project-thumb {
         margin: auto;
+        
       }
     }
 
     .project-title {
-      color: black;
       justify-self: end;
       display: block;
       text-align: center;

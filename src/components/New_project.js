@@ -17,14 +17,14 @@ class New_project extends Component {
       return <p>no link</p>
     }
     return <div className="link-container">
-      <Link to={{
+      <Link className="edit-link" to={{
       pathname: '/edit',
       state: {
         width: width,
         height: height,
       }
       }}>
-        <div className="new-link"></div> 
+        <div className="new-link"><i className="far fa-image"></i></div> 
       </Link>
       <div className='description'>{width}X{height}</div> 
     </div>
@@ -112,7 +112,9 @@ class New_project extends Component {
               <input type="number" name="height" value={this.state.height} onChange={this.handleChange} min="10" max="5000"/>
             </div>
           </div>
-          {this.renderLink(this.state.width, this.state.height)}
+          <div className="render-button">
+            {this.renderLink(this.state.width, this.state.height)}
+          </div>
         </div>
       </div>
     )

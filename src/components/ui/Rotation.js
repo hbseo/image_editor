@@ -10,13 +10,13 @@ export default withTranslation()(class Rotation extends Component{
   }
 
   componentDidMount(){
-    console.log('Rotation UI Mount');
+    // console.log('Rotation UI Mount');
   }
   componentDidUpdate(){
-    console.log('Rotation UI Update');
+    // console.log('Rotation UI Update');
   }
   componentWillUnmount(){
-    console.log('Rotation UI Unmount');
+    // console.log('Rotation UI Unmount');
   }
 
   handleAngleChange = (event) => {
@@ -31,6 +31,19 @@ export default withTranslation()(class Rotation extends Component{
   setAngle = (event) => {
     var changeAngle = event.target.getAttribute('angle');
     this.props.setObjectAngle(Number(changeAngle));
+  }
+
+  angleValue = () => {
+    if(this.props.object.type !== 'not active'){
+      return this.props.object.angle;
+    }
+    else if(this.props.getBackgroundImage()){
+      // console.log(this.props.getBackgroundImage().angle)
+      return this.props.getBackgroundImage().angle
+    }
+    else{
+      return 0
+    }
   }
 
   render(){
@@ -73,7 +86,7 @@ export default withTranslation()(class Rotation extends Component{
               max='360'
               step='1'
               placeholder='0'
-              value={this.props.object.type !== 'not active' ? this.props.object.angle : 0}
+              value={this.angleValue()}
               onChange={this.handleAngleChange}
             />
           </div>

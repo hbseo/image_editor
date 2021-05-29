@@ -152,8 +152,8 @@ class ImageEditor extends Component {
       if(this._canvasImageUrl){
         this.loadImage(
           this._canvasImageUrl,
-          {x : 0, y : 0}, 
-          {originX : "left", originY : "top", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
+          {x : this._canvasSize.width / 2, y : this._canvasSize.height / 2}, 
+          {originX : "center", originY : "center", scaleX : this._backgroundImageRatio, scaleY : this._backgroundImageRatio}
         )
         .then((img) => {
           this._backgroundImage = img;
@@ -168,7 +168,7 @@ class ImageEditor extends Component {
             preserveObjectStacking: true,
             height: this._canvasSize.height,
             width: this._canvasSize.width,
-            backgroundColor: 'grey',
+            // backgroundColor: 'grey',
             backgroundImage : this._backgroundImage,
             uniformScaling: false, // When true, objects can be transformed by one side
             imageSmoothingEnabled : false,
@@ -962,6 +962,10 @@ class ImageEditor extends Component {
     this.action['Image'].saveImage(title);
   }
 
+  downloadImage = () => {
+    this.action['Image'].saveImage("image");
+  }
+
   addImage = (url) => {
     this.action['Image'].addImage(url);
   }
@@ -1451,7 +1455,6 @@ class ImageEditor extends Component {
     // }
 
 
-
     //캔버스 기능 씀. 문제는.. 스크롤바가 없다는 것.
     if(this._canvas.width * zoomScale < maxWidth && this._canvas.height * zoomScale < maxHeight){
       // document.getElementById('canvas').style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
@@ -1468,8 +1471,8 @@ class ImageEditor extends Component {
 
   canvasZoomOut = (event) => {
     const zoomScale = this.state.scaleZoom - 0.05;
-    const maxHeight = document.getElementsByClassName('editor-main')[0].clientHeight
-    const maxWidth = document.getElementsByClassName('editor-main')[0].clientWidth
+    // const maxHeight = document.getElementsByClassName('editor-main')[0].clientHeight
+    // const maxWidth = document.getElementsByClassName('editor-main')[0].clientWidth
     // if(zoomScale > 0.1){
     //   document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
     //   this.setState({ scaleZoom: this.state.scaleZoom - 0.05 })
@@ -1516,15 +1519,17 @@ class ImageEditor extends Component {
       document.getElementsByClassName('canvas-container')[0].style.setProperty("transform", "scale("+zoomScale+","+zoomScale+")");
       this.setState({ scaleZoom: zoomScale })
     }
+
+    document.getElementById("canvas").style["position"] = "static"
   }
 
 
-  checkCanvasSize = () => {
-    const maxHeight = document.getElementsByClassName('real')[0].clientHeight
-    const maxWidth = document.getElementsByClassName('real')[0].clientWidth
-    // this.resizeScale();
-    // console.log(maxHeight, maxWidth)
-  }
+  // checkCanvasSize = () => {
+  //   const maxHeight = document.getElementsByClassName('real')[0].clientHeight
+  //   const maxWidth = document.getElementsByClassName('real')[0].clientWidth
+  //   // this.resizeScale();
+  //   // console.log(maxHeight, maxWidth)
+  // }
 
   render() {
     if(i18next.language === 'ko'){
@@ -1604,7 +1609,7 @@ class ImageEditor extends Component {
           scaleXChange = {this.scaleXChange}
           scaleYChange = {this.scaleYChange}
           />,
-      5: <RotationUI object={this.state.activeObject} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
+      5: <RotationUI object={this.state.activeObject} getBackgroundImage = {this.getBackgroundImage} setObjectAngle = {this.setObjectAngle} rotateObjectAngle = {this.rotateObjectAngle}/>,
       6: <ShapeUI 
           object={this.state.activeObject} 
           addShape={this.addShape} 
@@ -1699,6 +1704,7 @@ class ImageEditor extends Component {
             <div className="save">
             </div>
             <div className="save-more">
+                <button id="save" onClick={this.downloadImage} >{i18next.t('ImageEditor.Download')}</button>
                 <button id="save" onClick={this.openSaveModal} >{i18next.t('ImageEditor.Save')}</button>
                 <button id="more" onClick = { this.returnToHome }>{i18next.t('ImageEditor.Home')}</button>
                 {/* <input type="checkbox" onClick={this.getMousePointInfo} /> */}

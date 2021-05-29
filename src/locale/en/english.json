@@ -213,7 +213,8 @@
         "More" : "more",
         "Zoom" : "zoom",
         "Home" : "Home",
-        "LeavePage" : "Are you sure you're leaveing?"
+        "LeavePage" : "Are you sure you're leaveing?",
+        "Download" : "Download"
     },
 
     "ImageFilter" : {

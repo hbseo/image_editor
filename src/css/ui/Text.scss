@@ -18,8 +18,8 @@
   padding: 5%;
 
   button {
-    background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    background-color: #688eff;
+    border: 1px solid #688eff;
     border-radius: 5px;
     width: 160px;
     height: 30px;
@@ -27,7 +27,7 @@
   }
 
   button:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
   }
 }
 
@@ -86,6 +86,7 @@
       height: 34px;
       width: 23px;
       cursor: pointer;
+      color : white;
     }
 
     input[type="number"]:disabled {
@@ -124,13 +125,17 @@
         }
 
         svg {
+          fill : #688eff;
           width: 50%;
           height: 50%;
         }
       }
 
       label:hover {
-        background-color: #d9d9d9;
+        background-color: #84a3ff;
+        svg {
+          fill : white;
+        }
       }
     }
 
@@ -151,6 +156,7 @@
         }
 
         svg {
+          fill : #ababab;
           width: 50%;
           height: 50%;
         }
@@ -169,7 +175,7 @@
   .bold {
     width: 50px;
     height: 50px;
-    background-color: #e6e6e6;
+    background-color: #688eff;
     border-radius: 5px;
 
     label {
@@ -191,7 +197,11 @@
   }
 
   .bold:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
+
+    label {
+      cursor : pointer;
+    }
 
     svg {
       fill: #365afc;
@@ -225,7 +235,7 @@
   .italic {
     width: 50px;
     height: 50px;
-    background-color: #e6e6e6;
+    background-color: #688eff;
     border-radius: 5px;
 
     label {
@@ -247,7 +257,10 @@
   }
 
   .italic:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
+    label {
+      cursor : pointer;
+    }
   }
 
   .italic:hover svg {
@@ -280,7 +293,7 @@
   .underline {
     width: 50px;
     height: 50px;
-    background-color: #e6e6e6;
+    background-color: #688eff;
     border-radius: 5px;
 
     label {
@@ -302,7 +315,10 @@
   }
 
   .underline:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
+    label {
+      cursor : pointer;
+    }
   }
 
   .underline:hover svg {
@@ -347,7 +363,7 @@
   input[type="checkbox"] + label {
     width: 7vmin;
     height: 7vmin;
-    background-color: #e6e6e6;
+    background-color: #688eff;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -356,12 +372,17 @@
   }
 
   input[type="checkbox"] + label:hover {
-    background-color: #d9d9d9;
+    background-color: #97b1ff;
   }
 
-  input[type="checkbox"]:disabled + label:hover {
+  input[type="checkbox"]:disabled + label {
+    color : #ababab;
     background-color: #e6e6e6;
   }
+
+  // input[type="checkbox"]:disabled + label:hover {
+  //   background-color: #688eff;
+  // }
 
   input[type="checkbox"]:checked + label {
     background-color: #365afc;
@@ -377,8 +398,8 @@
   align-items: center;
 
   .fontfamily-button {
-    background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    background-color: #688eff;
+    border: 1px solid #688eff;
     border-radius: 5px;
     width: 160px;
     height: 30px;
@@ -401,7 +422,8 @@
 
   .fontfamily-button {
     background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #ababab;
+    color : #ababab;
     border-radius: 5px;
     width: 160px;
     height: 30px;

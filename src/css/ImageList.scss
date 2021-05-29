@@ -15,6 +15,20 @@ input[type="number"] {
   height: 100%;
   overflow-y: scroll;
 
+  .topscroll-button {
+    position: fixed;
+    right : 0;
+    bottom : 0;
+    background-color: #a0a0a0;
+    border-radius: 9px;
+    color : white;
+    font-weight: 1000;
+    font-size : 30px;
+    padding : 10px;
+    margin : 30px;
+    z-index: 1;
+  }
+
   .more-image-search {
     flex-direction: row;
     display: flex;
@@ -65,7 +79,7 @@ input[type="number"] {
         height: 7vh;
         max-height: 80px;
         border-radius: 5px;
-        background-color: #365afc;
+        background-color: #688eff;
         color: white;
         cursor: pointer;
         transition: background-color 0.1s linear;
@@ -92,7 +106,8 @@ input[type="number"] {
       border-radius: 5px;
       width: 500px;
       height: 100px;
-      background-color: #eeeeee;
+      background-color: #171c24;
+      color : white;
 
       .search-form {
         display: flex;
@@ -122,6 +137,8 @@ input[type="number"] {
         .search-input {
           float: right;
           border: 2px solid #a0a0a0;
+          background-color: #171c24;
+          color : white;
           border-radius: 3px;
           transition: 0.3s;
           width: 10vw;
@@ -131,7 +148,7 @@ input[type="number"] {
         }
 
         .search-input:hover {
-          border: 2px solid #0b0b0b;
+          border: 2px solid #688eff;
         }
 
         .search-input:focus {
@@ -146,7 +163,7 @@ input[type="number"] {
           height: 7vh;
           max-height: 80px;
           border-radius: 5px;
-          background-color: #365afc;
+          background-color: #688eff;
           color: white;
           cursor: pointer;
           transition: background-color 0.1s linear;
@@ -155,12 +172,6 @@ input[type="number"] {
         .search-image-button:hover {
           background-color: #4667fc;
         }
-      }
-    }
-
-    .search-image:hover {
-      .option-title {
-        color: #1a58d3;
       }
     }
 
@@ -173,7 +184,7 @@ input[type="number"] {
     margin: 0.1% 3% 0.1% 3%;
     padding: 1%;
     border-radius: 5px;
-    background-color: #eeeeee;
+    background-color: #171c24;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -228,28 +239,32 @@ input[type="number"] {
         font-size: 13px;
         // visibility: hidden;
       }
-    }
+    }  
   }
 
   #image-list-size {
     margin: 3%;
-    padding: 3%;
+    padding: 2%;
     border-radius: 5px;
-    background-color: #eeeeee;
+    background-color: #171c24;
+    color : white;
+
 
     ul {
       display: flex;
       justify-content: space-around;
 
       li {
+        height: 100%;
         img:hover + div {
           color: #1a58d3;
         }
 
         .image-list-img {
           object-fit: contain;
-          width: 100%;
-          height: 100%;
+          max-width: 100%;
+          max-height: 100%;
+          margin : 1%;
           transition: outline 0.1s linear;
         }
         .image-list-img:hover {
@@ -260,6 +275,8 @@ input[type="number"] {
         div {
           text-align: center;
           font-weight: bold;
+          height: 100%;
+
         }
       }
     }

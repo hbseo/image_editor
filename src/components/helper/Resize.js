@@ -1,4 +1,3 @@
-
 function shapeScalingResizeEvent(canvas, pointer, obj){
   let width = Math.abs(obj.left - pointer.x);
   let height = Math.abs(obj.top - pointer.y);
@@ -88,6 +87,33 @@ function adjustOriginToCenter  (shape) {
 }
 
 
+function adjustBackgroundImage (img) {
+  // console.log(img.width)
+  // const width = img.width
+  // const height = img.height
+  // let ratio = img.height / img.width
+  // console.log(ratio)
+  // const rotatedWidth = 800
+  // const rotatedHeight = ratio * rotatedWidth
+  // console.log(img.getBoundingRect())
+  // img.set({
+  //   width : rotatedWidth,
+  //   height : rotatedHeight
+  // })
+}
+
+function exchangeBackgroundSize(canvas, angle) {
+  if(angle === 90 || angle === 270){
+    // console.log(angle)
+    // const originWidth = canvas.width
+    // const originHeight = canvas.height
+  
+    // canvas.setWidth(originHeight)
+    // canvas.setHeight(originWidth)
+  }
+
+}
+
 module.exports = {
   resize(canvas, event, obj){
     const pointer = canvas.getPointer(event, false);
@@ -96,6 +122,12 @@ module.exports = {
     adjustOriginToCenter(obj)
   },
   adjustOriginToCenter(shape){
-    adjustOriginToCenter  (shape)
+    adjustOriginToCenter(shape)
+  },
+  adjustBackgroundImage(img){
+    adjustBackgroundImage(img)
+  },
+  exchangeBackgroundSize(canvas,angle){
+    exchangeBackgroundSize(canvas, angle)
   }
 }

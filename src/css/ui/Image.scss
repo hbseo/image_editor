@@ -26,12 +26,12 @@
     }
     
     .crop-start-button button:hover{
-      background-color: #D9D9D9;
+      background-color: #84a3ff;
     }
 
     #end-button{
-      background-color: #E6E6E6;
-      border: 1px solid #D4D4D4;
+      background-color: #688eff;
+      // border: 1px solid #D4D4D4;
       border-radius: 5px;
       width: 200px;
       height: 30px;
@@ -39,7 +39,7 @@
     }
     
     #end-button:hover{
-      background-color: #D9D9D9;
+      background-color: #84a3ff;
     }
   }
 
@@ -65,25 +65,25 @@
         .input-file-button {
           display: inline-block;
           text-align: center;
-          border: 1px solid #D4D4D4;
+          // border: 1px solid #D4D4D4;
           border-radius: 5px;
           width: 200px;
           height: 30px;
-          background: #E6E6E6;
+          background: #688eff;
           margin-top: 5%;
           padding-top: 10px;
           cursor: pointer;
         }
   
         .input-file-button:hover {
-          background-color: #D9D9D9;
+          background-color: #84a3ff;
         }
       }
     }
 
     .open-url{
-      background-color: #E6E6E6;
-      border: 1px solid #D4D4D4;
+      background-color: #688eff ;
+      // border: 1px solid #D4D4D4;
       border-radius: 5px;
       width: 200px;
       height: 30px;
@@ -91,7 +91,7 @@
     }
 
     .open-url:hover{
-      background-color: #D9D9D9;
+      background-color: #84a3ff;
     }
 
     .image-url{
@@ -139,10 +139,10 @@
       }
 
       .url-submit{
-        background-color: #E6E6E6;
+        background-color: #688eff ;
         width: 100px;
         height: 30px;
-        border: 1px solid #D4D4D4;
+        // border: 1px solid #D4D4D4;
         border-radius: 5px;
         cursor: pointer;
         text-align: center;
@@ -151,20 +151,20 @@
       }
       
       .url-submit:hover{
-        background-color: #D9D9D9;
+        background-color: #84a3ff;
       }
     }
   }
 
   .open-lib{
-    background-color: #E6E6E6;
-    border: 1px solid #D4D4D4;
+    background-color: #688eff;
+    // border: 1px solid #D4D4D4;
     border-radius: 5px;
     width: 200px;
     height: 30px;
   }
 
   .open-lib:hover{
-    background-color: #D9D9D9;
+    background-color: #84a3ff;
   }
 }

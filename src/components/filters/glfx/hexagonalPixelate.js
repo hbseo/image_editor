@@ -68,9 +68,9 @@ filters.HexagonalPixelate = createClass(filters.BaseFilter, /** @lends fabric.Im
   },
 
   applyTo2d: function(options) {
-    var imageData = options.imageData,
-        data = imageData.data, i,
-        len = data.length;
+    // var imageData = options.imageData,
+        // data = imageData.data, i,
+        // len = data.length;
   },
 
   isNeutralState: function() {
@@ -93,5 +93,5 @@ filters.HexagonalPixelate = createClass(filters.BaseFilter, /** @lends fabric.Im
 
 });
 
-fabric.Image.filters.HexagonalPixelate .fromObject = fabric.Image.filters.BaseFilter.fromObject;
+fabric.Image.filters.HexagonalPixelate.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 export const HexagonalPixelate  = filters.HexagonalPixelate
