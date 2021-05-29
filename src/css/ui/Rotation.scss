@@ -25,7 +25,9 @@
   
   .rotate-degree button{
     width: 5vmin;
+    min-width : 50px;
     height: 5vmin;
+    min-height : 50px;
     border-radius: 5px;
   }
   
@@ -61,19 +63,35 @@
   }
   
   #clockwise{
-    background-image: url(../img/rotate-left.svg);
-    background-repeat: no-repeat;
+    // background-image: url(../img/rotate-left.svg);
+    // background-repeat: no-repeat;
+    // fill : white;
     width: 5vmin;
     height: 5vmin;
+    min-width: 50px;
+    min-height : 50px;
     background-size: contain;
   }
   
   #c-clockwise{
-    background-image: url(../img/rotate-right.svg);
-    background-repeat: no-repeat;
+    // background-image: url(../img/rotate-right.svg);
+    // background-repeat: no-repeat;
+    fill : white;
     width: 5vmin;
     height: 5vmin;
+    min-width: 50px;
+    min-height : 50px;
     background-size: contain;
+  }
+
+  .rotation-svg {
+    pointer-events: none;
+    min-width: 50px;
+    min-height : 50px;
+    width: 5vmin;
+    height: 5vmin;
+    // width : 80px;
+    fill : white;
   }
   
   .rotate-input{
@@ -87,7 +105,9 @@
     background-color: #222b36;
     border-bottom: 1px solid #D9D9D9;
     width: 7vmin;
+    min-width : 66px;
     height: 3vmin;
+    min-height : 22px;
     margin: 5%;
   }
   
