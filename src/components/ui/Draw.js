@@ -107,11 +107,13 @@ export default withTranslation()(class Draw extends Component{
           </div>
           <div>{this.state.lineWidth}</div>
           <div className="option-title">{i18next.t('ui/draw.Line Color')}</div>
-          <div className="color-picker">            
-            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
-            <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+          <div className="color-picker">
+            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange }/>
+            <div className="cp-rangebox">
+                <div>{i18next.t('ui/draw.Color opacity')}: {this.state.color.a}</div>
+                <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+            </div>
           </div>
-          <div>{this.state.color.a}</div>
         </div>
       </div>
       

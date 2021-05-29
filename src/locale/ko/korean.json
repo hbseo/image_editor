@@ -362,6 +362,7 @@
         "CropCanvas" : "캔버스 자르기 시작",
         "CropEndCanvas" : "자르기 완료",
         "CanvasColor" : "캔버스 배경색",
+        "Color opacity" : "색 투명도",
         "CanvasEtc" : "기타 기능",
         "Beta" : "베타 기능",
         "CanvasExport" : "캔버스 로컬파일 저장",
@@ -375,13 +376,15 @@
         "Draw" : "그리기",
         "Brush type" : "붓 종류",
         "Width" : "붓 두께",
-        "Line Color" : "붓 색깔"
+        "Line Color" : "붓 색깔",
+        "Color opacity" : "색 투명도"
     },
 
     "ui/effect" : {
         "Effect" : "효과",
         "Blur" : "블러",
         "ShadowColor" : "그림자 색상",
+        "Color opacity" : "색 투명도",
         "OffsetY" : "세로 위치",
         "OffsetX" : "가로 위치",
         "Stroke" : "외곽선",
@@ -516,6 +519,7 @@
         "Text background" : "글자 배경색",
         "Active" : "켜기",
         "Text color" : "글자색",
+        "Text opacity" : "색 투명도",
         "Text bg color" : "글자 배경색",
         "Pipette" : "스포이드",
         "Font family" : "폰트 패밀리"

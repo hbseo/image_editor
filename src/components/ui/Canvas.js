@@ -133,11 +133,13 @@ export default withTranslation()(class Canvas extends Component {
             }
           </div>
           <div className="option-title">{i18next.t('ui/canvas.CanvasColor')}</div>
-          <div className="color-picker">            
-            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
-            <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+          <div className="color-picker">
+            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange }/>
+            <div className="cp-rangebox">
+                <div>{i18next.t('ui/canvas.Color opacity')}: {this.state.color.a}</div>
+                <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+            </div>
           </div>
-          <div>{this.state.color.a}</div>
 
           <div className="option-title">{i18next.t('ui/canvas.CanvasEtc')}</div>
           <div className="canvas-export-import">

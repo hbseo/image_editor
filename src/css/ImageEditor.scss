@@ -544,6 +544,10 @@ input[type="range"]:focus::-ms-fill-upper {
   justify-content: space-around;
   margin: 5%;
 
+  .cp-rangebox {
+    width: 70%;
+  }
+
   input[type="color"] {
     border-radius: 100%;
     width: 30px;
@@ -564,6 +568,6 @@ input[type="range"]:focus::-ms-fill-upper {
   }
 
   input[type="range"] {
-    width: 75%;
+    width: 100%;
   }
 }
