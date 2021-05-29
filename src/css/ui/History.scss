@@ -1,0 +1,28 @@
+.stack-box {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+
+  .undo-stack {
+    margin-bottom: 1px;
+  }
+
+  .link-image {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      width: 80%;
+      height: 80%;
+      opacity: 0;
+    }
+  }
+}
+
+.stack-box:hover {
+  svg {
+    opacity: 1;
+  }
+}
