@@ -57,7 +57,7 @@ ul {
 
 .menu {
   background-color: #374357;
-  color : white;
+  color: white;
   width: 70px;
   height: 100vh;
   display: flex;
@@ -126,28 +126,6 @@ ul {
   align-items: center;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cccccc;
-  border-radius: 8px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a6a6a6;
-}
-
-.closed-editor {
-  width: calc(100vw - 70px);
-
-  .editor-nav {
-    width: calc(100vw - 70px);
-  }
-}
-
 .editor-nav {
   width: calc(100vw - 350px);
   display: flex;
@@ -156,7 +134,7 @@ ul {
   height: 5%;
   // margin-top: 5px;
   background-color: #222b36;
-  color : #f8f5f1;
+  color: #f8f5f1;
 }
 
 .nav-bar-button,
@@ -167,7 +145,7 @@ ul {
   margin: 0;
   border: 0;
   background-color: rgba(0, 0, 0, 0);
-  color : #c1c1c1;
+  color: #c1c1c1;
 }
 
 .nav-bar-button-active {
@@ -295,12 +273,13 @@ ul {
   bottom: 0;
   right: 0;
   width: 300px;
-  height: 400px;
+  max-height: 250px;
   z-index: 99999;
+  overflow-y: scroll;
 
   .popup-tab {
     display: flex;
-    height: 10%;
+    height: 35px;
     background-color: #d5ecc2;
 
     .history-tab {
