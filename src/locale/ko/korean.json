@@ -437,7 +437,8 @@
         "Icon" : "아이콘",
         "Pick icon" : "아이콘 선택",
         "Color" : "아이콘 색",
-        "Pipette" : "스포이드"
+        "Pipette" : "스포이드",
+        "Color opacity" :"색 투명도"
     },
 
     "ui/image" : {
@@ -491,7 +492,8 @@
         "Drag" : "드래그",
         "Adjust degree": "각도 조절",
         "Degree" : "도",
-        "Pipette" : "스포이드"
+        "Pipette" : "스포이드",
+        "Color opacity" : "색 투명도"
     },
 
     "ui/sidenav" : {

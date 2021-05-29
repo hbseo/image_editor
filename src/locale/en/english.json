@@ -446,7 +446,8 @@
         "Icon" : "Icon",
         "Pick icon" : "Pick icon",
         "Color" : "Icon Color",
-        "Pipette" : "Pipette"
+        "Pipette" : "Pipette",
+        "Color opacity" :"Color opacity"
     },
 
     "ui/image" : {
@@ -500,7 +501,8 @@
         "Drag" : "Drag",
         "Adjust degree": "Adjust degree",
         "Degree" : "Degree",
-        "Pipette" : "Pipette"
+        "Pipette" : "Pipette",
+        "Color opacity" :"Color opacity"
     },
 
     "ui/sidenav" : {

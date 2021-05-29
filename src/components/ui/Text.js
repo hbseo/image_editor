@@ -317,10 +317,10 @@ export default withTranslation()(class Text extends Component{
 
           <label className="option-title">{i18next.t('ui/text.Text bg color')}</label>
           <div className="color-picker">
-            <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange }/>
+            <input type="color" id="colorSource" value={this.state.hexbgcolor} onChange = { this.handleBGColorChange }/>
             <div className="cp-rangebox">
-                <div>{i18next.t('ui/text.Text opacity')}: {this.state.color.a}</div>
-                <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+                <div>{i18next.t('ui/text.Text opacity')}: {this.state.bgcolor.a} </div>
+                <input type="range" value = {this.state.bgcolor.a} min='0' max='1' step='0.01' onChange = {this.handleBGOpacityChange} />
             </div>
           </div>
 
