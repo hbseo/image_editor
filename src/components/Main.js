@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Project from './Project';
-import Login from './Login';
 import Newproject from './New_project';
 import LoadImage from './LoadImage';
 import Withdrawal from './Withdrawal';
@@ -93,8 +92,7 @@ class Main extends Component {
       0: <Newproject/>,
       1: <LoadImage tab = '1'/>,
       2: <LoadImage tab = '2'/>,
-      3: <Login tab = '3' login_state = {this.state.login_state} loginSuccess = {this.loginSuccess} loginFail = {this.loginFail} id = {this.state.id} />,
-      4: <Project id ={this.state.id} login = {this.state.login_state}/>
+      3: <Project id ={this.state.id} login = {this.state.login_state} tab = '3'/>
     }
     const {t} = this.props;
     // const { t } = useTranslation(['translation', 'common']);
@@ -141,8 +139,8 @@ class Main extends Component {
               </div>
               {this.state.login_state ? 
               <div className="side-project-button">
-                <div className = {this.state.tab === 4 ?  "sidenav-button-active" : "sidenav-button"} >
-                  <button onClick={this.changeTab} tab='4'>{t('Main.Project')}</button>
+                <div className = {this.state.tab === 3 ?  "sidenav-button-active" : "sidenav-button"} >
+                  <button onClick={this.changeTab} tab='3'>{t('Main.Project')}</button>
                 </div> 
                 <div className='sidenav-user'>
                   {this.state.id}

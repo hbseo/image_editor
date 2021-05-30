@@ -382,6 +382,27 @@ ul {
     overflow-y: auto;
     background-color: #f8f5f1;
     padding: 5%;
+
+    .canvas-info {
+      .canvas-info-title {
+        font-weight: 800;
+        font-size : 18px;
+      }
+      .canvas-size-info{
+
+      }
+      .canvas-zoom-info{
+
+      }
+
+      hr {
+        margin-top : 5px;
+        margin-bottom : 5px;
+        color : black;
+        border :3px solid #374357;
+      }
+      
+    }
   }
 }
 

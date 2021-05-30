@@ -135,7 +135,7 @@ export default withTranslation()(class Objects extends Component {
             <div className="zoom-box">
               <div className="keep-ratio">
                 <label className="mycheckbox path">
-                  <input type="checkbox" id="lockScale" onClick={this.props.lockScaleRatio} disabled={this.props.object.type === 'not active' || this.props.object.type === 'path' ? true : false} />
+                  <input type="checkbox" id="lockScale" onClick={this.props.lockScaleRatio} disabled={this.props.object.type === 'not active' ? true : false} />
                   <svg viewBox="0 0 21 21">
                     <path d={ObjectIcon.checkbox}></path>
                   </svg>
@@ -152,7 +152,9 @@ export default withTranslation()(class Objects extends Component {
                 value={this.props.object.scaleX * 100}
                 onChange={this.handleScaleXChange}
               />
-              <label>X : {this.props.object.scaleX * 100}%</label>
+              {this.props.object.type === 'not active' || this.props.object.type === 'path' ? 
+              null : <div><label>X : {this.props.object.scaleX * 100}%</label></div>}
+              
               <input
                 type='range'
                 name='scaleY'
@@ -163,7 +165,8 @@ export default withTranslation()(class Objects extends Component {
                 value={this.props.object.scaleY * 100}
                 onChange={this.handleScaleYChange}
               />
-              <label>Y : {this.props.object.scaleY * 100}%</label>
+              {this.props.object.type === 'not active' || this.props.object.type === 'path' ? 
+              null : <div><label>Y : {this.props.object.scaleY * 100}%</label></div>}
             </div>
           </div>
         </div>
