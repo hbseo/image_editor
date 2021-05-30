@@ -1,6 +1,13 @@
-const config = require('../config/db-config.json');
 const mysql = require("mysql");
 
+require('dotenv').config();
+const config = {
+  "host"     : "localhost",
+  "user"     : process.env.SESSION_DB_USER,
+  "password" : process.env.SESSION_DB_PW,
+  "database" : process.env.SESSION_DB_NAME,
+  "connectionLimit": 30
+}
 class Database {
   constructor() {
     this.connection = mysql.createConnection(config);

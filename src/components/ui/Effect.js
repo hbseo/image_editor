@@ -211,6 +211,9 @@ export default withTranslation()(class Effect extends Component {
               disabled = { (this.props.object.type === 'group' || this.props.object.type === 'activeSelection' || this.props.object.type === 'not active' || this.props.object.type === 'line' ) ? true : false }
               onChange={this.handleStrokeWidthChange}
             />
+            <div>
+              {this.props.object.strokeWidth ? this.props.object.strokeWidth : 0}
+            </div>
           </div>          
           <div className="stroke-color">            
             {i18next.t('ui/effect.StrokeColor')}

@@ -8,8 +8,9 @@ import { ObjectIcon } from '../const/consts';
 export default withTranslation()(class Canvas extends Component {
   constructor(props) {
     super(props);
+    console.log()
     this.state = {
-      cropCanvasSize: { width: 0, height: 0 },
+      cropCanvasSize: { width: props.canvas.width/2, height: props.canvas.height/2},
       displayCropCanvas: false,
       color: {
         r: '128',
@@ -134,7 +135,7 @@ export default withTranslation()(class Canvas extends Component {
                   />
                 </div>
                 <button onClick={this.cropEndCanvas}>{i18next.t('ui/canvas.CropEndCanvas')}</button>
-                <input type="checkbox" id="cropfit" /><label htmlFor="cropfit">이미지 줄이기(번역할거)</label>
+                <input type="checkbox" id="cropfit" /><label htmlFor="cropfit">{i18next.t('ui/canvas.CropBackground')}</label>
               </div>
               : null
             }

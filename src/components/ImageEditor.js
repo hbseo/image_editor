@@ -1540,12 +1540,12 @@ class ImageEditor extends Component {
   }
 
 
-  // checkCanvasSize = () => {
-  //   const maxHeight = document.getElementsByClassName('real')[0].clientHeight
-  //   const maxWidth = document.getElementsByClassName('real')[0].clientWidth
-  //   // this.resizeScale();
-  //   // console.log(maxHeight, maxWidth)
-  // }
+  checkCanvasSize = () => {
+    // const maxHeight = document.getElementsByClassName('real')[0].clientHeight
+    // const maxWidth = document.getElementsByClassName('real')[0].clientWidth
+    this.resizeScale();
+    // console.log(maxHeight, maxWidth)
+  }
 
   render() {
     if(i18next.language === 'ko'){

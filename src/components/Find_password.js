@@ -136,7 +136,7 @@ class Find_password extends Component {
                 </button>
                 </div>
                 <div className="container-login100-form-btn">
-                  <button className="login100-form-btn" id="cancel" onClick={() => this.props.history.push('/')}>
+                  <button className="login100-form-btn" id="cancel" onClick={() => this.props.history.push('/main')}>
                     {i18next.t("Find_Password.Cancel")}
                 </button>
                 </div>

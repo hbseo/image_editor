@@ -379,7 +379,8 @@
         "GridSnap" : "Snap",
         "GridShow" : "Grid",
         "ObjectSnap" : "Object Snap",
-        "Transparent background" : "Transparent Background"
+        "Transparent background" : "Transparent Background",
+        "CropBackground" : "No Crop BackgroundImage"
     },
 
     "ui/draw" : {
