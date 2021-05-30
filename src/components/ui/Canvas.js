@@ -91,6 +91,13 @@ export default withTranslation()(class Canvas extends Component {
   closeHiddenMenu = () => {
     document.getElementById("hidden-menu").style.setProperty("display", "none");
   }
+
+  clearBackgroundColor = () => {
+    let change = this.state.color;
+    change.a = 0;
+    this.setState({ color : change });
+    this.props.clearBackgroundColor();
+  }
   
   render() {
     return (
@@ -99,9 +106,9 @@ export default withTranslation()(class Canvas extends Component {
           {i18next.t('ui/canvas.Canvas')} ( {this.props.object.type} )
         </div>
         <div className="canvas-menu">
-          <div className="canvas-reset">
+          {/* <div className="canvas-reset">
               <button onClick={this.props.resetCanvas}> {i18next.t('ui/canvas.ResetCanvas')} </button>
-          </div>
+          </div> */}
           <div className="option-title">{i18next.t('ui/canvas.CropCanvas')}</div>
           <div className="canvas-crop">
             <button onClick={this.cropCanvas}>{i18next.t('ui/canvas.CropCanvas')}</button>
@@ -139,6 +146,10 @@ export default withTranslation()(class Canvas extends Component {
                 <div>{i18next.t('ui/canvas.Color opacity')}: {this.state.color.a}</div>
                 <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
             </div>
+          </div>
+
+          <div className="canvas-trans">
+            <button className="trans-background" onClick = {this.clearBackgroundColor}>{i18next.t('ui/canvas.Transparent background')}</button>
           </div>
 
           <div className="option-title">{i18next.t('ui/canvas.CanvasEtc')}</div>

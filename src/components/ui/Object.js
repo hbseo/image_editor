@@ -85,7 +85,7 @@ export default withTranslation()(class Objects extends Component {
                   </svg>
                   <p className="attribute">{i18next.t('ui/object.Flip x')}</p>
                 </div>
-                <div>
+                <div className="flip-div">
                   <svg onClick={this.flipObject} flip="Y" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
                     <path flip="Y" d={ObjectIcon.flipY} overflow="visible" fontFamily="Bitstream Vera Sans" />
                   </svg>
@@ -115,12 +115,20 @@ export default withTranslation()(class Objects extends Component {
           </div>
           <div className="option-title">{i18next.t('ui/object.Group')}</div>
           <div className="obj-group">
-            <svg onClick={this.props.makeGroup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-              <path d={ObjectIcon.makeGroup}/>
-            </svg>
-            <svg onClick={this.props.unGroup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-              <path d={ObjectIcon.unGroup}/>
-            </svg>
+            <div className="group-div">
+              <svg onClick={this.props.makeGroup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <path d={ObjectIcon.makeGroup}/>
+              </svg>
+              <p className="attribute">{i18next.t('ui/object.Group')}</p>
+            </div>
+            <div className="group-div">
+              <svg onClick={this.props.unGroup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <path d={ObjectIcon.unGroup}/>
+              </svg>
+              <p className="attribute">{i18next.t('ui/object.Ungroup')}</p>
+            </div>
+
+
           </div>
           <div className="option-title">{i18next.t('ui/object.Change Scale')}</div>
           <div className="obj-zoom">

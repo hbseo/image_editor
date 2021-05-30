@@ -117,9 +117,17 @@ ul {
   font-size: 1.1em;
 }
 
-.editor {
+.opened-editor {
   display: flex;
   width: calc(100vw - 350px);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.closed-editor {
+  display: flex;
+  width: calc(100vw - 70px);
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -132,7 +140,18 @@ ul {
   align-items: center;
   height: 5%;
   // margin-top: 5px;
-  background-color: #222b36;
+  background-color:  #374357;
+  color: #f8f5f1;
+}
+
+.closed-editor-nav {
+  width: calc(100vw - 70px);
+  display: flex;
+  justify-content: space-between;
+  // align-items: center;
+  height: 5%;
+  // margin-top: 5px;
+  background-color:  #171c24;
   color: #f8f5f1;
 }
 
@@ -158,6 +177,7 @@ ul {
   justify-content: space-around;
   align-items: center;
   width: 15%;
+  min-width : 300px;
   height: 100%;
 
   #save {
@@ -166,7 +186,7 @@ ul {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 80px;
+    width: 120px;
     height: 100%;
   }
 
@@ -181,7 +201,7 @@ ul {
     color: white;
     border-radius: 5px;
     cursor: pointer;
-    width: 80px;
+    width: 120px;
     height: 100%;
   }
 
@@ -190,22 +210,32 @@ ul {
   }
 }
 
-.do button {
-  background: none;
-  color: #a0a0a0;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  cursor: pointer;
-  outline: inherit;
-  font-size: 1.1em;
-  margin: 10px;
+.do {
   height: 100%;
+
+  button {
+    background: none;
+    color: #a0a0a0;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    outline: inherit;
+    font-size: 1.1em;
+    // margin: 10px;
+    height: 100%;
+  }
+
+  .topnav-zoom {
+    width : 70px;
+  }
+  
+  button:hover {
+    background-color: #ececec;
+  }
 }
 
-.do button:hover {
-  background-color: #ececec;
-}
+
 
 .editor-main {
   overflow-x: hidden;
@@ -258,7 +288,7 @@ ul {
         // overflow: auto;
         // background-image: url(./img/back.png);
         // background-repeat: repeat;
-        background-color: black;
+        background-color: #181f27;
       }
       .upper-canvas {
         // overflow: auto;

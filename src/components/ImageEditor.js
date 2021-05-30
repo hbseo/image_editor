@@ -200,7 +200,7 @@ class ImageEditor extends Component {
           preserveObjectStacking: true,
           height: this._canvasSize.height,
           width: this._canvasSize.width,
-          backgroundColor: 'grey',
+          backgroundColor: '#EEEEEE',
           backgroundImage : this._backgroundImage,
           uniformScaling: false,
           imageSmoothingEnabled : false,
@@ -911,8 +911,8 @@ class ImageEditor extends Component {
     this.action['Draw'].drawPolygonWithClick();
   }
 
-  openDrawing = () => {
-    this.action['Draw'].openDrawing();
+  openDrawing = (linewidth) => {
+    this.action['Draw'].openDrawing(linewidth);
   }
 
   closeDrawing = () => {
@@ -1240,6 +1240,14 @@ class ImageEditor extends Component {
       this.action['Draw'].setBrush(); // Canvas Required
       this.resizeScale();
     })
+  }
+
+  clearBackgroundColor = () => {
+    if(this._canvas){
+      console.log('a')
+      this._canvas.backgroundColor = null;
+      this._canvas.renderAll();
+    }
   }
 
   changeToKorean = () => {
@@ -1667,6 +1675,7 @@ class ImageEditor extends Component {
           gridOn = {this.gridOn}
           snapOn = {this.snapOn}
           objectSnapOn = {this.objectSnapOn}
+          clearBackgroundColor = {this.clearBackgroundColor}
         />,
       10: <EffectUI 
           object={this.state.activeObject} 
@@ -1687,7 +1696,7 @@ class ImageEditor extends Component {
         >
         </SideNav>
 
-        <div className={this.state.tab === 99 ? "closed-editor" : "editor"} id='editor'>
+        <div className={this.state.tab === 99 ? "closed-editor" : "opened-editor"} id='editor'>
           <Draggable
             boutnds="editor">
             <div className="popup">
@@ -1701,12 +1710,12 @@ class ImageEditor extends Component {
               </div>
             </div>
           </Draggable>
-          <div className="editor-nav">
+          <div  className={this.state.tab === 99 ? "closed-editor-nav" : "editor-nav"}>
             <div className="do">
                 <button onClick = {this.undo}>{i18next.t('ImageEditor.Undo')}</button>
                 <button onClick = {this.redo}>{i18next.t('ImageEditor.Redo')}</button>
-                <button onClick = {this.buttonCanvasZoom} option = "in">+</button>
-                <button onClick = {this.buttonCanvasZoom} option = "out">-</button>
+                <button className="topnav-zoom" onClick = {this.buttonCanvasZoom} option = "in">+</button>
+                <button className="topnav-zoom" onClick = {this.buttonCanvasZoom} option = "out">-</button>
 
             </div>
             <div className="save">

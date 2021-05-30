@@ -106,11 +106,10 @@ class Image extends Action {
     }
     else{
       option = {
-        format : 'jpeg'
+        format : 'png'
       }
       name = title + '.png'
     }
-
     const canvas = this.getCanvas();
     let dataURL = canvas.toDataURL(option);
     var a = document.createElement("a");

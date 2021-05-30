@@ -369,7 +369,8 @@
         "CanvasImport" : "캔버스 불러오기",
         "GridSnap" : "스냅",
         "GridShow" : "그리드",
-        "ObjectSnap" : "오브젝트 스냅"
+        "ObjectSnap" : "오브젝트 스냅",
+        "Transparent background" : "투명 배경화면"
     },
 
     "ui/draw" : {
@@ -377,7 +378,8 @@
         "Brush type" : "붓 종류",
         "Width" : "붓 두께",
         "Line Color" : "붓 색깔",
-        "Color opacity" : "색 투명도"
+        "Color opacity" : "색 투명도",
+        "Draw Mode" : "모드 선택"
     },
 
     "ui/effect" : {
@@ -513,6 +515,7 @@
 
     "ui/text" : {
         "Text" : "텍스트",
+        "Add Text" : "텍스트 추가",
         "New Text" : "새 텍스트",
         "Font" : "폰트",
         "Font size" : "글자 크기",

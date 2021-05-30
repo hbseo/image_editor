@@ -224,6 +224,7 @@ export default withTranslation()(class Text extends Component{
             {i18next.t('ui/text.Text')} ( {this.props.object.type} )
         </div>
         <div className="sub-textmenu">
+          <label htmlFor="add-text" className="option-title">{i18next.t('ui/text.Add Text')}</label>
           <div className="add-text">
             <button onClick={this.addText}>{i18next.t('ui/text.New Text')}</button>
           </div>

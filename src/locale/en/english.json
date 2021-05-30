@@ -378,7 +378,8 @@
         "CanvasImport" : "Import a Canvas",
         "GridSnap" : "Snap",
         "GridShow" : "Grid",
-        "ObjectSnap" : "Object Snap"
+        "ObjectSnap" : "Object Snap",
+        "Transparent background" : "Transparent Background"
     },
 
     "ui/draw" : {
@@ -386,7 +387,8 @@
         "Brush type" : "Brush Type",
         "Width" : "Brush Width",
         "Line Color" : "Brush Color",
-        "Color opacity" : "색 투명도"
+        "Color opacity" : "색 투명도",
+        "Draw Mode" : "Select a Mode"
     },
 
     "ui/effect" : {
@@ -522,6 +524,7 @@
 
     "ui/text" : {
         "Text" : "Text",
+        "Add Text" : "Add Text",
         "New Text" : "New Text",
         "Font" : "Font",
         "Font size" : "Font size",

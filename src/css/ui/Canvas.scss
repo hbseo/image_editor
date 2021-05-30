@@ -96,6 +96,21 @@
   }
 }
 
+.canvas-trans {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  .trans-background {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #688eff;
+    // border: 1px solid #84a3ff;
+    border-radius: 5px;
+    width: 150px;
+    height: 30px;
+  }
+}
+
 .canvas-export-import {
   display: flex;
   justify-content: center;
