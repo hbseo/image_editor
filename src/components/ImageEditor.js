@@ -1375,7 +1375,7 @@ class ImageEditor extends Component {
   showCurrentState = () => {
     if(this._canvas){
       return(
-        <div>
+        <div className="current-state">
           Current state : {i18next.t(this.currentState.action)}
         </div>
       )

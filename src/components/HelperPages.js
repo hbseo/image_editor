@@ -185,39 +185,10 @@ export function GetStarted() {
         <h1>시작하기!</h1>
       </div>
       <section className="help-container">
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <p>글 쓰는 척</p>
-        <ul>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-          <li>000000000</li>
-        </ul>
+        <p>NO</p>
       </section>
       <div className="help-footer">
-        밑바닥
+        footer
       </div>
     </div>
   )

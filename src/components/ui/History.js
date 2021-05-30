@@ -19,6 +19,7 @@ class History extends Component {
     return (
       <div className="history">
         {this.props.showCurrentState()}
+        <hr/>
         {this.props.showUndoStack()}
       </div>
     );

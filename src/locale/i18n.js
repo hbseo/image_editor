@@ -3,7 +3,6 @@ import {initReactI18next} from "react-i18next";
 import LanguageDetector from 'i18next-browser-languagedetector';
 import translationEn from './en/english'
 import translationKo from './ko/korean'
-
 const resource =  {
     en: {
         translation: translationEn
@@ -18,8 +17,10 @@ i18n
     .use(initReactI18next)  // passes i18n down to react-i18next
     .init({
         resources: resource,
-        lng: "ko",
-        fallbackLng: 'ko',
+        lng: localStorage.getItem("i18nextLng") || "en",
+        fallbackLng: 'en',
+        useLocalStorage: true,
+        localStorageExpirationTime: 86400000,
         // ns: ['translation'],
         // defaultNS: "translation",
         debug: false,
