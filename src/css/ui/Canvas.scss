@@ -16,15 +16,15 @@
     button {
       margin-top: 5px;
       margin-bottom: 5px;
-      background-color: #e6e6e6;
-      border: 1px solid #d4d4d4;
+      background-color: #688eff;
+      // border: 1px solid #d4d4d4;
       border-radius: 5px;
       width: 150px;
       height: 30px;
     }
 
     button:hover {
-      background-color: #d9d9d9;
+      background-color: #84a3ff;
     }
 
     .crop-button {
@@ -83,15 +83,15 @@
     button {
       margin-top: 5px;
       margin-bottom: 5px;
-      background-color: #eeeeee;
-      border: 1px solid #d4d4d4;
+      background-color: #688eff;
+      // border: 1px solid #84a3ff;
       border-radius: 5px;
       width: 150px;
       height: 30px;
     }
 
     button:hover {
-      background-color: #d9d9d9;
+      background-color: #84a3ff;
     }
   }
 }
@@ -105,22 +105,22 @@
   button {
     margin-top: 5px;
     margin-bottom: 5px;
-    background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    background-color: #688eff;
+    // border: 1px solid #d4d4d4;
     border-radius: 5px;
     width: 150px;
     height: 30px;
   }
 
   button:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
   }
 
   .file-input-group {
     margin-top: 5px;
     margin-bottom: 5px;
-    background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    background-color: #688eff;
+    // border: 1px solid #d4d4d4;
     border-radius: 5px;
     width: 150px;
     height: 30px;
@@ -130,7 +130,7 @@
   }
 
   .file-input-group:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
   }
 }
 
@@ -225,6 +225,7 @@
     height: 30px;
     border-radius: 3px;
     transition: 0.5s;
+    background-color: #688eff;
   }
 
   button:hover {

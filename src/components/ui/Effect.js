@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {convertRGB, HEXtoRGBA } from '../helper/ConverRGB';
 import i18next from "../../locale/i18n";
+import SwitchTools from '../helper/SwitchTools';
 import { withTranslation } from "react-i18next";
 import { ObjectIcon } from '../const/consts';
 import '../../css/ui/Effect.scss';
@@ -50,9 +51,11 @@ export default withTranslation()(class Effect extends Component {
       else{
         document.getElementById('shadow_toggle').checked = false;
       }
+      SwitchTools('shadow', false)
       document.getElementById('shadow_toggle').disabled = false;
     }
     else{
+      SwitchTools('shadow', true)
       document.getElementById('shadow_toggle').disabled = true;
     }
 
@@ -149,12 +152,15 @@ export default withTranslation()(class Effect extends Component {
                   type='range'
                   className='shadow'
                   id='shadow'
-                  min='1'
-                  max='100'
+                  min='0'
+                  max='10'
                   name='blur'
-                  step='1'
+                  step='0.1'
                   value={this.state.blur}
                   onChange={this.handleShadowChange}/>
+                <div>
+                  {this.state.blur}
+                </div>
               </label>
             </div>
             <div className="shadow-offset">
@@ -213,9 +219,9 @@ export default withTranslation()(class Effect extends Component {
               <input type="range" value = {this.state.strokeColor.a} min='0' max='1' step='0.01' onChange = {this.handleStrokeOpacityChange} />
             </div>
           </div>
-          <div>
+          {/* <div>
             <button onClick = { this.handlePipette }>{i18next.t('ui/effect.Pipette')}</button>
-          </div>
+          </div> */}
         </div>
       </div>
     );

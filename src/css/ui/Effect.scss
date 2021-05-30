@@ -8,6 +8,11 @@
     justify-content: center;
     margin: 3%;
 
+    #shadow_toggle:disabled{
+      background-color: #979797;
+      border: 1px solid black black;
+    }
+    
     input[type="range"] {
       width: 75%;
     }

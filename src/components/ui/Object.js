@@ -47,18 +47,36 @@ export default withTranslation()(class Objects extends Component {
         <div className="sub-objmenu">
           <div className="option-title"> {i18next.t('ui/object.Order')}</div>
           <div className="obj-order">
-            <svg onClick={this.props.bringToFront} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-              <path d={ObjectIcon.bringToFront}/>
-            </svg>
-            <svg onClick={this.props.sendToBack} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-              <path d={ObjectIcon.sendToBack}/>
-            </svg>
-            <svg onClick={this.props.bringForward} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-              <path d={ObjectIcon.bringForward}/>
-            </svg>
-            <svg onClick={this.props.sendBackwards} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-              <path d={ObjectIcon.sendBackwards}/>
-            </svg>
+            <div className ="order-div">
+              <svg onClick={this.props.bringToFront} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <path d={ObjectIcon.bringToFront}/>
+              </svg>
+              <p className="attribute">{i18next.t('ui/object.BringToFront')}</p>
+            </div>
+
+            <div className ="order-div">
+              <svg onClick={this.props.sendToBack} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <path d={ObjectIcon.sendToBack}/>
+              </svg>
+              <p className="attribute">{i18next.t('ui/object.SendToBack')}</p>
+            </div>
+
+            <div className ="order-div">
+              <svg onClick={this.props.bringForward} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <path d={ObjectIcon.bringForward}/>
+              </svg>
+              <p className="attribute">{i18next.t('ui/object.BringForward')}</p>
+            </div>
+
+            <div className ="order-div">
+              <svg onClick={this.props.sendBackwards} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <path d={ObjectIcon.sendBackwards}/>
+              </svg>
+              <p className="attribute">{i18next.t('ui/object.SendBackwards')}</p>
+            </div>
+            
+
+
           </div>
           <div className="flip-delete">
             <div className="obj-flip">

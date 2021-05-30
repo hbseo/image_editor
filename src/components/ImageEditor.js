@@ -1335,8 +1335,8 @@ class ImageEditor extends Component {
   showUndoStack = () => {
     // const { t } = useTranslation();
     const listitem = this.stateStack.map((state) =>
-    <div className="stack-box">
-        <div style = {{color : 'black'}} key= {state.id} className="undo-stack" number = {state.id} onClick = {this.onclickUndoStack} >
+    <div className="stack-box" key= {state.id} >
+        <div style = {{color : 'black'}} className="undo-stack" number = {state.id} onClick = {this.onclickUndoStack} >
             {state.id + 1} : {i18next.t(state.action)}
         </div>
         <div className="link-image">
