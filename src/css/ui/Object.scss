@@ -1,12 +1,14 @@
 .sub-objmenu{
     overflow-y: auto;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    // justify-content: center;
 
     .option-title{
         font-size: 17px;
         margin: 3%;
+        color : #688eff;
     }
 
     .obj-order{
@@ -30,7 +32,7 @@
             }
 
             p {
-                font-size: 11px;
+                font-size: 14px;
                 text-align: center;
                 margin : auto;
                 padding : auto;
@@ -47,11 +49,13 @@
             margin: 3%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            // justify-content: center;
             margin-right: 30px;
 
             .flip-button{
                 display: flex;
+                flex-direction: column;
+
                 svg{
                     width: 50px;
                     height: 50px;
@@ -61,6 +65,10 @@
         
                 svg:hover{
                     fill: #365AFC;
+                }
+
+                p {
+                    font-size: 14px;
                 }
             }
         }
@@ -69,10 +77,12 @@
             margin: 3%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            // justify-content: center;
 
             .delete-button{
                 display: flex;
+                flex-direction: column;
+
                 svg{
                     width: 50px;
                     height: 50px;
@@ -82,6 +92,9 @@
         
                 svg:hover{
                     fill: #365AFC;
+                }
+                p {
+                    font-size: 14px;
                 }
             }
         }

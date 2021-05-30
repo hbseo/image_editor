@@ -74,31 +74,42 @@ export default withTranslation()(class Objects extends Component {
               </svg>
               <p className="attribute">{i18next.t('ui/object.SendBackwards')}</p>
             </div>
-            
-
-
           </div>
           <div className="flip-delete">
             <div className="obj-flip">
               <div className="option-title">{i18next.t('ui/object.Flip')}</div>
               <div className="flip-button">
-                <svg onClick={this.flipObject} flip="X" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
-                  <path flip="X" d={ObjectIcon.flipX} overflow="visible" fontFamily="Bitstream Vera Sans" />
-                </svg>
-                <svg onClick={this.flipObject} flip="Y" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
-                  <path flip="Y" d={ObjectIcon.flipY} overflow="visible" fontFamily="Bitstream Vera Sans" />
-                </svg>
+                <div className="flip-div">
+                  <svg onClick={this.flipObject} flip="X" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+                    <path flip="X" d={ObjectIcon.flipX} overflow="visible" fontFamily="Bitstream Vera Sans" />
+                  </svg>
+                  <p className="attribute">{i18next.t('ui/object.Flip x')}</p>
+                </div>
+                <div>
+                  <svg onClick={this.flipObject} flip="Y" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+                    <path flip="Y" d={ObjectIcon.flipY} overflow="visible" fontFamily="Bitstream Vera Sans" />
+                  </svg>
+                  <p className="attribute">{i18next.t('ui/object.Flip y')}</p>
+                </div>
               </div>
             </div>
             <div className="obj-delete">
               <div className="option-title">{i18next.t('ui/object.Delete')}</div>
               <div className="delete-button">
-                <svg onClick={this.props.deleteObject} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-                  <path d={ObjectIcon.deleteObject}/>
-                </svg>
-                <svg onClick={this.props.deleteAllObject} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-                  <path d={ObjectIcon.deleteAllObject}/>
-                </svg>
+                <div className="delete-div">
+                  <svg onClick={this.props.deleteObject} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                    <path d={ObjectIcon.deleteObject}/>
+                  </svg>
+                  <p className="attribute">{i18next.t('ui/object.Delete')}</p>
+                </div>
+                <div className="delete-div">
+                  <svg onClick={this.props.deleteAllObject} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                    <path d={ObjectIcon.deleteAllObject}/>
+                  </svg>
+                  <p className="attribute">{i18next.t('ui/object.Deleteall')}</p>
+                </div>
+
+
               </div>
             </div>
           </div>
@@ -133,7 +144,7 @@ export default withTranslation()(class Objects extends Component {
                 value={this.props.object.scaleX * 100}
                 onChange={this.handleScaleXChange}
               />
-              <label>{this.props.object.scaleX * 100}%</label>
+              <label>X : {this.props.object.scaleX * 100}%</label>
               <input
                 type='range'
                 name='scaleY'
@@ -144,7 +155,7 @@ export default withTranslation()(class Objects extends Component {
                 value={this.props.object.scaleY * 100}
                 onChange={this.handleScaleYChange}
               />
-              <label>{this.props.object.scaleY * 100}%</label>
+              <label>Y : {this.props.object.scaleY * 100}%</label>
             </div>
           </div>
         </div>
