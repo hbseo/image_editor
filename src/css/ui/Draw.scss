@@ -10,24 +10,24 @@
     justify-content: center;
 
     .selected-button {
-      background-color: #2621fa; 
+      background-color: #2621fa;
       border-radius: 5px;
       width: 150px;
       height: 30px;
       font-weight: bold;
-      margin : 10px;
+      margin: 10px;
     }
     .selected-button:hover {
       background-color: #84a3ff;
     }
 
-    .unselected-button{
+    .unselected-button {
       background-color: #688eff;
       border-radius: 5px;
       width: 150px;
       height: 30px;
       font-weight: bold;
-      margin : 10px;
+      margin: 10px;
     }
     .unselected-button:hover {
       background-color: #84a3ff;
@@ -49,10 +49,15 @@
   .select-width {
     margin: 5%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
 
     #width {
-      width: 80%;
+      width: 70%;
+    }
+
+    div {
+      display: flex;
+      align-items: center;
     }
   }
 }
@@ -66,7 +71,6 @@
   cursor: pointer;
   // background-color: black;
 }
-
 
 .brush_ul img:hover {
   background-color: #374357;
