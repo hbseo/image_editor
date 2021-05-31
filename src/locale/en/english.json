@@ -243,7 +243,7 @@
     "LoadImage" : {
         "Invalid Url" : "Invalid url",
         "Load Error" : "Image load error",
-        "Enlarge" : "enlarge"
+        "Enlarge" : "Enlarge"
     },
 
     "Login" : {
@@ -278,7 +278,11 @@
         "Select Size" : "Select Canvas",
         "Direct Input" : "Direct Input",
         "Width" : "Width",
-        "Height" : "Height"
+        "Height" : "Height",
+        "AddTemplate" : "Add Template",
+        "DeleteAll" : "Delete ALL",
+        "Delete" : "Delete",
+        "LocalTemplate" : "Canvas Size Template"
     },
 
     "Project" : {

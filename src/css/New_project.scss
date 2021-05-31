@@ -153,20 +153,7 @@
       flex-direction: column-reverse;
       justify-content: center;
       // background-color: red;
-      .add-template {
-        display: inline-block;
-        text-align: center;
-        button {
-          background-color: #688eff;
-          border-radius: 5px;
-          margin-bottom : 5px;
-          padding : 4px;
-          transition: all 0.1s linear;
-        }
-        button:hover {
-          background-color: #84a3ff;
-        }
-      }
+      
     }
 
     .direct-input-button {
@@ -174,6 +161,23 @@
       flex-direction: column;
       justify-content: center;
       margin-left : 10px;
+
+      .add-template {
+        display: inline-block;
+        // text-align: center;
+        margin-top : 3px;
+        button {
+          background-color: #688eff;
+          border-radius: 5px;
+          margin-bottom : 5px;
+          padding : 4px;
+          transition: all 0.1s linear;
+          // font-size : 1.3em;
+        }
+        button:hover {
+          background-color: #84a3ff;
+        }
+      }
 
       input[type="number"] {
         height: auto;

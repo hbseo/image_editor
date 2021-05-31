@@ -90,7 +90,7 @@ class New_project extends Component {
         templateList.push(
           <li className="canvas-list" key={i}>
             <div>
-              <button className="template-delete-btn" onClick={this.deleteTemplate} idx={i}>delete</button>
+              <button className="template-delete-btn" onClick={this.deleteTemplate} idx={i}>{i18next.t('New_Project.Delete')}</button>
             </div>
             {this.renderLink(canvasList[i].width, canvasList[i].height)}
           </li>
@@ -100,8 +100,8 @@ class New_project extends Component {
         <div>
           <hr/>
           <div className="canvas-template-title">
-            Local Template 
-            <button className="delete-all-template" onClick={this.deleteAllTemplate}>Delete All</button>
+            {i18next.t('New_Project.LocalTemplate')}
+            <button className="delete-all-template" onClick={this.deleteAllTemplate}>{i18next.t('New_Project.DeleteAll')}</button>
           </div>
           <ul className="canvas-template-ul">
             {templateList}
@@ -174,12 +174,12 @@ class New_project extends Component {
               <label htmlFor="height">{i18next.t('New_Project.Height')}</label>
               <input type="number" name="height" value={this.state.height} onChange={this.handleChange} min="10" max="5000"/>
             </div>
+            <div className="add-template">
+              <button onClick={this.addTemplate}>{i18next.t('New_Project.AddTemplate')}</button>
+            </div>
           </div>
           <div className="render-button">
             {this.renderLink(this.state.width, this.state.height)}
-            <div className="add-template">
-              <button onClick={this.addTemplate}>템플릿 추가</button>
-            </div>
           </div>
         </div>
       </div>

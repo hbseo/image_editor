@@ -269,7 +269,11 @@
         "Select Size" : "캔버스 선택",
         "Direct Input" : "직접 입력",
         "Width" : "가로",
-        "Height" : "세로"
+        "Height" : "세로",
+        "AddTemplate" : "템플릿 추가",
+        "DeleteAll" : "모두 삭제",
+        "Delete" : "삭제",
+        "LocalTemplate" : "저장된 캔버스 사이즈"
     },
 
     "Project" : {

@@ -37,6 +37,7 @@ class ImageList extends Component {
       user_link : '',
       download_location : '',
     }
+    this.submitSearch = ""
   }
 
   getImage() {
@@ -50,6 +51,7 @@ class ImageList extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    this.submitSearch = this.state.search;
     this.getImage();
   }
 
@@ -77,7 +79,9 @@ class ImageList extends Component {
       // ursl뒤에 raw, small, regular, full 등의 따라 사이즈 조절
     );
     return (
-      <div id="image-list">{listitem}</div>
+      <div id="image-list">
+        {listitem}
+      </div>
     )
   }
 
@@ -188,7 +192,7 @@ class ImageList extends Component {
         <button className="topscroll-button" onClick = {this.scrollTop}>↑</button>
         <div className="more-image-search">
           <div className="search-image">
-            <div className="option-title">{i18next.t('ImageList.Search random image')} {this.state.search}</div>
+            <div className="option-title">{i18next.t('ImageList.Search random image')}</div>
             <form className="search-form" onSubmit={this.handleSubmit}> 
               <div>
                 <div className="search-group">
@@ -204,6 +208,11 @@ class ImageList extends Component {
             </form>
           </div>
         </div>
+        {this.submitSearch === "" ? null :
+          <div className="submit-search-div">
+          {this.submitSearch.toUpperCase()}
+          </div>
+        }
         {this.showImage(this.state.images)}
         {this.state.url ? this.imageSizeVersion() : null}
         {this.props.children}
