@@ -105,6 +105,7 @@ input[type="number"] {
 
     .option-title {
       transition: color 0.4s linear;
+      margin-left : 0px;
     }
 
     .random-image:hover {
@@ -114,7 +115,7 @@ input[type="number"] {
     }
 
     .search-image {
-      margin: 3%;
+      margin: 1% 3% 1% 3%;
       padding: 0.5% 3% 3% 3%;
       border-radius: 5px;
       width: 500px;
@@ -206,6 +207,11 @@ input[type="number"] {
     vertical-align: bottom;
     position: relative;
     width: 90%;
+
+    .not-found {
+      color: white;
+      font-size: 2em;
+    }
 
     .image-list-box {
       margin: 1px;

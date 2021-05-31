@@ -15,7 +15,8 @@ export default withTranslation()(class Icon extends Component {
         b: '0',
         a: '1'
       },
-      hexcolor : "#ffffff"
+      hexcolor : "#ffffff",
+      iconList : []
     }
   }
   componentDidMount(){
@@ -34,6 +35,10 @@ export default withTranslation()(class Icon extends Component {
       color : this.state.color,
     }
     this.props.addIcon(options);
+  }
+
+  searchIcon = () => {
+
   }
 
   handleColorChange = (event) => {

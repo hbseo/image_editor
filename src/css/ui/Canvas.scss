@@ -108,7 +108,8 @@
     // border: 1px solid #84a3ff;
     border-radius: 5px;
     width: 150px;
-    height: 30px;
+    padding : 3px;
+    // height: 30px;
   }
 }
 
@@ -238,7 +239,8 @@
 
   button {
     width: 120px;
-    height: 30px;
+    height: auto;
+    padding : 3px;
     border-radius: 3px;
     transition: 0.5s;
     background-color: #688eff;

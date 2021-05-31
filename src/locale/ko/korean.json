@@ -375,7 +375,9 @@
         "GridShow" : "그리드",
         "ObjectSnap" : "오브젝트 스냅",
         "Transparent background" : "투명 배경화면",
-        "CropBackground" : "배경화면 자르지 않기"
+        "CropBackground" : "배경화면 자르지 않기",
+        "OpenHidden" : "히든 메뉴 열기",
+        "CloseHidden" : "히든 메뉴 닫기"
     },
 
     "ui/draw" : {

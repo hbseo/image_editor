@@ -65,8 +65,8 @@ class ImageList extends Component {
     if(imagelist['errors']){ 
       // alert(i18next.t('ImageList.Showimage errors')); 
       return(
-        <div style={{color : 'white'}}>
-          Not Found
+        <div id="image-list">
+          <p className="not-found">Not Found</p>
         </div>
       )
     }

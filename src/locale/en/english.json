@@ -227,9 +227,9 @@
 
     "ImageList" : {
         "Get random image" : "Get random image",
-        "Image count" : "Image count",
+        "Image count" : "Count",
         "Search random image" : "Search random image",
-        "Image name" : "Image name",
+        "Image name" : "Search",
         "Search" : "Search",
         "Showimage errors" : "Fail to load images",
         "Fail" : "Fail",
@@ -384,7 +384,9 @@
         "GridShow" : "Grid",
         "ObjectSnap" : "Object Snap",
         "Transparent background" : "Transparent Background",
-        "CropBackground" : "No Crop BackgroundImage"
+        "CropBackground" : "No Crop BackgroundImage",
+        "OpenHidden" : "Open Hidden Menu",
+        "CloseHidden" : "Close Hidden Menu"
     },
 
     "ui/draw" : {

@@ -186,8 +186,8 @@ export default withTranslation()(class Canvas extends Component {
                 {i18next.t('ui/canvas.ObjectSnap')}
               </div>
               <div className="hidden">
-                <button onClick = {this.openHiddenMenu}>히든 메뉴 열기</button>
-                <button onClick = {this.closeHiddenMenu}>히든 메뉴 닫기</button>
+                <button onClick = {this.openHiddenMenu}>{i18next.t('ui/canvas.OpenHidden')}</button>
+                <button onClick = {this.closeHiddenMenu}>{i18next.t('ui/canvas.CloseHidden')}</button>
               </div>
           </div>
         </div>
