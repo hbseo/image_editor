@@ -78,6 +78,7 @@
 }
 .topnav{
   background-color: #171c24;
+  min-height: 55px;
   height: 7vh;
   display: flex;
   flex-direction: column;
@@ -117,21 +118,23 @@
     }
   
     .rightbtn:hover {
-      background-color: #043c40;
+      background-color: #323d4e;
     }
   
     .right-dropdown {
       display: none;
   
       button {
-        border-radius: 5px;
+        // border-radius: 5px;
         background-color: #fafafa;
         width: 15vmin;
         padding: 5%;
+        transition: all 0.1s linear;
       }
   
       button:hover {
-        color: #365afc;
+        background-color: #374357;
+        color: white;
       }
     }
   }
@@ -412,5 +415,6 @@
 .inner {
   display: flex;
   flex-direction: column;
-  width: calc(100% - 20vmin);
+  width: calc(100% - 200px);
+  // width: calc(100% - 20vmin);
 }

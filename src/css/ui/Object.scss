@@ -1,29 +1,45 @@
 .sub-objmenu{
     overflow-y: auto;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    // justify-content: center;
 
     .option-title{
         font-size: 17px;
         margin: 3%;
+        color : #688eff;
     }
 
     .obj-order{
         padding: 5%;
         display: flex;
         justify-content: space-around;
-        
-        svg{
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            fill : white;
-        }
+        flex-direction: column;
+        .order-div {
+            display: flex;
+            flex-direction: row;
 
-        svg:hover{
-            fill: #365AFC;
+            svg{
+                width: 50px;
+                height: 50px;
+                cursor: pointer;
+                fill : white;
+            }
+    
+            svg:hover{
+                fill: #365AFC;
+            }
+
+            p {
+                font-size: 14px;
+                text-align: center;
+                margin : auto;
+                padding : auto;
+            }
         }
+        
+
     }
 
     .flip-delete{
@@ -38,15 +54,25 @@
 
             .flip-button{
                 display: flex;
-                svg{
-                    width: 50px;
-                    height: 50px;
-                    cursor: pointer;
-                    fill : white;
-                }
-        
-                svg:hover{
-                    fill: #365AFC;
+                flex-direction: column;
+
+                .flip-div {
+                    margin-bottom: 10px;
+
+                    svg{
+                        width: 50px;
+                        height: 50px;
+                        cursor: pointer;
+                        fill : white;
+                    }
+            
+                    svg:hover{
+                        fill: #365AFC;
+                    }
+    
+                    p {
+                        font-size: 14px;
+                    }
                 }
             }
         }
@@ -59,15 +85,23 @@
 
             .delete-button{
                 display: flex;
-                svg{
-                    width: 50px;
-                    height: 50px;
-                    cursor: pointer;
-                    fill : white;
-                }
-        
-                svg:hover{
-                    fill: #365AFC;
+                flex-direction: column;
+
+                .delete-div{
+                    margin-bottom: 10px;
+                    svg{
+                        width: 50px;
+                        height: 50px;
+                        cursor: pointer;
+                        fill : white;
+                    }
+            
+                    svg:hover{
+                        fill: #365AFC;
+                    }
+                    p {
+                        font-size: 14px;
+                    }
                 }
             }
         }
@@ -77,6 +111,7 @@
         margin: 3%;
         display: flex;
         justify-content: space-evenly;
+        text-align: center;
         
         svg{
             width: 50px;

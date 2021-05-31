@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import i18next from "../../locale/i18n";
 import { withTranslation } from "react-i18next";
+import { RotationIcon } from '../const/consts'
 import '../../css/ui/Rotation.scss';
 
 export default withTranslation()(class Rotation extends Component{
@@ -70,10 +71,18 @@ export default withTranslation()(class Rotation extends Component{
             </div>
             <div className="clock-button">
               <div>
-                <button id="clockwise" onClick={this.rotateObject} angle='-30'></button>
+                <button id="clockwise" onClick={this.rotateObject} angle='-30'>
+                  <svg className="rotation-svg" id="left-icon" version="1.1" viewBox="0 0 486.805 486.805" onClick={this.rotateObject} angle='-30'>
+                    <path d = {RotationIcon.left} />
+                  </svg>
+                </button>
               </div>
               <div>
-                <button id="c-clockwise" onClick={this.rotateObject} angle='30'></button>
+                <button id="c-clockwise" onClick={this.rotateObject} angle='30'>
+                  <svg className="rotation-svg" version="1.1" viewBox="0 0 80 80 " onClick={this.rotateObject} angle='30'>
+                    <path d = {RotationIcon.right} />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>

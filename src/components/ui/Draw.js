@@ -22,6 +22,7 @@ export default withTranslation()(class Draw extends Component{
         b: '0',
         a: '1',
       },
+      mode : false,
       hexcolor : "#000000",
       lineWidth : 10,
       showbrush: false,
@@ -33,7 +34,6 @@ export default withTranslation()(class Draw extends Component{
 
   componentDidMount(){
     console.log('Draw UI Mount');
-    this.props.openDrawing();
   }
   componentDidUpdate(){
     console.log('Draw UI Update');
@@ -82,13 +82,30 @@ export default withTranslation()(class Draw extends Component{
     this.setState({showbrush: !this.state.showbrush});
   }
 
+  openDrawing = () => {
+    this.props.openDrawing(this.state.lineWidth)
+    this.setState({mode : true});
+  }
+
+  closeDrawing = () => {
+    this.setState({mode : false});
+    this.props.closeDrawing();
+  }
+
   render(){
     return (
       <div className="sub">
         <div className="sub-title">
           {i18next.t('ui/draw.Draw')} ( {this.props.object.type} )
         </div>
-        <div className="sub-filters">
+        <div className="sub-draw">
+
+          <div className="option-title">{i18next.t('ui/draw.Draw Mode')}</div>
+          <div className="mode-select">
+            <button className={this.state.mode ? "selected-button" : "unselected-button" } onClick={this.openDrawing}>Draw</button>
+            <button className={this.state.mode ? "unselected-button" : "selected-button" } onClick={this.closeDrawing}>Select</button>
+          </div>
+
           <div className="option-title">{i18next.t('ui/draw.Brush type')}</div> 
           <div className="select-brush">
             <div>
@@ -99,6 +116,9 @@ export default withTranslation()(class Draw extends Component{
                 </ul>
                 : null
               }
+            </div>
+            <div className="brush-title">
+              {this.state.brush_now}
             </div>
           </div>
           <div className="option-title">{i18next.t('ui/draw.Width')}</div>

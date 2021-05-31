@@ -32,12 +32,12 @@ class Draw extends Action {
     return true;
   }
 
-  openDrawing = () => {
+  openDrawing = (linewidth) => {
     const canvas = this.getCanvas();
     if(canvas || this.checkBrush()){
       canvas.isDrawingMode = true;
       canvas.freeDrawingCursor = 'crosshair';
-      canvas.freeDrawingBrush.width = 10;
+      canvas.freeDrawingBrush.width = parseInt(linewidth);
     }
     else{
       alert('Brush Error')

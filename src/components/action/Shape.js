@@ -12,6 +12,8 @@ class Shape extends Action {
 
   setEndAngle = (value) => {
     if(this.getActiveObject()){
+      if(value > 360) { value = 360; }
+      if(value < 0) { value = 0; }
       let shape = this.getActiveObject();
       shape.set({
         endAngle : value * Math.PI / 180,

@@ -8,8 +8,9 @@ import { ObjectIcon } from '../const/consts';
 export default withTranslation()(class Canvas extends Component {
   constructor(props) {
     super(props);
+    console.log()
     this.state = {
-      cropCanvasSize: { width: 0, height: 0 },
+      cropCanvasSize: { width: props.canvas.width/2, height: props.canvas.height/2},
       displayCropCanvas: false,
       color: {
         r: '128',
@@ -91,6 +92,13 @@ export default withTranslation()(class Canvas extends Component {
   closeHiddenMenu = () => {
     document.getElementById("hidden-menu").style.setProperty("display", "none");
   }
+
+  clearBackgroundColor = () => {
+    let change = this.state.color;
+    change.a = 0;
+    this.setState({ color : change });
+    this.props.clearBackgroundColor();
+  }
   
   render() {
     return (
@@ -99,9 +107,9 @@ export default withTranslation()(class Canvas extends Component {
           {i18next.t('ui/canvas.Canvas')} ( {this.props.object.type} )
         </div>
         <div className="canvas-menu">
-          <div className="canvas-reset">
+          {/* <div className="canvas-reset">
               <button onClick={this.props.resetCanvas}> {i18next.t('ui/canvas.ResetCanvas')} </button>
-          </div>
+          </div> */}
           <div className="option-title">{i18next.t('ui/canvas.CropCanvas')}</div>
           <div className="canvas-crop">
             <button onClick={this.cropCanvas}>{i18next.t('ui/canvas.CropCanvas')}</button>
@@ -127,7 +135,7 @@ export default withTranslation()(class Canvas extends Component {
                   />
                 </div>
                 <button onClick={this.cropEndCanvas}>{i18next.t('ui/canvas.CropEndCanvas')}</button>
-                <input type="checkbox" id="cropfit" /><label htmlFor="cropfit">이미지 줄이기(번역할거)</label>
+                <input type="checkbox" id="cropfit" /><label htmlFor="cropfit">{i18next.t('ui/canvas.CropBackground')}</label>
               </div>
               : null
             }
@@ -139,6 +147,10 @@ export default withTranslation()(class Canvas extends Component {
                 <div>{i18next.t('ui/canvas.Color opacity')}: {this.state.color.a}</div>
                 <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
             </div>
+          </div>
+
+          <div className="canvas-trans">
+            <button className="trans-background" onClick = {this.clearBackgroundColor}>{i18next.t('ui/canvas.Transparent background')}</button>
           </div>
 
           <div className="option-title">{i18next.t('ui/canvas.CanvasEtc')}</div>
@@ -174,8 +186,8 @@ export default withTranslation()(class Canvas extends Component {
                 {i18next.t('ui/canvas.ObjectSnap')}
               </div>
               <div className="hidden">
-                <button onClick = {this.openHiddenMenu}>히든 메뉴 열기</button>
-                <button onClick = {this.closeHiddenMenu}>히든 메뉴 닫기</button>
+                <button onClick = {this.openHiddenMenu}>{i18next.t('ui/canvas.OpenHidden')}</button>
+                <button onClick = {this.closeHiddenMenu}>{i18next.t('ui/canvas.CloseHidden')}</button>
               </div>
           </div>
         </div>

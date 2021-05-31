@@ -227,9 +227,9 @@
 
     "ImageList" : {
         "Get random image" : "Get random image",
-        "Image count" : "Image count",
+        "Image count" : "Count",
         "Search random image" : "Search random image",
-        "Image name" : "Image name",
+        "Image name" : "Search",
         "Search" : "Search",
         "Showimage errors" : "Fail to load images",
         "Fail" : "Fail",
@@ -243,7 +243,7 @@
     "LoadImage" : {
         "Invalid Url" : "Invalid url",
         "Load Error" : "Image load error",
-        "Enlarge" : "enlarge"
+        "Enlarge" : "Enlarge"
     },
 
     "Login" : {
@@ -278,7 +278,11 @@
         "Select Size" : "Select Canvas",
         "Direct Input" : "Direct Input",
         "Width" : "Width",
-        "Height" : "Height"
+        "Height" : "Height",
+        "AddTemplate" : "Add Template",
+        "DeleteAll" : "Delete ALL",
+        "Delete" : "Delete",
+        "LocalTemplate" : "Canvas Size Template"
     },
 
     "Project" : {
@@ -378,7 +382,11 @@
         "CanvasImport" : "Import a Canvas",
         "GridSnap" : "Snap",
         "GridShow" : "Grid",
-        "ObjectSnap" : "Object Snap"
+        "ObjectSnap" : "Object Snap",
+        "Transparent background" : "Transparent Background",
+        "CropBackground" : "No Crop BackgroundImage",
+        "OpenHidden" : "Open Hidden Menu",
+        "CloseHidden" : "Close Hidden Menu"
     },
 
     "ui/draw" : {
@@ -386,7 +394,8 @@
         "Brush type" : "Brush Type",
         "Width" : "Brush Width",
         "Line Color" : "Brush Color",
-        "Color opacity" : "색 투명도"
+        "Color opacity" : "색 투명도",
+        "Draw Mode" : "Select a Mode"
     },
 
     "ui/effect" : {
@@ -446,7 +455,8 @@
         "Icon" : "Icon",
         "Pick icon" : "Pick icon",
         "Color" : "Icon Color",
-        "Pipette" : "Pipette"
+        "Pipette" : "Pipette",
+        "Color opacity" :"Color opacity"
     },
 
     "ui/image" : {
@@ -500,7 +510,8 @@
         "Drag" : "Drag",
         "Adjust degree": "Adjust degree",
         "Degree" : "Degree",
-        "Pipette" : "Pipette"
+        "Pipette" : "Pipette",
+        "Color opacity" :"Color opacity"
     },
 
     "ui/sidenav" : {
@@ -520,6 +531,7 @@
 
     "ui/text" : {
         "Text" : "Text",
+        "Add Text" : "Add Text",
         "New Text" : "New Text",
         "Font" : "Font",
         "Font size" : "Font size",

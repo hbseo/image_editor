@@ -1,6 +1,7 @@
 .option-title {
   font-size: 17px;
   margin: 3%;
+  color : #688eff;
 }
 
 .sub-textmenu {
@@ -23,7 +24,6 @@
     border-radius: 5px;
     width: 160px;
     height: 30px;
-    font-weight: bold;
   }
 
   button:hover {
@@ -133,6 +133,7 @@
 
       label:hover {
         background-color: #84a3ff;
+        cursor: pointer;
         svg {
           fill : white;
         }

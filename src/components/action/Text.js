@@ -11,7 +11,7 @@ class Text extends Action {
     const canvas = this.getCanvas();
     const pointer = canvas.getPointer(event, false)
     if(event.target.tagName === 'CANVAS'){
-      let text = new fabric.Textbox('Test', {
+      let text = new fabric.Textbox('Double Click', {
         left: pointer.x,
         top: pointer.y,
         fontSize: this.addTextOpt.size,

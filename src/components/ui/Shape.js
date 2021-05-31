@@ -98,7 +98,7 @@ export default withTranslation()(class Shape extends Component {
             min='0' 
             max='360' 
             step = '1' 
-            value = {this.props.object && this.props.object.type ==='circle' ? (this.props.object.endAngle * 180 / Math.PI).toFixed(3) : 0} 
+            value = {this.props.object && this.props.object.type ==='circle' ? (this.props.object.endAngle * 180 / Math.PI).toFixed(0) : 0} 
             disabled = {this.props.object.type ==='circle' ? false : true }
             onChange = {this.handleEndAngleChange}/>{i18next.t('ui/shape.Degree')}
           </div>
@@ -113,9 +113,11 @@ export default withTranslation()(class Shape extends Component {
           </div>
           <div className="color-picker">            
             <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
-            <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+            <div className="cp-rangebox">
+                <div>{i18next.t('ui/shape.Color opacity')}: {this.state.color.a}</div>
+                <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+            </div>
           </div>
-          <div>{this.state.color.a}</div>
           {/* <div>
             <button onClick = { this.handlePipette }>{i18next.t('ui/shape.Pipette')}</button>
           </div> */}

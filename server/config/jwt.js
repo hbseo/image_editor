@@ -1,3 +1,4 @@
+require('dotenv').config();
 let jwtObj = {};
-jwtObj.secret = 'akEfjdCZzcvQEW32kaGF';
+jwtObj.secret = process.env.REACT_APP_JWT_SECRET_KEY
 module.exports = jwtObj;

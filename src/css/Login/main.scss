@@ -135,7 +135,7 @@
 
   button[disabled] {
     cursor: default;
-    background: #333333;
+    // background: #333333;
   }
 
   iframe {
@@ -189,10 +189,10 @@
 
     // custom
     background: #9053c7;
-    background: -webkit-linear-gradient(55deg, #000000, #434343);
-    background: -o-linear-gradient(55deg, #000000, #434343);
-    background: -moz-linear-gradient(55deg, #000000, #434343);
-    background: linear-gradient(55deg, #000000, #434343);
+    background: -webkit-linear-gradient(55deg, #171c24, #222b36);
+    background: -o-linear-gradient(55deg, #171c24, #222b36);
+    background: -moz-linear-gradient(55deg, #171c24, #222b36);
+    background: linear-gradient(55deg, #171c24, #222b36);
   }
 
   /*------------------------------------------------------------------
@@ -373,7 +373,7 @@
   }
 
   .login100-form-btn:hover {
-    background: #333333;
+    background: #374357;
   }
 
   .register-button {
@@ -381,7 +381,7 @@
     font-size: 15px;
     line-height: 1.5;
     text-transform: uppercase;
-
+    background-color: #688eff;
     width: 100%;
     height: 50px;
     // border-radius: 25px;
@@ -401,7 +401,12 @@
   }
 
   .register-button:hover {
-    background: #333333;
+    background:  #374357;
+    color : white;
+  }
+
+  #register-btn:disabled {
+    background-color: #d4d4d4;
   }
 
 
@@ -932,7 +937,7 @@
   }
 
   .login100-form-btn {
-    background: #b6a04e;
+    background: #688eff;
     color: #fff;
   }
 
@@ -961,25 +966,25 @@
     background: #333333;
   }
   .wrap-login100 {
-    width: 25%;
-    padding: 50px 60px 33px 60px;
+    width : 80%;
+    padding: 50px 30px 33px 30px;
   }
   .container-login100-form-btn {
     padding-top: 20px;
   }
   #confirm {
-    background: #57b846;
+    background: #688eff;
     color: #fff;
   }
   #confirm:hover {
-    background: #333333;
+    background: #374357;
   }
   #cancel {
     background: rgb(218, 218, 218);
     color: black;
   }
   #cancel:hover {
-    background: #333333;
+    background:  #374357;
     color: #fff;
   }
 }

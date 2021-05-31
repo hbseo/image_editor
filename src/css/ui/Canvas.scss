@@ -16,15 +16,15 @@
     button {
       margin-top: 5px;
       margin-bottom: 5px;
-      background-color: #e6e6e6;
-      border: 1px solid #d4d4d4;
+      background-color: #688eff;
+      // border: 1px solid #d4d4d4;
       border-radius: 5px;
       width: 150px;
       height: 30px;
     }
 
     button:hover {
-      background-color: #d9d9d9;
+      background-color: #84a3ff;
     }
 
     .crop-button {
@@ -67,6 +67,7 @@
         display: flex;
         width: 70%;
         justify-content: space-around;
+        color : black;
 
         div {
           margin-top: 5px;
@@ -83,16 +84,32 @@
     button {
       margin-top: 5px;
       margin-bottom: 5px;
-      background-color: #eeeeee;
-      border: 1px solid #d4d4d4;
+      background-color: #688eff;
+      // border: 1px solid #84a3ff;
       border-radius: 5px;
       width: 150px;
       height: 30px;
     }
 
     button:hover {
-      background-color: #d9d9d9;
+      background-color: #84a3ff;
     }
+  }
+}
+
+.canvas-trans {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  .trans-background {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #688eff;
+    // border: 1px solid #84a3ff;
+    border-radius: 5px;
+    width: 150px;
+    padding : 3px;
+    // height: 30px;
   }
 }
 
@@ -105,22 +122,22 @@
   button {
     margin-top: 5px;
     margin-bottom: 5px;
-    background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    background-color: #688eff;
+    // border: 1px solid #d4d4d4;
     border-radius: 5px;
     width: 150px;
     height: 30px;
   }
 
   button:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
   }
 
   .file-input-group {
     margin-top: 5px;
     margin-bottom: 5px;
-    background-color: #e6e6e6;
-    border: 1px solid #d4d4d4;
+    background-color: #688eff;
+    // border: 1px solid #d4d4d4;
     border-radius: 5px;
     width: 150px;
     height: 30px;
@@ -130,7 +147,7 @@
   }
 
   .file-input-group:hover {
-    background-color: #d9d9d9;
+    background-color: #84a3ff;
   }
 }
 
@@ -222,9 +239,11 @@
 
   button {
     width: 120px;
-    height: 30px;
+    height: auto;
+    padding : 3px;
     border-radius: 3px;
     transition: 0.5s;
+    background-color: #688eff;
   }
 
   button:hover {

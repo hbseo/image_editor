@@ -22,6 +22,7 @@
       border-radius: 6px;
       font-size: 16px;
       margin : 5px;
+      color : white;
     }
 
     .option-title:hover {
@@ -87,6 +88,11 @@
 
     input[type="checkbox"]:checked + label {
       box-shadow: inset 0 0 0 1000px rgba(52, 152, 219, 0.5);
+      color : #84a3ff;
+      border: 5px solid #4b6078;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
     }
 
     .label-filter-icon {

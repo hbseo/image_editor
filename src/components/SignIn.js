@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
+import FindPassword from './Find_password';
 import '../css/Login/font-awesome.min.scss';
 import '../css/Login/main.scss';
 import '../css/Login/util.scss';
@@ -89,9 +90,9 @@ class SignIn extends Component {
                   <span className="txt1">
                   {/* {i18next.t('SignIn.Forgot')} */}
                 </span>
-                  <a className="txt2" href="/find">
-                  {i18next.t('SignIn.Username / Password?')}
-                </a>
+                  <Link to={{
+                    pathname: `/find`,
+                  }}><p className="txt2">{i18next.t('SignIn.Username / Password?')}</p></Link>
                 </div>
               </form>
             </div>

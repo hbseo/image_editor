@@ -1,29 +1,43 @@
 .helper-div{
+    background-color: #222b36;
+
     overflow-y: auto;
     overflow-x : hidden;
     height : 100vh;
     .top-div{
         text-align: center;
-
+        font-size: 2em;
+        color : white;
+        padding : 10px;
     }
 
     
     .container {
         display: flex;
         flex-direction: row;
+        background-color: white;
+        min-height : 80%;
         
         .side-nav {
             width : 300px;
             height : 100%;
-            background-color: red;
+            background-color: #374357;
+            color : white;
             margin : 1%;
             padding : 20px;
 
             .return-home {
-                background-color: #d3d3d3;
+                background-color: #688eff;
                 width: 100%;
                 padding : 0px 100px 0px 100px;
                 font-size: 2em;
+                color : black;
+                border-radius: 5px;
+                transition: all 0.1s linear;
+            }
+            
+            .return-home:hover {
+                background-color: #84a3ff;
             }
 
             .subject {
@@ -40,7 +54,7 @@
 
         }       
         .main{
-            background-color: green;
+            border : 1px solid #171c24;
             width : 100%;
             height: auto;
             padding : 80px;
@@ -49,8 +63,9 @@
     }
     footer {
         text-align: center;
-        background-color: #d3d3d3;
-        padding : 10px;
+        background-color: #222b36;
+        color : white;
+
 
         ul {
             list-style-type: none;

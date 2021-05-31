@@ -269,7 +269,11 @@
         "Select Size" : "캔버스 선택",
         "Direct Input" : "직접 입력",
         "Width" : "가로",
-        "Height" : "세로"
+        "Height" : "세로",
+        "AddTemplate" : "템플릿 추가",
+        "DeleteAll" : "모두 삭제",
+        "Delete" : "삭제",
+        "LocalTemplate" : "저장된 캔버스 사이즈"
     },
 
     "Project" : {
@@ -369,7 +373,11 @@
         "CanvasImport" : "캔버스 불러오기",
         "GridSnap" : "스냅",
         "GridShow" : "그리드",
-        "ObjectSnap" : "오브젝트 스냅"
+        "ObjectSnap" : "오브젝트 스냅",
+        "Transparent background" : "투명 배경화면",
+        "CropBackground" : "배경화면 자르지 않기",
+        "OpenHidden" : "히든 메뉴 열기",
+        "CloseHidden" : "히든 메뉴 닫기"
     },
 
     "ui/draw" : {
@@ -377,7 +385,8 @@
         "Brush type" : "붓 종류",
         "Width" : "붓 두께",
         "Line Color" : "붓 색깔",
-        "Color opacity" : "색 투명도"
+        "Color opacity" : "색 투명도",
+        "Draw Mode" : "모드 선택"
     },
 
     "ui/effect" : {
@@ -437,7 +446,8 @@
         "Icon" : "아이콘",
         "Pick icon" : "아이콘 선택",
         "Color" : "아이콘 색",
-        "Pipette" : "스포이드"
+        "Pipette" : "스포이드",
+        "Color opacity" :"색 투명도"
     },
 
     "ui/image" : {
@@ -491,7 +501,8 @@
         "Drag" : "드래그",
         "Adjust degree": "각도 조절",
         "Degree" : "도",
-        "Pipette" : "스포이드"
+        "Pipette" : "스포이드",
+        "Color opacity" : "색 투명도"
     },
 
     "ui/sidenav" : {
@@ -511,6 +522,7 @@
 
     "ui/text" : {
         "Text" : "텍스트",
+        "Add Text" : "텍스트 추가",
         "New Text" : "새 텍스트",
         "Font" : "폰트",
         "Font size" : "글자 크기",

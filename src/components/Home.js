@@ -43,12 +43,13 @@ class Home extends Component {
               </div>
               <div className="section-main">
                 <div className = "section-image">
-                  <img id="first-img" src="/image/home1.png" alt="none"></img>
+                  <img id="first-img" src="/image/home2.png" alt="none"></img>
                 </div>
                 <div className = "section-text">
                   <h1>Image Filter</h1>
                   Apply the effect to the Image with a simple button click.
-                  Brightness, Contrast, Blur
+                  Brightness, Contrast, Blur, etc.
+                  <br/>
                   FRACT provides 20+ filters.
                 </div>
               </div>
@@ -62,7 +63,7 @@ class Home extends Component {
               </div>
               <div className="section-main-col">
                 <div className = "section-image">
-                  <img id="first-img" src="/image/home1.png" alt="none"></img>
+                  <img id="first-img" src="/image/home3.png" alt="none"></img>
                 </div>
                 <div className = "section-text">
                   <h1>Save a Image or Your Work</h1>
@@ -77,16 +78,16 @@ class Home extends Component {
           <section className = "container" id = "fourth-section">
             <div className="section-maindiv">
               <div className="section-title">
-                <h1>No Login, No </h1>
+                <h1>No SignUp, No Signin </h1>
               </div>
 
               <div className="section-main">
                 <div className = "section-text">
                   <h1>Without Login, You can use all features</h1>
-                  dddddd
+                  The Only thing that needs to be sign in is to be saved on our Server.
                 </div>
                 <div className = "section-image">
-                  <img id="first-img" src="/image/home1.png" alt="none"></img>
+                  <img id="first-img" src="/image/home4.png" alt="none"></img>
                 </div>
               </div>
             </div>

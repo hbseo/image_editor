@@ -37,6 +37,7 @@ class ImageList extends Component {
       user_link : '',
       download_location : '',
     }
+    this.submitSearch = ""
   }
 
   getImage() {
@@ -50,6 +51,7 @@ class ImageList extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    this.submitSearch = this.state.search;
     this.getImage();
   }
 
@@ -60,7 +62,14 @@ class ImageList extends Component {
   }
 
   showImage = (imagelist) => {
-    if(imagelist['errors']){ alert(i18next.t('ImageList.Showimage errors')); return null;}
+    if(imagelist['errors']){ 
+      // alert(i18next.t('ImageList.Showimage errors')); 
+      return(
+        <div id="image-list">
+          <p className="not-found">Not Found</p>
+        </div>
+      )
+    }
     const listitem = imagelist.map((image) =>
       <div className="image-list-box" key={image.id} >
         <img className="image-list-img" key={image.id} user={image.user.name} links = {image.user.links.html} dl = {image.links.download_location} src={image.urls.thumb} alt="." onClick={ this.onClickThumb } full = {image.urls.full} raw = {image.urls.raw} regular = {image.urls.regular} small = {image.urls.small} full-width = {image.width} />
@@ -70,7 +79,9 @@ class ImageList extends Component {
       // ursl뒤에 raw, small, regular, full 등의 따라 사이즈 조절
     );
     return (
-      <div id="image-list">{listitem}</div>
+      <div id="image-list">
+        {listitem}
+      </div>
     )
   }
 
@@ -181,7 +192,7 @@ class ImageList extends Component {
         <button className="topscroll-button" onClick = {this.scrollTop}>↑</button>
         <div className="more-image-search">
           <div className="search-image">
-            <div className="option-title">{i18next.t('ImageList.Search random image')} {this.state.search}</div>
+            <div className="option-title">{i18next.t('ImageList.Search random image')}</div>
             <form className="search-form" onSubmit={this.handleSubmit}> 
               <div>
                 <div className="search-group">
@@ -197,6 +208,11 @@ class ImageList extends Component {
             </form>
           </div>
         </div>
+        {this.submitSearch === "" ? null :
+          <div className="submit-search-div">
+          {this.submitSearch.toUpperCase()}
+          </div>
+        }
         {this.showImage(this.state.images)}
         {this.state.url ? this.imageSizeVersion() : null}
         {this.props.children}

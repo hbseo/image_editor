@@ -1,7 +1,7 @@
 export function getSearchImage (search, image_count) {
   var url = new URL("https://api.unsplash.com/photos/random");
   var params = {
-    client_id: 'ua3Yx_zNDTdYyxlcX5JaO-KoZs4ri2-xZXZqc7_rcp0',
+    client_id: process.env.REACT_APP_UNSPLASH_PUBLIC_KEY,
     count: image_count,
     query: search
   }

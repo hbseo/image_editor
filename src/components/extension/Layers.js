@@ -54,6 +54,7 @@ class Layers extends Extension {
         );
         return(
           <div>
+            ! Beta Features !
             {listitem}
           </div>
         )

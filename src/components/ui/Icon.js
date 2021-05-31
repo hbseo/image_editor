@@ -15,7 +15,8 @@ export default withTranslation()(class Icon extends Component {
         b: '0',
         a: '1'
       },
-      hexcolor : "#ffffff"
+      hexcolor : "#ffffff",
+      iconList : []
     }
   }
   componentDidMount(){
@@ -34,6 +35,10 @@ export default withTranslation()(class Icon extends Component {
       color : this.state.color,
     }
     this.props.addIcon(options);
+  }
+
+  searchIcon = () => {
+
   }
 
   handleColorChange = (event) => {
@@ -73,8 +78,13 @@ export default withTranslation()(class Icon extends Component {
           <div className="icon">
             
             <div className="icon_div">
-              <button className="fas fa-times fa-2x" onClick={this.addIcon} type = "icon_cancel"></button>
-              <p className="attribute">Cancel</p>
+              <button className="fas fa-times fa-2x" onClick={this.addIcon} type = "icon_cancel1"></button>
+              <p className="attribute">Cancel1</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="far fa-times-circle fa-2x" onClick={this.addIcon} type = "icon_cancel2"></button>
+              <p className="attribute">Cancel2</p>
             </div>
             
             <div className="icon_div">
@@ -85,6 +95,11 @@ export default withTranslation()(class Icon extends Component {
             <div className="icon_div">
               <button className="fas fa-angle-right fa-2x" onClick={this.addIcon} type = "icon_arrow_3"></button>
               <p className="attribute">Arrow2</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-angle-double-right fa-2x" onClick={this.addIcon} type = "icon_arrow_4"></button>
+              <p className="attribute">Arrow3</p>
             </div>
 
             <div className="icon_div">
@@ -147,7 +162,7 @@ export default withTranslation()(class Icon extends Component {
             </div>
 
             <div className="icon_div">
-              <button className="fab fa-facebook-f fa-2x" onClick={this.addIcon} type = "icon_facebook"></button>
+              <button className="fab fa-facebook fa-2x" onClick={this.addIcon} type = "icon_facebook"></button>
               <p className="attribute">Facebook</p>
             </div>
 
@@ -177,13 +192,108 @@ export default withTranslation()(class Icon extends Component {
             </div>
 
             <div className="icon_div">
+              <button className="fas fa-undo-alt fa-2x" onClick={this.addIcon} type = "icon_undo"></button>
+              <p className="attribute">Undo</p>
+            </div>
+
+            <div className="icon_div">
               <button className="fab fa-twitter fa-2x" onClick={this.addIcon} type = "icon_twitter"></button>
               <p className="attribute">Twitter</p>
             </div>
 
             <div className="icon_div">
+              <button className="fas fa-tree fa-2x" onClick={this.addIcon} type = "icon_tree1"></button>
+              <p className="attribute">Tree1</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-minus-circle fa-2x" onClick={this.addIcon} type = "icon_minus_circle"></button>
+              <p className="attribute">Minus Circle</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-folder fa-2x" onClick={this.addIcon} type = "icon_folder1"></button>
+              <p className="attribute">Folder1</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="far fa-folder fa-2x" onClick={this.addIcon} type = "icon_folder2"></button>
+              <p className="attribute">Folder2</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-wifi fa-2x" onClick={this.addIcon} type = "icon_wifi"></button>
+              <p className="attribute">Wifi</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-paper-plane fa-2x" onClick={this.addIcon} type = "icon_paper_plane1"></button>
+              <p className="attribute">Paper Plane1</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="far fa-paper-plane fa-2x" onClick={this.addIcon} type = "icon_paper_plane2"></button>
+              <p className="attribute">Paper Plane2</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-check fa-2x" onClick={this.addIcon} type = "icon_check1"></button>
+              <p className="attribute">Check1</p>
+            </div>
+            
+            <div className="icon_div">
+              <button className="fas fa-dollar-sign fa-2x" onClick={this.addIcon} type = "icon_dollar_sign"></button>
+              <p className="attribute">Dollar</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-yen-sign fa-2x" onClick={this.addIcon} type = "icon_yen_sign"></button>
+              <p className="attribute">Yen</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-umbrella fa-2x" onClick={this.addIcon} type = "icon_umbrella"></button>
+              <p className="attribute">Umbrella</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-video fa-2x" onClick={this.addIcon} type = "icon_video"></button>
+              <p className="attribute">Video</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fab fa-youtube fa-2x" onClick={this.addIcon} type = "icon_youtube"></button>
+              <p className="attribute">Youtube</p>
+            </div>
+            
+            <div className="icon_div">
+              <button className="fas fa-mouse-pointer fa-2x" onClick={this.addIcon} type = "icon_cursor1"></button>
+              <p className="attribute">Cursor1</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fab fa-windows fa-2x" onClick={this.addIcon} type = "icon_windows"></button>
+              <p className="attribute">Windows</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="fas fa-paw fa-2x" onClick={this.addIcon} type = "icon_paw"></button>
+              <p className="attribute">Paw</p>
+            </div>
+
+            <div className="icon_div">
+              <button className="noicon" onClick={this.addIcon} type = "icon_time1"> 
+                <svg className="icon_svg" viewBox="-3 -3 29 29" > 
+                  <path d={iconList.icon_time1}> 
+                  </path> 
+                </svg> 
+              </button>
+              <p className="attribute">Time1</p>
+            </div>
+
+            <div className="icon_div">
               <button className="noicon" onClick={this.addIcon} type = "icon_fish"> 
-                <svg className="icon_svg" viewBox="-3 0 29 29" > 
+                <svg className="icon_svg" viewBox="-3 -3 29 29" > 
                   <path d={iconList.icon_fish}> 
                   </path> 
                 </svg> 
@@ -193,11 +303,14 @@ export default withTranslation()(class Icon extends Component {
           </div>
           
           <div className="option-title">{i18next.t('ui/icon.Color')}</div>
-          <div className="color-picker">            
+          
+          <div className="color-picker">
             <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange}/>
-            <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+            <div className="cp-rangebox">
+                <div>{i18next.t('ui/icon.Color opacity')}: {this.state.color.a}</div>
+                <input type="range" value = {this.state.color.a} min='0' max='1' step='0.01' onChange = {this.handleOpacityChange} />
+            </div>            
           </div>
-          <div>{this.state.color.a}</div>
           {/* <div>
             <button onClick = { this.handlePipette }>{i18next.t('ui/icon.Pipette')}</button>
           </div> */}
