@@ -68,7 +68,7 @@ class ImageEditor extends Component {
     this._canvasSize = {width : props.location.state? props.location.state.width : 500, height : props.location.state? props.location.state.height : 500}
     this._backgroundImageRatio = props.location.state ? props.location.state.ratio/100 : 1;
     
-    console.log(props.location)
+    // console.log(props.location)
 
     this._openProject = props.location.save ? true : false;
     this._project_data = props.location.project_data ? props.location.project_data : null;
@@ -1085,6 +1085,10 @@ class ImageEditor extends Component {
     this.action['Crop'].cropEndCanvas(img);
   }
 
+  cropStopCanvas = () => {
+    this.action['Crop'].cropStopCanvas();
+  }
+
   handleCropCanvasSizeChange = (value) => {
     this.action['Crop'].resizeCropzone(value);
   }
@@ -1118,6 +1122,14 @@ class ImageEditor extends Component {
     if(this.cropImg){
       this._canvas.off('mouse:down', this.cropObjMouseDown);
       this.action['Crop'].cropObjend(this.cropImg);
+      this.cropImg = null;
+    }
+  }
+
+  cropStopObject = () => {
+    if(this.cropImg){
+      this._canvas.off('mouse:down', this.cropObjMouseDown);
+      this.action['Crop'].cropObjstop();
       this.cropImg = null;
     }
   }
@@ -1345,10 +1357,9 @@ class ImageEditor extends Component {
   }
 
   showUndoStack = () => {
-    // const { t } = useTranslation();
     const listitem = this.stateStack.map((state) =>
-    <div className="stack-box" key= {state.id} >
-        <div style = {{color : 'black'}} className="undo-stack" number = {state.id} onClick = {this.onclickUndoStack} >
+    <div className="stack-box" key= {state.id} number = {state.id} onClick = {this.onclickUndoStack}>
+        <div style = {{color : 'black'}} className="undo-stack" >
             {state.id + 1} : {i18next.t(state.action)}
         </div>
         <div className="link-image">
@@ -1607,6 +1618,7 @@ class ImageEditor extends Component {
       1: <ImageUI 
           object={this.state.activeObject} 
           cropObject={this.cropObject} 
+          cropStopObject={this.cropStopObject}
           cropEndObject={this.cropEndObject}
           addImage = {this.addImage}
           imgStatus = {this.state.imgStatus}
@@ -1679,6 +1691,7 @@ class ImageEditor extends Component {
           resetCanvas = {this.resetCanvas}
           cropCanvas = {this.cropCanvas}
           cropEndCanvas = {this.cropEndCanvas}
+          cropStopCanvas = {this.cropStopCanvas}
           handleCropCanvasSizeChange = {this.handleCropCanvasSizeChange}
           changeBackgroundColor = {this.changeBackgroundColor}
           setCropCanvasSize = {this.setCropCanvasSize}

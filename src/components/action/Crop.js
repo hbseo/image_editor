@@ -89,6 +89,14 @@ class Crop extends Action {
     canvas.requestRenderAll();
   }
 
+  cropObjstop = () => {
+    let canvas = this.getCanvas();
+    canvas.remove(this._cropzone);
+    this._cropzone = null;
+    this.deleteEvent();
+    canvas.renderAll();
+  }
+
   cropObjend = (activeObject) => {
     let canvas = this.getCanvas();
     let image = activeObject;
@@ -280,6 +288,19 @@ class Crop extends Action {
 
     canvas.renderAll();
   }
+
+  cropStopCanvas = () => {
+    console.log('stop')
+    if(this._cropzone === null || this.getCanvas() === null) {
+      return;
+    }
+    let canvas = this.getCanvas();
+    canvas.remove(this._cropzone);
+    this.deleteEvent();
+    this._cropzone = null;
+    canvas.renderAll();
+  }
+
 
   fillOuterBox = () => {
     let canvas = this.getCanvas();

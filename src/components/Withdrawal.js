@@ -66,7 +66,7 @@ class Withdrawal extends Component {
 
           <div className="bottom-div">
             <button className="confirm" onClick={this.withdrawalHandler}>{i18next.t("Withdrawal.Confirm")}</button>
-            <button className="cancel" onClick={this.props.close}>{i18next.t("Withdrawl.Cancel")}</button>
+            <button className="cancel" onClick={this.props.close}>{i18next.t("Withdrawal.Cancel")}</button>
           </div>
           
         </div>

@@ -119,12 +119,12 @@ class Change_password extends Component {
       .then((data) => {
         if(data.msg === 'success') {
           alert(i18next.t('Change_Password.PWsuccess'));
-          window.location.replace('/');
+          window.location.replace('/main');
         }
         else {
           if(data.msg === "not login") {
             alert(i18next.t("login_expired"));
-            window.location.replace('/');
+            window.location.replace('/main');
             return;
           }
           alert(i18next.t('Change_Password.PWfail'));

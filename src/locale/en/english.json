@@ -386,7 +386,8 @@
         "Transparent background" : "Transparent Background",
         "CropBackground" : "No Crop BackgroundImage",
         "OpenHidden" : "Open Hidden Menu",
-        "CloseHidden" : "Close Hidden Menu"
+        "CloseHidden" : "Close Hidden Menu",
+        "CropStopCanvas" : "Stop"
     },
 
     "ui/draw" : {
@@ -466,7 +467,8 @@
         "Upload image" : "Upload image",
         "Upload local image" : "Upload local image",
         "Upload URL image" : "Upload URL image",
-        "Upload library image" : "Upload library image"
+        "Upload library image" : "Upload library image",
+        "CropCancel" : "Cancel Cropping"
     },
 
     "ui/loading" : {

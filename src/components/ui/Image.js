@@ -23,6 +23,7 @@ export default withTranslation()(class Image extends Component {
     // console.log('Image UI Update');
   }
   componentWillUnmount(){
+    this.props.cropStopObject();
     // console.log('Image UI Unmount');
   }
   handleCropImage = (event) => {
@@ -82,6 +83,7 @@ export default withTranslation()(class Image extends Component {
               <button onClick={this.handleCropImage} className = "cropStart" crop="1:1">1:1</button>
             </div>
             <button id="end-button" onClick={this.props.cropEndObject} crop="left">{i18next.t('ui/image.Crop End')}</button>
+            <button id="end-button" onClick={this.props.cropStopObject} crop="left">{i18next.t('ui/image.CropCancel')}</button>
           </div>
           <div className="option-title">{i18next.t('ui/image.Upload image')}</div>
           <div className="upload-file">

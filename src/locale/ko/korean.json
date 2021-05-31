@@ -386,7 +386,8 @@
         "Transparent background" : "투명 배경화면",
         "CropBackground" : "배경화면 자르지 않기",
         "OpenHidden" : "히든 메뉴 열기",
-        "CloseHidden" : "히든 메뉴 닫기"
+        "CloseHidden" : "히든 메뉴 닫기",
+        "CropStopCanvas" : "취소"
     },
 
     "ui/draw" : {
@@ -466,7 +467,8 @@
         "Upload image" : "이미지 업로드",
         "Upload local image" : "내 컴퓨터에서 불러오기",
         "Upload URL image" : "주소로 불러오기",
-        "Upload library image" : "라이브러리 불러오기"
+        "Upload library image" : "라이브러리 불러오기",
+        "CropCancel" : "자르기 취소"
     },
 
     "ui/loading" : {

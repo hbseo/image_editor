@@ -31,7 +31,7 @@ export default withTranslation()(class Canvas extends Component {
     this.canvasUpdate();
   }
   componentWillUnmount() {
-    this.props.cropEndCanvas();
+    this.props.cropStopCanvas();
     // console.log('Canvas UI Unmount');
   }
 
@@ -59,6 +59,11 @@ export default withTranslation()(class Canvas extends Component {
   cropEndCanvas = () => {
     this.setState({displayCropCanvas: false});
     this.props.cropEndCanvas(document.getElementById("cropfit").checked);
+  }
+
+  cropStopCanvas = () => {
+    this.setState({displayCropCanvas: false});
+    this.props.cropStopCanvas();
   }
 
   offdisplayCropCanvas = () => {
@@ -135,6 +140,7 @@ export default withTranslation()(class Canvas extends Component {
                   />
                 </div>
                 <button onClick={this.cropEndCanvas}>{i18next.t('ui/canvas.CropEndCanvas')}</button>
+                <button onClick={this.cropStopCanvas}>{i18next.t('ui/canvas.CropStopCanvas')}</button>
                 <input type="checkbox" id="cropfit" /><label htmlFor="cropfit">{i18next.t('ui/canvas.CropBackground')}</label>
               </div>
               : null
