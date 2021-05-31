@@ -10,6 +10,7 @@ class New_project extends Component {
   constructor(props) {
     super(props);
     this.state = {width: 500, height: 500, input : false}
+    this.localTemplate = JSON.parse(localStorage.getItem('canvas-template')) || []
   }
 
   renderLink = (width, height) => {
@@ -56,6 +57,61 @@ class New_project extends Component {
     }
   }, 400)
 
+  addTemplate = () => {
+    this.localTemplate.push({width : this.state.width, height : this.state.height})
+    localStorage.setItem('canvas-template', JSON.stringify(this.localTemplate));
+    // console.log(this.localTemplate)
+    this.forceUpdate()
+  }
+
+  deleteTemplate = (event) => {
+    let idx = parseInt(event.target.getAttribute('idx'));
+    this.localTemplate.splice(idx, 1);
+    localStorage.setItem('canvas-template', JSON.stringify(this.localTemplate));
+    this.forceUpdate()
+    
+  }
+
+  deleteAllTemplate = () => {
+    this.localTemplate = []
+    localStorage.setItem('canvas-template', JSON.stringify(this.localTemplate));
+    this.forceUpdate()
+  }
+
+  showTemplate = () => {
+    let canvasList = JSON.parse(localStorage.getItem('canvas-template'))
+    let templateList = []
+    if(canvasList){
+      if(canvasList.length === 0){
+        return null;
+      }
+      // console.log(canvasList)
+      for(let i=0; i<canvasList.length; i++){
+        templateList.push(
+          <li className="canvas-list" key={i}>
+            <div>
+              <button className="template-delete-btn" onClick={this.deleteTemplate} idx={i}>delete</button>
+            </div>
+            {this.renderLink(canvasList[i].width, canvasList[i].height)}
+          </li>
+          )
+      }
+      return(
+        <div>
+          <hr/>
+          <div className="canvas-template-title">
+            Local Template 
+            <button className="delete-all-template" onClick={this.deleteAllTemplate}>Delete All</button>
+          </div>
+          <ul className="canvas-template-ul">
+            {templateList}
+          </ul>
+        </div>
+      )
+    }
+    return null;
+  }
+
   render() {
     return (
       <div className='New_project'>
@@ -87,10 +143,16 @@ class New_project extends Component {
                 {this.renderLink(800, 600)}
             </li>
             <li className="canvas-list">
+                {this.renderLink(1080, 720)}
+            </li>
+            <li className="canvas-list">
                 {this.renderLink(1080, 1080)}
             </li>
             <li className="canvas-list">
                 {this.renderLink(1280, 720)}
+            </li>
+            <li className="canvas-list">
+                {this.renderLink(1280, 1280)}
             </li>
             <li className="canvas-list">
                 {this.renderLink(1920, 1080)}
@@ -99,6 +161,7 @@ class New_project extends Component {
                 {this.renderLink(2048, 2048)}
             </li>
           </ul>
+          {this.showTemplate()}
         </div>
         {/* <div className="option-title">{i18next.t('New_Project.Direct Input')}</div> */}
         <div className="new-project-input">
@@ -114,6 +177,9 @@ class New_project extends Component {
           </div>
           <div className="render-button">
             {this.renderLink(this.state.width, this.state.height)}
+            <div className="add-template">
+              <button onClick={this.addTemplate}>템플릿 추가</button>
+            </div>
           </div>
         </div>
       </div>
