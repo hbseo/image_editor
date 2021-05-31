@@ -1,7 +1,7 @@
 .option-title {
   font-size: 17px;
   margin: 3%;
-  color : #688eff;
+  color: #688eff;
 }
 
 .sub-textmenu {
@@ -70,23 +70,13 @@
       font-size: 16px;
       width: 80px;
       outline: none;
-      background-image: url("data:image/svg+xml;utf8,%3Csvg%20version%3D%221.1%22%20viewBox%3D%220%200%2050%2067%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20stroke-width%3D%222%22%3E%3Cline%20x1%3D%221%22%20x2%3D%2250%22%20y1%3D%2233.5%22%20y2%3D%2233.5%22%20stroke%3D%22%23D8D8D8%22%2F%3E%3Cpolyline%20transform%3D%22translate(25%2020)%20rotate(45)%20translate(-25%20-20)%22%20points%3D%2219%2026%2019%2014%2032%2014%22%20stroke%3D%22%23000%22%2F%3E%3Cpolyline%20transform%3D%22translate(25%2045)%20rotate(225)%20translate(-25%20-45)%22%20points%3D%2219%2052%2019%2039%2032%2039%22%20stroke%3D%22%23000%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-      background-position: center right;
-      background-size: contain;
-      background-repeat: no-repeat;
+      cursor: text;
     }
 
     input[type="number"]::-webkit-inner-spin-button {
       -webkit-appearance: none !important;
       opacity: 1 !important;
       background: transparent !important;
-      border-width: 0px;
-      margin: 0;
-      border-left: 1px solid #b8b8b8;
-      height: 34px;
-      width: 23px;
-      cursor: pointer;
-      color : white;
     }
 
     input[type="number"]:disabled {
@@ -125,7 +115,7 @@
         }
 
         svg {
-          fill : #688eff;
+          fill: #688eff;
           width: 50%;
           height: 50%;
         }
@@ -135,7 +125,7 @@
         background-color: #84a3ff;
         cursor: pointer;
         svg {
-          fill : white;
+          fill: white;
         }
       }
     }
@@ -157,7 +147,7 @@
         }
 
         svg {
-          fill : #ababab;
+          fill: #ababab;
           width: 50%;
           height: 50%;
         }
@@ -201,7 +191,7 @@
     background-color: #84a3ff;
 
     label {
-      cursor : pointer;
+      cursor: pointer;
     }
 
     svg {
@@ -260,7 +250,7 @@
   .italic:hover {
     background-color: #84a3ff;
     label {
-      cursor : pointer;
+      cursor: pointer;
     }
   }
 
@@ -318,7 +308,7 @@
   .underline:hover {
     background-color: #84a3ff;
     label {
-      cursor : pointer;
+      cursor: pointer;
     }
   }
 
@@ -377,7 +367,7 @@
   }
 
   input[type="checkbox"]:disabled + label {
-    color : #ababab;
+    color: #ababab;
     background-color: #e6e6e6;
   }
 
@@ -424,7 +414,7 @@
   .fontfamily-button {
     background-color: #e6e6e6;
     border: 1px solid #ababab;
-    color : #ababab;
+    color: #ababab;
     border-radius: 5px;
     width: 160px;
     height: 30px;
