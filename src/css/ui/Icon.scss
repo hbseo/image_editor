@@ -1,63 +1,56 @@
-.sub-iconmenu{
+.sub-iconmenu {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 93%;
+
+  .option-title {
+    font-size: 17px;
+    margin: 3%;
+  }
+
+  .icon {
+    width: 100%;
+    margin-top: 3%;
     display: flex;
-    flex-direction: column;
-  
-    .option-title{
-        font-size: 17px;
-        margin: 3%;
-    }
-  
-    .icon{
-      width: 100%;
-      margin-top: 3%;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: space-around;
 
-      .icon_div{
-        position: relative;
-        flex-direction: column;
+    .icon_div {
+      position: relative;
+      flex-direction: column;
 
-        .icon_svg {
-          pointer-events: none;
-          width : 50px;
-          fill : white;
-        }
-
-        button{
-          width: 75px;
-          height: 75px;
-          border-radius: 5px;
-        }
-
-        button:hover{
-          background-color: #222b36;
-        }
-          
-        button:hover + .attribute {
-          display: flex;
-        }
-    
-        .attribute {
-          display: none;
-          padding : 0.9px;
-          border-radius: 5px;
-          left : 0%;
-          top : 0%;
-          background-color: #56565654;
-          color : white;
-          position : absolute;
-          pointer-events: none;
-        }
-
+      .icon_svg {
+        pointer-events: none;
+        width: 50px;
+        fill: white;
       }
 
+      button {
+        width: 75px;
+        height: 75px;
+        border-radius: 5px;
+      }
 
-    }
-  
-    .color-picker{
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      button:hover {
+        background-color: #222b36;
+      }
+
+      button:hover + .attribute {
+        display: flex;
+      }
+
+      .attribute {
+        display: none;
+        padding: 0.9px;
+        border-radius: 5px;
+        left: 0%;
+        top: 0%;
+        background-color: #56565654;
+        color: white;
+        position: absolute;
+        pointer-events: none;
+      }
     }
   }
+}
