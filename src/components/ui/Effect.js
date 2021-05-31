@@ -147,21 +147,21 @@ export default withTranslation()(class Effect extends Component {
                 </label>
                 {i18next.t('ui/effect.Blur')}
               </div>
-              <label htmlFor='shadow'>
+              <div className="blur-box">
                 <input
-                  type='range'
-                  className='shadow'
-                  id='shadow'
-                  min='0'
-                  max='10'
-                  name='blur'
-                  step='0.1'
-                  value={this.state.blur}
-                  onChange={this.handleShadowChange}/>
+                type='range'
+                className='shadow'
+                id='shadow'
+                min='0'
+                max='10'
+                name='blur'
+                step='0.1'
+                value={this.state.blur}
+                onChange={this.handleShadowChange}/>
                 <div>
                   {this.state.blur}
                 </div>
-              </label>
+              </div>
             </div>
             <div className="shadow-offset">
               {i18next.t('ui/effect.OffsetX')}
@@ -219,7 +219,7 @@ export default withTranslation()(class Effect extends Component {
             {i18next.t('ui/effect.StrokeColor')}
             <div className="color-picker">
                 <input type="color" id="colorSource" value={this.state.hexstrokeColor} onChange = { this.handleStrokeColorChange}/>
-              <input type="range" value = {this.state.strokeColor.a} min='0' max='1' step='0.01' onChange = {this.handleStrokeOpacityChange} />
+                <input type="range" id="stroke-range" value = {this.state.strokeColor.a} min='0' max='1' step='0.01' onChange = {this.handleStrokeOpacityChange} />
             </div>
           </div>
           {/* <div>

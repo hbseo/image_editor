@@ -1,6 +1,6 @@
 .sub-effect {
   .optioni-title {
-    color : red;
+    color: red;
   }
 }
 .shadow-box {
@@ -11,11 +11,11 @@
     justify-content: center;
     margin: 3%;
 
-    #shadow_toggle:disabled{
+    #shadow_toggle:disabled {
       background-color: #979797;
       border: 1px solid black black;
     }
-    
+
     input[type="range"] {
       width: 75%;
     }
@@ -111,11 +111,6 @@
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid rgba($color: #000000, $alpha: 0.3);
-
-  div {
-    display: flex;
-    align-items: center;
-  }
 }
 
 .stroke {
@@ -135,8 +130,22 @@
   display: flex;
   flex-direction: column;
 
+  .color-picker {
+    display: flex;
+    justify-content: space-around;
+
+    #stroke-range {
+      width: 70%;
+    }
+  }
+}
+
+.blur-box {
+  display: flex;
+
   div {
     display: flex;
     align-items: center;
+    margin-left: 5%;
   }
 }
