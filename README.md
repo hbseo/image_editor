@@ -19,13 +19,16 @@ We used some references
 * __Save and Load__ - Save current project as JPG or PNG. Also, Load from image.  
 * __User ID__ - Manage projects using individual ID. Use mysql as Database. There are two tables USERS table and PROJECTS table.  
 * __Main page__ - You can create or load a project of any size.  
-![](https://via.placeholder.com/150)  
+<img src = "https://raw.githubusercontent.com/hbseo/image_editor/master/doc/pictures/main.png" width="50%">  
+
 * __Editor page__ - Edit your project using tools.  
-![](https://via.placeholder.com/150)  
+<img src = "https://raw.githubusercontent.com/hbseo/image_editor/master/doc/pictures/editor.png" width="50%">  
+
 * __Get image__ - You can search under any title to use the image.  
-![](https://via.placeholder.com/150)  
+<img src = "https://raw.githubusercontent.com/hbseo/image_editor/master/doc/pictures/get.png" width="50%">  
+
 * __Load project__ - View projects when login.  
-![](https://via.placeholder.com/150)  
+<img src = "https://raw.githubusercontent.com/hbseo/image_editor/master/doc/pictures/projects.png" width="50%">  
 
 ## How to start  
 Before launching the below code open mysql and set [config](https://github.com/hbseo/image_editor/tree/master/server/config).   
