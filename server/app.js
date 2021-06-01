@@ -36,7 +36,18 @@ app.use(express.static(path.join(__dirname, '../build')))
 // set the secret key variable for jwt
 app.set('jwt-secret', config.secret);
 
+const options = { etag: false };
+app.use(express.static("public", options));
+
 // router
+// app.use((req, res, next) => {
+//     res.status(404).send('NOT FOUND');
+// })
+// app.use((err, req, res, next) => {
+//     console.log(err.stack)
+//     res.status(500).send('Server ERR');
+// })
+
 app.use('/', require('./routes/index'));
 
 
