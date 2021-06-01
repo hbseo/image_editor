@@ -217,6 +217,27 @@
       }
     }
 
+    #blend-color-range-box {
+      width: 300px;
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+      align-items: center;
+
+      .blend-color-div {
+        display: flex;
+        flex-direction: row;
+        width: 200px;
+        align-items: center;
+
+        .rangefilter-select {
+          margin-left : auto;
+          width : 100px;
+        }
+
+      }
+    }
+
     .range-box {
       width: 200px;
       display: flex;

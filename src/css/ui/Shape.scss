@@ -40,14 +40,27 @@
       position: relative;
       text-align: center;
       font-size: 16px;
-      width: 50px;
+      width: 100px;
       outline: none;
+      
+      background-image: url("../img/input.png");
+      background-position: center right;
+      background-size: contain;
+      background-repeat: no-repeat;
+      cursor: text;
     }
 
     input[type="number"]::-webkit-inner-spin-button {
       -webkit-appearance: none !important;
       opacity: 1 !important;
       background: transparent !important;
+      border-width: 0px;
+      margin: 0;
+      border-left: 1px solid #b8b8b8;
+      height: 34px;
+      width: 23px;
+      cursor: pointer;
+      color : white;
     }
   }
 
@@ -66,8 +79,12 @@
       position: relative;
       text-align: center;
       font-size: 16px;
-      width: 50px;
+      width: 100px;
       outline: none;
+      background-image: url("../img/input.png");
+      background-position: center right;
+      background-size: contain;
+      background-repeat: no-repeat;
       cursor: text;
     }
 
@@ -77,6 +94,8 @@
       background: transparent !important;
       border-width: 0px;
       margin: 0;
+      height: 34px;
+      width: 23px;
     }
 
     input[type="number"]:disabled {

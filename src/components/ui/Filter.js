@@ -823,42 +823,45 @@ export default withTranslation()(class Filter extends Component{
                   <input className="range-onoff-button" id="blendcolor-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='blendcolor'/>
                   <label htmlFor="blendcolor-onoff-checkbox">{i18next.t('ui/filter.BlendColor')}</label>
                 </div>
-                <div className="range-box"  style = {this.rangeStyle('blendcolor')}>
-                  <label className="mycheckbox path">
-                    <input type='checkbox' id="blendcolor-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='blendcolor'/>
-                      <svg viewBox="0 0 21 21">
-                        <path d={ObjectIcon.checkbox}></path>
-                      </svg>
-                  </label>
-                  <input type="color" id="colorSource" value={this.state.blendcolor.color} onChange = { this.setBlendColor }/>
-                  <select className='rangefilter-select' id="blend-mode" name="blend-mode" onChange = {this.handleBlendModeChange} value = {this.state.blendcolor.mode}>
-                    <option value="add">Add</option>
-                    <option value="diff">Diff</option>
-                    <option value="subtract">Subtract</option>
-                    <option value="multiply">Multiply</option>
-                    <option value="screen">Screen</option>
-                    <option value="lighten">Lighten</option>
-                    <option value="darken">Darken</option>
-                    <option value="overlay">Overlay</option>
-                    <option value="exclusion">Exclusion</option>
-                    <option value="tint">Tint</option>
-                  </select>
-                  <input
-                    type='range'
-                    className='filter'
-                    id='blendcolor'
-                    min='0'
-                    max='1'
-                    name='blendcolor'
-                    step='0.01'
-                    value={this.state.blendcolor.alpha || 0}
-                    onChange={ this.handleBlendColorChange } filter='blendcolor'
-                  />
-                  <div className="range-value">
-                    {this.state.blendcolor.alpha}
+                <div className="range-box" id="blend-color-range-box" style = {this.rangeStyle('blendcolor')}>
+                  <div className="blend-color-div">
+                    <label className="mycheckbox path">
+                      <input type='checkbox' id="blendcolor-checkbox" className='rangefilter' onClick={this.filterObjectforValue} filter='blendcolor'/>
+                        <svg viewBox="0 0 21 21">
+                          <path d={ObjectIcon.checkbox}></path>
+                        </svg>
+                    </label>
+                    <input type="color" id="colorSource" value={this.state.blendcolor.color} onChange = { this.setBlendColor }/>
+                    <select className='rangefilter-select' id="blend-mode" name="blend-mode" onChange = {this.handleBlendModeChange} value = {this.state.blendcolor.mode}>
+                      <option value="add">Add</option>
+                      <option value="diff">Diff</option>
+                      <option value="subtract">Subtract</option>
+                      <option value="multiply">Multiply</option>
+                      <option value="screen">Screen</option>
+                      <option value="lighten">Lighten</option>
+                      <option value="darken">Darken</option>
+                      <option value="overlay">Overlay</option>
+                      <option value="exclusion">Exclusion</option>
+                      <option value="tint">Tint</option>
+                    </select>
+                  </div>
+                  <div className="blend-color-div">
+                    <input
+                      type='range'
+                      className='filter'
+                      id='blendcolor'
+                      min='0'
+                      max='1'
+                      name='blendcolor'
+                      step='0.01'
+                      value={this.state.blendcolor.alpha || 0}
+                      onChange={ this.handleBlendColorChange } filter='blendcolor'
+                    />
+                    <div className="range-value">
+                      {this.state.blendcolor.alpha}
+                    </div>
                   </div>
                 </div>
-
                 <div className="range-onoff">
                   <input className="range-onoff-button" id="gamma-onoff-checkbox" type="checkbox" onClick = {this.changeRange} filter='gamma'/>
                   <label htmlFor="gamma-onoff-checkbox">{i18next.t('ui/filter.Gamma')}</label>
@@ -1003,7 +1006,7 @@ export default withTranslation()(class Filter extends Component{
                   <label htmlFor="opacity-onoff-checkbox">{i18next.t('ui/filter.Opacity')}</label>
                 </div>
                 <div className="range-box" style = {this.rangeStyle('opacity')}>
-                  <label className="mycheckbox path">
+                  <label className="mycheckbox path" style={{display : 'none'}}>
                     <input type='checkbox' id="opacity-checkbox" className='rangefilter' onClick={this.filterObject} filter='opacity' value={this.state.opacity || 10}/>
                       <svg viewBox="0 0 21 21">
                         <path d={ObjectIcon.checkbox}></path>

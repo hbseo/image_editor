@@ -227,9 +227,9 @@
 
     "ImageList" : {
         "Get random image" : "랜덤 이미지 불러오기",
-        "Image count" : "이미지 수",
+        "Image count" : "개수",
         "Search random image" : "랜덤 이미지 검색",
-        "Image name" : "이미지 이름",
+        "Image name" : "검색어",
         "Search" : "검색어",
         "Showimage errors" : "이미지 불러오기 에러",
         "Fail" : "실패",
@@ -401,14 +401,15 @@
 
     "ui/effect" : {
         "Effect" : "효과",
-        "Blur" : "블러",
+        "Blur" : "그림자",
         "ShadowColor" : "그림자 색상",
         "Color opacity" : "색 투명도",
         "OffsetY" : "세로 위치",
         "OffsetX" : "가로 위치",
         "Stroke" : "외곽선",
         "StrokeColor" : "외곽선 색상",
-        "Pipette" : "스포이드"
+        "Pipette" : "스포이드",
+        "Blur strength" : "그림자 블러"
     },
 
     "ui/filter" : {

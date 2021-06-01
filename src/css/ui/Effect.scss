@@ -1,4 +1,6 @@
 .sub-effect {
+  height: 93%; 
+  overflow-y: auto;
   .optioni-title {
     color: red;
   }
@@ -110,7 +112,7 @@
   font-size: 17px;
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid rgba($color: #000000, $alpha: 0.3);
+  border-bottom: 1px solid rgba($color: #c4c4c4, $alpha: 0.3);
 }
 
 .stroke {
@@ -118,6 +120,16 @@
   font-size: 17px;
   display: flex;
   flex-direction: column;
+
+  .stroke-input {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+
+    div {
+      margin-left : 30px;
+    }
+  }
 
   input[type="range"] {
     width: 75%;
@@ -134,18 +146,27 @@
     display: flex;
     justify-content: space-around;
 
-    #stroke-range {
-      width: 70%;
-    }
+    // #stroke-range {
+    //   width: 70%;
+    // }
   }
 }
 
 .blur-box {
+  
   display: flex;
+  flex-direction: column;
 
-  div {
+  .blur-box-title {
+    margin-top : 10px;
+  }
+  .blur-box-input {
     display: flex;
     align-items: center;
-    margin-left: 5%;
+    // margin-left: 5%;
+
+    div {
+      margin-left: 5%;
+    }
   }
 }

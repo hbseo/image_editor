@@ -13,7 +13,7 @@ class Icon extends Action {
   addIcon = (options) => {
     let canvas = this.getCanvas();
     let icon = this._createIcon(iconList[options.type]);
-    console.log(options);
+    // console.log(options);
     let canvas_area = document;
     
     canvas.defaultCursor = 'pointer';
@@ -57,6 +57,8 @@ class Icon extends Action {
         scaleX : 0,
         scaleY : 0,
         isRegular : false,
+        cornerStrokeColor : "grey",
+        borderColor : "grey"
     }))
     canvas.add(icon).setActiveObject(icon);
     canvas.selection = false;

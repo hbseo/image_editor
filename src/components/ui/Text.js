@@ -234,7 +234,7 @@ export default withTranslation()(class Text extends Component{
             {fontlist}
           </div>
           <div className="size-align">
-            <div className="font-size">
+            <div className={this.props.object.type ==='textbox' ? "font-size" : "font-size-disabled" } >
             <label htmlFor='fontSize' className="option-title">{i18next.t('ui/text.Font size')}</label>
               <input 
                 type='number' 

@@ -20,6 +20,8 @@ class Text extends Action {
         lockScalingY: true,
         strokeWidth : 0,
         textBackgroundColor : null,
+        cornerStrokeColor : "grey",
+        borderColor : "grey"
       });
       text.setControlsVisibility({
         mt: false,

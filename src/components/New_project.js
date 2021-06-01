@@ -38,7 +38,7 @@ class New_project extends Component {
       resolve()
     })
     .then(() => {
-      this.sizeCheck();
+      // this.sizeCheck();
     })
   }
 
@@ -55,7 +55,7 @@ class New_project extends Component {
     if(this.state.height > 5000){
       this.setState({height : 5000})
     }
-  }, 400)
+  }, 1000)
 
   addTemplate = () => {
     this.localTemplate.push({width : this.state.width, height : this.state.height})

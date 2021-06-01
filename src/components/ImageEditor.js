@@ -63,11 +63,15 @@ class ImageEditor extends Component {
     }
     
     this._canvas = null;
-    if(!props.location.state) { props.history.push('/'); }
+    if(!props.location.state) { props.history.push('/main'); }
     this._canvasImageUrl = props.location.state ? props.location.state.url : '';
     this._canvasSize = {width : props.location.state? props.location.state.width : 500, height : props.location.state? props.location.state.height : 500}
     this._backgroundImageRatio = props.location.state ? props.location.state.ratio/100 : 1;
     
+    if(this._canvasSize.width < 10 || this._canvasSize.height < 10 ) {
+      alert("Too Small Size")
+      this.props.history.push('/main');
+    }
     // console.log(props.location)
 
     this._openProject = props.location.save ? true : false;
@@ -147,6 +151,7 @@ class ImageEditor extends Component {
           this.action['Grid'].makeGrid();
           this.forceUpdate(); // for showUndo/Redo Stack
           this.action['Draw'].setBrush(); // Canvas Required
+          this.resizeScale();
       })
     }
     else{
@@ -192,7 +197,7 @@ class ImageEditor extends Component {
           this.resizeScale();
         })
         .catch(() => {
-          this.props.history.push('/');
+          this.props.history.push('/main');
         })
       }
       else{
@@ -486,32 +491,10 @@ class ImageEditor extends Component {
     
 		this._canvas.on('selection:created', (event) => {
       this.setState({activeObject : this.getActiveObject() });
-			/* switch(type) {
-				case 'image':
-					break;
-				case 'textbox':
-					break;
-				case 'activeSelection': //group using drag
-          break;
-        case 'group': //group using drag
-				  break;
-				default:
-			} */
 		});
 
 		this._canvas.on('selection:updated', (event) => {
       this.setState({ activeObject : this.getActiveObject() });
-			/* switch(type) {
-				case 'image':
-					break;
-				case 'textbox':
-					break;
-				case 'activeSelection': //group using drag
-          break;
-        case 'group': //group using drag
-				  break;
-				default:
-			} */
 		});
 
 		this._canvas.on('selection:cleared', (event) => {
@@ -539,11 +522,14 @@ class ImageEditor extends Component {
     this._canvas.on('object:skewing', (event) => {
 
     })
+    this._canvas.on('object:selected', (event) => {
+
+    })
+
     this._canvas.on('object:scaling', (event) => {
       if(event.target.type !== 'Cropzone') {
         this.saveState(event.target.type + ' : scale change');
       }
-      // this.forceUpdate();
     })
 
     this._canvas.on('object:moved', this._movedObjectSave);
@@ -655,7 +641,7 @@ class ImageEditor extends Component {
       this.forceUpdate(); // for showUndo/Redo Stack
       this.scrollBot.current.scrollTop = this.scrollBot.current.scrollHeight
     }
-  }, 200);
+  }, 270);
 
   undo = () => {
     if(this.stateStack.length > 0) {
@@ -1260,7 +1246,6 @@ class ImageEditor extends Component {
 
   clearBackgroundColor = () => {
     if(this._canvas){
-      console.log('a')
       this._canvas.backgroundColor = null;
       this._canvas.renderAll();
     }
@@ -1339,7 +1324,7 @@ class ImageEditor extends Component {
   onclickRedoStack = (event) => {
     let origin = this.currentState.id;
     let dest = parseInt(event.target.getAttribute('number'), 10);
-    console.log(dest, origin - 1);
+    // console.log(dest, origin - 1);
     if(this.redoStack.length > 0){
       this.stateStack.push(this.currentState);
       for(let i = origin; i < dest - 1 ; i++ ){

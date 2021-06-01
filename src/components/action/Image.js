@@ -80,7 +80,9 @@ class Image extends Action {
             scaleX : option.scaleX,
             scaleY : option.scaleY,
   
-            strokeWidth : 0
+            strokeWidth : 0,
+            cornerStrokeColor : "grey",
+            borderColor : "grey"
           });
           resolve(img);
         }

@@ -76,6 +76,7 @@ class Save extends Component {
         if(data.success){
           // console.log(data);
           alert(i18next.t('Save.Update') + ' '+ i18next.t('Save.Success'));
+          this.props.getCheckSave(data.prj_idx);
           this.props.close();
         }
         else{

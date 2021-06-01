@@ -137,6 +137,7 @@ export default withTranslation()(class Effect extends Component {
         </div>
         <div className="sub-effect">
           <div className="shadow-box">
+            <div className="option-title">{i18next.t('ui/effect.Blur')}</div>
             <div className="shadow-checkbox">
               <div>
                 <label className="mycheckbox path">
@@ -145,21 +146,26 @@ export default withTranslation()(class Effect extends Component {
                       <path d={ObjectIcon.checkbox}></path>
                     </svg>
                 </label>
-                {i18next.t('ui/effect.Blur')}
+                On/Off
               </div>
               <div className="blur-box">
-                <input
-                type='range'
-                className='shadow'
-                id='shadow'
-                min='0'
-                max='10'
-                name='blur'
-                step='0.1'
-                value={this.state.blur}
-                onChange={this.handleShadowChange}/>
-                <div>
-                  {this.state.blur}
+                <div className="blur-box-title">
+                  {i18next.t('ui/effect.Blur strength')}
+                </div>
+                <div className="blur-box-input">
+                  <input
+                  type='range'
+                  className='shadow'
+                  id='shadow'
+                  min='0'
+                  max='10'
+                  name='blur'
+                  step='0.1'
+                  value={this.state.blur}
+                  onChange={this.handleShadowChange}/>
+                  <div>
+                    {this.state.blur}
+                  </div>
                 </div>
               </div>
             </div>
@@ -189,7 +195,7 @@ export default withTranslation()(class Effect extends Component {
             </div>
           </div>
           <div className="shadow-color">
-            {i18next.t('ui/effect.ShadowColor')}
+            <div className="option-title">{i18next.t('ui/effect.ShadowColor')}</div>
             <div className="color-picker">
                 <input type="color" id="colorSource" value={this.state.hexcolor} onChange = { this.handleColorChange }/>
                 <div className="cp-rangebox">
@@ -199,27 +205,33 @@ export default withTranslation()(class Effect extends Component {
           </div>
           </div>         
           <div className="stroke">
-            <label htmlFor="stroke">{i18next.t('ui/effect.Stroke')} </label>
-            <input
-              type='range'
-              className='stroke'
-              name='stroke'
-              min='0'
-              max='100'
-              step='1'
-              value={ this.props.object.strokeWidth ? this.props.object.strokeWidth : 0}
-              disabled = { (this.props.object.type === 'group' || this.props.object.type === 'activeSelection' || this.props.object.type === 'not active' || this.props.object.type === 'line' ) ? true : false }
-              onChange={this.handleStrokeWidthChange}
-            />
-            <div>
-              {this.props.object.strokeWidth ? this.props.object.strokeWidth : 0}
+            <label className="option-title" htmlFor="stroke">{i18next.t('ui/effect.Stroke')} </label>
+            <div className="stroke-input">
+              <input
+                type='range'
+                className='stroke'
+                name='stroke'
+                min='0'
+                max='100'
+                step='1'
+                value={ this.props.object.strokeWidth ? this.props.object.strokeWidth : 0}
+                disabled = { (this.props.object.type === 'group' || this.props.object.type === 'activeSelection' || this.props.object.type === 'not active' || this.props.object.type === 'line' ) ? true : false }
+                onChange={this.handleStrokeWidthChange}
+              />
+              <div>
+                {this.props.object.strokeWidth ? this.props.object.strokeWidth : 0}
+              </div>
             </div>
+
           </div>          
-          <div className="stroke-color">            
-            {i18next.t('ui/effect.StrokeColor')}
+          <div className="stroke-color">     
+            <div className="option-title">{i18next.t('ui/effect.StrokeColor')}</div>
             <div className="color-picker">
-                <input type="color" id="colorSource" value={this.state.hexstrokeColor} onChange = { this.handleStrokeColorChange}/>
+              <input type="color" id="colorSource" value={this.state.hexstrokeColor} onChange = { this.handleStrokeColorChange}/>
+              <div className="cp-rangebox">
+                <div>{i18next.t('ui/effect.Color opacity')}: {this.state.color.a}</div>
                 <input type="range" id="stroke-range" value = {this.state.strokeColor.a} min='0' max='1' step='0.01' onChange = {this.handleStrokeOpacityChange} />
+              </div>
             </div>
           </div>
           {/* <div>

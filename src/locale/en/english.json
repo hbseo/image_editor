@@ -401,14 +401,15 @@
 
     "ui/effect" : {
         "Effect" : "Effect",
-        "Blur" : "Blur",
+        "Blur" : "Shadow",
         "ShadowColor" : "Shadow Color",
         "Color opacity" : "Color opacity",
         "OffsetY" : "Offset Y",
         "OffsetX" : "Offset X",
         "Stroke" : "Stroke",
         "StrokeColor" : "Stroke Color",
-        "Pipette" : "Pipette"
+        "Pipette" : "Pipette",
+        "Blur strength" : "Shadow Blur"
     },
 
     "ui/filter" : {

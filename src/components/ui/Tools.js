@@ -47,15 +47,19 @@ export default class Tools extends Component {
               <div style={ {color : 'red', padding : '10px'}}>
               {this.props.object.type !== 'not active' ? 
                 <div>
-                  <p>object left : {this.props.object.left}</p>
-                  <p>object top : {this.props.object.top}</p>
-                  <p>object scaleX : {this.props.object.scaleX}</p>
-                  <p>object scaleY : {this.props.object.scaleY}</p>
-
-                  <p> left : {this.props.object.aCoords.tl.x} </p>
-                  <p> right : {this.props.object.aCoords.br.x} </p>
-                  <p> top : {this.props.object.aCoords.tl.y} </p>
-                  <p> bottom : {this.props.object.aCoords.br.y} </p>
+                  <p>object left from center : {this.props.object.left.toFixed(3)}</p>
+                  <p>object top from center: {this.props.object.top.toFixed(3)}</p>
+                  <p>object scaleX : {this.props.object.scaleX.toFixed(3)}</p>
+                  <p>object scaleY : {this.props.object.scaleY.toFixed(3)}</p>
+                  <p>object width : {this.props.object.width}</p>
+                  <p>object height : {this.props.object.height}</p>
+                  
+                  <p>object width * scaleX : {(this.props.object.width * this.props.object.scaleX).toFixed(3)}</p>
+                  <p>object height * scaleY : {(this.props.object.height * this.props.object.scaleY).toFixed(3)}</p>
+                  <p> left : {this.props.object.aCoords.tl.x.toFixed(3)} </p>
+                  <p> right : {this.props.object.aCoords.br.x.toFixed(3)} </p>
+                  <p> top : {this.props.object.aCoords.tl.y.toFixed(3)} </p>
+                  <p> bottom : {this.props.object.aCoords.br.y.toFixed(3)} </p>
                 </div> : null}
               </div>
 

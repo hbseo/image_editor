@@ -70,6 +70,11 @@
       font-size: 16px;
       width: 80px;
       outline: none;
+
+      background-image: url("../img/input.png");
+      background-position: center right;
+      background-size: contain;
+      background-repeat: no-repeat;
       cursor: text;
     }
 
@@ -77,6 +82,56 @@
       -webkit-appearance: none !important;
       opacity: 1 !important;
       background: transparent !important;
+      border-width: 0px;
+      margin: 0;
+      border-left: 1px solid #b8b8b8;
+      height: 34px;
+      width: 23px;
+      cursor: pointer;
+      color : white;
+    }
+
+    input[type="number"]:disabled {
+      cursor: default;
+    }
+  }
+
+  .font-size-disabled {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+
+    input[type="number"] {
+      margin-left: 5%;
+      height: 32px;
+      border-radius: 4px;
+      border: 1px solid #555555;
+      color : #555555;
+      position: relative;
+      text-align: center;
+      font-size: 16px;
+      width: 80px;
+      outline: none;
+
+      background-image: url("../img/input-disabled.png");
+      background-position: center right;
+      background-size: contain;
+      background-repeat: no-repeat;
+      cursor: text;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+      opacity: 1 !important;
+      background: transparent !important;
+      border-width: 0px;
+      margin: 0;
+      height: 34px;
+      width: 23px;
+      cursor: pointer;
+      color : white;
+      border-left: 1px solid #555555;
     }
 
     input[type="number"]:disabled {
@@ -147,7 +202,7 @@
         }
 
         svg {
-          fill: #ababab;
+          fill: #555555;
           width: 50%;
           height: 50%;
         }
@@ -202,7 +257,8 @@
   .bold-disabled {
     width: 50px;
     height: 50px;
-    background-color: #e6e6e6;
+    // background-color: #555555;
+    border : 1px solid #555555;
     border-radius: 5px;
 
     label {
@@ -220,6 +276,7 @@
     svg {
       width: 50%;
       height: 50%;
+      fill : #555555;
     }
   }
 
@@ -261,7 +318,8 @@
   .italic-disabled {
     width: 50px;
     height: 50px;
-    background-color: #e6e6e6;
+    // background-color: #e6e6e6;
+    border : 1px solid #555555;
     border-radius: 5px;
 
     label {
@@ -279,6 +337,7 @@
     svg {
       width: 50%;
       height: 50%;
+      fill : #555555;
     }
   }
   .underline {
@@ -319,7 +378,8 @@
   .underline-disabled {
     width: 50px;
     height: 50px;
-    background-color: #e6e6e6;
+    // background-color: #e6e6e6;
+    border : 1px solid #555555;
     border-radius: 5px;
 
     label {
@@ -337,6 +397,7 @@
     svg {
       width: 50%;
       height: 50%;
+      fill : #555555;
     }
   }
 }
@@ -368,7 +429,7 @@
 
   input[type="checkbox"]:disabled + label {
     color: #ababab;
-    background-color: #e6e6e6;
+    background-color: #555555;
   }
 
   // input[type="checkbox"]:disabled + label:hover {
@@ -412,9 +473,9 @@
   align-items: center;
 
   .fontfamily-button {
-    background-color: #e6e6e6;
-    border: 1px solid #ababab;
-    color: #ababab;
+    // background-color: #e6e6e6;
+    border: 1px solid #555555;
+    color: #555555;
     border-radius: 5px;
     width: 160px;
     height: 30px;
