@@ -69,9 +69,16 @@
                         padding : 3vw;
                         width : 250px;
                         text-align: left;
+                        text-overflow: ellipsis;
 
                         h1{
                             padding-bottom : 13px;
+                        }
+                    }
+                    @media (max-width: 540px) {
+                        .section-text{
+                            font-size: 13px;
+                            
                         }
                     }
                     .section-image {

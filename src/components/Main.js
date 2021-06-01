@@ -101,7 +101,7 @@ class Main extends Component {
         <div className='Main'>
           <div className='topnav'>
             <a className="site-title-a" href="/">FRACT</a>
-            <p className="site-title-p" href="/">Image Editor</p>
+            <a className="site-title-p" href="/">Image Editor</a>
 
             <div className='right'>
               <button className='rightbtn'><i className="fas fa-bars"></i></button>

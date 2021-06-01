@@ -88,11 +88,17 @@
     color : white;
     font-size: 2.5vh;
     text-align: center;
+  }
 
+  .site-title-a:hover {
+    color : grey;
   }
 
   .site-title-p {
     font-size: 1.5vh;
+  }
+  .site-title-p:hover {
+    color : grey;
   }
 
   .right {

@@ -4,6 +4,7 @@ import i18next from "../../locale/i18n";
 import ImageMini from './ImageMini';
 import { withTranslation } from "react-i18next";
 import '../../css/ui/Image.scss'
+import { corsLink } from '../const/consts';
 
 export default withTranslation()(class Image extends Component {
   constructor(props){
@@ -40,7 +41,7 @@ export default withTranslation()(class Image extends Component {
     this.url = this.state.imgURL;
     this.setState({imgURL : ""});
     console.log("loading");
-    this.props.addImage('https://cors-anywhere.herokuapp.com/' + this.url);
+    this.props.addImage(corsLink + this.url);
   }
 
   importImage = (event) => {

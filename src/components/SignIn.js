@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
-import FindPassword from './Find_password';
+// import FindPassword from './Find_password';
 import '../css/Login/font-awesome.min.scss';
 import '../css/Login/main.scss';
 import '../css/Login/util.scss';

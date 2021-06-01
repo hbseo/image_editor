@@ -7,6 +7,7 @@ import unsplash from './helper/UnspalshAPI';
 import { unSplashAppName } from './const/consts';
 import i18next from "../locale/i18n";
 import { withTranslation } from "react-i18next";
+import { corsLink } from './const/consts';
 
 class LoadImage extends Component {
   constructor(props) {
@@ -120,7 +121,7 @@ class LoadImage extends Component {
       console.log('fail');
     }
 
-    imgObj.src = 'https://cors-anywhere.herokuapp.com/' + this.state.url;
+    imgObj.src = corsLink + this.state.url;
   }
 
   fileChange = (event) => {

@@ -1,5 +1,6 @@
 {
     "hello": "hello",
+    "initilize" : "initilize",
     "paste object" : "Paste Object",
     "image crop" : "Image Crop",
     "canvas crop" : "Canvas Crop",
@@ -511,7 +512,7 @@
         "Free making" : "Free making",
         "Click" : "Click",
         "Drag" : "Drag",
-        "Adjust degree": "Adjust degree",
+        "Adjust degree": "Adjust Circle degree",
         "Degree" : "Degree",
         "Pipette" : "Pipette",
         "Color opacity" :"Color opacity"

@@ -1,5 +1,6 @@
 {
     "hello": "hello",
+    "initilize" : "캔버스 생성",
     "paste object" : "물체 복사",
     "image crop" : "이미지 자르기",
     "canvas crop" : "캔버스 자르기",
@@ -511,7 +512,7 @@
         "Free making" : "자유롭게 만들기",
         "Click" : "클릭",
         "Drag" : "드래그",
-        "Adjust degree": "각도 조절",
+        "Adjust degree": "원의 내각 조절",
         "Degree" : "도",
         "Pipette" : "스포이드",
         "Color opacity" : "색 투명도"

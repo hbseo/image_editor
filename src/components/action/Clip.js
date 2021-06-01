@@ -29,6 +29,8 @@ class Clip extends Action {
         left: clonedObj.left + 10,
         top: clonedObj.top + 10,
         evented: true,
+        cornerStrokeColor : "grey",
+        borderColor : "grey"
       });
       if (clonedObj.type === 'activeSelection') {
         clonedObj.canvas = canvas;

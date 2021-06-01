@@ -118,7 +118,8 @@ class Project extends Component {
     .then((data) => {
       if(data.success){
         let index = this.state.projects.findIndex((element) => {
-          if(Number(element.idx) === Number(idx)) return 1;
+          if(Number(element.idx) === Number(idx)) {return 1;}
+          else {return 0;}
         });
         this.state.projects.splice(index, 1);
         let bool = this.state.projects.length === 0 ? false : true;

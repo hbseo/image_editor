@@ -233,6 +233,13 @@ ul {
   button:hover {
     background-color: #ececec;
   }
+
+  .dummy-button {
+    cursor : default;
+  }
+  .dummy-button:disabled{
+    background-color: rgba(0,0,0,0);
+  }
 }
 
 
@@ -288,7 +295,11 @@ ul {
         // overflow: auto;
         // background-image: url(./img/back.png);
         // background-repeat: repeat;
-        background-color: #181f27;
+        // background-color: #181f27;
+        background-color: #888;
+        background-image: linear-gradient(45deg, #444 25%, transparent 25%, transparent 75%, #444 75%, #444), linear-gradient(45deg, #444 25%, transparent 25%, transparent 75%, #444 75%, #444);
+        background-position: 0 0, 25px 25px;
+        background-size: 50px 50px;
       }
       .upper-canvas {
         // overflow: auto;
