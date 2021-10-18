@@ -1,8 +1,5 @@
 <p align="center">
   <h1 align="center">🎨 Image Editor</h1>
-  <p align="center">
-    HYU-ERICA capstone project
-  </p>
 </p>
 
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hbseo/image_editor/blob/master/LICENSE) 
