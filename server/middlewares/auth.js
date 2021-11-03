@@ -4,7 +4,7 @@ const secretObj = require('../config/jwt');
 const authMiddleware = (req, res, next) => {
   const token = req.cookies.token || req.headers['x-access-token'] || ''
   if (!token) {
-    return res.status(403).json({
+    return res.status(401).json({
       success: false,
       msg: 'not login'
     })
@@ -20,7 +20,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   const onError = (error) => {
-    res.status(403).json({
+    res.status(401).json({
       success: false,
       msg: error.message,
     })
